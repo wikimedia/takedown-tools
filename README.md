@@ -11,8 +11,8 @@ legalTakedownProcess.php - file to process input from form, very not working rig
 LICENSE.txt (MIT License for all files not otherwise marked)  
 README.md (this readme)
 
-Images folder:
-monobook-bullet.png (Public Domain)
+Images folder:  
+monobook-bullet.png (Public Domain)  
 roryshield.jpg (Ruby Wang CC-BY-SA-3.0 unported https://creativecommons.org/licenses/by-sa/3.0/deed.en)
 
 CSS folder:  
