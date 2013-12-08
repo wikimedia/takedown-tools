@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
+<head>
+	<title>Local user</title>
+	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	<style type='text/css'>
+	<!--/* <![CDATA[ */
+	@import 'css/main.css'; 
+	/* ]]> */-->
+	td { vertical-align: top; }
+	.external, .external:visited { color: #222222; }
+	.autocomment{color:gray}
+	</style>
+</head>
+<body class='mediawiki'>
+	<div id='globalWrapper'>
+		<div id='column-content'>
+			<div id='content'>
+				<h1> Legal Takedown </h1>
+				<br />
+				<form method='post' action='legalTakedownProcess.php' id='takedown-form1'>
+					<fieldset>
+						<legend>Who sent the takedown?</legend>
+						<table border='0' id='mw-movepage-table'> 
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-name'>Sender (person or organization)</label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-name' name='sender-name' value='' type='text' size='50' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-person'>Attorney or individual signing</label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-person' name='sender-person' value='' type='text' size='50' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-firm'>Law Firm or Agent (if any)</label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-firm' name='sender-firm' value='' type='text' size='50' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-address1'>Sender Address </label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-address1' name='sender-address1' value='' type='text' size='50' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-address2'>Sender Address, line 2</label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-address2' name='sender-address2' value='' type='text' size='50' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'> Sender City, State, Zip </td>
+								<td>
+									<input id='sender-city' name='sender-city' value='' type='text' size='25' />, <input id='sender-state' name='sender-state' value='' type='text' size='10' />, <input id='sender-zip' name='sender-zip' value='' type='text' size='10' />
+								</td>
+							</tr>
+							<tr>
+								<td class='lca-label'>
+									<label for='sender-country'>Country</label>
+								</td>
+								<td class='lca-input'>
+									<input id='sender-country' name='sender-country' value='' type='text' size='10' />
+								</td>
+							</tr>
+						</table>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+			<div id='column-one'>
+				<div class='portlet' id='p-logo' role='banner'>
+					<a href='legalTakedown.html' style='background-image: url(images/roryshield.jpg); background-size:100% 100%;' title='Visit the main page'></a>
+				</div>
+				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
+					<h3>LCA links</h3>
+					<div class='pBody'>
+						<ul>
+							<li id='lca-central-link'>
+								<a href='https://sites.google.com/a/wikimedia.org/lca-central/'>LCA Central</a>
+							</li>
+							<li id='officewiki-link'>
+								<a href='https://office.wikimedia.org/wiki/Main_Page'>Office Wiki</a>
+							</li>
+							<li id='collabwiki-link'>
+								<a href='https://collab.wikimedia.org/wiki/Main_Page'>Collab Wiki</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class='no-text-transform portlet' id='p-dmcalinks' role='navigation'>
+					<h3>DMCA related links</h3>
+					<div class='pBody'>
+						<ul>
+							<li id='comdmca-link'>
+								<a href='https://commons.wikimedia.org/wiki/COM:DMCA'>Commons DMCA Page</a>
+							</li>
+							<li id='comvp-link'>
+								<a href='https://commons.wikimedia.org/wiki/Commons:Village_pump'>Commons Village Pump</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
