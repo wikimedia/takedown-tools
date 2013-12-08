@@ -1,0 +1,13 @@
+/*
+** LCA Takedown css file for use on legalTakedown web app pages or other related pages
+** Copyright James Alexander 2013
+** License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
+*/
+
+i {
+	font-style:italic;
+}
+#p-logo {
+	background-image: url(../images/roryshield.jpg);
+	background-size:100% 100%;
+}
