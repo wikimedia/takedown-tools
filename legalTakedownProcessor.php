@@ -60,7 +60,7 @@ if (!empty($_POST['files-affected'])) {
 					<table>
 						<tr>
 							<td>
-								Please post the below text to <?php echo "<a href='https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."?action=edit'>https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."</a>"?>
+								Please post the below text to <?php echo "<a target='_blank' href='https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."?action=edit'>https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."</a>"?>
 							</td>
 						</tr>
 						<tr>
@@ -80,7 +80,7 @@ if (!empty($_POST['files-affected'])) {
 					<table>
 						<tr>
 							<td>
-								Please post the below text to the Wikimedia Commons DMCA Board at <a href="https://commons.wikimedia.org/wiki/Commons:DMCA?action=edit&amp;section=new">https://commons.wikimedia.org/wiki/Commons:DMCA</a>
+								Please post the below text to the Wikimedia Commons DMCA Board at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:DMCA?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:DMCA</a>
 							</td>
 						</tr>
 						<tr>
@@ -99,7 +99,7 @@ if (!empty($_POST['files-affected'])) {
 						</tr>
 						<tr>
 							<td>
-								Please post the below text to the Wikimedia Commons Village Pump at <a href="https://commons.wikimedia.org/wiki/Commons:Village_pump?action=edit&amp;section=new">https://commons.wikimedia.org/wiki/Commons:Village_pump</a>
+								Please post the below text to the Wikimedia Commons Village Pump at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:Village_pump?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:Village_pump</a>
 							</td>
 						</tr>
 						<tr>
