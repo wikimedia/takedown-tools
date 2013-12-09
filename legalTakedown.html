@@ -1,9 +1,10 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
+	<link rel='shortcut icon' href='images/favicon.ico'/>
 	<title>Local user</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src="scripts/jquery-1.10.2.min.js"></script>
+	<script src='scripts/jquery-1.10.2.min.js'></script>
 	<script src='scripts/moment.min.js'></script>
 	<script src='scripts/pikaday.js'></script>
 	<script src='scripts/pikaday.jquery.js'></script>
@@ -37,7 +38,7 @@
 			<div id='content'>
 				<h1> Legal Takedown </h1>
 				<br />
-				<form method='post' action='legalTakedownProcess.php' id='takedown-form1' enctype="multipart/form-data">
+				<form method='post' action='legalTakedownProcess.php' id='takedown-form1' enctype='multipart/form-data'>
 					<fieldset>
 						<legend>Who sent the takedown?</legend>
 						<table border='0' id='mw-movepage-table'> 
@@ -153,12 +154,12 @@
 					<fieldset>
 						<legend> The Takedown </legend>
 						<p> Takedown text - copy and paste email etc. </p>
-						<textarea name="takedown-body" wrap="virtual" rows="18" cols="70"></textarea>
-						<input type="hidden" name="MAX_FILE_SIZE" value="52428800" />
-						<p>Supporting file 1 (scanned takedown etc) <input name="takedown-file1" type="file" /></p>
-						<p>Supporting file 2 (scanned takedown etc) <input name="takedown-file2" type="file" /></p>
+						<textarea name='takedown-body' wrap='virtual' rows='18' cols='70'></textarea>
+						<input type='hidden' name='MAX_FILE_SIZE' value='52428800' />
+						<p>Supporting file 1 (scanned takedown etc) <input name='takedown-file1' type='file' /></p>
+						<p>Supporting file 2 (scanned takedown etc) <input name='takedown-file2' type='file' /></p>
 					</fieldset>
-					<input type="submit" value="Process takedown">
+					<input type='submit' value='Process takedown'>
 				</form>
 			</div>
 		</div>

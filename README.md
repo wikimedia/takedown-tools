@@ -14,6 +14,7 @@ README.md (this readme)
 Images folder:  
 monobook-bullet.png (Public Domain)  
 roryshield.jpg (Ruby Wang CC-BY-SA-3.0 unported https://creativecommons.org/licenses/by-sa/3.0/deed.en)
+favicon.ico (Copyright Wikimedia Foundation)
 
 CSS folder:  
 main.css (mediawiki monobook styling Gabriel Wicke GPL)  
