@@ -15,6 +15,7 @@ Images folder:
 monobook-bullet.png (Public Domain)  
 roryshield.jpg (Ruby Wang CC-BY-SA-3.0 unported https://creativecommons.org/licenses/by-sa/3.0/deed.en)
 favicon.ico (Copyright Wikimedia Foundation)
+20px-Help.png (Public Domain help icon - http://tango.freedesktop.org/Tango_Desktop_Project)
 
 CSS folder:  
 main.css (mediawiki monobook styling Gabriel Wicke GPL)  

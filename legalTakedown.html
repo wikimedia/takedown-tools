@@ -48,7 +48,7 @@
     }).mouseout(function () {
         $this = $(this);
         $this.attr('title', $this.data('title'));
-    });
+    }); 
 
 });
     
@@ -138,7 +138,7 @@
 									<label for='takedown-date'> Date the takedown was sent </label>
 								</td>
 								<td>
-									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' /> <i>please use date selector or format as YYYY-MM-DD</i>
+									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' /> <img class='showTooltip' src='images/20px-Help.png' title='Please use date selector or format as YYYY-MM-DD' />
 								</td>
 							</tr>
 							<tr>
@@ -146,7 +146,7 @@
 									<label for='files-affected'> Files affected </label>
 								</td>
 								<td>
-									<input id='files-affected' name='files-affected' value='' type='text' size'50' /> <i>Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest. </i>
+									<input id='files-affected' name='files-affected' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
 								</td>
 							</tr>
 							<tr>
@@ -154,7 +154,7 @@
 									<label for='takedown-title'> Chilling Effects 'Title' </label>
 								</td>
 								<td>
-									<input id='takedown-title' name='takedown-title' value='DMCA (Copyright) Complaint to Wikimedia Foundation' size='50'/> <i>Feel free to override the default with a witty title for Chilling Effects if it suits you.</i>
+									<input id='takedown-title' name='takedown-title' type='text' value='DMCA (Copyright) Complaint to Wikimedia Foundation' size='50'/> <img class='showTooltip' src='images/20px-Help.png' title='Feel free to override the default with a witty title for Chilling Effects if it suits you.'/>
 								</td>
 							</tr>
 							<tr>
@@ -162,7 +162,7 @@
 									<label for='takedown-commons-title'>Commons Title</label>
 								</td>
 								<td>
-									<input id='takedown-commons-title' name='takedown-commons-title' value='' size='50' /> <i> the title to use for the Commons announcement </i>
+									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement'/>
 								</td>
 							</tr>
 							<tr>
@@ -170,7 +170,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' value='' size='50' /> <i> the title to use for the WMF wiki posting (Don't worry I'll give you a link on the next page) </i>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don't worry I'll give you a link on the next page)'/>
 								</td>
 							</tr>
 							<tr>
@@ -178,7 +178,7 @@
 									<label for='takedown-method'>How was the C&amp;D sent?</label>
 								</td>
 								<td>
-									<input id='takedown-method' name='takedown-method' value='email' type='text' size='25' /> <i> (e.g. email, postal mail, fax ...)</i>
+									<input id='takedown-method' name='takedown-method' value='email' type='text' size='25' /> <img class='showTooltip' src='images/20px-Help.png' title='(e.g. email, postal mail, fax ...)'/>
 								</td>
 							</tr>
 							<tr>
@@ -186,7 +186,7 @@
 									<label for='takedown-subject'> Subject Line </label>
 								</td>
 								<td>
-									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' />
+									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax recieved'/>
 								</td>
 							</tr>
 						</table>
