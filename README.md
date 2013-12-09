@@ -7,7 +7,7 @@ This is currently a placeholder and will be expanded as we go and I have time.
 
 Files:  
 legalTakedown.html - starting page with form to fill out for take down  
-legalTakedownProcess.php - file to process input from form, very not working right now  
+legalTakedownProcessor.php - file to process input from form, very not working right now  
 LICENSE.txt (MIT License for all files not otherwise marked)  
 README.md (this readme)
 
