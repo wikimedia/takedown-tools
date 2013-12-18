@@ -10,6 +10,8 @@ legalTakedown.html - starting page with form to fill out for take down
 legalTakedownProcessor.php - file to process input from form, very not working right now  
 LICENSE.txt (MIT License for all files not otherwise marked)  
 README.md (this readme)
+legalTakedownConfig.sample.php - Sample configuration file for takedown processor
+.gitignore - ignore real config files which have private keys/passwords
 
 Images folder:  
 monobook-bullet.png (Public Domain)  
