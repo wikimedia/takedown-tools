@@ -7,16 +7,18 @@ Author : James Alexander
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
 Date of creation : 2013-12-07
-Last modified : 2013-12-08
+Last modified : 2013-12-18
 
 Thanks to Quentinv57 (of the Wikimedia projects) for some of the inspiration for the start.
 
 Universal form to assist in DMCA takedowns by LCA team.
 
-Part 1. Simple form for all information and wiki code spit out- in process 2013-12-08
+Part 1. Simple form for all information and wiki code spit out- Complete 2013-12-09
+Part 2. Submit data to chiling effects - in process 2013-12-18
 			
 ---------------------------------------------   */
 
+include_once (legalTakedownConfig.php)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -55,6 +57,7 @@ if (!empty($_POST['files-affected'])) {
 			<div id='content'>
 				<h1>Processed Takedown</h1>
 				<br />
+				<iframe src="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices" height="20px" width="50px"></iframe>
 				<fieldset>
 					<legend> wmfWiki post </legend>
 					<table>
