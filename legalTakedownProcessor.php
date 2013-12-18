@@ -18,7 +18,7 @@ Part 2. Submit data to chiling effects - in process 2013-12-18
 			
 ---------------------------------------------   */
 
-include_once (legalTakedownConfig.php)
+include_once (legalTakedownConfig.php);
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -27,6 +27,31 @@ if (!empty($_POST['files-affected'])) {
 	$filearray=explode(',', $_POST['files-affected']);
 }
 
+// Set up file uploads if they exist.
+if (is_uploaded_file($_FILES['takedown-file1']['tmp_name'])) {
+	
+
+}
+
+// Set up initial post data for Chilling Effects
+$CE_post_data = array (
+	'notice' => array (
+		'title' => $_POST['takedown-title'],
+		'type' => $_POST['ce-report-type'],
+		'subject' => $_POST['takedown-subject'],
+		'date_sent' => $_POST['takedown-date'],
+		'source' => $_POST['takedown-method'],
+		'action_taken' => $_POST['action-taken'],
+		'body' => $_POST['takedown-body'],
+		)
+	)
+
+// Set up headers for Chilling Effects submission
+$CE_post_headers = array (
+	'Accept: application/json',
+	'Content-Type: application/json',
+	'AUTHENTICATION_TOKEN:'.$takedown_config['CE_apikey'],
+	);
 
 ?>
 
