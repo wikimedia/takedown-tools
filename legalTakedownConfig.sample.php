@@ -15,15 +15,16 @@ Sample config file for Wikimedia LCA DMCA Takedown webapp
 
 $takedown_config = array (
 	'CE_apikey' => '',
-	'CE_apiurl' => 'http://api-beta.chillingeffects.org/',
+	'CE_apiurl' => 'http://api-beta.chillingeffects.org/notices',
 	'CE_recipient' =>  array (
-		name => 'Wikimedia Foundation',
-		kind => 'organization',
-		address_line_1 => '149 New Montgomery St. 6th FL',
-		city => 'San Francisco',
-		state => 'CA',
-		country_code => 'US',
-		phone => '4158396885',
-		url => 'https://wikimediafoundation.org',
+		'name' => 'Wikimedia Foundation',
+		'kind' => 'organization',
+		'address_line_1' => '149 New Montgomery St. 6th FL',
+		'city' => 'San Francisco',
+		'state' => 'CA',
+		'zip' => '94105',
+		'country_code' => 'US',
+		'phone' => '4158396885',
+		'url' => 'https://wikimediafoundation.org',
 		),
 	);

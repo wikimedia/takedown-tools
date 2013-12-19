@@ -18,7 +18,7 @@ Part 2. Submit data to chiling effects - in process 2013-12-18
 			
 ---------------------------------------------   */
 
-include_once (legalTakedownConfig.php);
+include_once ('legalTakedownConfig.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -27,14 +27,35 @@ if (!empty($_POST['files-affected'])) {
 	$filearray=explode(',', $_POST['files-affected']);
 }
 
+foreach ($filearray as $value) {
+	$linksarray[] = 'https://commons.wikimedia.org/wiki/File'.$value;
+}
+
 // Set up file uploads if they exist.
 if (is_uploaded_file($_FILES['takedown-file1']['tmp_name'])) {
-	
+	$_FILES['takedown-file1']['name'] = $CE_post_files_tmp1['file_name'];
+	$datatemp = file_get_contents($_FILES['takedown-file1']['tmp_name']);
+	$datatemp = base64_encode($datatemp);
+	$uri = 'data: '. $_FILES['takedown-file1']['type'].';base64,'.$datatemp;
+	$uri = $CE_post_files_tmp1['file'];
+	$CE_post_files[] = $CE_post_files_tmp1;
+
 
 }
 
+if (is_uploaded_file($_FILES['takedown-file2']['tmp_name'])) {
+	$_FILES['takedown-file2']['name'] = $CE_post_files_tmp2['file_name'];
+	$datatemp = file_get_contents($_FILES['takedown-file2']['tmp_name']);
+	$datatemp = base64_encode($datatemp);
+	$uri = 'data: '. $_FILES['takedown-file2']['type'].';base64,'.$datatemp;
+	$uri = $CE_post_files_tmp2['file'];
+	$CE_post_files[] = $CE_post_files_tmp2;
+}
+
+
 // Set up initial post data for Chilling Effects
 $CE_post_data = array (
+	'authentication_token' => $takedown_config['CE_apikey'],
 	'notice' => array (
 		'title' => $_POST['takedown-title'],
 		'type' => $_POST['ce-report-type'],
@@ -43,17 +64,67 @@ $CE_post_data = array (
 		'source' => $_POST['takedown-method'],
 		'action_taken' => $_POST['action-taken'],
 		'body' => $_POST['takedown-body'],
-		)
-	)
+		'tag_list' => 'wikipedia, wikimedia',
+		'jurisdiction_list' => 'US, CA',
+		),
+	);
+
+$CE_post_entities = array (
+	array (
+		'name' => 'recipient',
+		'entity_attributes' => $takedown_config['CE_recipient'],
+		),
+	array (
+		'name' => 'sender',
+		'entity_attributes' => array (
+			'name' => $_POST['sender-name'],
+			'address_line_1' => $_POST['sender-address1'],
+			'address_line_2' => $_POST['sender-address2'],
+			'city' => $_POST['sender-city'],
+			'state' => $_POST['sender-state'],
+			'zip' => $_POST['sender-zip'],
+			),
+		),
+	);
+
+$CE_post_data['notice']['entity_notice_roles_attributes'] = $CE_post_entities;
+
+$CE_post_works[] = array (
+	'infringing_urls_attributes' => $linksarray,
+	);
+
+$CE_post_data['notice']['works_attributes'] = $CE_post_works;
+
+if (!empty($CE_post_files)) {
+	$CE_post_data['notice']['file_uploads_attributes'] = $CE_post_files;
+}
+
+$CE_post = json_encode($CE_post_data);
 
 // Set up headers for Chilling Effects submission
 $CE_post_headers = array (
 	'Accept: application/json',
 	'Content-Type: application/json',
-	'AUTHENTICATION_TOKEN:'.$takedown_config['CE_apikey'],
+	'Content-Length: ' . strlen($CE_post),
+	'AUTHENTICATION_TOKEN: '.$takedown_config['CE_apikey'],
 	);
 
+$ch = curl_init($takedown_config['CE_apiurl']);
+$f = fopen('request.txt', 'w');
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_POSTFIELDS, $CE_post);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HEADER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, $CE_post_headers);
+curl_setopt($ch, CURLOPT_VERBOSE, true);
+curl_setopt($ch, CURLOPT_STDERR, $f);
+
+$result = curl_exec($ch);
+fclose($f);
+curl_close($ch);
+
 ?>
+
 
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
@@ -82,7 +153,6 @@ $CE_post_headers = array (
 			<div id='content'>
 				<h1>Processed Takedown</h1>
 				<br />
-				<iframe src="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices" height="20px" width="50px"></iframe>
 				<fieldset>
 					<legend> wmfWiki post </legend>
 					<table>
@@ -164,6 +234,28 @@ $CE_post_headers = array (
 								<?php echo (!empty($filearray) ? var_dump($filearray) : "")?>
 							</td>
 						</tr>
+						<tr>
+							<td>
+								print of php array for CE
+							</td>
+							<td>
+								<?php echo var_dump($CE_post_data);?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								print of json for CE
+							</td>
+							<td>
+								<?php echo json_encode($CE_post_data, JSON_PRETTY_PRINT);?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Print of response from CE
+							</td>
+							<td>
+								<?php echo print_r($result);?>
 					</table>
 				</fieldset>
 			</div>
