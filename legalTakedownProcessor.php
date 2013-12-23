@@ -228,7 +228,7 @@ curl_close($ch);
 								Files affected (if given)
 							</td>
 							<td>
-								<?php echo (!empty($_POST["files-affected"]) ? $_POST["files-affected"] : "") ?>
+								<textarea><?php echo (!empty($_POST["files-affected"]) ? $_POST["files-affected"] : "") ?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -236,7 +236,7 @@ curl_close($ch);
 								Var dump of filearray
 							</td>
 							<td>
-								<?php echo (!empty($filearray) ? var_dump($filearray) : "")?>
+								<textarea><?php echo (!empty($filearray) ? var_dump($filearray) : "")?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -244,7 +244,7 @@ curl_close($ch);
 								print of php array for CE
 							</td>
 							<td>
-								<?php echo var_dump($CE_post_data);?>
+								<textarea><?php echo var_dump($CE_post_data);?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -252,7 +252,7 @@ curl_close($ch);
 								print of json for CE
 							</td>
 							<td>
-								<?php echo json_encode($CE_post_data, JSON_PRETTY_PRINT);?>
+								<textarea><?php echo json_encode($CE_post_data, JSON_PRETTY_PRINT);?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -260,7 +260,7 @@ curl_close($ch);
 								Print of response from CE
 							</td>
 							<td>
-								<?php echo print_r($result);?>
+								<textarea><?php echo print_r($result);?></textarea>
 					</table>
 				</fieldset>
 			</div>
