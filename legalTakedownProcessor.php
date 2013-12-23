@@ -31,24 +31,27 @@ foreach ($filearray as $value) {
 	$linksarray[] = 'https://commons.wikimedia.org/wiki/File'.$value;
 }
 
+
 // Set up file uploads if they exist.
 if (is_uploaded_file($_FILES['takedown-file1']['tmp_name'])) {
-	$_FILES['takedown-file1']['name'] = $CE_post_files_tmp1['file_name'];
+	$CE_post_files_tmp1 = array();
+	$CE_post_files_tmp1['file_name'] = $_FILES['takedown-file1']['name'];
 	$datatemp = file_get_contents($_FILES['takedown-file1']['tmp_name']);
 	$datatemp = base64_encode($datatemp);
 	$uri = 'data: '. $_FILES['takedown-file1']['type'].';base64,'.$datatemp;
-	$uri = $CE_post_files_tmp1['file'];
+	$CE_post_files_tmp1['file'] = $uri;
 	$CE_post_files[] = $CE_post_files_tmp1;
 
 
 }
 
 if (is_uploaded_file($_FILES['takedown-file2']['tmp_name'])) {
-	$_FILES['takedown-file2']['name'] = $CE_post_files_tmp2['file_name'];
+	$CE_post_files_tmp2 = array();
+	$CE_post_files_tmp2['file_name'] = $_FILES['takedown-file2']['name'];
 	$datatemp = file_get_contents($_FILES['takedown-file2']['tmp_name']);
 	$datatemp = base64_encode($datatemp);
 	$uri = 'data: '. $_FILES['takedown-file2']['type'].';base64,'.$datatemp;
-	$uri = $CE_post_files_tmp2['file'];
+	$CE_post_files_tmp2['file'] = $uri;
 	$CE_post_files[] = $CE_post_files_tmp2;
 }
 
@@ -109,6 +112,7 @@ $CE_post_headers = array (
 	'AUTHENTICATION_TOKEN: '.$takedown_config['CE_apikey'],
 	);
 
+/*
 $ch = curl_init($takedown_config['CE_apiurl']);
 $f = fopen('request.txt', 'w');
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -122,6 +126,7 @@ curl_setopt($ch, CURLOPT_STDERR, $f);
 $result = curl_exec($ch);
 fclose($f);
 curl_close($ch);
+*/
 
 ?>
 
