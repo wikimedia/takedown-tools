@@ -14,11 +14,12 @@ Thanks to Quentinv57 (of the Wikimedia projects) for some of the inspiration for
 Universal form to assist in DMCA takedowns by LCA team.
 
 Part 1. Simple form for all information and wiki code spit out- Complete 2013-12-09
-Part 2. Submit data to chiling effects - in process 2013-12-18
+Part 2. Submit data to Chilling Effects - in process 2013-12-18
 			
 ---------------------------------------------   */
 
 include_once ('legalTakedownConfig.php');
+include_once('multiuseFunctions.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -34,25 +35,11 @@ foreach ($filearray as $value) {
 
 // Set up file uploads if they exist.
 if (is_uploaded_file($_FILES['takedown-file1']['tmp_name'])) {
-	$CE_post_files_tmp1 = array();
-	$CE_post_files_tmp1['file_name'] = $_FILES['takedown-file1']['name'];
-	$datatemp = file_get_contents($_FILES['takedown-file1']['tmp_name']);
-	$datatemp = base64_encode($datatemp);
-	$uri = 'data: '. $_FILES['takedown-file1']['type'].';base64,'.$datatemp;
-	$CE_post_files_tmp1['file'] = $uri;
-	$CE_post_files[] = $CE_post_files_tmp1;
-
-
+		$CE_post_files[] = setupdataurl($_FILES['takedown-file1']);
 }
 
 if (is_uploaded_file($_FILES['takedown-file2']['tmp_name'])) {
-	$CE_post_files_tmp2 = array();
-	$CE_post_files_tmp2['file_name'] = $_FILES['takedown-file2']['name'];
-	$datatemp = file_get_contents($_FILES['takedown-file2']['tmp_name']);
-	$datatemp = base64_encode($datatemp);
-	$uri = 'data: '. $_FILES['takedown-file2']['type'].';base64,'.$datatemp;
-	$CE_post_files_tmp2['file'] = $uri;
-	$CE_post_files[] = $CE_post_files_tmp2;
+		$CE_post_files[] = setupdataurl($_FILES['takedown-file2']);
 }
 
 
@@ -112,21 +99,9 @@ $CE_post_headers = array (
 	'AUTHENTICATION_TOKEN: '.$takedown_config['CE_apikey'],
 	);
 
-/*
-$ch = curl_init($takedown_config['CE_apiurl']);
-$f = fopen('request.txt', 'w');
-curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-curl_setopt($ch, CURLOPT_POSTFIELDS, $CE_post);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HEADER, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $CE_post_headers);
-curl_setopt($ch, CURLOPT_VERBOSE, true);
-curl_setopt($ch, CURLOPT_STDERR, $f);
+// Add new argument 1 to end of function to write to request.txt for debug
+curlAPIpost($takedown_config['CE_apiurl'],$CE_post,$CE_post_headers);
 
-$result = curl_exec($ch);
-fclose($f);
-curl_close($ch);
-*/
 
 ?>
 
