@@ -55,5 +55,5 @@ if ($debug=1) {
 fclose($f);
 }
 curl_close($ch);
-return $result
+return $result;
 }

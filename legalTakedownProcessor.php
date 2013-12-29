@@ -18,8 +18,9 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 			
 ---------------------------------------------   */
 
-include_once ('legalTakedownConfig.php');
 include_once('multiuseFunctions.php');
+$config = parse_ini_file("lcaToolsConfig.ini");
+
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -45,7 +46,7 @@ if (is_uploaded_file($_FILES['takedown-file2']['tmp_name'])) {
 
 // Set up initial post data for Chilling Effects
 $CE_post_data = array (
-	'authentication_token' => $takedown_config['CE_apikey'],
+	'authentication_token' => $config['CE_apikey'],
 	'notice' => array (
 		'title' => $_POST['takedown-title'],
 		'type' => $_POST['ce-report-type'],
@@ -62,7 +63,7 @@ $CE_post_data = array (
 $CE_post_entities = array (
 	array (
 		'name' => 'recipient',
-		'entity_attributes' => $takedown_config['CE_recipient'],
+		'entity_attributes' => $config['CE_recipient'],
 		),
 	array (
 		'name' => 'sender',
@@ -96,11 +97,12 @@ $CE_post_headers = array (
 	'Accept: application/json',
 	'Content-Type: application/json',
 	'Content-Length: ' . strlen($CE_post),
-	'AUTHENTICATION_TOKEN: '.$takedown_config['CE_apikey'],
+	'AUTHENTICATION_TOKEN: '.$config['CE_apikey'],
 	);
 
+// send to Chilling Effects
 // Add new argument 1 to end of function to write to request.txt for debug
-curlAPIpost($takedown_config['CE_apiurl'],$CE_post,$CE_post_headers);
+//curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
 
 
 ?>
