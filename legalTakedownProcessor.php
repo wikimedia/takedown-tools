@@ -19,7 +19,8 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 ---------------------------------------------   */
 
 include_once('multiuseFunctions.php');
-$config = parse_ini_file("lcaToolsConfig.ini");
+$config = parse_ini_file('lcaToolsConfig.ini');
+$sendtoCE = $config['sendtoCE'];
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -29,8 +30,10 @@ if (!empty($_POST['files-affected'])) {
 	$filearray=explode(',', $_POST['files-affected']);
 }
 
-foreach ($filearray as $value) {
-	$linksarray[] = 'https://commons.wikimedia.org/wiki/File'.$value;
+if (!empty($filearray)) {
+	foreach ($filearray as $value) {
+		$linksarray[] = 'https://commons.wikimedia.org/wiki/File'.$value;
+	}
 }
 
 
@@ -80,9 +83,11 @@ $CE_post_entities = array (
 
 $CE_post_data['notice']['entity_notice_roles_attributes'] = $CE_post_entities;
 
-$CE_post_works[] = array (
-	'infringing_urls_attributes' => $linksarray,
-	);
+if (!empty($linksarray)) {
+	$CE_post_works[] = array (
+		'infringing_urls_attributes' => $linksarray,
+		);
+}
 
 $CE_post_data['notice']['works_attributes'] = $CE_post_works;
 
@@ -100,9 +105,12 @@ $CE_post_headers = array (
 	'AUTHENTICATION_TOKEN: '.$config['CE_apikey'],
 	);
 
+
 // send to Chilling Effects
 // Add new argument 1 to end of function to write to request.txt for debug
-//curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
+if ($sendtoCE) {
+	curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
+}
 
 
 ?>
