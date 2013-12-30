@@ -109,7 +109,7 @@ $CE_post_headers = array (
 // send to Chilling Effects
 // Add new argument 1 to end of function to write to request.txt for debug
 if ($sendtoCE) {
-	curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
+	curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers, 1);
 }
 
 
@@ -208,6 +208,14 @@ if ($sendtoCE) {
 				<fieldset>
 					<legend>Debugging and double checking information for James</legend>
 					<table>
+						<tr>
+							<td>
+								CE info being sent?
+							</td>
+							<td>
+								<textarea><?php echo $sendtoCE ?></textarea>
+							</td>
+						</tr>
 						<tr>
 							<td>
 								Files affected (if given)
