@@ -7,12 +7,14 @@ Author : James Alexander
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
 Date of creation : 2013-12-22
-Last modified : 2013-12-22
+Last modified : 2013-12-29
 
 Plugin providing functions which could be used in multiple LCA tools and/or multiple instances of the same tool.
 Stored here mostly to keep main files cleaner.
 			
 ---------------------------------------------   */
+
+$config = parse_ini_file('lcaToolsConfig.ini');
 
 function setupdataurl($inputfile) {
 	/* in case a real file is passed instead of _FILES (should not happen in current setup) 
@@ -56,4 +58,24 @@ fclose($f);
 }
 curl_close($ch);
 return $result;
+}
+
+function lcalog($user,$type,$title) {
+	$mysql = new mysqli($config['database_address'],$config['database_user'],$config['database_password',$config['database']);
+
+	$template = 'INSERT INTO centrallog (user,timestamp,type,title) VALUES (?,?,?,?)';
+
+	$submittime = gmdate("Y-m-d H:i:s", time());
+
+	$log = $mysql->prepare($template);
+	if ($log === false) {
+		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+	}
+
+	$log->bind_param('ssss',$user,$submittime,$type,$title);
+
+	$log->execute();
+
+	return $log->insert_id;
+	$mysql->close();
 }
