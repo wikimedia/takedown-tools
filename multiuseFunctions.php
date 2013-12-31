@@ -15,6 +15,10 @@ Stored here mostly to keep main files cleaner.
 ---------------------------------------------   */
 
 $config = parse_ini_file('lcaToolsConfig.ini');
+$dbaddress = $config['database_address'];
+$dbuser = $config['database_user'];
+$dbpw = $config['database_password'];
+$db = $config['database'];
 
 function setupdataurl($inputfile) {
 	/* in case a real file is passed instead of _FILES (should not happen in current setup) 
@@ -60,8 +64,12 @@ curl_close($ch);
 return $result;
 }
 
+
 function lcalog($user,$type,$title) {
-	$mysql = new mysqli($config['database_address'],$config['database_user'],$config['database_password'],$config['database']);
+
+	global $dbaddress, $dbuser, $dbpw, $db;
+
+	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
 
 	$template = 'INSERT INTO centrallog (user,timestamp,type,title) VALUES (?,?,?,?)';
 
