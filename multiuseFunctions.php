@@ -61,7 +61,7 @@ return $result;
 }
 
 function lcalog($user,$type,$title) {
-	$mysql = new mysqli($config['database_address'],$config['database_user'],$config['database_password',$config['database']);
+	$mysql = new mysqli($config['database_address'],$config['database_user'],$config['database_password'],$config['database']);
 
 	$template = 'INSERT INTO centrallog (user,timestamp,type,title) VALUES (?,?,?,?)';
 
