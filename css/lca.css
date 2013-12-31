@@ -7,6 +7,7 @@
 i {
 	font-style:italic;
 }
+
 #p-logo {
 	background-image: url(../images/roryshield.jpg);
 	background-size:100% 100%;
@@ -23,3 +24,4 @@ i {
 	font-size:12px Arial;
 	z-index: 100;
 }
+
