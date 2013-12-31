@@ -7,7 +7,7 @@ Author : James Alexander
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
 Date of creation : 2013-12-07
-Last modified : 2013-12-18
+Last modified : 2013-12-30
 
 Thanks to Quentinv57 (of the Wikimedia projects) for some of the inspiration for the start.
 
@@ -21,6 +21,11 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 include_once('multiuseFunctions.php');
 $config = parse_ini_file('lcaToolsConfig.ini');
 $sendtoCE = $config['sendtoCE'];
+$user = $_SERVER['PHP_AUTH_USER'];
+$log_type = 'DMCA';
+$log_title = $_POST['takedown-wmf-title'];
+$log_row = lcalog($user,$log_type,$log_title);
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -259,6 +264,13 @@ if ($sendtoCE) {
 			</div>
 		</div>
 		<div id='column-one'>
+			<div role="navigation" id="p-personal" class="portlet">
+				<div class="pBody">
+					<ul>
+						<li id="pt-login">You are logged in as <b><u><?php echo $_SERVER['PHP_AUTH_USER']; ?></u></b> if you are done or not you <b><a href="#" onclick="javascript: logout();">log out </a> </b></li>
+					</ul>
+				</div>
+			</div>
 			<div class='portlet' id='p-logo' role='banner'>
 				<a href='legalTakedown.html' title='Back to form'></a>
 			</div>
@@ -274,6 +286,29 @@ if ($sendtoCE) {
 							</li>
 							<li id='collabwiki-link'>
 								<a href='https://collab.wikimedia.org/wiki/Main_Page'>Collab Wiki</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
+					<h3>LCATools Forms</h3>
+					<div class='pBody'>
+						<ul>
+							<li id='dmca-takedown-form'>
+								<a href="legalTakedown.php">DMCA Takedown Form</a>
+							</li>
+							<li id='ncmec-form'>
+								<a href="NCMECreporting.php"> Child Protection Takedown Form </a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
+					<h3>LCATools Special Pages</h3>
+					<div class='pBody'>
+						<ul>
+							<li id='dmca-takedown-form'>
+								<a href="CentralLog.php"> Central submission Log </a>
 							</li>
 						</ul>
 					</div>
