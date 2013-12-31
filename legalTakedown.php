@@ -178,7 +178,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don&#39;t worry I&#39;ll give you a link on the next page)'/>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
 								</td>
 							</tr>
 							<tr>
