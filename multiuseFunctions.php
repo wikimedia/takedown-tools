@@ -32,6 +32,7 @@ function setupdataurl($inputfile) {
 	}
 
 	$tempfile = array();
+	$tempfile['kind'] = 'original';
 	$tempfile['file_name'] = $inputfile['name'];
 	$datatemp = file_get_contents($inputfile['tmp_name']);
 	$datatemp = base64_encode($datatemp);
