@@ -24,12 +24,11 @@
 					<img style="display:block; margin:auto;" width="500px" src="images/roryshield.jpg" />
 					<u> Reporting forms </u> <br />
 					<a href="legalTakedown.php">DMCA Takedown Form</a> <br />
-					<a href="NCMECreporting.php"> Child Protection Takedown Form </a> <br /> <br />
+					<a href="NCMECreporting.php"> Child Protection Takedown Form </a> <br />
+					<a href="basicRelease.php"> Basic Release of Confidential Information <a> <br /> <br />
 
 					<u> 'special' pages </u> <br />
 					<a href="CentralLog.php"> Central submission Log </a>
-
-
 			</div>
 
 			</div>
@@ -70,6 +69,9 @@
 							</li>
 							<li id='ncmec-form'>
 								<a href="NCMECreporting.php"> Child Protection Takedown Form </a>
+							</li>
+							<li id='basic-release'>
+								<a href="basicRelease.php"> Basic Release of Confidential Information </a>
 							</li>
 						</ul>
 					</div>
