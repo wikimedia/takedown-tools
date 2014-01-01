@@ -23,13 +23,20 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
-// cast config variables
+// cast config and log variables
 $config = parse_ini_file('lcaToolsConfig.ini');
 $sendtoCE = $config['sendtoCE'];
 $user = $_SERVER['PHP_AUTH_USER'];
 $log_type = 'DMCA';
 $log_title = $_POST['takedown-wmf-title'];
-$log_row = lcalog($user,$log_type,$log_title);
+if ($_POST['is-test'] === 'No') {
+	$istest = 'N';
+} elseif ($_POST['is-test'] === 'Yes') {
+	$istest = 'Y';
+} else {
+	$istest = '?';
+}
+$log_row = lcalog($user,$log_type,$log_title,$istest);
 
 
 // cast form ce-send variable.
