@@ -19,6 +19,11 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 ---------------------------------------------   */
 
 include_once('multiuseFunctions.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+date_default_timezone_set('UTC');
+
+// cast config variables
 $config = parse_ini_file('lcaToolsConfig.ini');
 $sendtoCE = $config['sendtoCE'];
 $user = $_SERVER['PHP_AUTH_USER'];
@@ -27,9 +32,19 @@ $log_title = $_POST['takedown-wmf-title'];
 $log_row = lcalog($user,$log_type,$log_title);
 
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-date_default_timezone_set('UTC');
+// cast form ce-send variable.
+if ($_POST['ce-send'] === 'Yes') {
+	$formsendtoCE = true;
+} else {
+	$formsendtoCE = false;
+}
+
+// cast test variable
+if ($_POST['is-test'] === 'No') {
+	$istest = 'Y';
+} else {
+	$istest = 'N';
+}
 
 if (!empty($_POST['files-affected'])) {
 	$filearray=explode(',', $_POST['files-affected']);
@@ -110,11 +125,18 @@ $CE_post_headers = array (
 	'AUTHENTICATION_TOKEN: '.$config['CE_apikey'],
 	);
 
+// Debug info
+/*if (!$sendtoCE || !$formsendtoCE) {
+	echo 'sendtoCE set to False? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];
+	echo 'formsendtoCE set to False? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];
+}*/
 
 // send to Chilling Effects
 // Add new argument 1 to end of function to write to request.txt for debug
-if ($sendtoCE) {
-	curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers, 1);
+if ($sendtoCE && $formsendtoCE) {
+	/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
+	echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
+	$result = curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
 }
 
 
@@ -299,6 +321,9 @@ if ($sendtoCE) {
 							</li>
 							<li id='ncmec-form'>
 								<a href="NCMECreporting.php"> Child Protection Takedown Form </a>
+							</li>
+							<li id='basic-release'>
+								<a href="basicRelease.php"> Basic Release of Confidential Information </a>
 							</li>
 						</ul>
 					</div>
