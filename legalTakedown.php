@@ -73,6 +73,70 @@
 				<br />
 				<form method='post' action='legalTakedownProcessor.php' id='takedown-form1' enctype='multipart/form-data'>
 					<fieldset>
+						<legend> Processing and Logging information </legend>
+						<table border='0' id='mw-movepage-table'> 
+							<tr class='spaceOut'>
+								<td>
+									<label for='ce-send'> Send to Chilling Effects?</label> 
+									<select name='ce-send' id='ce-send'>
+										<option>No</option>
+										<option>Yes</option>
+									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes to send this report to Chilling Effects, No to internally process only and not send.'/>
+								</td>
+								<td>
+									<label for='is-test'> Is this a test? </label>
+									<select name='is-test' id='is-test'>
+										<option>No</option>
+										<option>Yes</option>
+									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
+								</td>
+							</tr>
+							<!-- <tr class='spaceOut'>
+								<td>
+									<label for='is-dmca'> Is this a DMCA Takedown?</label>
+									<select name='is-dmca' id='is-dmca'>
+										<option>Yes</option>
+										<option>No</option>
+									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select no if this is a non DMCA based takedown'/>
+								</td>
+							</tr> -->
+							<tr class='spaceOut'>
+								<td>
+									<label for='involved-user'> Username who added the content: </label>
+								</td>
+								<td>
+									<input id='involved-user' name='involved-user' value='' type='text' size='15' />
+								</td>
+							</tr>
+							<tr>
+								<td rowspan='2' style='vertical-align:middle'>
+									<label for='logging-metadata'> Place a checkmark by all items which are true. </label>
+								</td>
+								<td>
+									<input type='checkbox' name='logging-metadata' value='user-warned' /> The content was taken down and the user was clearly warned and discouraged from future violations.  <br />
+									<input type='checkbox' name='logging-metadata' value='actual-knowledge' /> The content was taken down and we have actual knowledge that the content was infringing copyright  <br />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type='checkbox' name='logging-metadata' value='awareness-apparent' /> The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent <br />
+									<input type='checkbox' name='logging-metadata' value='is-dmca' /> The content was taken down pursuant to a DMCA notice <br />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for='strike-note'> The takedown does NOT count as a "strike" for purposes of the repeat infinger policy because: </label>
+								</td>
+								<td>
+									<input type='checkbox' name='strike-note' value='counter-notice' /> The user has filed a successful counter-notification.  <br />
+									<input type='checkbox' name='strike-note' value='lawyers-nostrike' /> The Office of General Counsel has decided that a "strike" is not appropriate because of mitigating circumstances (e.g., the user demonstrates a clear lack of willfulness and a mistaken belief of compliance)  <br />
+									<input type='checkbox' name='strike-note' value='other' /> Other: <input type='text' id='strike-note-other' name='strike-note-other' size='50' />
+								</td>
+							</tr>
+						</table>
+
+					</fieldset>
+					<fieldset>
 						<legend>Who sent the takedown?</legend>
 						<table border='0' id='mw-movepage-table'> 
 							<tr>
@@ -247,6 +311,9 @@
 							</li>
 							<li id='ncmec-form'>
 								<a href="NCMECreporting.php"> Child Protection Takedown Form </a>
+							</li>
+							<li id='basic-release'>
+								<a href="basicRelease.php"> Basic Release of Confidential Information </a>
 							</li>
 						</ul>
 					</div>
