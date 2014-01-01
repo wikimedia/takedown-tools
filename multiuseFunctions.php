@@ -65,13 +65,13 @@ return $result;
 }
 
 
-function lcalog($user,$type,$title) {
+function lcalog($user,$type,$title,$test) {
 
 	global $dbaddress, $dbuser, $dbpw, $db;
 
 	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
 
-	$template = 'INSERT INTO centrallog (user,timestamp,type,title) VALUES (?,?,?,?)';
+	$template = 'INSERT INTO centrallog (user,timestamp,type,title,test) VALUES (?,?,?,?,?)';
 
 	$submittime = gmdate("Y-m-d H:i:s", time());
 
@@ -80,7 +80,7 @@ function lcalog($user,$type,$title) {
 		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 	}
 
-	$log->bind_param('ssss',$user,$submittime,$type,$title);
+	$log->bind_param('sssss',$user,$submittime,$type,$title,$test);
 
 	$log->execute();
 
