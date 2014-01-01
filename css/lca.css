@@ -25,3 +25,7 @@ i {
 	z-index: 100;
 }
 
+/* Apply some padding to certain table rows where they get more crowded then necessary */
+tr.spaceOut > td {
+	padding-bottom: 1em;
+}
