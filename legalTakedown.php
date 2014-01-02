@@ -258,7 +258,7 @@
 									<label for='takedown-subject'> Subject Line </label>
 								</td>
 								<td>
-									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax recieved'/>
+									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax received'/>
 								</td>
 							</tr>
 						</table>
