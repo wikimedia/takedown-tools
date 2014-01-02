@@ -23,6 +23,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
+//null variables that may or may not be set later depending on how it goes
+$locationURL = null;
+$filessent = null;
+
+
+
 // cast config and log variables
 $config = parse_ini_file('lcaToolsConfig.ini');
 $sendtoCE = $config['sendtoCE'];
@@ -37,6 +43,30 @@ if ($_POST['is-test'] === 'No') {
 	$istest = '?';
 }
 $log_row = lcalog($user,$log_type,$log_title,$istest);
+
+$involved_user = $_POST['involved-user'];
+$logging_metadata = $_POST['logging-metadata'];
+$strike_note = $_POST['strike-note'];
+if (in_array('other', $strike_note)) {
+	$strike_note[array_search('other', $strike_note)] = 'Other: ' . $_POST['strike-note-other'];
+}
+$sender_name = $_POST['sender-name'];
+$sender_person = $_POST['sender-person'];
+$sender_firm = $_POST['sender-firm'];
+$sender_address1 = $_POST['sender-address1'];
+$sender_address2 = $_POST['sender-address2'];
+$sender_city = $_POST['sender-city'];
+$sender_zip = $_POST['sender-zip'];
+$sender_state = $_POST['sender-state'];
+$sender_country = $_POST['sender-country'];
+$takedown_date = $_POST['takedown-date'];
+$action_taken = $_POST['action-taken'];
+$takedown_title = $_POST['takedown-title'];
+$commons_title = $_POST['takedown-commons-title'];
+$wmfwiki_title = $_POST['takedown-wmf-title'];
+$takedown_method = $_POST['takedown-method'];
+$takedown_subject = $_POST['takedown-subject'];
+$takedown_text = $_POST['takedown-body'];
 
 
 // cast form ce-send variable.
@@ -67,24 +97,25 @@ if (!empty($filearray)) {
 // Set up file uploads if they exist.
 if (is_uploaded_file($_FILES['takedown-file1']['tmp_name'])) {
 		$CE_post_files[] = setupdataurl($_FILES['takedown-file1']);
+		$filessent[] = $_FILES['takedown-file1']['name'];
 }
 
 if (is_uploaded_file($_FILES['takedown-file2']['tmp_name'])) {
 		$CE_post_files[] = setupdataurl($_FILES['takedown-file2']);
+		$filessent[] = $_FILES['takedown-file2']['name'];
 }
-
 
 // Set up initial post data for Chilling Effects
 $CE_post_data = array (
 	'authentication_token' => $config['CE_apikey'],
 	'notice' => array (
-		'title' => $_POST['takedown-title'],
+		'title' => $takedown_title,
 		'type' => $_POST['ce-report-type'],
-		'subject' => $_POST['takedown-subject'],
-		'date_sent' => $_POST['takedown-date'],
-		'source' => $_POST['takedown-method'],
-		'action_taken' => $_POST['action-taken'],
-		'body' => $_POST['takedown-body'],
+		'subject' => $takedown_subject,
+		'date_sent' => $takedown_date,
+		'source' => $takedown_method,
+		'action_taken' => $action_taken,
+		'body' => $takedown_text,
 		'tag_list' => 'wikipedia, wikimedia',
 		'jurisdiction_list' => 'US, CA',
 		),
@@ -98,12 +129,12 @@ $CE_post_entities = array (
 	array (
 		'name' => 'sender',
 		'entity_attributes' => array (
-			'name' => $_POST['sender-name'],
-			'address_line_1' => $_POST['sender-address1'],
-			'address_line_2' => $_POST['sender-address2'],
-			'city' => $_POST['sender-city'],
-			'state' => $_POST['sender-state'],
-			'zip' => $_POST['sender-zip'],
+			'name' => $sender_name,
+			'address_line_1' => $sender_address1,
+			'address_line_2' => $sender_address2,
+			'city' => $sender_city,
+			'state' => $sender_city,
+			'zip' => $sender_zip,
 			),
 		),
 	);
@@ -150,11 +181,55 @@ if ($sendtoCE && $formsendtoCE) {
 	$headers = explode("\n", $headers);
 	foreach($headers as $header) {
 		if (stripos($header, 'Location:') !== false) {
-			$locationURL = substr($header, 10)
+			$locationURL = substr($header, 10);
 		}
 	}
 }
 
+// Get ready to store in database
+
+$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
+$mysql->set_charset("utf8");
+
+$submittime = gmdate("Y-m-d H:i:s", time());
+$insert_user = $mysql->real_escape_string($user);
+$insert_sender_name = $mysql->real_escape_string($sender_name);
+$insert_sender_person = $mysql->real_escape_string($sender_person);
+$insert_sender_firm = $mysql->real_escape_string($sender_firm);
+$insert_sender_address1 = $mysql->real_escape_string($sender_address1);
+$insert_sender_address2 = $mysql->real_escape_string($sender_address2);
+$insert_sender_city = $mysql->real_escape_string($sender_city);
+$insert_sender_zip = $mysql->real_escape_string($sender_zip);
+$insert_sender_state = $mysql->real_escape_string($sender_state);
+$insert_sender_country = $mysql->real_escape_string($sender_country);
+$insert_takedown_date = $mysql->real_escape_string($takedown_date);
+$insert_action_taken = $mysql->real_escape_string($action_taken);
+$insert_takedown_title = $mysql->real_escape_string($takedown_title);
+$insert_commons_title = $mysql->real_escape_string($commons_title);
+$insert_wmfwiki_title = $mysql->real_escape_string($wmfwiki_title);
+$insert_takedown_method = $mysql->real_escape_string($takedown_method);
+$insert_takedown_subject = $mysql->real_escape_string($takedown_subject);
+$insert_takedown_text = $mysql->real_escape_string($takedown_text);
+$insert_involved_user = $mysql->real_escape_string($involved_user);
+$insert_logging_metadata = $mysql->real_escape_string(serialize($logging_metadata));
+$insert_strike_note = $mysql->real_escape_string(serialize($strike_note));
+$insert_ce_url = $mysql->real_escape_string($locationURL);
+$insert_filessent = $mysql->real_escape_string(serialize($filessent));
+$insert_files_affected = $mysql->real_escape_string(serialize($linksarray));
+
+// do it
+
+$template = 'INSERT INTO dmcatakedowns (log_id,user,timestamp,sender_name,sender_person,sender_firm,sender_address1,sender_address2,sender_city,sender_zip,sender_state,sender_country,takedown_date,action_taken,takedown_title,commons_title,wmfwiki_title,takedown_method,takedown_subject,takedown_text,involved_user,logging_metadata,strike_note,ce_url,files_sent,files_affected,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+
+$insert = $mysql->prepare($template);
+	if ($insert === false) {
+		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+	}
+
+$insert->bind_param('issssssssssssssssssssssssss',$log_row,$insert_user,$submittime,$insert_sender_name,$insert_sender_person,$insert_sender_firm,$insert_sender_address1,$insert_sender_address2,$insert_sender_city,$insert_sender_zip,$insert_sender_state,$insert_sender_country,$insert_takedown_date,$insert_action_taken,$insert_takedown_title,$insert_commons_title,$insert_wmfwiki_title,$insert_takedown_method,$insert_takedown_subject,$insert_takedown_text,$insert_involved_user,$insert_logging_metadata,$insert_strike_note,$insert_ce_url,$insert_files_sent,$insert_files_affected,$istest);
+
+$insert->execute();
+$insert->close();
 
 ?>
 
@@ -190,14 +265,14 @@ if ($sendtoCE && $formsendtoCE) {
 					<table>
 						<tr>
 							<td>
-								Please post the below text to <?php echo "<a target='_blank' href='https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."?action=edit'>https://www.wikimediafoundation.org/wiki/".htmlentities($_POST["takedown-wmf-title"])."</a>"?>
+								Please post the below text to <?php echo "<a target='_blank' href='https://www.wikimediafoundation.org/wiki/".htmlentities($wmfwiki_title)."?action=edit'>https://www.wikimediafoundation.org/wiki/".htmlentities($wmfwiki_title)."</a>"?>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90'><?php 
 								echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word; ''><nowiki>".PHP_EOL.
-								$_POST["takedown-body"].PHP_EOL.
+								$takedown_text.PHP_EOL.
 								"</nowiki></div>".PHP_EOL.
 								"[[Category:DMCA ".date("Y")."]]";?>
 								</textarea>
@@ -216,9 +291,9 @@ if ($sendtoCE && $formsendtoCE) {
 						<tr>
 							<td>
 								<textarea name='commons-dmca-post' wrap='virtual' rows='18' cols='90'><?php
-								echo "=== ".$_POST["takedown-commons-title"]." ===".PHP_EOL.PHP_EOL.
-								"{{subst:DMCA_takedown_notice|".$_POST["takedown-commons-title"].
-								(!empty($_POST["takedown-wmf-title"]) ? "|".$_POST["takedown-wmf-title"] : "").
+								echo "=== ".$commons_title." ===".PHP_EOL.PHP_EOL.
+								"{{subst:DMCA_takedown_notice|".$commons_title.
+								(!empty($wmfwiki_title) ? "|".$wmfwiki_title : "").
 								(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
 								(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
 								(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
@@ -235,8 +310,8 @@ if ($sendtoCE && $formsendtoCE) {
 						<tr>
 							<td>
 								<textarea name='commons-dmca-post' wrap='virtual' rows='18' cols='90'><?php
-								echo "{{subst:DMCA_takedown_notice|".$_POST["takedown-commons-title"].
-								(!empty($_POST["takedown-wmf-title"]) ? "|".$_POST["takedown-wmf-title"] : "").
+								echo "{{subst:DMCA_takedown_notice|".$commons_title.
+								(!empty($commons_title) ? "|".$wmfwiki_title : "").
 								(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
 								(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
 								(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
@@ -263,7 +338,7 @@ if ($sendtoCE && $formsendtoCE) {
 								Files affected (if given)
 							</td>
 							<td>
-								<textarea><?php echo (!empty($_POST["files-affected"]) ? $_POST["files-affected"] : "") ?></textarea>
+								<textarea><?php echo (!empty($files_affected) ? $files_affected : "") ?></textarea>
 							</td>
 						</tr>
 						<tr>
