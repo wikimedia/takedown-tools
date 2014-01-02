@@ -39,8 +39,11 @@ if ($drillto) {
 	$logLookup->bind_param('i',$drillto);
 	$logLookup->execute();
 
-	$results=$logLookup->get_result();
-	$logData = $results->fetch_all(MYSQLI_ASSOC);
+	$logLookup->bind_result($id,$type,$title);
+
+	while ($logLookup->fetch()) {
+		$logData[] = array ('id' => $id,'type' => $type,'title' => $title);
+	}
 
 	if ($logData[0]['type']) {
 		$logType = $logData[0]['type'];
