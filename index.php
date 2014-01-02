@@ -25,7 +25,7 @@
 					<u> Reporting forms </u> <br />
 					<a href="legalTakedown.php">DMCA Takedown Form</a> <br />
 					<a href="NCMECreporting.php"> Child Protection Takedown Form </a> <br />
-					<a href="basicRelease.php"> Basic Release of Confidential Information <a> <br /> <br />
+					<a href="basicRelease.php"> Basic Release of Confidential Information </a> <br /> <br />
 
 					<u> 'special' pages </u> <br />
 					<a href="CentralLog.php"> Central submission Log </a>
