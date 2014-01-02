@@ -2,7 +2,7 @@
 				<div role="navigation" id="p-personal" class="portlet">
 					<div class="pBody">
 						<ul>
-							<li id="pt-login">You are logged in as <b><u><?php echo $_SERVER['PHP_AUTH_USER']; ?></u></b> if you are done or not you <b><a href="#" onclick="javascript: logout();">log out </a> </b></li>
+							<li id="pt-login">You are logged in as <b><u><?php echo $_SERVER['PHP_AUTH_USER']; ?>.</u></b> If this is not you, <u><b><a href="#" onclick="javascript: logout();">log out </a></b></u></li>
 						</ul>
 					</div>
 				</div>
