@@ -144,6 +144,15 @@ if ($sendtoCE && $formsendtoCE) {
 	/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
 	echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
 	$result = curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
+
+	list($headers, $response) = explode("\r\n\r\n", $result, 2);
+
+	$headers = explode("\n", $headers);
+	foreach($headers as $header) {
+		if (stripos($header, 'Location:') !== false) {
+			$locationURL = substr($header, 10)
+		}
+	}
 }
 
 
@@ -173,6 +182,9 @@ if ($sendtoCE && $formsendtoCE) {
 			<div id='content'>
 				<h1>Processed Takedown</h1>
 				<br />
+				<?php if (isset($locationHeader)) {
+					echo '<p> The DMCA Takedown was send to Chilling Effects and you can find the submission at <a href="'.$locationURL.'" target="_blank">'.$locationURL.'</a>';
+				} else echo '<p> It does not appear that a report was sent to Chilling Effects (either because you asked the report not to, reporting is turned off on the server level or there was an error) <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE'; ?>
 				<fieldset>
 					<legend> wmfWiki post </legend>
 					<table>
@@ -185,7 +197,7 @@ if ($sendtoCE && $formsendtoCE) {
 							<td>
 								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90'><?php 
 								echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word; ''><nowiki>".PHP_EOL.
-								$_POST["takedown-body"].PHP_EOL.
+					 			$_POST["takedown-body"].PHP_EOL.
 								"</nowiki></div>".PHP_EOL.
 								"[[Category:DMCA ".date("Y")."]]";?>
 								</textarea>
