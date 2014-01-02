@@ -28,7 +28,7 @@
 					<a href="basicRelease.php"> Basic Release of Confidential Information </a> <br /> <br />
 
 					<u> 'special' pages </u> <br />
-					<a href="CentralLog.php"> Central submission Log </a>
+					<a href="centralLog.php"> Central submission Log </a>
 			</div>
 
 			</div>

@@ -46,7 +46,7 @@
 					<div class='pBody'>
 						<ul>
 							<li id='dmca-takedown-form'>
-								<a href="CentralLog.php"> Central submission Log </a>
+								<a href="centralLog.php"> Central submission Log </a>
 							</li>
 						</ul>
 					</div>
