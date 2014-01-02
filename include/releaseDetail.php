@@ -1,4 +1,4 @@
-<p> See below for the information that szx submitted. <?php if ($istest = 'Y') { echo '<b> NOTE: This was marked as a test submission </b>'; } ?> </p>
+<p> See below for the information that was submitted. <?php if ($istest = 'Y') { echo '<b> NOTE: This was marked as a test submission </b>'; } ?> </p>
 <p> This data was submitted by <?php echo $user; ?> with a timestamp of <?php echo $timestamp; ?> UTC </p>
 	<fieldset>
 		<legend> Release info </legend>
