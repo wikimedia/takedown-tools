@@ -7,7 +7,7 @@ Author : James Alexander
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
 Date of creation : 2013-12-22
-Last modified : 2013-12-29
+Last modified : 2014-01-02
 
 Plugin providing functions which could be used in multiple LCA tools and/or multiple instances of the same tool.
 Stored here mostly to keep main files cleaner.

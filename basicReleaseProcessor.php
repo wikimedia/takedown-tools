@@ -6,7 +6,7 @@ Author : James Alexander
 
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
-Date of creation : 2014-01-01
+Date of creation : 2014-01-02
 
 Processor for basic information release form basicRelease.php
 			

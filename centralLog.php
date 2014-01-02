@@ -7,7 +7,7 @@ Author : James Alexander
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
 			
 Date of Creation: 2013-12-30
-Last modified: 2013-12-30
+Last modified: 2014-01-02
 
 Central log for submissions to LCA Tools
 			
