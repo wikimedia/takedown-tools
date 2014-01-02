@@ -186,7 +186,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 							echo '<td> '. $row['user'] . '</td>';
 							echo '<td> '. $row['timestamp'] . '</td>';
 							echo '<td> '. $row['type'] . '</td>';
-							echo '<td> '. $row['title'] . '</td>';
+							echo '<td> '. '<a href="logDetails.php?logid='.$row['id'].'">'. $row['title'] . '</a></td>';
 							echo '<td> '. $row['test'] . '</td>';
 							echo '</tr>';
 							$i++;
