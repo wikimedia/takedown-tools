@@ -42,10 +42,8 @@ function setupdataurl($inputfile) {
 	return $tempfile;
 }
 
-function curlAPIpost ($url,$data,$headers='',$debug=0) {
-	if ($debug=1) {
-		$f = fopen('request.txt', 'w');
-	}
+function curlAPIpost ($url,$data,$headers='') {
+
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
@@ -53,14 +51,8 @@ function curlAPIpost ($url,$data,$headers='',$debug=0) {
 	curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	curl_setopt($ch, CURLOPT_VERBOSE, true);
-	if ($debug=1) {
-	curl_setopt($ch, CURLOPT_STDERR, $f);
-}
 
 $result = curl_exec($ch);
-if ($debug=1) {
-fclose($f);
-}
 curl_close($ch);
 return $result;
 }
