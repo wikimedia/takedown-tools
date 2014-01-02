@@ -71,6 +71,7 @@ function lcalog($user,$type,$title,$test) {
 	global $dbaddress, $dbuser, $dbpw, $db;
 
 	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
+	$mysql->set_charset("utf8");
 
 	$template = 'INSERT INTO centrallog (user,timestamp,type,title,test) VALUES (?,?,?,?,?)';
 
