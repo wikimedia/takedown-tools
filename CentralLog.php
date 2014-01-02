@@ -33,27 +33,27 @@ $offset = (!empty($_GET['offset'])) ? intval($_GET['offset']) : 0; // offset sta
 
 $sortby = (!empty($_GET['sort'])) ? $_GET['sort'] : "none"; // grab sort options
 
-if ($_GET['sort'] == 'id')
+if ($sortby == 'id')
 {
 	$sql .= ' ORDER BY id';
 }
-elseif ($_GET['sort'] == 'user')
+elseif ($sortby == 'user')
 {
 	$sql .= ' ORDER BY user';
 }
-elseif ($_GET['sort'] == 'time')
+elseif ($sortby == 'time')
 {
 	$sql .= ' ORDER BY timestamp';
 }
-elseif($_GET['sort'] == 'type')
+elseif($sortby == 'type')
 {
 	$sql .= ' ORDER BY type';
 }
-elseif($_GET['sort'] == 'title')
+elseif($sortby == 'title')
 {
 	$sql .= ' ORDER BY title';
 }
-elseif($_GET['sort'] == 'test')
+elseif($sortby == 'test')
 {
 	$sql .= ' ORDER BY test';
 }
@@ -71,6 +71,20 @@ if($results === false) {
 
 $results->data_seek($offset);
 
+$nextoffset = $offset + $limit;
+
+if (($offset - $limit) < 0) {
+	$backoffset = 0;
+} else {
+	$backoffset = $offset - $limit;
+}
+
+$nextquery = http_build_query(array_merge($_GET,array('offset' => $nextoffset)));
+$nexturl = $_SERVER['PHP_SELF'].'?'.$nextquery;
+
+$backquery = http_build_query(array_merge($_GET,array('offset' => $backoffset)));
+$backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
+
 ?>
 
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
@@ -79,7 +93,17 @@ $results->data_seek($offset);
 	<link rel='shortcut icon' href='images/favicon.ico'/>
 	<title>DMCA Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	<script src='scripts/jquery-1.10.2.min.js'></script>
 	<script src='scripts/lca.js'></script>
+	<script>
+	$(document).ready(function(){
+		var selected = <?php echo "'".$sortby."'";?>;
+		$("select#sort option").filter(function() {
+			return $(this).val() == selected;
+		}).prop('selected', true);
+	});
+
+	</script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
 	@import 'css/main.css'; 
@@ -95,31 +119,81 @@ $results->data_seek($offset);
 		<div id='column-content'>
 			<div id='content'>
 				<h1> LCA Central Submission Log </h1>
-				
-				<table border='1' id='mw-movepage-table'> 
-					<tr>
-						<th> <a>ID </th>
-						<th> User </th>
-						<th> Time (UTC) </th>
-						<th> Type </th>
-						<th> Title </th>
-						<th> Test? </th>
-					</tr>
-					<?php
-					$i = 0;
-					while (($row = $results->fetch_assoc()) && ($i < $limit)) {
-						echo '<tr>';
-						echo '<td> '. $row['id'] . '</td>';
-						echo '<td> '. $row['user'] . '</td>';
-						echo '<td> '. $row['timestamp'] . '</td>';
-						echo '<td> '. $row['type'] . '</td>';
-						echo '<td> '. $row['title'] . '</td>';
-						echo '<td> '. $row['test'] . '</td>';
-						echo '</tr>';
-						$i++;
-					}
-					?>
-				</table>
+				<fieldset>
+					<legend>Log manipulation options</legend>
+					<form method='GET'>
+						<table border='0' id='mw-movepage-table'> 
+							<tr>
+								<td>
+									<label for='sort'>Sort by:</label>
+								</td>
+								<td>
+									<select name='sort' id='sort'>
+										<option value='id'> ID </option>
+										<option value='user'> User submitting </option>
+										<option value='time'> Time submitted </option>
+										<option value='title'> Submittion title </option>
+										<option value='test'> If test </option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for='limit'> How many items should be shown at once? </label>
+								</td>
+								<td>
+									<input name='limit' id='limit' type='text' size='10' value='<?php echo $limit; ?>' />
+								</td>
+							</tr>
+							<tr>
+								<td colspan='2'>
+									<input type='submit' value='Submit'>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</fieldset>
+				<fieldset>
+					<legend>Log data </legend>
+					<table border='1' id='mw-movepage-table'> 
+						<tr>
+							<td colspan='6'>
+								<span style='float:left;'><?php if ($offset==0) {
+									echo '<b> &#60;&#60; BACK </b>';
+								} else {
+									echo '<a href="'.$backurl.'"> &#60;&#60; BACK </a>';
+								} ?></span>
+								<span style='float:right'><?php if (($offset + $limit) > $rows_returned) {
+									echo '<b> NEXT &#62;&#62; </b>';
+								} else {
+									echo '<a href="'.$nexturl.'"> NEXT &#62;&#62; </a>';
+								} ?></span>
+							</td>
+						</tr>
+						<tr>
+							<th> ID </th>
+							<th> User </th>
+							<th> Time (UTC) </th>
+							<th> Type </th>
+							<th> Title </th>
+							<th> Test? </th>
+						</tr>
+						<?php
+						$i = 0;
+						while (($row = $results->fetch_assoc()) && ($i < $limit)) {
+							echo '<tr>';
+							echo '<td> '. $row['id'] . '</td>';
+							echo '<td> '. $row['user'] . '</td>';
+							echo '<td> '. $row['timestamp'] . '</td>';
+							echo '<td> '. $row['type'] . '</td>';
+							echo '<td> '. $row['title'] . '</td>';
+							echo '<td> '. $row['test'] . '</td>';
+							echo '</tr>';
+							$i++;
+						}
+						?>
+					</table>
+				</fieldset>
 			</div>
 		</div>
 			<?php include('include/lcapage.php'); ?>
