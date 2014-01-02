@@ -64,7 +64,7 @@ $insert = $mysql->prepare($template);
 $insert->bind_param('issssssssss',$log_row,$user,$submittime,$serializedwho_received,$pre_approved,$serializedwhy_released,$who_released,$who_released_to,$released_to_contact,$details,$istest);
 
 $insert->execute();
-$mysql->close();
+$insert->close();
 ?>
 
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
