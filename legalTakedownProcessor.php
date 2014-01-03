@@ -323,6 +323,57 @@ $insert->close();
 					</table>
 				</fieldset>
 				<fieldset>
+					<legend>Warning to uploader</legend>
+					<table>
+						<tr>
+							<td> Please post the below text to the Wikimedia Commons user talk page of the user who uploaded the File. According to the information you submitted earlier this is <?php echo htmlspecialchars($involved_user);?>. <br /> 
+								You can leave them a new message by following this link: <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars($involved_user).'?action=edit&section=new&preloadtitle=Notice of upload removal"/> https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars($involved_user).'</a>'; ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea name='commons-user-warning' wrap='virtual' rows='18' cols='90'>
+Dear <?php echo $involved_user;?>:
+
+The Wikimedia Foundation (“Wikimedia”) has taken down content that you posted at [[:File:<?echo htmlspecialchars($filearray[0]);?>]] due to Wikimedia’s receipt of a validly formulated notice that your posted content was infringing an existing copyright.  When someone sends us a validly formulated notice of copyright infringement, the Digital Millennium Copyright Act (“DMCA”) Section (c)(1)(C) requires Wikimedia to take the content down, and to notify you that we have removed that content.  This notice, by itself, does not mean that the party requesting that the content be taken down are suing you.  The party requesting the take down might only be interested in removing the content from our site.
+
+'''What Can You Do?'''
+
+You are not obligated to take any action.  However, if you feel that your content does not infringe upon any copyrights, you may contest the take down request by submitting a ‘counter notice’ to Wikimedia.  Before doing so, you should understand your legal position, and you may wish to consult with an attorney.  If you choose to submit a counter notice, the alleged copyright holder can either refuse to contest the counter notice or decide to file a lawsuit against you to restrain Wikimedia from re-posting the content.  Please note that Wikimedia will not be a party to any legal action that arises from you sending a counter notice, and that Wikimedia is unable to provide you with legal advice.
+
+'''Filing a Counter Notice'''
+ 
+If you choose to submit a counter notice, you must send a letter asking Wikimedia to restore your content to [mailto:legal@wikimedia.org legal@wikimedia.org], or to our service processor at the following address:  Wikimedia Foundation, c/o CT Corporation System, 818 West Seventh Street, Los Angeles, California, 90017.  The letter must comply with DMCA standards, set out in Section (g)(3)(A-D), and must contain the following:
+
+* A link to where the content was before we took it down and a description of the material that was removed;
+* A statement, under penalty of perjury, that you have a good faith belief that the content was removed or disabled as a result of mistake or misidentification of the material to be removed or disabled;
+* Your name, address, and phone number;
+* If your address is in the United States, a statement that says “I consent to the jurisdiction of the Federal District Court for the district where my address is located, and I will accept service of process from the person who complained about the content I posted”; alternatively, if your address is outside the United States, a statement that says “I agree to accept service of process in any jurisdiction where the Wikimedia Foundation can be found, and I will accept service of process from the person who complained about the content I posted”; and finally,
+* Your physical or electronic signature.
+
+Pursuant to the DMCA, Wikimedia must inform the alleged copyright holder that you sent us a counter notice, and give the alleged copyright holder a copy of the counter notice. The alleged copyright holder will then have fourteen (14) business days to file a lawsuit against you to restrain Wikimedia from reposting the content.  If Wikimedia does not receive proper notification that the alleged copyright holder has initiated such a lawsuit against you, we will repost your content within ten (10) to fourteen (14) business days.  
+
+'''Miscellaneous'''
+
+As a matter of policy and under appropriate circumstances, Wikimedia will block the accounts of repeat infringers as provided by Section 512(i)(1)(A) of the DMCA.  
+
+If you would like to learn more about Wikimedia’s policies, please refer to the Wikimedia Terms of Use, available at [[wmf:Terms_of_use|Terms of use]], and the Wikimedia Legal Policies, available at [[m:Legal/Legal_Policies]].  More information on DMCA compliance may also be found at:
+
+* [http://www.chillingeffects.org/dmca512/faq http://www.chillingeffects.org/dmca512/faq]
+* [https://www.eff.org/issues/dmca https://www.eff.org/issues/dmca]
+* [http://www.copyright.gov/onlinesp/ http://www.copyright.gov/onlinesp/]
+
+
+Wikimedia appreciates your support.  Please do not hesitate to contact us if you have any questions regarding this notice.
+
+
+Sincerely,
+~~~~</textarea>
+</td>
+</tr>
+</table>
+				</fieldset>
+				<fieldset>
 					<legend>Debugging and double checking information for James</legend>
 					<table>
 						<tr>
