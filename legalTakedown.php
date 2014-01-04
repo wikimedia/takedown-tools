@@ -5,6 +5,7 @@
 	<title>DMCA Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
+	<script src='scripts/jquery.validate.min.js'></script>
 	<script src='scripts/moment.min.js'></script>
 	<script src='scripts/pikaday.js'></script>
 	<script src='scripts/pikaday.jquery.js'></script>
@@ -50,6 +51,8 @@
         $this = $(this);
         $this.attr('title', $this.data('title'));
     }); 
+
+
 
 });
     
@@ -190,7 +193,9 @@
 									<label for='sender-country'>Country</label>
 								</td>
 								<td class='lca-input'>
-									<input id='sender-country' name='sender-country' value='' type='text' size='10' />
+									<select id='sender-country' name='sender-country' value=''>
+									<?php include('include/countrySelect.php'); ?>
+									</select>
 								</td>
 							</tr>
 						</table>
