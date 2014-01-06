@@ -23,6 +23,7 @@ i {
 	color:#fff;
 	font-size:12px Arial;
 	z-index: 100;
+	max-width: 25%;
 }
 
 /* Apply some padding to certain table rows where they get more crowded then necessary */
