@@ -29,6 +29,7 @@
 
 					<u> 'special' pages </u> <br />
 					<a href="centralLog.php"> Central submission Log </a>
+					<a href="NCMECretract.php"> NCMEC report retraction form </a> (note: Only for unclosed test submissions which errored out)
 			</div>
 
 			</div>
