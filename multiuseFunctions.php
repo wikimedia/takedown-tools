@@ -20,6 +20,9 @@ $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 
+$NCMECusername = $config['NCMEC_user'];
+$NCMECpassword = $config['NCMEC_password'];
+
 function setupdataurl($inputfile) {
 	/* in case a real file is passed instead of _FILES (should not happen in current setup) 
 	or in case something went wrong and file is not stored in system anymore. */
@@ -81,3 +84,70 @@ function lcalog($user,$type,$title,$test) {
 	return $log->insert_id;
 	$mysql->close();
 }
+
+// Following 2 function Copyright CC 3.0 attribution PHP Group from http://creativecommons.org/licenses/by/3.0/legalcode - from http://www.php.net/manual/en/domdocument.schemavalidate.php#62032
+function libxml_display_error($error)
+{
+    $return = "<br/>\n";
+    switch ($error->level) {
+        case LIBXML_ERR_WARNING:
+            $return .= "<b>Warning $error->code</b>: ";
+            break;
+        case LIBXML_ERR_ERROR:
+            $return .= "<b>Error $error->code</b>: ";
+            break;
+        case LIBXML_ERR_FATAL:
+            $return .= "<b>Fatal Error $error->code</b>: ";
+            break;
+    }
+    $return .= trim($error->message);
+    if ($error->file) {
+        $return .=    " in <b>$error->file</b>";
+    }
+    $return .= " on line <b>$error->line</b>\n";
+
+    return $return;
+}
+
+function libxml_display_errors() {
+    $errors = libxml_get_errors();
+    foreach ($errors as $error) {
+        print libxml_display_error($error);
+    }
+    libxml_clear_errors();
+}
+
+function NCMECsimpleauthdcurlPost($url,$data) {
+	global $NCMECusername, $NCMECpassword;
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_VERBOSE, true);
+	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+	$result = curl_exec($ch);
+	curl_close($ch);
+	return $result;
+}
+
+function curlauthdAPIpost ($url,$data,$headers='') {
+	global $NCMECpassword, $NCMECusername;
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_HEADER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	//curl_setopt($ch, CURLOPT_VERBOSE, true);
+	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+$result = curl_exec($ch);
+curl_close($ch);
+return $result;
+}
+
