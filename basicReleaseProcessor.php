@@ -89,7 +89,7 @@ $insert->close();
 		<div id='column-content'>
 			<div id='content'>
 				<h1>Processed Release</h1>
-				<p> See below for the information that has been submitted. <?php if ($istest = 'Y') { echo '<b> NOTE: This was marked as a test submission </b>'; } ?> </p>
+				<p> See below for the information that has been submitted. <?php if ($istest === 'Y') { echo '<b> NOTE: This was marked as a test submission </b>'; } ?> </p>
 				<fieldset>
 					<legend> Release info </legend>
 					<table border='1' id='mw-movepage-table'> 
