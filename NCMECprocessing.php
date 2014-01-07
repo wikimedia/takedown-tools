@@ -20,10 +20,13 @@ date_default_timezone_set('UTC');
 // cast config and log variables
 $config = parse_ini_file('lcaToolsConfig.ini');
 $user = $_SERVER['PHP_AUTH_USER'];
-$log_type = 'Child Protection';
-$log_title = 'Report to NCMEC for file uploaded by '.$_POST['uploader-username'].' '.$_POST['incident-date'].' '.$_POST['incident-time-hour'].':'.$_POST['incident-time-min'].' UTC';
 $istest = $_POST['is-test'];
-$log_row = lcalog($user,$log_type,$log_title,$istest);
+
+if ($istest === 'N') {
+	$NCMECurl = $config['NCMEC_URL_Production'];
+} else {
+	$NCMECurl = $config['NCMEC_URL_Test'];
+}
 
 $accessdate = $_POST['access-date'];
 $accesshour = $_POST['access-time-hour'];
@@ -63,10 +66,6 @@ $uploadedfilesize = $_FILES['takedown-file1']['size'];
 $uploadedfiletype = $_FILES['takedown-file1']['type'];
 $uploadedfiletmploc = $_FILES['takedown-file1']['tmp_name'];
 
-
-$NCMECusername = $config['NCMEC_user'];
-$NCMECpassword = $config['NCMEC_password'];
-$NCMECurl = $config['NCMEC_URL'];
 
 // Set up report open - Notes being placed above where I'm making assumptions for first rollout
 $openReport = new DOMDocument();
@@ -454,4 +453,8 @@ $retracturl = $NCMECurl.'retract';
 			<?php include('include/lcapage.php'); ?>
 	</div>
 </body>
-</html>
+</html><?php
+$log_type = 'Child Protection';
+$log_title = 'Report to NCMEC for file uploaded by '.$uploaderusername.' '.$incdate.' '.$inchour.':'.$incmin.' UTC - Report# '.$reportID;
+$log_row = lcalog($user,$log_type,$log_title,$istest);
+?>
