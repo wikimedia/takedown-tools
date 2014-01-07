@@ -73,6 +73,12 @@ if ($drillto) {
 			}
 	}
 
+	if ($logType = 'DMCA') {
+		$detailLookup = 'SELECT * FROM dmcatakedowns WHERE log_id='.$drillto;
+		$detailResults = $mysql->query($detailLookup);
+
+	}
+
 	$mysql->close();
 }
 
