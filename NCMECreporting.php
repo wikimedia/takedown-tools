@@ -100,6 +100,17 @@
                         <table border='0' id='mw-movepage-table'> 
                             <tr>
                                 <td>
+                                    <label for='is-test'> Is this a test? </label>
+                                </td>
+                                <td>
+                                    <select name='is-test' id='is-test'>
+                                        <option value='N'>No</option>
+                                        <option value='Y' selected>Yes</option>
+                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
                                     <label for='access-date'>When did you you access the content? (UTC)</label>
                                 </td>
                                 <td>
@@ -210,14 +221,14 @@
                                     <input id='reporter-email' name='reporter-email' type='text' size='50' value=<?php echo "'".$_SERVER['PHP_AUTH_USER']."@wikimedia.org'";?> required email/> <img class='showTooltip' src='images/20px-Help.png' title='YOUR email as the reporter, defaults to username logged in' />
                                 </td>
                             </tr>
-                            <tr>
+                        <!--<tr>
                                 <td>
                                     <label for='reporter-phone'> Phone number (xxx-xxx-xxx) <br /> and extension (xxxx) if necessary: </label>
                                 </td>
                                 <td>
                                     <input id='reporter-phone' name='reporter-phone' type='text' size='20' value='415-839-6885' /> <input id='reporter-phone-ext' name='reporter-phone-ext' type='text' size='5' /> <img class='showTooltip' src='images/20px-Help.png' title='Phone number for followup, defaults to office with no extension' />
                                 </td>
-                            </tr>
+                            </tr> REMOVED FOR NOW BECAUSE OF CONTACT INFO BEING SENT ELSEWHERE-->
                         </table>
                     </fieldset>
                     <fieldset>
@@ -369,7 +380,7 @@
                                     <label for='uploader-username'> Uploaded by: </label>
                                 </td>
                                 <td>
-                                    User:<input type='text' size='50' name='incident-uploader' id='incident-uploader' required/>
+                                    User:<input type='text' size='50' name='uploader-username' id='uploader-username' required/>
                                 </td>
                             </tr>
                             <tr>
