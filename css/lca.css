@@ -30,3 +30,12 @@ i {
 tr.spaceOut > td {
 	padding-bottom: 1em;
 }
+
+/* From http://stackoverflow.com/questions/10943579/adjust-the-textarea-height-and-width-to-fit-in-td-of-a-table great option to fix the overlap issues */
+textarea {
+    border: none;
+    width: 100%;
+    -webkit-box-sizing: border-box; /* <=iOS4, <= Android  2.3 */
+    -moz-box-sizing: border-box; /* FF1+ */
+    box-sizing: border-box; /* Chrome, IE8, Opera, Safari 5.1*/
+}
