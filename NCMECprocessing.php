@@ -274,6 +274,7 @@ $retracturl = $NCMECurl.'retract';
 $responseXML = null;
 $result = null;
 $filedetaildom = null;
+$filehash = null;
 
 ?>
 
@@ -366,11 +367,19 @@ $filedetaildom = null;
 							$responseXML = new DOMDocument();
 							$responseXML->loadXML($result);
 							$fileIdNodes = $responseXML->getElementsByTagName('fileId');
+							$fileHashNodes = $responseXML->getElementsByTagName('hash');
 							if ($fileIdNodes->length==0) {
 								$fileID = null;
 							} else {
 								foreach ($fileIdNodes AS $ID) {
 									$fileID = $ID->nodeValue;
+								}
+							}
+							if ($fileHashNodes->length==0) {
+								$filehash = null;
+							} else {
+								foreach ($fileHashNodes AS $hash) {
+									$filehash = $hash->nodeValue;
 								}
 							}
 						} else {echo 'something is wrong! Either there is no report ID or no file info!';} ?>
@@ -476,7 +485,52 @@ $filedetaildom = null;
 	</div>
 </body>
 </html><?php
+if ($reportID) {
+// Central Log
 $log_type = 'Child Protection';
 $log_title = 'Report to NCMEC for file uploaded by '.$uploaderusername.' '.$incdate.' '.$inchour.':'.$incmin.' UTC - Report# '.$reportID;
 $log_row = lcalog($user,$log_type,$log_title,$istest);
+// Log details
+$template = 'INSERT INTO ncmecrelease (log_id,user,timestamp,username,project,filename,legalapproved,whoapproved,whynotapproved,logging_metadata,logging_details,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
+$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
+$mysql->set_charset("utf8");
+
+if (!empty($incprojectlang)) {
+	$incproject = $incprojectlang.".".$incproject;
+}
+$submittime = gmdate("Y-m-d H:i:s", time());
+$insert_user = $mysql->real_escape_string($user);
+$insert_username = $mysql->real_escape_string($uploaderusername);
+$insert_project = $mysql->real_escape_string($incproject);
+$insert_filename = $mysql->real_escape_string($incfilename);
+$insert_whoapproved = $mysql->real_escape_string($_POST['who-approved']);
+$insert_whynot = $mysql->real_escape_string($_POST['why-not-approved']);
+$insert_logdata = $mysql->real_escape_string(serialize($_POST['logging-metadata']));
+$insert_details = $mysql->real_escape_string($_POST['logging-details']);
+$insert_legalapproved = $mysql->real_escape_string($_POST['legal-approved']);
+
+$insert = $mysql->prepare($template);
+	if ($insert === false) {
+		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+	}
+$insert->bind_param('isssssssssss',$log_row,$insert_user,$submittime,$insert_username,$insert_project,$insert_filename,$insert_legalapproved,$insert_whoapproved,$insert_whynot,$insert_logdata,$insert_details,$istest);
+
+$insert->execute();
+
+if ($filehash) {
+$details_row = $insert->insert_id;
+
+// filehash log
+$template = 'INSERT INTO submittedfilehashes (clog_id, type, tlog_id, hash) VALUES (?,?,?,UNHEX(?))';
+$insert = $mysql->prepare($template);
+	if ($insert === false) {
+		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+	}
+$insert->bind_param('isis',$log_row,$log_type,$details_row,$filehash);
+$insert->execute();
+}
+
+$mysql->close();
+}
+
 ?>

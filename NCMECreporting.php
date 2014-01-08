@@ -73,6 +73,18 @@
         return $(this).val() == selectedi;
     }).prop('selected', true);
 
+    $('#legal-approved').change(function(){
+        var val = $(this).val();
+
+        if(val == 'Y') {
+            $('#who-approved').attr("readonly", false);
+            $('#why-not-approved').attr("readonly", true);
+        } else {
+            $('#why-not-approved').attr("readonly", false);
+            $('#who-approved').attr("readonly", true);
+        }
+    });
+
 
 });
     
@@ -95,6 +107,61 @@
 				<h1>Child Protection Takedown</h1>
 				<br />
 				<form method='post' action='NCMECprocessing.php' id='ncmec-form1' enctype='multipart/form-data'>
+                    <fieldset>
+                        <legend>Logging Data</legend>
+                        <table border='1' id='mw-movepage-table'> 
+                            <tr>
+                                <td>
+                                    <label for='legal-approved'> Was this release to NCMEC Approved by the legal department? </label>
+                                </td>
+                                <td>
+                                    <select id='legal-approved' name='legal-approved' required>
+                                        <option value='Y'>Yes</option>
+                                        <option value='N'>No</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='who-approved'>If Yes: Who in the legal department approved the release?</label>
+                                </td>
+                                <td> 
+                                    <input id ='who-approved' name='who-approved' type='text' size='30' value=''> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='why-not-approved'> If No: Why not? </label>
+                                </td>
+                                <td>
+                                    <input id='why-not-approved' name='why-not-approved' type='text' size='50' value='' readonly='true' />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan='2' style='vertical-align:middle'>
+                                    <label for='logging-metadata'> Please check all statements which are true </label>
+                                </td>
+                                <td>
+                                    <input type='checkbox' name='logging-metadata[]' value='The content was taken down and suppressed.'> The content was taken down and suppressed. <br />
+                                    <input type='checkbox' name='logging-metadata[]' value='An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.'> An email was sent to <a href='mailto:legal@rt.wikimedia.org' target='_blank'>legal@rt.wikimedia.org</a> with the file name asking for it to be deleted.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type='checkbox' name='logging-metadata[]' value='The user who uploaded the content has been locked.'> The user who uploaded the content has been locked. <br />
+                                    <input type='checkbox' name='logging-metadata[]' value='Checkuser data was available and is being included below.'> Checkuser data was available and is being included below.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for='logging-details'> Is there any information that you would like to record in the permenant log? <br /> <b><u>Note:</u> Do not include Checkuser data you are not ok with being permenantly kept </b></label>
+                                </td>
+                                <td>
+                                    <textarea id ='logging-details' name='logging-details' wrap='virtual' rows='4' ></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
 					<fieldset>
 						<legend> Information about the reporter </legend>
                         <table border='0' id='mw-movepage-table'> 
