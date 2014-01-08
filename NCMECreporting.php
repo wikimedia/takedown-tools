@@ -311,17 +311,17 @@
                                 </td>
                                 <td>
                                     <select id='project' name='project' required>
-                                        <option value='commons' selected>Wikimedia Commons </option>
-                                        <option value='wp'> Wikipedia </option>
-                                        <option value='wikidata'> Wikidata </option>
-                                        <option value='wb'> Wikibooks </option>
-                                        <option value='meta'> Meta </option>
-                                        <option value='wq'> Wikiquote </option>
-                                        <option value='wikispecies'> Wikispecies </option>
-                                        <option value='voyage'> Wikivoyage </option>
-                                        <option value='wt'> Wiktionary </option>
-                                        <option value='ws'> Wikisource </option>
-                                        <option value='wikiversity'> Wikiversity</option>
+                                        <option value='Wikimedia Commons' selected>Wikimedia Commons </option>
+                                        <option value='Wikipedia'> Wikipedia </option>
+                                        <option value='Wikidata'> Wikidata </option>
+                                        <option value='Wikibooks'> Wikibooks </option>
+                                        <option value='Meta'> Meta </option>
+                                        <option value='Wikiquote'> Wikiquote </option>
+                                        <option value='Wikispecies'> Wikispecies </option>
+                                        <option value='Wikivoyage'> Wikivoyage </option>
+                                        <option value='Wiktionary'> Wiktionary </option>
+                                        <option value='Wikisource'> Wikisource </option>
+                                        <option value='Wikiversity'> Wikiversity</option>
                                     </select> <img class='showTooltip' src='images/20px-Help.png' title='The project where the image was uploaded (usually Commons). [note: Non Commons sites not YET implemented]' />
                                 </td>
                             </tr>
