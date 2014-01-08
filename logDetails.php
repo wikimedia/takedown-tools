@@ -79,6 +79,47 @@ if ($drillto) {
 
 	}
 
+	if ($logType = 'Child Protection') {
+		$detailLookup = 'SELECT * FROM ncmecrelease WHERE log_id='.$drillto;
+		$detailResults = $mysql->query($detailLookup);
+		if ($detailResults === false) {
+			echo 'Error while querying: ' . $detailResults . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		}
+
+		if ($detailResults->num_rows > 0) {
+			$logDetails = $detailResults->fetch_assoc();
+			$detailsavailable = true;
+
+			$user = $logDetails['user'];
+			$submittime = $logDetails['timestamp'];
+			$uploaderusername = $logDetails['username'];
+			$project = $logDetails['project'];
+			$incfilename = $logDetails['filename'];
+			if ($logDetails['legalapproved'] === 'Y') {
+				$legalapproved = 'Yes';
+			} elseif ($logDetails['legalapproved']) {
+				$legalapproved = 'No';
+			} else { $legalapproved = 'Huh? DB Confused';}
+			$whoapproved = $logDetails['whoapproved'];
+			$whynotapproved = $logDetails['whynotapproved'];
+			$logdata = unserialize(stripcslashes($logDetails['logging_metadata']));
+			$details = $logDetails['logging_details'];
+			$istest = $logDetails['test'];
+
+			$getfilehash = 'SELECT HEX(hash) FROM submittedfilehashes WHERE clog_id='.$drillto;
+			$hashresults = $mysql->query($getfilehash);
+			if ($hashresults === false) {
+			echo 'Error while querying: ' . $hashresults . ' Error text: ' . $mysql->error, E_USER_ERROR;
+			}
+
+			if ($hashresults->num_rows > 0) {
+				$hasharray = $hashresults->fetch_assoc();
+				$hash = $hasharray['HEX(hash)'];
+			}
+
+		}
+	}
+
 	$mysql->close();
 }
 
@@ -92,7 +133,7 @@ if ($drillto) {
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
 	<link rel='shortcut icon' href='images/favicon.ico'/>
-	<title>Release of Confidential Information</title>
+	<title>LCA Tools Log Detail</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
 	<style type='text/css'>
@@ -120,11 +161,11 @@ if ($drillto) {
 					<li> The programmer screwed something up, in which case you should go dock him over the head (after verifying he screwed up) and/or give him booze. </li>
 					</ul>
 					<p> You can get back to the log by clicking <a href="centralLog.php">HERE</a>';
-				} elseif ($logType='Release') {
+				} elseif ($logType === 'Release') {
 					include('include/releaseDetail.php');
-				} else {
-					echo var_dump($logDetails);
-				}
+				} elseif ($logType === 'Child Protection') {
+					include('include/ncmecdetail.php');
+				} else { echo var_dump($logDetails); }
 
 				?>
 				</div>
