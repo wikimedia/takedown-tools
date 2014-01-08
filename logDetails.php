@@ -49,7 +49,7 @@ if ($drillto) {
 		$logType = $logData[0]['type'];
 	} else {$logType = null;}
 
-	if ($logType = 'Release') {
+	if ($logType === 'Release') {
 		$detailLookup = 'SELECT * FROM basicrelease WHERE log_id='.$drillto;
 		$detailResults = $mysql->query($detailLookup);
 			if ($detailResults === false) {
@@ -73,13 +73,13 @@ if ($drillto) {
 			}
 	}
 
-	if ($logType = 'DMCA') {
+	if ($logType === 'DMCA') {
 		$detailLookup = 'SELECT * FROM dmcatakedowns WHERE log_id='.$drillto;
 		$detailResults = $mysql->query($detailLookup);
 
 	}
 
-	if ($logType = 'Child Protection') {
+	if ($logType === 'Child Protection') {
 		$detailLookup = 'SELECT * FROM ncmecrelease WHERE log_id='.$drillto;
 		$detailResults = $mysql->query($detailLookup);
 		if ($detailResults === false) {
@@ -97,7 +97,7 @@ if ($drillto) {
 			$incfilename = $logDetails['filename'];
 			if ($logDetails['legalapproved'] === 'Y') {
 				$legalapproved = 'Yes';
-			} elseif ($logDetails['legalapproved']) {
+			} elseif ($logDetails['legalapproved'] === 'N') {
 				$legalapproved = 'No';
 			} else { $legalapproved = 'Huh? DB Confused';}
 			$whoapproved = $logDetails['whoapproved'];
@@ -151,7 +151,8 @@ if ($drillto) {
 		<div id='column-content'>
 			<div id='content'>
 				<h1>Log Details</h1>
-				<?php if (!$detailsavailable) {
+				<?php echo $logType;
+				if (!$detailsavailable) {
 					echo 'The details for the log entry that you clicked are not currently available, this could be for many reasons including:
 					<ul>
 					<li> You clicked on a very early log entry before data was saved for that log type. </li>
@@ -161,9 +162,9 @@ if ($drillto) {
 					<li> The programmer screwed something up, in which case you should go dock him over the head (after verifying he screwed up) and/or give him booze. </li>
 					</ul>
 					<p> You can get back to the log by clicking <a href="centralLog.php">HERE</a>';
-				} elseif ($logType === 'Release') {
+				} elseif ($logType == 'Release') {
 					include('include/releaseDetail.php');
-				} elseif ($logType === 'Child Protection') {
+				} elseif ($logType == 'Child Protection') {
 					include('include/ncmecdetail.php');
 				} else { echo var_dump($logDetails); }
 

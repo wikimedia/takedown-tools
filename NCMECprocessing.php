@@ -499,15 +499,15 @@ if (!empty($incprojectlang)) {
 	$incproject = $incprojectlang.".".$incproject;
 }
 $submittime = gmdate("Y-m-d H:i:s", time());
-$insert_user = $mysql->real_escape_string($user);
-$insert_username = $mysql->real_escape_string($uploaderusername);
-$insert_project = $mysql->real_escape_string($incproject);
-$insert_filename = $mysql->real_escape_string($incfilename);
-$insert_whoapproved = $mysql->real_escape_string($_POST['who-approved']);
-$insert_whynot = $mysql->real_escape_string($_POST['why-not-approved']);
-$insert_logdata = $mysql->real_escape_string(serialize($_POST['logging-metadata']));
-$insert_details = $mysql->real_escape_string($_POST['logging-details']);
-$insert_legalapproved = $mysql->real_escape_string($_POST['legal-approved']);
+$insert_user = $user;
+$insert_username = $uploaderusername;
+$insert_project = $incproject;
+$insert_filename = $incfilename;
+$insert_whoapproved = $_POST['who-approved'];
+$insert_whynot = $_POST['why-not-approved'];
+$insert_logdata = serialize($_POST['logging-metadata']);
+$insert_details = $_POST['logging-details'];
+$insert_legalapproved = $_POST['legal-approved'];
 
 $insert = $mysql->prepare($template);
 	if ($insert === false) {

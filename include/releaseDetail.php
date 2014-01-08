@@ -70,7 +70,7 @@
 	</fieldset>
 	<fieldset>
 		<legend>Please describe the situation, including any applicable links. </legend>
-		<textarea name='details' wrap='virtual' rows='18' cols='70' readonly> <?php if(!empty($details)) {
-			echo htmlspecialchars($details);
+		<textarea name='details' wrap='virtual' rows='18' cols='70' readonly><?php if(!empty($details)) {
+			echo $details;
 		}  else { echo 'This option was not set'; } ?></textarea>
 	</fieldset>

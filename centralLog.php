@@ -29,6 +29,12 @@ if ($mysql->connect_error) {
 
 $sql = 'Select * FROM centrallog'; // basic query
 
+if (!empty($_GET['test'])) {
+	if ($_GET['test'] === 'N' {
+		$sql .= ' WHERE test='
+	}
+}
+
 $offset = (!empty($_GET['offset'])) ? intval($_GET['offset']) : 0; // offset starts at 0
 
 $sortby = (!empty($_GET['sort'])) ? $_GET['sort'] : "none"; // grab sort options

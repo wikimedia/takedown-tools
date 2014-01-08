@@ -38,18 +38,18 @@ $who_received = $_POST['who-received'];
 if (in_array('Other', $who_received)) {
 	$who_received[array_search('Other', $who_received)] = 'Other: ' . $_POST['who-received-other'];
 }
-$serializedwho_received = $mysql->real_escape_string(serialize($who_received));
+$serializedwho_received = serialize($who_received);
 
-$pre_approved = $mysql->real_escape_string($_POST['pre-approved']);
+$pre_approved = $_POST['pre-approved'];
 $why_released = $_POST['why-released'];
 if (in_array('Other', $why_released)) {
 	$why_released[array_search('Other', $why_released)] = 'Other: ' . $_POST['why-released-other'];
 }
-$serializedwhy_released = $mysql->real_escape_string(serialize($why_released));
-$who_released = $mysql->real_escape_string($_POST['who-released']);
-$who_released_to = $mysql->real_escape_string($_POST['who-released-to']);
-$released_to_contact = $mysql->real_escape_string($_POST['released-to-contact']);
-$details = $mysql->real_escape_string($_POST['details']);
+$serializedwhy_released = serialize($why_released);
+$who_released = $_POST['who-released'];
+$who_released_to = $_POST['who-released-to'];
+$released_to_contact = $_POST['released-to-contact'];
+$details = $_POST['details'];
 
 
 $template = 'INSERT INTO basicrelease (log_id,user,timestamp,who_received,pre_approved,why_released,who_released,who_released_to,released_to_contact,details,test) VALUES (?,?,?,?,?,?,?,?,?,?,?)';
@@ -161,7 +161,7 @@ $insert->close();
 					<fieldset>
 						<legend>Please describe the situation, including any applicable links. </legend>
 						<textarea name='details' wrap='virtual' rows='18' cols='70' readonly> <?php if(!empty($details)) {
-							echo htmlspecialchars($details);
+							echo $details;
 						}  else { echo 'This option was not set'; } ?></textarea>
 					</fieldset>
 				</div>
