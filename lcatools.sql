@@ -93,6 +93,7 @@ CREATE TABLE /*!32312 IF NOT EXISTS*/ `ncmecrelease` (
   `logging_metadata` text,
   `logging_details` text,
   `test` char(1) DEFAULT NULL,
+  `report_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `log_id` (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
