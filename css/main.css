@@ -764,7 +764,7 @@ in bg url to hide it from iemac */
 li#pt-userpage,
 li#pt-anonuserpage,
 li#pt-login {
-	background: url(user.gif) top left no-repeat;
+	background: url(data:image/gif;base64,R0lGODlhEAAQAKU5AFtJMlpJNFxIMU5OTm2XH3aIVJNkK5FmMJZnPbt6NIZzXId0XpVwQZRzR5p7VI1+baZ3Tdl+Kt1/LIO2JYe5K4q8M4idYZKBbJK/QLqddZfDR5rFTZ/HVqfMZanNacKVWuKVQ+ejVuelVu21bPC/e5+XjKOjo7rXhr3aiM+1kNi4icffm8rio83jqNHmrtXotOPEl/HDg/LKjvfaq/ngut3Z1Nvrwd/tx/vqz////////////////////////////yH5BAEAAD8ALAAAAAAQABAAAAZiwJ9wSCwafxfF5VhUNBgHAVO4cKRgHwNg+sjQZrFEYFpSyUihyGD6M4lAEgRbCKnPTaYRjjRYH00vLAUkFhoVfkQmNy4rJxYcGBQTiEImNi0TKB0bHgSTRX2hon1zpaanP0EAOw==) top left no-repeat;
 	padding-left: 20px;
 	text-transform: none;
 }
