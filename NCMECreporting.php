@@ -138,16 +138,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td rowspan='2' style='vertical-align:middle'>
+                                <td style='vertical-align:middle'>
                                     <label for='logging-metadata'> Please check all statements which are true </label>
                                 </td>
                                 <td>
                                     <input type='checkbox' name='logging-metadata[]' value='The content was taken down and suppressed.'> The content was taken down and suppressed. <br />
-                                    <input type='checkbox' name='logging-metadata[]' value='An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.'> An email was sent to <a href='mailto:legal@rt.wikimedia.org' target='_blank'>legal@rt.wikimedia.org</a> with the file name asking for it to be deleted.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
+                                    <input type='checkbox' name='logging-metadata[]' value='An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.'> An email was sent to <a href='mailto:legal@rt.wikimedia.org' target='_blank'>legal@rt.wikimedia.org</a> with the file name asking for it to be deleted.<br />
                                     <input type='checkbox' name='logging-metadata[]' value='The user who uploaded the content has been locked.'> The user who uploaded the content has been locked. <br />
                                     <input type='checkbox' name='logging-metadata[]' value='Checkuser data was available and is being included below.'> Checkuser data was available and is being included below.
                                 </td>
