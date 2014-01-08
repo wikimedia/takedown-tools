@@ -270,6 +270,10 @@ $fileinfourl = $NCMECurl.'fileinfo';
 $finishurl = $NCMECurl.'finish';
 $retracturl = $NCMECurl.'retract';
 
+//null variables
+$responseXML = null;
+$result = null;
+$filedetaildom = null;
 
 ?>
 
@@ -307,39 +311,47 @@ $retracturl = $NCMECurl.'retract';
 				</fieldset>
 				<fieldset>
 					<legend> Initial Data displayed and verified, errors from the same.</legend>
-					<textarea name='reportxml' wrap='virtual' rows='18' cols='70'><?php 
+					<textarea name='reportxml' wrap='virtual' rows='18' cols='70'><?php
 						echo $openReport->saveXML();
 						?></textarea>
 					<textarea name='reportxmlvalidate' wrap='virtual' rows='18' cols='70'><?php 
 						if (!$openReport->schemaValidate('include/espsubmittal.xsd')) {
-						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }?></textarea>
+							echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+							libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; $openReportValid = true;}?></textarea>
 				</fieldset>
 				<fieldset>
 					<legend>Submit initial data and report back with response </legend>
 					<?php
-					$result = curlauthdAPIpost($openurl,$Report,$xmlHeader);
-					//list($headers, $response) = explode("\r\n\r\n", $result, 2);
-					//$headers = explode("\n", $headers);
-					$responseXML = new DOMDocument();
-					$responseXML->loadXML($result);
-					$reportIDNodes = $responseXML->getElementsByTagName('reportId');
-					if ($reportIDNodes->length==0) {
-						$reportID = null;
-					} else {
-						foreach ($reportIDNodes as $ID) {
-							$reportID = $ID->nodeValue;
+					if ($openReportValid) {
+						$result = curlauthdAPIpost($openurl,$Report,$xmlHeader);
+						//list($headers, $response) = explode("\r\n\r\n", $result, 2);
+						//$headers = explode("\n", $headers);
+						$responseXML = new DOMDocument();
+						$responseXML->loadXML($result);
+						$reportIDNodes = $responseXML->getElementsByTagName('reportId');
+						if ($reportIDNodes->length==0) {
+							$reportID = null;
+						} else {
+							foreach ($reportIDNodes as $ID) {
+								$reportID = $ID->nodeValue;
+							}
 						}
-					} ?>
-					<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php 
+					} else { 
+						$reportID = null;
+						echo '<b><u>NO REPORT SENT: Report not valid</u></b>';}
+					 ?>
+					<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
+					if ($reportID) {
 						if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
 						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }?></textarea>
-					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'<?php
+						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else {echo 'no verification because no valid report sent'; }?></textarea>
+					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'><?php
+					if ($responseXML) {
 						echo $responseXML->saveXML();
-						?></textarea>
+						$responseXML = null;
+						} else { echo 'no response xml because no valid response recieved or no valid report sent';}?></textarea>
 					<textarea name='responsefull' wrap='virtual' rows='18' cols='20'><?php
-						echo $result ?></textarea>
+						if ($result) { echo $result; $result = null; } else { echo 'no result';} ?></textarea>
 					<p> The report ID is: <?php echo $reportID; ?> </p>
 				</fieldset>
 				<fieldset>
@@ -362,69 +374,79 @@ $retracturl = $NCMECurl.'retract';
 								}
 							}
 						} else {echo 'something is wrong! Either there is no report ID or no file info!';} ?>
-						<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php 
-						if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
-						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }?></textarea>
+						<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
+						if (!empty($uploadedfiletmploc) && !empty($reportID)) {
+							if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
+							echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+							libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else { echo 'no file sent'; }?></textarea>
 					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'<?php
+					if ($responseXML) {
 						echo $responseXML->saveXML();
+						$responseXML = null; } else { echo 'no response XML because no file sent or no valid report sent';}
 						?></textarea>
 					<textarea name='responsefull' wrap='virtual' rows='18' cols='20'><?php
-						echo $result ?></textarea>
+					if ($result) {
+						echo $result; $result=null; } else { echo 'no result'; } ?></textarea>
 					<p> The File ID is: <?php echo $fileID; ?> </p>
 				</fieldset>
 				<fieldset>
 					<legend> File data set up, processing and sending.</legend>
 					<?php
-					// FIXME NOTE: Only sending file name at this time, all other exif should be contained in the file.
-					$filedetaildom = new DOMDocument();
-					$filedetaildom->formatOutput = true;
-					$filedetaildom->encoding='UTF-8';
+					if ($fileID) {
+						// FIXME NOTE: Only sending file name at this time, all other exif should be contained in the file.
+						$filedetaildom = new DOMDocument();
+						$filedetaildom->formatOutput = true;
+						$filedetaildom->encoding='UTF-8';
 
-					$reportroot = $filedetaildom->createElement('fileDetails');
-					$filedetaildom->appendChild($reportroot);
+						$reportroot = $filedetaildom->createElement('fileDetails');
+						$filedetaildom->appendChild($reportroot);
 
-					$filereportid = $filedetaildom->createElement('reportId');
-					$filereportidtext = $filedetaildom->createTextNode($reportID);
-					$filereportid->appendChild($filereportidtext);
-					$reportroot->appendChild($filereportid);
+						$filereportid = $filedetaildom->createElement('reportId');
+						$filereportidtext = $filedetaildom->createTextNode($reportID);
+						$filereportid->appendChild($filereportidtext);
+						$reportroot->appendChild($filereportid);
 
-					$fileidpost = $filedetaildom->createElement('fileId');
-					$fileidposttext = $filedetaildom->createTextNode($fileID);
-					$fileidpost->appendChild($fileidposttext);
-					$reportroot->appendChild($fileidpost);
+						$fileidpost = $filedetaildom->createElement('fileId');
+						$fileidposttext = $filedetaildom->createTextNode($fileID);
+						$fileidpost->appendChild($fileidposttext);
+						$reportroot->appendChild($fileidpost);
 
-					$filename = $filedetaildom->createElement('fileName');
-					$filenametext = $filedetaildom->createTextNode($uploadedfilename);
-					$filename->appendChild($filenametext);
-					$reportroot->appendChild($filename);
+						$filename = $filedetaildom->createElement('fileName');
+						$filenametext = $filedetaildom->createTextNode($uploadedfilename);
+						$filename->appendChild($filenametext);
+						$reportroot->appendChild($filename);
 
-					$filedetailXML = $filedetaildom->saveXML();
+						$filedetailXML = $filedetaildom->saveXML();
 
-					$result = curlauthdAPIpost($fileinfourl,$filedetailXML,$xmlHeader);
-					$responseXML = new DOMDocument();
-					$responseXML->loadXML($result);
-					$responseNodes = $responseXML->getElementsByTagName('responseCode');
-					if ($responseNodes->length==0) {
-						$responsecode = null;
-					} else {
-						foreach ($responseNodes as $r) {
-							$responsecode = $r->nodeValue;
+						$result = curlauthdAPIpost($fileinfourl,$filedetailXML,$xmlHeader);
+						$responseXML = new DOMDocument();
+						$responseXML->loadXML($result);
+						$responseNodes = $responseXML->getElementsByTagName('responseCode');
+						if ($responseNodes->length==0) {
+							$responsecode = null;
+						} else {
+							foreach ($responseNodes as $r) {
+								$responsecode = $r->nodeValue;
+							}
 						}
-					} ?>
-					<textarea name='filedetailxml' wrap='virtual' rows='18' cols='70'><?php 
-						echo $filedetaildom->saveXML();
+						}?>
+					<textarea name='filedetailxml' wrap='virtual' rows='18' cols='70'><?php
+					if ($filedetaildom) {
+						echo $filedetaildom->saveXML();} else { echo 'no filedetail submission created';}
 						?></textarea>
-					<textarea name='filedetailxmlvalidate' wrap='virtual' rows='18' cols='70'><?php 
+					<textarea name='filedetailxmlvalidate' wrap='virtual' rows='18' cols='70'><?php
+					if ($filedetaildom) {
 						if (!$filedetaildom->schemaValidate('include/espsubmittal.xsd')) {
 						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }?></textarea>
-					<textarea name='fileinforesponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php 
+						libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }} else { echo 'no filedetail submission created'; } ?></textarea>
+					<textarea name='fileinforesponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
+					if ($responseXML) {
 						if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
 						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }?></textarea>
+						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }} else { echo 'no responseXML available'; }?></textarea>
 					<textarea name='fileinforesponsexml' wrap='virtual' rows='18' cols='20'><?php
-						echo $responseXML->saveXML();
+					if ($responseXML) {
+						echo $responseXML->saveXML(); $responseXML = null;} else {echo 'no responseXML available';}
 						?></textarea>
 					<p> <?php if ($responsecode == 0) {echo 'File details were recieved successfully';} else {echo 'there appears to have been a problem sending file details, check response'; }?> </p>
 				</fieldset>
@@ -435,7 +457,7 @@ $retracturl = $NCMECurl.'retract';
 						echo 'Report ID: '.$reportID.' marked for closure'.PHP_EOL.PHP_EOL;
 						$postdata = array ('id' => $reportID);
 						$result = NCMECsimpleauthdcurlPost($finishurl,$postdata);
-						echo $result; } else {echo 'No reportID detected, did you ever actually open a report?';}
+						echo $result;
 						$responseXML = new DOMDocument();
 						$responseXML->loadXML($result);
 						$responseNodes = $responseXML->getElementsByTagName('responseCode');
@@ -445,7 +467,7 @@ $retracturl = $NCMECurl.'retract';
 								foreach ($responseNodes as $r) {
 								$responsecode = $r->nodeValue;
 							}
-						}?></textarea>
+						}} else {echo 'No reportID detected, did you ever actually open a report?';}?></textarea>
 						<p> <?php if ($responsecode == 0) { echo '<b><u>Thank you, your report has been submitted with Report ID: '.$reportID.' and all log information has been saved. Please remember to email legal@rt.wikimedia.org in order to get the image permenantly deleted.</u></b>'; } else { echo 'It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above';} ?></p>
 				</fieldset>
 			</div>
