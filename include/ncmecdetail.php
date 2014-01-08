@@ -10,7 +10,7 @@
                 <td>
                     <?php
                     if (!empty($legalapproved)) {
-                        echo $legalapproved;
+                        echo htmlspecialchars($legalapproved);
                     } else { echo 'this field does not appear to have been set';} ?>
                 </td>
             </tr>
@@ -21,7 +21,7 @@
                 <td> 
                     <?php
                     if ($whoapproved) {
-                        echo $whoapproved;
+                        echo htmlspecialchars($whoapproved);
                     } else { echo '';} ?>
                 </td>
             </tr>
@@ -32,7 +32,7 @@
                 <td>
                     <?php
                     if ($whynotapproved) {
-                        echo $whynotapproved;
+                        echo htmlspecialchars($whynotapproved);
                     } else { echo '';} ?>
                 </td>
             </tr>
@@ -43,7 +43,7 @@
                 <td>
                     <?php
                     if ($uploaderusername) {
-                        echo $uploaderusername;
+                        echo htmlspecialchars($uploaderusername);
                     } else { echo 'This option was not set'; } ?>
                 </td>
             </tr>
@@ -54,7 +54,7 @@
                 <td>
                     <?php
                     if ($project) {
-                        echo $project;
+                        echo htmlspecialchars($project);
                     } else { echo 'This option was not set'; } ?>
                 </td>
             </tr>
@@ -65,7 +65,7 @@
                 <td>
                     <?php
                     if ($incfilename) {
-                        echo $incfilename;
+                        echo htmlspecialchars($incfilename);
                     } else { echo 'This option was not set'; } ?>
                 </td>
             </tr>
@@ -97,6 +97,6 @@
     <fieldset>
         <legend>Is there any information that you would like to record in the permenant log? </legend>
         <textarea name='details' wrap='virtual' rows='18' cols='70' readonly> <?php if(!empty($details)) {
-            echo htmlspecialchars($details);
+            echo nl2br(htmlspecialchars($details));
         }  else { echo 'This option was not set'; } ?></textarea>
     </fieldset>
