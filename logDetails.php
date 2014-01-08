@@ -105,6 +105,7 @@ if ($drillto) {
 			$logdata = unserialize(stripcslashes($logDetails['logging_metadata']));
 			$details = $logDetails['logging_details'];
 			$istest = $logDetails['test'];
+			$reportID = $logDetails['report_id'];
 
 			$getfilehash = 'SELECT HEX(hash) FROM submittedfilehashes WHERE clog_id='.$drillto;
 			$hashresults = $mysql->query($getfilehash);

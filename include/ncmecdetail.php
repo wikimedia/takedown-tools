@@ -81,6 +81,15 @@
                 </td>
             </tr>
             <tr>
+                <td>
+                    <label for='report-id'>NCMEC Report ID# </label>
+                </td>
+                <td>
+                    <?php
+                    if ($reportID) {
+                        echo $reportID;
+                    } else { echo 'this did not appear to have been set which should be impossible';} ?>
+            <tr>
                 <td style='vertical-align:middle'>
                     <label for='logging-metadata'> Please check all statements which are true </label>
                 </td>

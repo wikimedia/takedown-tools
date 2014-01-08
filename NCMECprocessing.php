@@ -491,7 +491,7 @@ $log_type = 'Child Protection';
 $log_title = 'Report to NCMEC for file uploaded by '.$uploaderusername.' '.$incdate.' '.$inchour.':'.$incmin.' UTC - Report# '.$reportID;
 $log_row = lcalog($user,$log_type,$log_title,$istest);
 // Log details
-$template = 'INSERT INTO ncmecrelease (log_id,user,timestamp,username,project,filename,legalapproved,whoapproved,whynotapproved,logging_metadata,logging_details,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)';
+$template = 'INSERT INTO ncmecrelease (log_id,user,timestamp,username,project,filename,legalapproved,whoapproved,whynotapproved,logging_metadata,logging_details,test,report_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
 $mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
 $mysql->set_charset("utf8");
 
@@ -513,7 +513,7 @@ $insert = $mysql->prepare($template);
 	if ($insert === false) {
 		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 	}
-$insert->bind_param('isssssssssss',$log_row,$insert_user,$submittime,$insert_username,$insert_project,$insert_filename,$insert_legalapproved,$insert_whoapproved,$insert_whynot,$insert_logdata,$insert_details,$istest);
+$insert->bind_param('isssssssssssi',$log_row,$insert_user,$submittime,$insert_username,$insert_project,$insert_filename,$insert_legalapproved,$insert_whoapproved,$insert_whynot,$insert_logdata,$insert_details,$istest,$reportID);
 
 $insert->execute();
 
