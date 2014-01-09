@@ -76,6 +76,35 @@ if ($drillto) {
 	if ($logType === 'DMCA') {
 		$detailLookup = 'SELECT * FROM dmcatakedowns WHERE log_id='.$drillto;
 		$detailResults = $mysql->query($detailLookup);
+		if ($detailResults === false) {
+			echo 'Error while querying: ' . $detailResults . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		}
+
+		if ($detailResults->num_rows > 0) {
+			$logDetails = $detailResults->fetch_assoc();
+			$detailsavailable = true;
+
+			$user = $logDetails['user'];
+			$timestamp = $logDetails['timestamp'];
+			$ce_url = $logDetails['ce_url'];
+			$takedown_date = $logDetails['takedown_date'];
+			$involved_user = $logDetails['involved_user'];
+			$linksarray = unserialize(stripslashes($logDetails['files_affected']));
+			$wmfwiki_title = $logDetails['wmfwiki_title'];
+			$commons_title = $logDetails['commons_title'];
+			$filessent = unserialize(stripslashes($logDetails['files_sent']));
+			$logging_metadata = unserialize(stripslashes($logDetails['logging_metadata']));
+			$strike_note = unserialize(stripslashes($logDetails['strike_note']));
+			$sender_country = $logDetails['sender_country'];
+			$sender_state = $logDetails['sender_state'];
+			$sender_city = $logDetails['sender_city'];
+			$sender_zip = $logDetails['sender_zip'];
+			$action_taken = $logDetails['action_taken'];
+			$takedown_method = $logDetails['takedown_method'];
+			$istest = $logDetails['test'];
+
+		}
+
 
 	}
 
@@ -167,6 +196,8 @@ if ($drillto) {
 					include('include/releaseDetail.php');
 				} elseif ($logType == 'Child Protection') {
 					include('include/ncmecdetail.php');
+				} elseif ($logType == 'DMCA') {
+					include('include/dmcadetails.php');
 				} else { echo var_dump($logDetails); }
 
 				?>
