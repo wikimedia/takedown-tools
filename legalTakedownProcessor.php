@@ -89,7 +89,7 @@ if (!empty($_POST['files-affected'])) {
 
 if (!empty($filearray)) {
 	foreach ($filearray as $value) {
-		$linksarray[] = 'https://commons.wikimedia.org/wiki/File'.$value;
+		$linksarray[] = 'https://commons.wikimedia.org/wiki/File:'.$value;
 	}
 }
 
@@ -194,11 +194,6 @@ $mysql->set_charset("utf8");
 
 $submittime = gmdate("Y-m-d H:i:s", time());
 $insert_user = $user;
-$insert_sender_name = $sender_name;
-$insert_sender_person = $sender_person;
-$insert_sender_firm = $sender_firm;
-$insert_sender_address1 = $sender_address1;
-$insert_sender_address2 = $sender_address2;
 $insert_sender_city = $sender_city;
 $insert_sender_zip = $sender_zip;
 $insert_sender_state = $sender_state;
@@ -210,7 +205,6 @@ $insert_commons_title = $commons_title;
 $insert_wmfwiki_title = $wmfwiki_title;
 $insert_takedown_method = $takedown_method;
 $insert_takedown_subject = $takedown_subject;
-$insert_takedown_text = $takedown_text;
 $insert_involved_user = $involved_user;
 $insert_logging_metadata = serialize($logging_metadata);
 $insert_strike_note = serialize($strike_note);
@@ -220,14 +214,14 @@ $insert_files_affected = serialize($linksarray);
 
 // do it
 
-$template = 'INSERT INTO dmcatakedowns (log_id,user,timestamp,sender_name,sender_person,sender_firm,sender_address1,sender_address2,sender_city,sender_zip,sender_state,sender_country,takedown_date,action_taken,takedown_title,commons_title,wmfwiki_title,takedown_method,takedown_subject,takedown_text,involved_user,logging_metadata,strike_note,ce_url,files_sent,files_affected,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+$template = 'INSERT INTO dmcatakedowns (log_id,user,timestamp,sender_city,sender_zip,sender_state,sender_country,takedown_date,action_taken,takedown_title,commons_title,wmfwiki_title,takedown_method,takedown_subject,involved_user,logging_metadata,strike_note,ce_url,files_sent,files_affected,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
 $insert = $mysql->prepare($template);
 	if ($insert === false) {
 		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 	}
 
-$insert->bind_param('issssssssssssssssssssssssss',$log_row,$insert_user,$submittime,$insert_sender_name,$insert_sender_person,$insert_sender_firm,$insert_sender_address1,$insert_sender_address2,$insert_sender_city,$insert_sender_zip,$insert_sender_state,$insert_sender_country,$insert_takedown_date,$insert_action_taken,$insert_takedown_title,$insert_commons_title,$insert_wmfwiki_title,$insert_takedown_method,$insert_takedown_subject,$insert_takedown_text,$insert_involved_user,$insert_logging_metadata,$insert_strike_note,$insert_ce_url,$insert_files_sent,$insert_files_affected,$istest);
+$insert->bind_param('issssssssssssssssssss',$log_row,$insert_user,$submittime,$insert_sender_city,$insert_sender_zip,$insert_sender_state,$insert_sender_country,$insert_takedown_date,$insert_action_taken,$insert_takedown_title,$insert_commons_title,$insert_wmfwiki_title,$insert_takedown_method,$insert_takedown_subject,$insert_involved_user,$insert_logging_metadata,$insert_strike_note,$insert_ce_url,$insert_files_sent,$insert_files_affected,$istest);
 
 $insert->execute();
 $insert->close();
@@ -286,14 +280,13 @@ $insert->close();
 					<table>
 						<tr>
 							<td>
-								Please post the below text to the Wikimedia Commons DMCA Board at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:DMCA?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:DMCA</a>
+								Please post the below text to the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit&amp;section=new&amp;preloadtitle='.htmlspecialchars($commons_title).'">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
 							</td>
 						</tr>
 						<tr>
 							<td>
 								<textarea name='commons-dmca-post' wrap='virtual' rows='18' cols='90'><?php
-								echo "=== ".$commons_title." ===".PHP_EOL.PHP_EOL.
-								"{{subst:DMCA_takedown_notice|".$commons_title.
+								echo "{{subst:DMCA_takedown_notice|".$commons_title.
 								(!empty($wmfwiki_title) ? "|".$wmfwiki_title : "").
 								(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
 								(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
