@@ -116,14 +116,14 @@
 									<label for='logging-metadata'> Place a checkmark by all items which are true. </label>
 								</td>
 								<td>
-									<input type='checkbox' name='logging-metadata[]' value='user-warned' /> The content was taken down and the user was clearly warned and discouraged from future violations.  <br />
-									<input type='checkbox' name='logging-metadata[]' value='actual-knowledge' /> The content was taken down and we have actual knowledge that the content was infringing copyright  <br />
+									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and the user was clearly warned and discouraged from future violations.' /> The content was taken down and the user was clearly warned and discouraged from future violations.  <br />
+									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have actual knowledge that the content was infringing copyright ' /> The content was taken down and we have actual knowledge that the content was infringing copyright.  <br />
 								</td>
 							</tr>
 							<tr>
 								<td>
-									<input type='checkbox' name='logging-metadata[]' value='awareness-apparent' /> The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent <br />
-									<input type='checkbox' name='logging-metadata[]' value='is-dmca' /> The content was taken down pursuant to a DMCA notice <br />
+									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. ' /> The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. <br />
+									<input type='checkbox' name='logging-metadata[]' value='The content was taken down pursuant to a DMCA notice.' /> The content was taken down pursuant to a DMCA notice. <br />
 								</td>
 							</tr>
 							<tr>
@@ -131,8 +131,8 @@
 									<label for='strike-note'> The takedown does NOT count as a "strike" for purposes of the repeat infinger policy because: </label>
 								</td>
 								<td>
-									<input type='checkbox' name='strike-note[]' value='counter-notice' /> The user has filed a successful counter-notification.  <br />
-									<input type='checkbox' name='strike-note[]' value='lawyers-nostrike' /> The Office of General Counsel has decided that a "strike" is not appropriate because of mitigating circumstances (e.g., the user demonstrates a clear lack of willfulness and a mistaken belief of compliance)  <br />
+									<input type='checkbox' name='strike-note[]' value='The user has filed a successful counter-notification.' /> The user has filed a successful counter-notification.  <br />
+									<input type='checkbox' name='strike-note[]' value='The Office of General Counsel has decided that a "strike" is not appropriate because of mitigating circumstances (e.g., the user demonstrates a clear lack of willfulness and a mistaken belief of compliance).' /> The Office of General Counsel has decided that a "strike" is not appropriate because of mitigating circumstances (e.g., the user demonstrates a clear lack of willfulness and a mistaken belief of compliance).  <br />
 									<input type='checkbox' name='strike-note[]' value='other' /> Other: <input type='text' id='strike-note-other' name='strike-note-other' size='50' />
 								</td>
 							</tr>

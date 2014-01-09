@@ -114,7 +114,7 @@
 					<?php
 					if ($strike_note) {
 						foreach ($strike_note as $value) {
-							echo htmlspecialchars($value);
+							echo htmlspecialchars($value).'<br />';
 						}
 					} else { echo 'This does not appear to be set';}?>
 				</td>
