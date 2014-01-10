@@ -107,7 +107,7 @@
     </fieldset>
     <fieldset>
         <legend>Is there any information that you would like to record in the permenant log? </legend>
-        <textarea name='details' wrap='virtual' rows='18' cols='70' readonly> <?php if(!empty($details)) {
+        <textarea name='details' wrap='virtual' rows='18' cols='70' readonly><?php if(!empty($details)) {
             echo $details;
         }  else { echo 'This option was not set'; } ?></textarea>
     </fieldset>
