@@ -36,7 +36,6 @@ $user = $_SERVER['PHP_AUTH_USER'];
 	@import 'css/main.css'; 
 	@import 'css/lca.css';
 	/* ]]> */-->
-	td { vertical-align: top; }
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
 	</style>

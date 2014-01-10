@@ -39,3 +39,7 @@ textarea {
     -moz-box-sizing: border-box; /* FF1+ */
     box-sizing: border-box; /* Chrome, IE8, Opera, Safari 5.1*/
 }
+
+td {
+	vertical-align: middle;
+}

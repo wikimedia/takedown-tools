@@ -95,7 +95,6 @@
 	@import 'css/pikaday.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
-	td { vertical-align: top; }
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
 	</style>
@@ -138,7 +137,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td style='vertical-align:middle'>
+                                <td >
                                     <label for='logging-metadata'> Please check all statements which are true </label>
                                 </td>
                                 <td>
