@@ -19,6 +19,7 @@ $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
+libxml_use_internal_errors(true);
 
 $NCMECusername = $config['NCMEC_user'];
 $NCMECpassword = $config['NCMEC_password'];
@@ -85,7 +86,7 @@ function lcalog($user,$type,$title,$test) {
 	$mysql->close();
 }
 
-// Following 2 function Copyright CC 3.0 attribution PHP Group from http://creativecommons.org/licenses/by/3.0/legalcode - from http://www.php.net/manual/en/domdocument.schemavalidate.php#62032
+// Following 2 functions Copyright CC 3.0 attribution PHP Group from http://creativecommons.org/licenses/by/3.0/legalcode - from http://www.php.net/manual/en/domdocument.schemavalidate.php#62032
 function libxml_display_error($error)
 {
     $return = "<br/>\n";
