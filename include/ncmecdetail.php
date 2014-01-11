@@ -92,7 +92,7 @@
                 </td>
             </tr>
             <tr>
-                <td style='vertical-align:middle'>
+                <td >
                     <label for='logging-metadata'> Please check all statements which are true </label>
                 </td>
                 <td>
