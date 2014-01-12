@@ -104,6 +104,21 @@
 		<div id='column-content'>
 			<div id='content'>
 				<h1>Child Protection Takedown</h1>
+                <table border='1' style='position:absolute; left:10spx; top:40px;'>
+                        <tr>
+                            <td>
+                                Server/Connection Status
+                            </td>
+                            <td >
+                                Production  
+                                <img id='ncmec-prod' src='images/List-remove.svg' width='15px'/>
+                            </td>
+                            <td>
+                                Test  
+                                <img id='ncmec-test' src='images/List-remove.svg' width='15px'/>
+                            </td>
+                        </tr>
+                </table>
 				<br />
 				<form method='post' action='NCMECprocessing.php' id='ncmec-form1' enctype='multipart/form-data'>
                     <fieldset>
@@ -476,6 +491,25 @@
         </div>
         <?php include('include/lcapage.php'); ?>
     </div>
+    <?php
+    flush();
+        include_once('multiuseFunctions.php');
+        $config = parse_ini_file('lcaToolsConfig.ini');
+        $NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
+        $NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
+        $prodresult = NCMECstatus($NCMEC_URL_Production);
+        if ( $prodresult === '0') {
+            echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+        } else {
+            echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+        }
+        $testresult = NCMECstatus($NCMEC_URL_Test);
+        if ( $testresult === '0') {
+            echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+        } else {
+            echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+        }
+        ?>
 </body>
 </html>
 
