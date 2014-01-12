@@ -152,3 +152,28 @@ curl_close($ch);
 return $result;
 }
 
+function NCMECstatus($url) {
+	global $NCMECusername, $NCMECpassword;
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+
+	$result = curl_exec($ch);
+	curl_close($ch);
+	$responseXML = new DOMDocument();
+	$responseXML->loadXML($result);
+	$responseNodes = $responseXML->getElementsByTagName('responseCode');
+	
+	if ($responseNodes->length==0) {
+		$responsecode = null;
+	} else {
+		foreach ($responseNodes as $r) {
+		$responsecode = $r->nodeValue;
+		}
+	}
+	return $responsecode;
+}
+
+

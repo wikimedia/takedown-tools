@@ -4,6 +4,7 @@
 	<link rel='shortcut icon' href='images/favicon.ico'/>
 	<title>DMCA Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+	<script src='scripts/jquery-1.10.2.min.js'></script>
 	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
@@ -21,6 +22,29 @@
 			<div id='content'>
 				<h1> LCA Tools </h1>
 				<div style="text-align:center">
+					<table border='2' style='position:absolute; left:10spx; top:40px;'>
+						<tr>
+							<td colspan='2'>
+								Server/Connection Status
+							</td>
+						</tr>
+						<tr>
+							<td>
+								NCMEC Production
+							</td>
+							<td>
+								<img id='ncmec-prod' src='images/List-remove.svg' width='15px'/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								NCMEC Test
+							</td>
+							<td>
+								<img id='ncmec-test' src='images/List-remove.svg' width='15px'/>
+							</td>
+						</tr>
+				</table>
 					<img style="display:block; margin:auto;" width="500px" src="images/roryshield.jpg" />
 					<u> Reporting forms </u> <br />
 					<a href="legalTakedown.php">DMCA Takedown Form</a> <br />
@@ -36,5 +60,25 @@
 		</div>
 			<?php include('include/lcapage.php'); ?>
 		</div>
+		<?php
+		flush();
+		include_once('multiuseFunctions.php');
+		$config = parse_ini_file('lcaToolsConfig.ini');
+		$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
+		$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
+		$prodresult = NCMECstatus($NCMEC_URL_Production);
+		if ( $prodresult === '0') {
+			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+		} else {
+			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+		}
+		flush();
+		$testresult = NCMECstatus($NCMEC_URL_Test);
+		if ( $testresult === '0') {
+			echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+		} else {
+			echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+		}
+		flush();?>
 	</body>
 </html>
