@@ -678,6 +678,27 @@ if ($fileID) {
 	$filename->appendChild($filenametext);
 	$reportroot->appendChild($filename);
 
+		if (!empty($uploaderip)) {
+		$uploadipevent = $filedetaildom->createElement('ipCaptureEvent');
+		$reportroot->appendChild($uploadipevent);
+		
+		$uploadactualip = $filedetaildom->createElement('ipAddress');
+		$uploadactualiptext = $filedetaildom->createTextNode($uploaderip);
+		$uploadactualip->appendChild($uploadactualiptext);
+
+		$uploadiptype = $filedetaildom->createElement('eventName');
+		$uploadiptypetext = $filedetaildom->createTextNode('Upload');
+		$uploadiptype->appendChild($uploadiptypetext);
+
+		$uploaddatetime = $filedetaildom->createElement('dateTime');
+		$uploaddatetimetext = $filedetaildom->createTextNode($incdatetime);
+		$uploaddatetime->appendChild($uploaddatetimetext);
+
+		$uploadipevent->appendChild($uploadactualip);
+		$uploadipevent->appendChild($uploadiptype);
+		$uploadipevent->appendChild($uploaddatetime);
+	}
+
 	$filedetailXML = $filedetaildom->saveXML();
 
 	$result = curlauthdAPIpost($fileinfourl,$filedetailXML,$xmlHeader);
