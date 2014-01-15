@@ -40,7 +40,7 @@ function setupdataurl($inputfile) {
 	$tempfile['file_name'] = $inputfile['name'];
 	$datatemp = file_get_contents($inputfile['tmp_name']);
 	$datatemp = base64_encode($datatemp);
-	$uri = 'data: '. $inputfile['type'].';base64,'.$datatemp;
+	$uri = 'data:'.$inputfile['type'].';base64,'.$datatemp;
 	$tempfile['file'] = $uri;
 	
 	return $tempfile;

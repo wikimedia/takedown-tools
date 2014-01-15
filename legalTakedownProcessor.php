@@ -181,9 +181,7 @@ if ($sendtoCE && $formsendtoCE) {
 	echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
 	$result = curlAPIpost($config['CE_apiurl'],$CE_post,$CE_post_headers);
 
-	list($headers, $response) = explode("\r\n\r\n", $result, 2);
-
-	$headers = explode("\n", $headers);
+	$headers = explode("\n", $result);
 	foreach($headers as $header) {
 		if (stripos($header, 'Location:') !== false) {
 			$locationURL = substr($header, 10);
@@ -255,7 +253,7 @@ $insert->close();
 			<div id='content'>
 				<h1>Processed Takedown</h1>
 				<br />
-				<?php if (isset($locationURL)) {
+				<?php if ($locationURL) {
 					echo '<p> The DMCA Takedown was send to Chilling Effects and you can find the submission at <a href="'.$locationURL.'" target="_blank">'.$locationURL.'</a>';
 				} else echo '<p> It does not appear that a report was sent to Chilling Effects (either because you asked the report not to, reporting is turned off on the server level or there was an error) <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE'; ?>
 				<fieldset>
@@ -378,7 +376,7 @@ Sincerely,
 								CE info being sent?
 							</td>
 							<td>
-								<textarea><?php echo $sendtoCE.$formsendtoCE ?></textarea>
+								<textarea><?php echo $sendtoCE.$formsendtoCE?></textarea>
 							</td>
 						</tr>
 						<tr>
