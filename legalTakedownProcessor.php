@@ -143,9 +143,11 @@ $CE_post_entities = array (
 $CE_post_data['notice']['entity_notice_roles_attributes'] = $CE_post_entities;
 
 if (!empty($linksarray)) {
-	$CE_post_works[] = array (
-		'infringing_urls_attributes' => $linksarray,
-		);
+	
+		foreach ($linksarray as $key => $value) {
+			$urlarray[] = array ('url' => $value);
+		}
+		$CE_post_works['infringing_urls_attributes'] = $urlarray;
 }
 
 $CE_post_data['notice']['works_attributes'] = $CE_post_works;
@@ -374,7 +376,7 @@ Sincerely,
 								CE info being sent?
 							</td>
 							<td>
-								<textarea><?php echo $sendtoCE ?></textarea>
+								<textarea><?php echo $sendtoCE.$formsendtoCE ?></textarea>
 							</td>
 						</tr>
 						<tr>
