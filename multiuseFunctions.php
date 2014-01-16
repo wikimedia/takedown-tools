@@ -176,4 +176,68 @@ function NCMECstatus($url) {
 	return $responsecode;
 }
 
+// mostly for oauth requests
+function noheaderstringget($request) {
+	$ch = curl_init();
+	curl_setopt( $ch, CURLOPT_URL, (string) $request );
+	curl_setopt( $ch, CURLOPT_HTTPGET, true );
+	curl_setopt( $ch, CURLOPT_HEADER, false );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+	$data = curl_exec( $ch );
 
+	if( !$data ) {
+		die('Curl error: ' . curl_error( $ch ));
+	}
+	
+	unset( $ch );
+	
+	return $data;
+}
+
+function mwOAuthAPIcall ($url,$params, $signedrequest) {
+	$ch = curl_init();
+	curl_setopt( $ch, CURLOPT_URL, $url . "?" . http_build_query( $params ) );
+	curl_setopt( $ch, CURLOPT_HEADER, 0 );
+	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+	curl_setopt( $ch, CURLOPT_HTTPHEADER, array( $signedrequest->to_header() ) ); // Authorization header required for api
+	$data = curl_exec( $ch );
+	if( !$data ) {
+		echo 'Curl error: ' . htmlspecialchars( curl_error( $ch ) );
+	}
+
+	return $data;
+}
+
+// From Chris Steipp https://www.mediawiki.org/wiki/OAuth/For_Developers#PHP_demo_cli_client_with_RSA_keys with slight modifications.
+function validateJWT( $identity, $consumerKey, $nonce, $server) {
+ 
+	$expectedCanonicalServer = $server;
+ 
+	// Verify the issuer is who we expect (server sends $wgCanonicalServer)
+	if ( $identity->iss !== $expectedCanonicalServer ) {
+		print "Invalid Issuer";
+		return false;
+	}
+ 
+	// Verify we are the intended audience
+	if ( $identity->aud !== $consumerKey ) {
+		print "Invalid Audience";
+		return false;
+	}
+ 
+	// Verify we are within the time limits of the token. Issued at (iat) should be
+	// in the past, Expiration (exp) should be in the future.
+	$now = time();
+	if ( $identity->iat > $now || $identity->exp < $now ) {
+		print "Invalid Time";
+		return false;
+	}
+ 
+	// Verify we haven't seen this nonce before, which would indicate a replay attack
+	if ( $identity->nonce !== $nonce ) {
+		print "Invalid Nonce";
+		return false;
+	}
+ 
+	return true;
+}
