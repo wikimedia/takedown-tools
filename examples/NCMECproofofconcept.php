@@ -256,7 +256,7 @@ And this is a 3rd...............a bit longer then the 2nd';
 
                 </div>
         </div>
-            <?php include('include/lcapage.php'); ?>
+            <?php include('../include/lcapage.php'); ?>
         </div>
         <?php
         sleep(1);
