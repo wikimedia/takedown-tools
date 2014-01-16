@@ -1,3 +1,5 @@
 #configfiles
 lcaToolsConfig.ini
 .htaccess
+lcatoolskey.pem
+lcatoolskey.pub
