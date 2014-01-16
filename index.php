@@ -53,6 +53,7 @@
 
 					<u> 'special' pages </u> <br />
 					<a href="centralLog.php"> Central submission Log </a> <br />
+					<a href="beginoauthregistration.php"> Register with Mediawiki OAuth <br /> (BETA)
 					<a href="NCMECretract.php"> NCMEC report retraction form </a> <br /> (note: Only for unclosed test submissions which errored out)
 			</div>
 
