@@ -107,9 +107,9 @@ abstract class OAuthSignatureMethod {
 	 * @return bool
 	 */
 	public function check_signature( $request, $consumer, $token, $signature ) {
-		wfDebugLog( 'OAuth', __METHOD__ . ": Expecting: '$signature'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": Expecting: '$signature'" );
 		$built = $this->build_signature( $request, $consumer, $token );
-		wfDebugLog( 'OAuth', __METHOD__ . ": Built: '$built'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": Built: '$built'" );
 		// Check for zero length, although unlikely here
 		if ( strlen( $built ) == 0 || strlen( $signature ) == 0 ) {
 			return false;
@@ -143,7 +143,7 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod {
 
 	public function build_signature( $request, $consumer, $token ) {
 		$base_string = $request->get_signature_base_string();
-		wfDebugLog( 'OAuth', __METHOD__ . ": Base string: '$base_string'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": Base string: '$base_string'" );
 		$request->base_string = $base_string;
 
 		$key_parts = array(
@@ -153,7 +153,7 @@ class OAuthSignatureMethod_HMAC_SHA1 extends OAuthSignatureMethod {
 
 		$key_parts = OAuthUtil::urlencode_rfc3986( $key_parts );
 		$key = implode( '&', $key_parts );
-		wfDebugLog( 'OAuth', __METHOD__ . ": HMAC Key: '$key'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": HMAC Key: '$key'" );
 		return base64_encode( hash_hmac( 'sha1', $base_string, $key, true ) );
 	}
 }
@@ -397,7 +397,7 @@ class OAuthRequest {
 	 * and the concated with &.
 	 */
 	public function get_signature_base_string() {
-		//wfDebugLog( 'OAuth', __METHOD__ . ": Generating base string when this->paramters:\n" . print_r( $this->parameters, true ) );
+		////wfDebugLog( 'OAuth', __METHOD__ . ": Generating base string when this->paramters:\n" . print_r( $this->parameters, true ) );
 		$parts = array(
 			$this->get_normalized_http_method(),
 			$this->get_normalized_http_url(),
@@ -642,7 +642,7 @@ class OAuthServer {
 		if ( !$consumer_key ) {
 			throw new OAuthException( "Invalid consumer key" );
 		}
-		wfDebugLog( 'OAuth', __METHOD__ . ": getting consumer for '$consumer_key'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": getting consumer for '$consumer_key'" );
 		$consumer = $this->data_store->lookup_consumer( $consumer_key );
 		if ( !$consumer ) {
 			throw new OAuthException( "Invalid consumer" );
@@ -694,7 +694,7 @@ class OAuthServer {
 		 );
 
 		if ( !$valid_sig ) {
-			wfDebugLog( 'OAuth', __METHOD__ . ': Signature check (' . get_class( $signature_method ) . ') failed' );
+			//wfDebugLog( 'OAuth', __METHOD__ . ': Signature check (' . get_class( $signature_method ) . ') failed' );
 			throw new OAuthException( "Invalid signature" );
 		}
 	}
@@ -797,11 +797,11 @@ class OAuthUtil {
 	// May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
 	//									see http://code.google.com/p/oauth/issues/detail?id = 163
 	public static function split_header( $header, $only_allow_oauth_parameters = true ) {
-		wfDebugLog( 'OAuth', __METHOD__ . ": pulling headers from '$header'" );
+		//wfDebugLog( 'OAuth', __METHOD__ . ": pulling headers from '$header'" );
 		$params = array();
 		if ( preg_match_all( '/(' . ( $only_allow_oauth_parameters ? 'oauth_' : '' ) . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches ) ) {
 			foreach ( $matches[1] as $i => $h ) {
-				wfDebugLog( 'OAuth', __METHOD__ . ": '$i' => '$h'" );
+				//wfDebugLog( 'OAuth', __METHOD__ . ": '$i' => '$h'" );
 				$params[$h] = OAuthUtil::urldecode_rfc3986( empty( $matches[3][$i] ) ? $matches[4][$i] : $matches[3][$i] );
 			}
 			if ( isset( $params['realm'] ) ) {
@@ -890,7 +890,7 @@ class OAuthUtil {
 	}
 
 	public static function build_http_query( $params ) {
-		wfDebugLog( 'OAuth', __METHOD__ . " called with params:\n" . print_r( $params, true ) );
+		//wfDebugLog( 'OAuth', __METHOD__ . " called with params:\n" . print_r( $params, true ) );
 		if ( !$params ) return '';
 
 		// Urlencode both keys and values
