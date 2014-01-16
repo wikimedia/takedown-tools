@@ -17,12 +17,12 @@ And this is a 3rd...............a bit longer then the 2nd';
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='../images/favicon.ico'/>
 	<title>NCMEC Submission</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/jquery.validate.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='../scripts/jquery-1.10.2.min.js'></script>
+	<script src='../scripts/jquery.validate.min.js'></script>
+	<script src='../scripts/lca.js'></script>
 	<script>
 	$(document).ready(function(){
 
@@ -64,9 +64,9 @@ And this is a 3rd...............a bit longer then the 2nd';
 </script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
-	@import 'css/pikaday.css';
-	@import 'css/lca.css';
+	@import '../css/main.css'; 
+	@import '../css/pikaday.css';
+	@import '../css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -86,13 +86,13 @@ And this is a 3rd...............a bit longer then the 2nd';
                                 <u>Step 1:</u> Data gathered and put together:
                             </td>
                             <td >
-                                <img id='gathered' src='images/List-remove.svg' width='40px'/>
+                                <img id='gathered' src='../images/List-remove.svg' width='40px'/>
                             </td>
                             <td >
                                 <u>Step 4:</u> File information sent:
                             </td>
                             <td >
-                                <img id='file-info' src='images/List-remove.svg' width='40px'/>
+                                <img id='file-info' src='../images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                         <tr>
@@ -100,13 +100,13 @@ And this is a 3rd...............a bit longer then the 2nd';
                                 <u>Step 2:</u> Report opened with NCMEC:
                             </td>
                             <td>
-                                <img id='opened' src='images/List-remove.svg' width='40px'/>
+                                <img id='opened' src='../images/List-remove.svg' width='40px'/>
                             </td>
                             <td >
                                 <u>Step 5:</u> Report closed:
                             </td>
                             <td>
-                                <img id='closed' src='images/List-remove.svg' width='40px'/>
+                                <img id='closed' src='../images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                         <tr>
@@ -114,13 +114,13 @@ And this is a 3rd...............a bit longer then the 2nd';
                                 <u>Step 3:</u> File sent:
                             </td>
                             <td>
-                                <img id='file-sent' src='images/List-remove.svg' width='40px'/>
+                                <img id='file-sent' src='../images/List-remove.svg' width='40px'/>
                             </td>
                              <td >
                                 <u>Step 6:</u> Log created and data stored:
                             </td>
                             <td>
-                                <img id='logged' src='images/List-remove.svg' width='40px'/>
+                                <img id='logged' src='../images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                     </table>
@@ -261,29 +261,29 @@ And this is a 3rd...............a bit longer then the 2nd';
         <?php
         sleep(1);
         echo '.....';
-        echo "<script> $('img#gathered').attr('src', 'images/Dialog-accept.svg'); </script>";
+        echo "<script> $('img#gathered').attr('src', '../images/Dialog-accept.svg'); </script>";
         flush();
         echo '.....';
         sleep(2);
-        echo "<script> $('img#opened').attr('src', 'images/Dialog-accept.svg');  
+        echo "<script> $('img#opened').attr('src', '../images/Dialog-accept.svg');  
         $('div#report-id').text('12345');</script>";
         flush();
         echo '.....';
         sleep(2);
-        echo "<script> $('img#file-sent').attr('src', 'images/Dialog-accept.svg'); 
+        echo "<script> $('img#file-sent').attr('src', '../images/Dialog-accept.svg'); 
         $('div#hash').text('IIZHASHHAHAHEHEHE');</script>";
         flush();
         echo '.....';
         sleep(1);
-        echo "<script> ($('img#file-info').attr('src', 'images/Dialog-accept.svg')); </script>";
+        echo "<script> ($('img#file-info').attr('src', '../images/Dialog-accept.svg')); </script>";
         flush();
         echo '.....';
         sleep(1);
-        echo "<script> ($('img#closed').attr('src', 'images/Dialog-accept.svg')); </script>";
+        echo "<script> ($('img#closed').attr('src', '../images/Dialog-accept.svg')); </script>";
         flush();
         echo '.....';
         sleep(1);
-        echo "<script> ($('img#logged').attr('src', 'images/Dialog-accept.svg')); </script>";
+        echo "<script> ($('img#logged').attr('src', '../images/Dialog-accept.svg')); </script>";
         flush();
         echo '.....';
         ?>
