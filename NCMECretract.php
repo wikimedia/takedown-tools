@@ -51,6 +51,17 @@ $user = $_SERVER['PHP_AUTH_USER'];
 					<table>
 						<tr>
 							<td>
+								<label for='wastest'>Was this a test submission (to the test server)?</label>
+							</td>
+							<td>
+								<select id='wastest' name='wastest'>
+									<option value='Y' selected>Yes</option>
+									<option value='N'>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								<label for='reportid'>Report ID to Retract </label>
 							</td>
 						</tr>
@@ -65,10 +76,19 @@ $user = $_SERVER['PHP_AUTH_USER'];
 				<fieldset>
 					<legend> Processing </legend>
 					<textarea name='reportxml' wrap='virtual' rows='18' cols='70'><?php if (!empty($_POST['reportid'])) {
+						$wastest = $_POST['wastest'];
+						if ($wastest === 'N') {
+							$NCMECurl = $config['NCMEC_URL_Production'];
+							$ncusername = $config['NCMEC_user_prod'];
+							$ncpassword = $config['NCMEC_password_prod'];
+						} else {
+							$NCMECurl = $config['NCMEC_URL_Test'];
+							$ncusername = $config['NCMEC_user_test'];
+							$ncpassword = $config['NCMEC_password_test'];
+						}
 						echo 'Report ID: '.$_POST['reportid'].' detected for retraction'.PHP_EOL.PHP_EOL;
 						$postdata = array('id'=>$_POST['reportid']);
-						$url = $config['NCMEC_URL'].'retract';
-						$result = NCMECsimpleauthdcurlPost($url,$postdata);
+						$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$NCMECurl,$postdata);
 						echo $result; } else {echo 'No reportID detected in post';}
 						?></textarea>
 				</fieldset>

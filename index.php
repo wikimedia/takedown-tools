@@ -68,14 +68,19 @@
 		$config = parse_ini_file('lcaToolsConfig.ini');
 		$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
 		$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
-		$prodresult = NCMECstatus($NCMEC_URL_Production);
+		$produsername = $config['NCMEC_user_prod'];
+		$prodpassword = $config['NCMEC_password_prod'];
+		$testusername = $config['NCMEC_user_test'];
+		$testpassword = $config['NCMEC_password_test'];
+
+		$prodresult = NCMECstatus($produsername,$prodpassword,$NCMEC_URL_Production);
 		if ( $prodresult === '0') {
 			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
 		} else {
 			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
 		}
 		flush();
-		$testresult = NCMECstatus($NCMEC_URL_Test);
+		$testresult = NCMECstatus($testusername,$testpassword,$NCMEC_URL_Test);
 		if ( $testresult === '0') {
 			echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
 		} else {

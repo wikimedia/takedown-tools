@@ -21,9 +21,6 @@ $dbpw = $config['database_password'];
 $db = $config['database'];
 libxml_use_internal_errors(true);
 
-$NCMECusername = $config['NCMEC_user'];
-$NCMECpassword = $config['NCMEC_password'];
-
 function setupdataurl($inputfile) {
 	/* in case a real file is passed instead of _FILES (should not happen in current setup) 
 	or in case something went wrong and file is not stored in system anymore. */
@@ -118,15 +115,14 @@ function libxml_display_errors() {
     libxml_clear_errors();
 }
 
-function NCMECsimpleauthdcurlPost($url,$data) {
-	global $NCMECusername, $NCMECpassword;
+function NCMECsimpleauthdcurlPost($username,$password,$url,$data) {
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 	//curl_setopt($ch, CURLOPT_VERBOSE, true);
-	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
 	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 
 	$result = curl_exec($ch);
@@ -134,8 +130,7 @@ function NCMECsimpleauthdcurlPost($url,$data) {
 	return $result;
 }
 
-function curlauthdAPIpost ($url,$data,$headers='') {
-	global $NCMECpassword, $NCMECusername;
+function curlauthdAPIpost($username,$password,$url,$data,$headers='') {
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
@@ -144,7 +139,7 @@ function curlauthdAPIpost ($url,$data,$headers='') {
 	//curl_setopt($ch, CURLOPT_HEADER, true);
 	curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	//curl_setopt($ch, CURLOPT_VERBOSE, true);
-	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
 	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 
 $result = curl_exec($ch);
@@ -152,12 +147,11 @@ curl_close($ch);
 return $result;
 }
 
-function NCMECstatus($url) {
-	global $NCMECusername, $NCMECpassword;
+function NCMECstatus($username,$password,$url) {
 
 	$ch = curl_init($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_USERPWD, $NCMECusername.":".$NCMECpassword);
+	curl_setopt($ch, CURLOPT_USERPWD, $username.":".$password);
 	curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 
 	$result = curl_exec($ch);

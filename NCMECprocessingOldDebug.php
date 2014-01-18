@@ -24,8 +24,12 @@ $istest = $_POST['is-test'];
 
 if ($istest === 'N') {
 	$NCMECurl = $config['NCMEC_URL_Production'];
+	$ncusername = $config['NCMEC_user_prod'];
+	$ncpassword = $config['NCMEC_password_prod'];
 } else {
 	$NCMECurl = $config['NCMEC_URL_Test'];
+	$ncusername = $config['NCMEC_user_test'];
+	$ncpassword = $config['NCMEC_password_test'];
 }
 
 $accessdate = $_POST['access-date'];
@@ -323,7 +327,7 @@ $filehash = null;
 					<legend>Submit initial data and report back with response </legend>
 					<?php
 					if ($openReportValid) {
-						$result = curlauthdAPIpost($openurl,$Report,$xmlHeader);
+						$result = curlauthdAPIpost($ncusername,$ncpassword,$openurl,$Report,$xmlHeader);
 						//list($headers, $response) = explode("\r\n\r\n", $result, 2);
 						//$headers = explode("\n", $headers);
 						$responseXML = new DOMDocument();
@@ -362,7 +366,7 @@ $filehash = null;
 							$postdata = array (
 								'id' => $reportID,
 								'file' => $file, );
-							$result = NCMECsimpleauthdcurlPost($fileurl,$postdata);
+							$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$fileurl,$postdata);
 							$responseXML = new DOMDocument();
 							$responseXML->loadXML($result);
 							$fileIdNodes = $responseXML->getElementsByTagName('fileId');
@@ -426,7 +430,7 @@ $filehash = null;
 
 						$filedetailXML = $filedetaildom->saveXML();
 
-						$result = curlauthdAPIpost($fileinfourl,$filedetailXML,$xmlHeader);
+						$result = curlauthdAPIpost($ncusername,$ncpassword,$fileinfourl,$filedetailXML,$xmlHeader);
 						$responseXML = new DOMDocument();
 						$responseXML->loadXML($result);
 						$responseNodes = $responseXML->getElementsByTagName('responseCode');
@@ -464,7 +468,7 @@ $filehash = null;
 					if (!empty($reportID)) {
 						echo 'Report ID: '.$reportID.' marked for closure'.PHP_EOL.PHP_EOL;
 						$postdata = array ('id' => $reportID);
-						$result = NCMECsimpleauthdcurlPost($finishurl,$postdata);
+						$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$finishurl,$postdata);
 						echo $result;
 						$responseXML = new DOMDocument();
 						$responseXML->loadXML($result);

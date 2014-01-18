@@ -25,8 +25,12 @@ $istest = $_POST['is-test'];
 
 if ($istest === 'N') {
 	$NCMECurl = $config['NCMEC_URL_Production'];
+	$ncusername = $config['NCMEC_user_prod'];
+	$ncpassword = $config['NCMEC_password_prod'];
 } else {
 	$NCMECurl = $config['NCMEC_URL_Test'];
+	$ncusername = $config['NCMEC_user_test'];
+	$ncpassword = $config['NCMEC_password_test'];
 }
 
 $accessdate = $_POST['access-date'];
@@ -577,7 +581,7 @@ echo '...';
 flush();
 
 if ($openReportValid) {
-	$result = curlauthdAPIpost($openurl,$Report,$xmlHeader);
+	$result = curlauthdAPIpost($ncusername,$ncpassword,$openurl,$Report,$xmlHeader);
 	//list($headers, $response) = explode("\r\n\r\n", $result, 2);
 	//$headers = explode("\n", $headers);
 	$responseXML = new DOMDocument();
@@ -613,7 +617,7 @@ if (!empty($uploadedfiletmploc) && !empty($reportID)) {
 	$postdata = array (
 		'id' => $reportID,
 		'file' => $file, );
-	$result = NCMECsimpleauthdcurlPost($fileurl,$postdata);
+	$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$fileurl,$postdata);
 	$responseXML = new DOMDocument();
 	$responseXML->loadXML($result);
 	$fileIdNodes = $responseXML->getElementsByTagName('fileId');
@@ -701,7 +705,7 @@ if ($fileID) {
 
 	$filedetailXML = $filedetaildom->saveXML();
 
-	$result = curlauthdAPIpost($fileinfourl,$filedetailXML,$xmlHeader);
+	$result = curlauthdAPIpost($ncusername,$ncpassword,$fileinfourl,$filedetailXML,$xmlHeader);
 	$responseXML = new DOMDocument();
 	$responseXML->loadXML($result);
 	$responseNodes = $responseXML->getElementsByTagName('responseCode');
@@ -745,7 +749,7 @@ flush();
 
 if (!empty($reportID)) {
 	$postdata = array ('id' => $reportID);
-	$result = NCMECsimpleauthdcurlPost($finishurl,$postdata);
+	$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$finishurl,$postdata);
 	echo "<script> $('#report-close-rsp').val(".json_encode($result)."); </script>".PHP_EOL;
 	$responseXML = new DOMDocument();
 	$responseXML->loadXML($result);
