@@ -45,8 +45,17 @@
 					<h3>LCATools Special Pages</h3>
 					<div class='pBody'>
 						<ul>
-							<li id='dmca-takedown-form'>
+							<li id='central-log'>
 								<a href="centralLog.php"> Central submission Log </a>
+							</li>
+							<li id='ncmec-retract'>
+								<a href="NCMECretract.php"> NCMEC report retraction form </a> 
+							</li>
+							<li id='oauth-register'>
+								<a href="beginoauthregistration.php"> Register with LCA Tools OAuth</a>
+							</li>
+							<li id='test-oauth'>
+								<a href="testOAuth.php"> Test your stored OAuth data </a> 
 							</li>
 						</ul>
 					</div>
