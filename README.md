@@ -32,7 +32,27 @@ beginoauthregistration.php - page to start the authorization process with mediaw
 mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
 	Takes verification script and token, verifies against session started on beginoauthregistration.php.  
 	If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
-testOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
+testOAuth.php - tests current users stored OAuth credentials by doing an API user information check.
+
+lcatools.sql - installation script for database required for tools.  
+LICENSE.txt (MIT License for all files not otherwise marked)  
+README.md (this readme)  
+lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  
+.gitignore - ignore real config files which have private keys/passwords and .htaccess file  
+
+include folder:  
+lcapage.php - template for surrounding pieces of lcatools pages (toolbar/logo/login header etc)  
+
+ncmecdetail.php - details to display when looking at a detailed log entry from a NCMEC submission.  
+dmcadetails.php - details to display when looking at a detailed log entry from a DMCA takedown submission.  
+releaseDetail.php - details to display when looking at a detailed log entry from a basic release of confidential information.  
+
+countrySelect.php - seperate file with list of countries that can be used to easily create a select box to choose country with 2 letter ISO code as select value.  
+espsubmittal.xsd - xsd to define required standard for XML submitals to and responses from NCMEC. Used to verify data going to and coming back from them.  
+
+OAuth.php - OAuth related classes a libary from Mediawiki Extension:OAuth and elsewhere (MIT Andy Smith)  
+JWT.php - JSON Web Token implementantion originally a library from Mediawiki Extension:OAuth and elsewhere (http://opensource.org/licenses/BSD-3-Clause 3-clause BSD Anant Narayanan anant@php.net and Neuman Vong neuman@twilio.com)  
+MWOAuthSignatureMethod_RSA_SHA1 - extension of OAuth RSA signature method (always load OAuth.php first) for mediawiki specifically. From Mediawiki Extension:OAuth GNU General Public License 2.0
 
 multiuseFunctions.php - file with functions used (or which could be used) in multiple different forms. Currently contains:  
 	setupdataurl() - takes a file and converts into a well formed dataurl.  
@@ -65,26 +85,6 @@ multiuseFunctions.php - file with functions used (or which could be used) in mul
 	validateJWT() - function from Chris Steipp to validate mediawiki Json Web Token  
 		Accepts: identity (web token), consumer key, nonce, server (where you got the JWT from)  
 		Response: boolean response  
-
-lcatools.sql - installation script for database required for tools.  
-LICENSE.txt (MIT License for all files not otherwise marked)  
-README.md (this readme)  
-lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  
-.gitignore - ignore real config files which have private keys/passwords and .htaccess file  
-
-include folder:  
-lcapage.php - template for surrounding pieces of lcatools pages (toolbar/logo/login header etc)  
-
-ncmecdetail.php - details to display when looking at a detailed log entry from a NCMEC submission.  
-dmcadetails.php - details to display when looking at a detailed log entry from a DMCA takedown submission.  
-releaseDetail.php - details to display when looking at a detailed log entry from a basic release of confidential information.  
-
-countrySelect.php - seperate file with list of countries that can be used to easily create a select box to choose country with 2 letter ISO code as select value.  
-espsubmittal.xsd - xsd to define required standard for XML submitals to and responses from NCMEC. Used to verify data going to and coming back from them.  
-
-OAuth.php - OAuth related classes a libary from Mediawiki Extension:OAuth and elsewhere (MIT Andy Smith)  
-JWT.php - JSON Web Token implementantion originally a library from Mediawiki Extension:OAuth and elsewhere (http://opensource.org/licenses/BSD-3-Clause 3-clause BSD Anant Narayanan anant@php.net and Neuman Vong neuman@twilio.com)  
-MWOAuthSignatureMethod_RSA_SHA1 - extension of OAuth RSA signature method (always load OAuth.php first) for mediawiki specifically. From Mediawiki Extension:OAuth GNU General Public License 2.0
 
 examples folder:  
 NCMECproofofconcept.php - proof of concept form with fake data to exhibit how the NCMEC form works without actual submission. Used for original testing purposes, kept for exhibit purposes.  
