@@ -1,6 +1,6 @@
 <?php
 
-require_once('multiuseFunctions.php');
+require_once('include/multiuseFunctions.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
@@ -53,6 +53,12 @@ $server = 'http://meta.wikimedia.org';
 				<h1>Test getting user data</h1>
 				<br />
 				<textarea id='insecureinfo' wrap='virtual' rows='18' cols='90'></textarea>
+
+				<fieldset>
+					<legend>Test edit to User talk:Jalexander/sandbox</legend>
+					<textarea id='testedit' wrap='virtual' rows='18' cols='90'> This is a test of the LCA Tools OAuth application to allow automated editing.</textarea>
+
+				</fieldset>
 
 				</div>
 		</div>
