@@ -45,6 +45,8 @@ $user = $_SERVER['PHP_AUTH_USER'];
 		<div id='column-content'>
 			<div id='content'>
 				<h1>Retract NCMEC Submission</h1>
+				<b> Note: This form will only work if a submission has not been closed. In the normal course of action this will only happen if an error has happened in the submission. If you need to retract a full, closed, submission we need to contact NCMEC directly by email. </b>
+
 				<fieldset>
 					<legend>Report ID</legend>
 					<form id='reportit' method='POST'>
