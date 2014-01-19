@@ -13,7 +13,7 @@ Mediawiki oAuth registration page. start of process.
 Huge help from example cli file by Chris Steipp https://www.mediawiki.org/wiki/OAuth/For_Developers#PHP_demo_cli_client_with_RSA_keys
 			
 ---------------------------------------------   */
-require_once('multiuseFunctions.php');
+require_once('include/multiuseFunctions.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 date_default_timezone_set('UTC');

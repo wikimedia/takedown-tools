@@ -493,7 +493,7 @@
     </div>
     <?php
     flush();
-        include_once('multiuseFunctions.php');
+        require_once('include/multiuseFunctions.php');
         $config = parse_ini_file('lcaToolsConfig.ini');
         $NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
         $NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
