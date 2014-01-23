@@ -93,6 +93,7 @@ $legalapproved = $_POST['legal-approved'];
 	<title>NCMEC Submission</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
+	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
 	@import 'css/main.css'; 
