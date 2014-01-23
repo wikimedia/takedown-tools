@@ -54,6 +54,7 @@ $server = 'http://meta.wikimedia.org';
 	<title>DMCA Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
+	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
 	@import 'css/main.css'; 
@@ -165,6 +166,7 @@ $server = 'http://meta.wikimedia.org';
 		echo "<script> $('#result').html('<span style=\'color:red\'> You do not appear to have a session set, which is required to verify that the person coming here is the same person who started the process (and logged in) and that this isn\'t someone trying to steal your access information. Please make sure you are accepting cookies and try again by going [here]. If you have any problems please contact James. </span>');</script>".PHP_EOL;
 		die();
 	}
+	flush();
 
 	$consumer = new OAuthConsumer( $consumerKey, $secretKey );
 	$signer = new MWOAuthSignatureMethod_RSA_SHA1( new OAuthDataStore(), $secretKey );
@@ -193,6 +195,7 @@ $server = 'http://meta.wikimedia.org';
 	
 	echo "<script> $('#permrequest').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL;
 	echo "<script> $('#tokenresponse').val(".$data."); </script>".PHP_EOL;
+	flush();
 	$acc = json_decode( $data );
 	$accessToken = new OAuthToken( $acc->key, $acc->secret );
 	$apiParams = array(
@@ -215,6 +218,7 @@ $server = 'http://meta.wikimedia.org';
 		echo "<script> $('#result').html('<span style=\'color:red\'>We appear to have had an issue actually using your data to do a request to Meta, this may be because of an issue on our side or on the wiki side. Please try again or contact James. </span>'); </script>".PHP_EOL;
 		die();
 	}
+	flush();
 
 	$consumer_secret = $config['mwconsumer_secret'];
 
@@ -248,8 +252,9 @@ $server = 'http://meta.wikimedia.org';
 		$announcement = json_encode('We got a valid JWT, describing the user as:'.PHP_EOL.'* Username: '.$identity->username.PHP_EOL.' * User\'s current groups: '. implode( ',', $identity->groups ) .PHP_EOL.' * User\'s current rights: ' . implode( ',', $identity->rights ) . PHP_EOL);
 		echo "<script> $('#secureinfo').val(".$announcement."); </script>";
 	}
+	flush();
 
-	$insertemplate = 'INSERT INTO user (user,mwtoken,mwsecret,wiki_user,registration_time) VALUES (?,?,?,?,?)';
+	$insertemplate = 'INSERT INTO user (user,mwtoken,mwsecret,wiki_user,registration_time) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE mwtoken = VALUES(mwtoken), mwsecret = VALUES(mwsecret), wiki_user = VALUES(wiki_user), registration_time = VALUES(registration_time)';
 	$submittime = gmdate("Y-m-d H:i:s", time());
 
 	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
@@ -266,6 +271,7 @@ $server = 'http://meta.wikimedia.org';
 		die();
 
 	}
+	flush();
 
 	$insert->bind_param('sssss',$user,$mwtoken,$mwsecret,$wiki_user,$submittime);
 
@@ -275,6 +281,7 @@ $server = 'http://meta.wikimedia.org';
 	$mysql->close();
 	echo "<script> $('#logged').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL;
 	echo "<script> $('#result').html('<span style=\'color:green\'>CONGRATS! You have successfully registered with the LCA Tools Wiki Editing Program! </span>'); </script>".PHP_EOL;
+	flush();
 
 
 
