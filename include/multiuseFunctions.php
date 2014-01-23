@@ -235,3 +235,27 @@ function validateJWT( $identity, $consumerKey, $nonce, $server) {
  
 	return true;
 }
+
+function getUserData($user) {
+	global $dbaddress, $dbuser, $dbpw, $db;
+	
+	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
+	$mysql->set_charset("utf8");
+
+	if ($mysql->connect_error) {
+	  echo json_encode('Database connection fail: '  . $mysql->connect_error, E_USER_ERROR);
+	}
+
+	$sql = 'Select * FROM user';
+	$sql .= ' WHERE user=\''.$user.'\'';
+
+	$results = $mysql->query($sql);
+
+	if($results === false) {
+	  echo json_encode('Bad SQL or no log: ' . $sql . ' Error: ' . $mysql->error, E_USER_ERROR);
+	}
+
+	$usertable = $results->fetch_assoc();
+	$mysql->close();
+	return $usertable;
+}
