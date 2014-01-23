@@ -26,6 +26,9 @@ if (empty($secretKey)) {
 
 $apiurl = 'https://meta.wikimedia.org/w/api.php';
 $server = 'http://meta.wikimedia.org';
+$usertable = getUserData($user);
+$mwsecret = $usertable['mwsecret'];
+$mwtoken = $usertable['mwtoken'];
 
 ?>
 
@@ -37,6 +40,7 @@ $server = 'http://meta.wikimedia.org';
 	<title>OAuth Test</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
+	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
 	@import 'css/main.css'; 
@@ -45,6 +49,38 @@ $server = 'http://meta.wikimedia.org';
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
 	</style>
+	<script>
+	$(document).ready(function(){
+		$("#editbutton").click( function() {
+			$("#result").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			var dpagetitle = "User_talk:Jalexander/sandbox";
+			var dsectiontitle = "Test edit from LCA Tools";
+			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
+			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
+			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
+			var deditsummary = "Test edit from LCA Tools system using mediawiki OAuth";
+			var dtext = $("#testedit").val();
+			var daction = "newsection";
+
+			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
+
+			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			if ( data && data.edit && data.edit.result == 'Success' ) {
+				$('#testedit').val(JSON.stringify(data));
+				$('#result').html(data.edit.result + 'you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); } 
+			else if ( data && data.error ) {
+				$('#testedit').val(JSON.stringify(data));
+				$('#result').html(data.edit.error); } 
+			else {
+				$('#testedit').val(JSON.stringify(data));
+				$('#result').html('hmmm something weird happened');
+					} },"json"); 
+		});
+
+		
+	});
+	</script>
+
 </head>
 <body class='mediawiki'>
 	<div id='globalWrapper'>
@@ -56,8 +92,24 @@ $server = 'http://meta.wikimedia.org';
 
 				<fieldset>
 					<legend>Test edit to User talk:Jalexander/sandbox</legend>
-					<textarea id='testedit' wrap='virtual' rows='18' cols='90'> This is a test of the LCA Tools OAuth application to allow automated editing.</textarea>
-
+					<textarea id='testedit' wrap='virtual' rows='18' cols='90'> Let&#39;s make a test edit! You can type anything you want here to send a test edit to User talk:Jalexander/sandbox on meta.</textarea>
+					<table>
+						<tr>
+							<td><?php
+									if ($usertable['mwtoken']) {
+										echo 'Found user OAuth Information! Want to try an edit? Click the button to the right!';
+									} else {
+										echo 'Did not find user OAuth information, please register using the link on the sidebar'.'<script> $("#testedit").attr("readonly", true);</script>'; 
+								}?>
+							</td>
+							<td>
+								<input id='editbutton' type='button' value='Start test edit'>
+							</td>
+						</tr>
+						<tr>
+							<td id='result' colspan='2'></td>
+						</tr>
+					</table>
 				</fieldset>
 
 				</div>
@@ -65,26 +117,9 @@ $server = 'http://meta.wikimedia.org';
 			<?php include('include/lcapage.php'); ?>
 	</div>
 	<?php
-
-	$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
-	$mysql->set_charset("utf8");
-
-	if ($mysql->connect_error) {
-	  echo 'Database connection fail: '  . $mysql->connect_error, E_USER_ERROR;
-	}
-
-	$sql = 'Select * FROM user';
-	$sql .= ' WHERE user=\''.$user.'\'';
-
-	$results = $mysql->query($sql);
-
-	if($results === false) {
-	  echo 'Bad SQL or no log: ' . $sql . ' Error: ' . $mysql->error, E_USER_ERROR;
-	}
-
-	$usertable = $results->fetch_assoc();
-
-	$accessToken = new OAuthToken( $usertable['mwtoken'], $usertable['mwsecret'] );
+	flush();
+if ($usertable['mwtoken']) {
+	$accessToken = new OAuthToken( $mwtoken, $mwsecret );
 	$apiParams = array(
 		'action' => 'query',
 		'meta' => 'userinfo',
@@ -107,7 +142,8 @@ $server = 'http://meta.wikimedia.org';
 		echo "<script> $('#insecureinfo').val('No data recieved it seems'); </script>".PHP_EOL;
 		die();
 	}
-
+} else { echo "<script> $('#insecureinfo').val('Did not find user OAuth information, please register.'); </script>".PHP_EOL;}
+flush();
 	?>
 </body>
 </html>
