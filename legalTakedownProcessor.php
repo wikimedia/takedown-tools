@@ -311,7 +311,7 @@ $mwtoken = $usertable['mwtoken'];
 
 			$.post( "mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
-				$('#usertalkresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#'+dsectiontitle+'" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); } 
+				$('#usertalkresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); } 
 			else if ( data && data.error ) {
 				$('#usertalkresult').html(data.edit.error); } 
 			else {
