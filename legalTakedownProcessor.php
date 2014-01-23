@@ -502,6 +502,14 @@ Sincerely,
 					<table>
 						<tr>
 							<td>
+								User table info:
+							</td>
+							<td>
+								<textarea><?php echo print_r($usertable) ?></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td>
 								CE info being sent?
 							</td>
 							<td>
