@@ -27,8 +27,6 @@ date_default_timezone_set('UTC');
 $locationURL = null;
 $filessent = null;
 
-
-
 // cast config and log variables
 $config = parse_ini_file('lcaToolsConfig.ini');
 $sendtoCE = $config['sendtoCE'];
@@ -228,6 +226,11 @@ $insert->bind_param('issssssssssssssssssss',$log_row,$insert_user,$submittime,$i
 $insert->execute();
 $insert->close();
 
+$apiurl = 'https://commons.wikimedia.org/w/api.php';
+$usertable = getUserData($user);
+$mwsecret = $usertable['mwsecret'];
+$mwtoken = $usertable['mwtoken'];
+
 ?>
 
 
@@ -247,6 +250,78 @@ $insert->close();
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
 	</style>
+	<script>
+	$(document).ready(function(){
+		$("#editdmcapage").click( function() {
+			$("#dmcapageresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			var dpagetitle = "Commons:Office_actions/DMCA_notices";
+			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
+			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
+			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
+			var deditsummary = "new takedown";
+			var dtext = $("#commonsdmcapost").val();
+			var daction = "appendtext";
+
+			postdata = { action: daction, pagetitle: dpagetitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
+
+			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			if ( data && data.edit && data.edit.result == 'Success' ) {
+				$('#dmcapageresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices#'+dsectiontitle+'" target="_blank">Commons:DMCA#'+dsectiontitle+'</a>'); } 
+			else if ( data && data.error ) {
+				$('#dmcapageresult').html(data.edit.error); } 
+			else {
+				$('#dmcapageresult').html('hmmm something weird happened');
+					} },"json"); 
+		});
+
+		$("#editvppage").click( function() {
+			$("#commonsvpresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			var dpagetitle = "Commons:Village_pump";
+			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
+			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
+			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
+			var deditsummary = "new DMCA takedown notifcation";
+			var dtext = $("#commonsvppost").val();
+			var daction = "appendtext";
+
+			postdata = { action: daction, pagetitle: dpagetitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
+
+			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			if ( data && data.edit && data.edit.result == 'Success' ) {
+				$('#commonsvpresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/Commons:Village_pump" target="_blank">Commons:Village_pump</a>'); } 
+			else if ( data && data.error ) {
+				$('#commonsvpresult').html(data.edit.error); } 
+			else {
+				$('#commonsvpresult').html('hmmm something weird happened');
+					} },"json"); 
+		});
+
+		$("#editusertalk").click( function() {
+			$("#usertalkresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			var dpagetitle = <?php echo '"User_talk:'.$involved_user.'"';?>;
+			var dsectiontitle = "Notice of upload removal";
+			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
+			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
+			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
+			var deditsummary = "Notice of upload removal";
+			var dtext = $("#commonsusertalk").val();
+			var daction = "newsection";
+
+			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
+
+			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			if ( data && data.edit && data.edit.result == 'Success' ) {
+				$('#usertalkresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#'+dsectiontitle+'" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); } 
+			else if ( data && data.error ) {
+				$('#usertalkresult').html(data.edit.error); } 
+			else {
+				$('#usertalkresult').html('hmmm something weird happened');
+					} },"json"); 
+		});
+
+		
+	});
+	</script>
 </head>
 <body class='mediawiki'>
 	<div id='globalWrapper'>
@@ -282,21 +357,39 @@ $insert->close();
 					<table>
 						<tr>
 							<td>
-								Please post the below text to the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit&amp;section=new&amp;preloadtitle='.htmlspecialchars($commons_title).'">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
+								Please post the below text to the <u>BOTTOM</u> of the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<textarea name='commons-dmca-post' wrap='virtual' rows='18' cols='90'><?php
-								echo "{{subst:DMCA_takedown_notice|".$commons_title.
-								(!empty($wmfwiki_title) ? "|".$wmfwiki_title : "").
-								(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
-								(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
-								(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
-								(array_key_exists(3,$filearray) ? "|".$filearray[3] : "").
-								(array_key_exists(4,$filearray) ? "|".$filearray[4] : "").
-								"}}"?></textarea>
+								<textarea id='commonsdmcapost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90'>
+
+<?php
+echo "{{subst:DMCA_takedown_notice|".$commons_title.
+(!empty($wmfwiki_title) ? "|".$wmfwiki_title : "").
+(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
+(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
+(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
+(array_key_exists(3,$filearray) ? "|".$filearray[3] : "").
+(array_key_exists(4,$filearray) ? "|".$filearray[4] : "").
+"}}";?></textarea>
 							</td>
+						</tr>
+						<tr>
+							<table border='1'>
+								<tr>
+									<td><?php
+									if ($usertable['mwtoken']) {
+										echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editdmcapage" type="button" value="send edit">';
+									} else {
+										echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box'; 
+									}?>
+									</td>
+								</tr>
+								<tr>
+									<td id='dmcapageresult'></td>
+								</tr>
+							</table>
 						</tr>
 						<tr>
 							<td>
@@ -305,16 +398,34 @@ $insert->close();
 						</tr>
 						<tr>
 							<td>
-								<textarea name='commons-dmca-post' wrap='virtual' rows='18' cols='90'><?php
-								echo "{{subst:DMCA_takedown_notice|".$commons_title.
-								(!empty($commons_title) ? "|".$wmfwiki_title : "").
-								(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
-								(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
-								(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
-								(array_key_exists(3,$filearray) ? "|".$filearray[3] : "").
-								(array_key_exists(4,$filearray) ? "|".$filearray[4] : "").
-								"}}"?></textarea>
+								<textarea id='commonsvppost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90'>
+
+<?php
+echo "{{subst:DMCA_takedown_notice|".$commons_title.
+(!empty($commons_title) ? "|".$wmfwiki_title : "").
+(array_key_exists(0,$filearray) ? "|".$filearray[0] : "").
+(array_key_exists(1,$filearray) ? "|".$filearray[1] : "").
+(array_key_exists(2,$filearray) ? "|".$filearray[2] : "").
+(array_key_exists(3,$filearray) ? "|".$filearray[3] : "").
+(array_key_exists(4,$filearray) ? "|".$filearray[4] : "").
+"}}";?></textarea>
 							</td>
+						</tr>
+						<tr>
+							<table border='1'>
+								<tr>
+									<td><?php
+									if ($usertable['mwtoken']) {
+										echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editvppage" type="button" value="send edit">';
+									} else {
+										echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box'; 
+									}?>
+									</td>
+								</tr>
+								<tr>
+									<td id='commonsvpresult'></td>
+								</tr>
+							</table>
 						</tr>
 					</table>
 				</fieldset>
@@ -328,7 +439,8 @@ $insert->close();
 						</tr>
 						<tr>
 							<td>
-								<textarea name='commons-user-warning' wrap='virtual' rows='18' cols='90'>
+								<textarea id ='commonsusertalk' name='commons-user-warning' wrap='virtual' rows='18' cols='90'>
+
 Dear <?php echo $involved_user;?>:
 
 The Wikimedia Foundation (“Wikimedia”) has taken down content that you posted at [[:File:<?echo htmlspecialchars($filearray[0]);?>]] due to Wikimedia’s receipt of a validly formulated notice that your posted content was infringing an existing copyright.  When someone sends us a validly formulated notice of copyright infringement, the Digital Millennium Copyright Act (“DMCA”) Section (c)(1)(C) requires Wikimedia to take the content down, and to notify you that we have removed that content.  This notice, by itself, does not mean that the party requesting that the content be taken down are suing you.  The party requesting the take down might only be interested in removing the content from our site.
@@ -365,9 +477,25 @@ Wikimedia appreciates your support.  Please do not hesitate to contact us if you
 
 Sincerely,
 ~~~~</textarea>
-</td>
-</tr>
-</table>
+							</td>
+						</tr>
+						<tr>
+							<table border='1'>
+								<tr>
+									<td><?php
+									if ($usertable['mwtoken']) {
+										echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editusertalk" type="button" value="send edit">';
+									} else {
+										echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box'; 
+									}?>
+									</td>
+								</tr>
+								<tr>
+									<td id='usertalkresult'></td>
+								</tr>
+							</table>
+						</tr>
+					</table>
 				</fieldset>
 				<fieldset>
 					<legend>Debugging and double checking information for James</legend>
