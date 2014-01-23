@@ -280,7 +280,7 @@ $server = 'http://meta.wikimedia.org';
 	# $log->insert_id;
 	$mysql->close();
 	echo "<script> $('#logged').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL;
-	echo "<script> $('#result').html('<span style=\'color:green\'>CONGRATS! You have successfully registered with the LCA Tools Wiki Editing Program! </span>'); </script>".PHP_EOL;
+	echo "<script> $('#result').html('<span style=\'color:green\'>CONGRATS! You have successfully registered with the LCA Tools Wiki Editing Program. </span>'); </script>".PHP_EOL;
 	flush();
 
 
