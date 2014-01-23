@@ -5,7 +5,7 @@
 		<table border='1' id='mw-movepage-table'> 
 			<tr>
 				<td>
-					<label for='who-received'> Who was this released too? </label> 
+					<label for='who-received'> Who was this released to? </label> 
 				</td>
 				<td>
 					<?php if(!empty($who_received)) { 
