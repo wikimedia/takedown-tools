@@ -85,6 +85,9 @@ multiuseFunctions.php - file with functions used (or which could be used) in mul
 	validateJWT() - function from Chris Steipp to validate mediawiki Json Web Token  
 		Accepts: identity (web token), consumer key, nonce, server (where you got the JWT from)  
 		Response: boolean response  
+	getUserData() - function to grab specific data for user from lcatools user table  
+		Accepts: User  
+		Response: Array of data from user table  
 
 examples folder:  
 NCMECproofofconcept.php - proof of concept form with fake data to exhibit how the NCMEC form works without actual submission. Used for original testing purposes, kept for exhibit purposes.  
