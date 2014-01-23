@@ -13,6 +13,9 @@
 	<script>
 	$(document).ready(function(){
 
+	//validate
+    $("#takedown-form1").validate();
+
 	//initialize datepicker
    var $datepicker = $('#takedown-date').pikaday({
         firstDay: 1,
@@ -107,7 +110,7 @@
 									<label for='involved-user'> Username who added the content: </label>
 								</td>
 								<td>
-									<input id='involved-user' name='involved-user' value='' type='text' size='15' />
+									<input id='involved-user' name='involved-user' value='' type='text' size='15' required/>
 								</td>
 							</tr>
 							<tr>
@@ -208,7 +211,7 @@
 									<label for='takedown-date'> Date the takedown was sent </label>
 								</td>
 								<td>
-									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' /> <img class='showTooltip' src='images/20px-Help.png' title='Please use date selector or format as YYYY-MM-DD' />
+									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' required/> <img class='showTooltip' src='images/20px-Help.png' title='Please use date selector or format as YYYY-MM-DD' />
 									<label for='action-taken'> Action taken? </label>
 									<select name='action-taken' id='action-taken'>
 									<option>Yes</option>
@@ -222,7 +225,7 @@
 									<label for='files-affected'> Files affected </label>
 								</td>
 								<td>
-									<input id='files-affected' name='files-affected' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
+									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
 								</td>
 							</tr>
 							<tr>
@@ -238,7 +241,7 @@
 									<label for='takedown-commons-title'>Commons Title</label>
 								</td>
 								<td>
-									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement'/>
+									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement'/>
 								</td>
 							</tr>
 							<tr>
@@ -246,7 +249,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
 								</td>
 							</tr>
 							<tr>
