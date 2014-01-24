@@ -27,7 +27,7 @@ if ($mysql->connect_error) {
   echo 'Database connection fail: '  . $mysql->connect_error, E_USER_ERROR;
 }
 
-$usersrequest = 'SELECT DISTINCT user FROM user';
+$usersrequest = 'SELECT DISTINCT user FROM centrallog';
 
 $userquery = $mysql->query($usersrequest);
 
