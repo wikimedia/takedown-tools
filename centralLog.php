@@ -27,11 +27,64 @@ if ($mysql->connect_error) {
   echo 'Database connection fail: '  . $mysql->connect_error, E_USER_ERROR;
 }
 
+$usersrequest = 'SELECT DISTINCT user FROM user';
+
+$userquery = $mysql->query($usersrequest);
+
+if($userquery === false) {
+  echo 'Bad SQL or no log: ' . $usersrequest . ' Error: ' . $mysql->error, E_USER_ERROR;
+}
+
+while ($urow = $userquery->fetch_assoc()) {
+	$users[] = $urow['user'];
+}
+
+// to check if log type is legit...hacky but ;)
+$logtypes = array ('dmca', 'ncmec', 'release');
+
 $sql = 'Select * FROM centrallog'; // basic query
 
 $offset = (!empty($_GET['offset'])) ? intval($_GET['offset']) : 0; // offset starts at 0
 
-$sortby = (!empty($_GET['sort'])) ? $_GET['sort'] : "none"; // grab sort options
+$sortby = (!empty($_GET['sort'])) ? $_GET['sort'] : "id"; // grab sort options
+
+$order = (!empty($_GET['order'])) ? $_GET['order'] : "DESC"; // grab order options
+
+$displaytest = (!empty($_GET['displaytest'])) ? $_GET['displaytest'] : 'Y'; // grab test options
+
+$displaytype = (!empty($_GET['displaytype'])) ? $_GET['displaytype'] : 'all'; // grab test options
+
+$displayuser = (!empty($_GET['displayuser'])) ? $_GET['displayuser'] : 'all'; // grab test options
+
+if ( $displaytest == 'N' || in_array( $displaytype, $logtypes ) || in_array( $displayuser, $users ) ) {
+	$sql .= ' WHERE';
+}
+
+if ( $displaytest == 'N' ) {
+	$sql .= ' test="N"';
+}
+
+if ( $displaytest == 'N' && ( in_array( $displaytype, $logtypes ) || in_array( $displayuser, $users ) ) ) {
+	$sql .= ' AND';
+}
+
+if ( in_array( $displaytype, $logtypes ) ) {
+	if ( $displaytype == 'dmca' ) {
+		$sql .= ' type="dmca"';
+	} elseif ( $displaytype == 'release' ) {
+		$sql .= ' type="Release"';
+	} elseif ( $displaytype == 'ncmec' ) {
+		$sql .= ' type="Child Protection"';
+	}
+}
+
+if ( in_array( $displaytype, $logtypes ) && in_array( $displayuser, $users ) ) {
+	$sql .= ' AND';
+}
+
+if ( in_array( $displayuser, $users ) ) {
+	$sql .= ' user="'.$displayuser.'"';
+}
 
 if ($sortby == 'id')
 {
@@ -56,6 +109,14 @@ elseif($sortby == 'title')
 elseif($sortby == 'test')
 {
 	$sql .= ' ORDER BY test';
+} else {
+	$sql .= ' ORDER BY id'; // fall back is always ID but want to still allow for order if someone hasn't set sortby.
+}
+
+if ($order == 'backwards') {
+	// do nothing
+} else {
+	$sql .=' DESC';
 }
 
 $limit = (!empty($_GET['limit'])) ? intval($_GET['limit']) : '50'; // 50 is the limit by default currently not showing other options but hidden ability
@@ -64,7 +125,7 @@ $limit = (!empty($_GET['limit'])) ? intval($_GET['limit']) : '50'; // 50 is the 
 $results = $mysql->query($sql);
 
 if($results === false) {
-  echo 'Bad SQL or no log: ' . $sql . ' Error: ' . $conn->error, E_USER_ERROR;
+  echo 'Bad SQL or no log: ' . $sql . ' Error: ' . $mysql->error, E_USER_ERROR;
 } else {
   $rows_returned = $results->num_rows;
 }
@@ -97,10 +158,31 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 	<script src='scripts/lca.js'></script>
 	<script>
 	$(document).ready(function(){
-		var selected = <?php echo "'".$sortby."'";?>;
+		var sort = <?php echo "'".$sortby."'";?>;
 		$("select#sort option").filter(function() {
-			return $(this).val() == selected;
+			return $(this).val() == sort;
 		}).prop('selected', true);
+
+		var order = <?php echo "'".$order."'";?>;
+		$("select#order option").filter(function() {
+			return $(this).val() == order;
+		}).prop('selected', true);
+
+		var fuser = <?php echo "'".$displayuser."'";?>;
+		$("select#displayuser option").filter(function() {
+			return $(this).val() == fuser;
+		}).prop('selected', true);
+
+		var ftest = <?php echo "'".$displaytest."'";?>;
+		$("select#displaytest option").filter(function() {
+			return $(this).val() == ftest;
+		}).prop('selected', true);
+
+		var ftype = <?php echo "'".$displaytype."'";?>;
+		$("select#displaytype option").filter(function() {
+			return $(this).val() == ftype;
+		}).prop('selected', true);
+
 	});
 
 	</script>
@@ -119,29 +201,94 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 			<div id='content'>
 				<h1> LCA Central Submission Log </h1>
 				<fieldset>
-					<legend>Log manipulation options</legend>
+					<legend>Log options</legend>
 					<form method='GET'>
-						<table border='0' id='mw-movepage-table'> 
+						<table border='0'>
 							<tr>
-								<td>
-									<label for='sort'>Sort by:</label>
+								<td> 
+									<fieldset>
+									<legend> Log manipulation options </legend>
+										<table border='0'>
+											<tr>
+												<td>
+													<label for='sort'>Sort by:</label>
+												</td>
+												<td>
+													<select name='sort' id='sort'>
+														<option value='id'> ID </option>
+														<option value='user'> User submitting </option>
+														<option value='time'> Time submitted </option>
+														<option value='title'> Submittion title </option>
+														<option value='test'> If test </option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for='order'> Order the results: </label>
+												</td>
+												<td>
+													<select name='order' id='order'>
+														<option value='DESC'> Most recent first </option>
+														<option value='backwards'> Oldest first </option>
+													</select>
+												</td>
+											<tr>
+												<td>
+													<label for='limit'> How many items should be shown at once? </label>
+												</td>
+												<td>
+													<input name='limit' id='limit' type='text' size='10' value='<?php echo $limit; ?>' />
+												</td>
+											</tr>
+										</table>
+									</fieldset>
 								</td>
 								<td>
-									<select name='sort' id='sort'>
-										<option value='id'> ID </option>
-										<option value='user'> User submitting </option>
-										<option value='time'> Time submitted </option>
-										<option value='title'> Submittion title </option>
-										<option value='test'> If test </option>
-									</select>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<label for='limit'> How many items should be shown at once? </label>
-								</td>
-								<td>
-									<input name='limit' id='limit' type='text' size='10' value='<?php echo $limit; ?>' />
+									<fieldset>
+									<legend> Log Filter options </legend>
+										<table border='0'>
+											<tr>
+												<td>
+													<label for='displaytest'> Display test actions </label>
+												</td>
+												<td>
+													<select name='displaytest' id='displaytest'>
+														<option value='Y'> Yes </option>
+														<option value='N'> No </option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for='displaytype'> Display log type: </label>
+												</td>
+												<td>
+													<select name='displaytype' id='displaytype'>
+														<option value='all'> All </option>
+														<option value='dmca'> DMCA </option>
+														<option value='ncmec'> Child Protection </option>
+														<option value='release'> Data Release </option>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<label for='displayuser'>Display actions from: </label>
+												</td>
+												<td>
+													<select name='displayuser' id='displayuser'>
+														<option value='all'> All users </option>
+														<?php
+														foreach ($users as $key => $value){
+															echo '<option value="'.$value.'"> '.$value.' </option>';
+														}
+														?>
+													</select>
+												</td>
+											</tr>
+										</table>
+									</fieldset>
 								</td>
 							</tr>
 							<tr>
