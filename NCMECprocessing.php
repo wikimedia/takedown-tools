@@ -14,8 +14,6 @@ New processor with pretty output - Beta
 ---------------------------------------------   */
 
 require_once('include/multiuseFunctions.php');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
 // cast config and log variables

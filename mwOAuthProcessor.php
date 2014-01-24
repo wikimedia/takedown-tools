@@ -17,8 +17,6 @@ require_once('include/OAuth.php');
 require_once('include/MWOAuthSignatureMethod.php');
 require_once('include/JWT.php');
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
 $config = parse_ini_file('lcaToolsConfig.ini');

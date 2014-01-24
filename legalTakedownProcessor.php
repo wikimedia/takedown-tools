@@ -19,8 +19,6 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 ---------------------------------------------   */
 
 require_once('include/multiuseFunctions.php');
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 date_default_timezone_set('UTC');
 
 //null variables that may or may not be set later depending on how it goes
