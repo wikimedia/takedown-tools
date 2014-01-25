@@ -52,7 +52,7 @@
 								<a href="NCMECretract.php"> NCMEC report retraction form </a> 
 							</li>
 							<li id='oauth-register'>
-								<a href="beginoauthregistration.php"> Register with LCA Tools OAuth</a>
+								<a href="beginmwoauthregistration.php"> Register with Mediawiki OAuth</a>
 							</li>
 							<li id='test-oauth'>
 								<a href="testOAuth.php"> Test your stored OAuth data </a> 

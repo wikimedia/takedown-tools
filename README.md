@@ -27,7 +27,7 @@ NCMECretract.php - form to allow retracting a report to NCMEC before the report 
 centralLog.php - calls and displays log for submissions done on all lcatool forms.  
 logDetails.php - displays details of logged events on demand (by clicking title on centraLog.php).  
 
-beginoauthregistration.php - page to start the authorization process with mediawiki oauth  
+beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
 	Begins blank request process then sends user to meta to finish authorization  
 mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
 	Takes verification script and token, verifies against session started on beginoauthregistration.php.  
