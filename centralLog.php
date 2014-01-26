@@ -5,15 +5,15 @@
 Author : James Alexander
 
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
-			
+
 Date of Creation: 2013-12-30
 Last modified: 2014-01-02
 
 Central log for submissions to LCA Tools
-			
+
 ---------------------------------------------   */
 
-$config = parse_ini_file('lcaToolsConfig.ini');
+$config = parse_ini_file( 'lcaToolsConfig.ini' );
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
@@ -21,40 +21,40 @@ $db = $config['database'];
 
 // get and/or set up variables
 
-$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db); // set up mysql connection
+$mysql = new mysqli( $dbaddress, $dbuser, $dbpw, $db ); // set up mysql connection
 
-if ($mysql->connect_error) {
-  echo 'Database connection fail: '  . $mysql->connect_error, E_USER_ERROR;
+if ( $mysql->connect_error ) {
+	echo 'Database connection fail: '  . $mysql->connect_error, E_USER_ERROR;
 }
 
 $usersrequest = 'SELECT DISTINCT user FROM centrallog';
 
-$userquery = $mysql->query($usersrequest);
+$userquery = $mysql->query( $usersrequest );
 
-if($userquery === false) {
-  echo 'Bad SQL or no log: ' . $usersrequest . ' Error: ' . $mysql->error, E_USER_ERROR;
+if ( $userquery === false ) {
+	echo 'Bad SQL or no log: ' . $usersrequest . ' Error: ' . $mysql->error, E_USER_ERROR;
 }
 
-while ($urow = $userquery->fetch_assoc()) {
+while ( $urow = $userquery->fetch_assoc() ) {
 	$users[] = $urow['user'];
 }
 
 // to check if log type is legit...hacky but ;)
-$logtypes = array ('dmca', 'ncmec', 'release');
+$logtypes = array ( 'dmca', 'ncmec', 'release' );
 
 $sql = 'Select * FROM centrallog'; // basic query
 
-$offset = (!empty($_GET['offset'])) ? intval($_GET['offset']) : 0; // offset starts at 0
+$offset = ( !empty( $_GET['offset'] ) ) ? intval( $_GET['offset'] ) : 0; // offset starts at 0
 
-$sortby = (!empty($_GET['sort'])) ? $_GET['sort'] : "id"; // grab sort options
+$sortby = ( !empty( $_GET['sort'] ) ) ? $_GET['sort'] : "id"; // grab sort options
 
-$order = (!empty($_GET['order'])) ? $_GET['order'] : "DESC"; // grab order options
+$order = ( !empty( $_GET['order'] ) ) ? $_GET['order'] : "DESC"; // grab order options
 
-$displaytest = (!empty($_GET['displaytest'])) ? $_GET['displaytest'] : 'Y'; // grab test options
+$displaytest = ( !empty( $_GET['displaytest'] ) ) ? $_GET['displaytest'] : 'Y'; // grab test options
 
-$displaytype = (!empty($_GET['displaytype'])) ? $_GET['displaytype'] : 'all'; // grab test options
+$displaytype = ( !empty( $_GET['displaytype'] ) ) ? $_GET['displaytype'] : 'all'; // grab test options
 
-$displayuser = (!empty($_GET['displayuser'])) ? $_GET['displayuser'] : 'all'; // grab test options
+$displayuser = ( !empty( $_GET['displayuser'] ) ) ? $_GET['displayuser'] : 'all'; // grab test options
 
 if ( $displaytest == 'N' || in_array( $displaytype, $logtypes ) || in_array( $displayuser, $users ) ) {
 	$sql .= ' WHERE';
@@ -86,64 +86,58 @@ if ( in_array( $displayuser, $users ) ) {
 	$sql .= ' user="'.$displayuser.'"';
 }
 
-if ($sortby == 'id')
-{
+if ( $sortby == 'id' ) {
 	$sql .= ' ORDER BY id';
 }
-elseif ($sortby == 'user')
-{
+elseif ( $sortby == 'user' ) {
 	$sql .= ' ORDER BY user';
 }
-elseif ($sortby == 'time')
-{
+elseif ( $sortby == 'time' ) {
 	$sql .= ' ORDER BY timestamp';
 }
-elseif($sortby == 'type')
-{
+elseif ( $sortby == 'type' ) {
 	$sql .= ' ORDER BY type';
 }
-elseif($sortby == 'title')
-{
+elseif ( $sortby == 'title' ) {
 	$sql .= ' ORDER BY title';
 }
-elseif($sortby == 'test')
-{
+elseif ( $sortby == 'test' ) {
 	$sql .= ' ORDER BY test';
 } else {
 	$sql .= ' ORDER BY id'; // fall back is always ID but want to still allow for order if someone hasn't set sortby.
 }
 
-if ($order == 'backwards') {
+if ( $order == 'backwards' ) {
 	// do nothing
 } else {
 	$sql .=' DESC';
 }
 
-$limit = (!empty($_GET['limit'])) ? intval($_GET['limit']) : '50'; // 50 is the limit by default currently not showing other options but hidden ability
-	if ($limit>1000) $limit = 1000; // limit can't be over 1000 for now
+$limit = ( !empty( $_GET['limit'] ) ) ? intval( $_GET['limit'] ) : '50'; // 50 is the limit by default currently not showing other options but hidden ability
+if ( $limit>1000 ) $limit = 1000; // limit can't be over 1000 for now
 
-$results = $mysql->query($sql);
+$results = $mysql->query( $sql );
 
-if($results === false) {
-  echo 'Bad SQL or no log: ' . $sql . ' Error: ' . $mysql->error, E_USER_ERROR;
+if ( $results === false ) {
+	echo 'Bad SQL or no log: ' . $sql . ' Error: ' . $mysql->error, E_USER_ERROR;
 } else {
-  $rows_returned = $results->num_rows;
+	$rows_returned = $results->num_rows;
 }
 
-$results->data_seek($offset);
+$results->data_seek( $offset );
 
 $nextoffset = $offset + $limit;
 
-if (($offset - $limit) < 0) {
+if ( ( $offset - $limit ) < 0 ) {
 	$backoffset = 0;
 } else {
 	$backoffset = $offset - $limit;
 }
 
-$nextquery = http_build_query(array_merge($_GET,array('offset' => $nextoffset)));
+$nextquery = http_build_query( array_merge( $_GET, array( 'offset' => $nextoffset ) ) );
 $nexturl = $_SERVER['PHP_SELF'].'?'.$nextquery;
 
-$backquery = http_build_query(array_merge($_GET,array('offset' => $backoffset)));
+$backquery = http_build_query( array_merge( $_GET, array( 'offset' => $backoffset ) ) );
 $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 
 ?>
@@ -159,27 +153,27 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 	<script>
 	$(document).ready(function(){
 		var sort = <?php echo "'".$sortby."'";?>;
-		$("select#sort option").filter(function() {
+		$('select#sort option').filter(function() {
 			return $(this).val() == sort;
 		}).prop('selected', true);
 
 		var order = <?php echo "'".$order."'";?>;
-		$("select#order option").filter(function() {
+		$('select#order option').filter(function() {
 			return $(this).val() == order;
 		}).prop('selected', true);
 
 		var fuser = <?php echo "'".$displayuser."'";?>;
-		$("select#displayuser option").filter(function() {
+		$('select#displayuser option').filter(function() {
 			return $(this).val() == fuser;
 		}).prop('selected', true);
 
 		var ftest = <?php echo "'".$displaytest."'";?>;
-		$("select#displaytest option").filter(function() {
+		$('select#displaytest option').filter(function() {
 			return $(this).val() == ftest;
 		}).prop('selected', true);
 
 		var ftype = <?php echo "'".$displaytype."'";?>;
-		$("select#displaytype option").filter(function() {
+		$('select#displaytype option').filter(function() {
 			return $(this).val() == ftype;
 		}).prop('selected', true);
 
@@ -188,7 +182,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 	</script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
@@ -205,7 +199,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 					<form method='GET'>
 						<table border='0'>
 							<tr>
-								<td> 
+								<td>
 									<fieldset>
 									<legend> Log manipulation options </legend>
 										<table border='0'>
@@ -280,10 +274,10 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 													<select name='displayuser' id='displayuser'>
 														<option value='all'> All users </option>
 														<?php
-														foreach ($users as $key => $value){
-															echo '<option value="'.$value.'"> '.$value.' </option>';
-														}
-														?>
+foreach ( $users as $key => $value ) {
+	echo '<option value="'.$value.'"> '.$value.' </option>';
+}
+?>
 													</select>
 												</td>
 											</tr>
@@ -301,19 +295,19 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 				</fieldset>
 				<fieldset>
 					<legend>Log data </legend>
-					<table border='1' id='mw-movepage-table'> 
+					<table border='1' id='mw-movepage-table'>
 						<tr>
 							<td colspan='6'>
-								<span style='float:left;'><?php if ($offset==0) {
-									echo '<b> &#60;&#60; BACK </b>';
-								} else {
-									echo '<a href="'.$backurl.'"> &#60;&#60; BACK </a>';
-								} ?></span>
-								<span style='float:right'><?php if (($offset + $limit) > $rows_returned) {
-									echo '<b> NEXT &#62;&#62; </b>';
-								} else {
-									echo '<a href="'.$nexturl.'"> NEXT &#62;&#62; </a>';
-								} ?></span>
+								<span style='float:left;'><?php if ( $offset==0 ) {
+	echo '<b> &#60;&#60; BACK </b>';
+} else {
+	echo '<a href="'.$backurl.'"> &#60;&#60; BACK </a>';
+} ?></span>
+								<span style='float:right'><?php if ( ( $offset + $limit ) > $rows_returned ) {
+	echo '<b> NEXT &#62;&#62; </b>';
+} else {
+	echo '<a href="'.$nexturl.'"> NEXT &#62;&#62; </a>';
+} ?></span>
 							</td>
 						</tr>
 						<tr>
@@ -325,24 +319,24 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 							<th> Test? </th>
 						</tr>
 						<?php
-						$i = 0;
-						while (($row = $results->fetch_assoc()) && ($i < $limit)) {
-							echo '<tr>';
-							echo '<td> '. $row['id'] . '</td>';
-							echo '<td> '. $row['user'] . '</td>';
-							echo '<td> '. $row['timestamp'] . '</td>';
-							echo '<td> '. $row['type'] . '</td>';
-							echo '<td> '. '<a href="logDetails.php?logid='.$row['id'].'">'. $row['title'] . '</a></td>';
-							echo '<td> '. $row['test'] . '</td>';
-							echo '</tr>';
-							$i++;
-						}
-						?>
+$i = 0;
+while ( ( $row = $results->fetch_assoc() ) && ( $i < $limit ) ) {
+	echo '<tr>';
+	echo '<td> '. $row['id'] . '</td>';
+	echo '<td> '. $row['user'] . '</td>';
+	echo '<td> '. $row['timestamp'] . '</td>';
+	echo '<td> '. $row['type'] . '</td>';
+	echo '<td> '. '<a href="logDetails.php?logid='.$row['id'].'">'. $row['title'] . '</a></td>';
+	echo '<td> '. $row['test'] . '</td>';
+	echo '</tr>';
+	$i++;
+}
+?>
 					</table>
 				</fieldset>
 			</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>

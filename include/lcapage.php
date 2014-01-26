@@ -49,13 +49,13 @@
 								<a href="centralLog.php"> Central submission Log </a>
 							</li>
 							<li id='ncmec-retract'>
-								<a href="NCMECretract.php"> NCMEC report retraction form </a> 
+								<a href="NCMECretract.php"> NCMEC report retraction form </a>
 							</li>
 							<li id='oauth-register'>
 								<a href="beginmwoauthregistration.php"> Register with Mediawiki OAuth</a>
 							</li>
 							<li id='test-oauth'>
-								<a href="testOAuth.php"> Test your stored OAuth data </a> 
+								<a href="testOAuth.php"> Test your stored OAuth data </a>
 							</li>
 						</ul>
 					</div>
