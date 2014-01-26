@@ -259,3 +259,8 @@ function getUserData($user) {
 	$mysql->close();
 	return $usertable;
 }
+
+function makehttps($url) {
+	$url = str_replace("http", "https", $url, 1);
+	return $url;
+}
