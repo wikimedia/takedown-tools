@@ -1,30 +1,27 @@
 <?php
 
-require_once('include/multiuseFunctions.php');
-date_default_timezone_set('UTC');
+require_once 'include/multiuseFunctions.php';
+require_once 'include/OAuth.php';
+require_once 'include/MWOAuthSignatureMethod.php';
+require_once 'include/JWT.php';
+date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
-$config = parse_ini_file('lcaToolsConfig.ini');
+$config = parse_ini_file( 'lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
-require_once('include/OAuth.php');
-require_once('include/MWOAuthSignatureMethod.php');
-require_once('include/JWT.php');
-
 $consumerKey = $config['mwconsumer_key'];
+$secretKey = file_get_contents( 'lcatoolskey.pem' );
 
-$secretKey = file_get_contents('lcatoolskey.pem');
-
-if (empty($secretKey)) {
-	die('You do not seem to have the required RSA Private key in the main app folder, please alert your nearest developer and tell them to get their shit together');
+if ( empty( $secretKey ) ) {
+	die( 'You do not seem to have the required RSA Private key in the main app folder, please alert your nearest developer and tell them to get their shit together' );
 }
 
-$apiurl = 'https://meta.wikimedia.org/w/api.php';
-$server = 'http://meta.wikimedia.org';
-$usertable = getUserData($user);
+$apiurl = makehttps( $config['mw_oauthserver'] ).'/w/api.php';
+$usertable = getUserData( $user );
 $mwsecret = $usertable['mwsecret'];
 $mwtoken = $usertable['mwtoken'];
 
@@ -41,7 +38,7 @@ $mwtoken = $usertable['mwtoken'];
 	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
@@ -65,17 +62,17 @@ $mwtoken = $usertable['mwtoken'];
 			$.post( "mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
 				$('#testedit').val(JSON.stringify(data));
-				$('#result').html(data.edit.result + 'you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); } 
+				$('#result').html(data.edit.result + 'you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); }
 			else if ( data && data.error ) {
 				$('#testedit').val(JSON.stringify(data));
-				$('#result').html(data.edit.error); } 
+				$('#result').html(data.edit.error); }
 			else {
 				$('#testedit').val(JSON.stringify(data));
 				$('#result').html('hmmm something weird happened');
-					} },"json"); 
+					} },"json");
 		});
 
-		
+
 	});
 	</script>
 
@@ -94,11 +91,11 @@ $mwtoken = $usertable['mwtoken'];
 					<table>
 						<tr>
 							<td><?php
-									if ($usertable['mwtoken']) {
-										echo 'Found user OAuth Information! Want to try an edit? Click the button to the right!';
-									} else {
-										echo 'Did not find user OAuth information, please register using the link on the sidebar'.'<script> $("#testedit").attr("readonly", true);</script>'; 
-								}?>
+if ( $usertable['mwtoken'] ) {
+	echo 'Found user OAuth Information! Want to try an edit? Click the button to the right!';
+} else {
+	echo 'Did not find user OAuth information, please register using the link on the sidebar'.'<script> $("#testedit").attr("readonly", true);</script>';
+}?>
 							</td>
 							<td>
 								<input id='editbutton' type='button' value='Start test edit'>
@@ -112,11 +109,11 @@ $mwtoken = $usertable['mwtoken'];
 
 				</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 	</div>
 	<?php
-	flush();
-if ($usertable['mwtoken']) {
+flush();
+if ( $usertable['mwtoken'] ) {
 	$accessToken = new OAuthToken( $mwtoken, $mwsecret );
 	$apiParams = array(
 		'action' => 'query',
@@ -128,13 +125,13 @@ if ($usertable['mwtoken']) {
 	$consumer = new OAuthConsumer( $consumerKey, $secretKey );
 	$signer = new MWOAuthSignatureMethod_RSA_SHA1( new OAuthDataStore(), $secretKey );
 
-	$api_req = OAuthRequest::from_consumer_and_token($consumer,$accessToken,"GET",$apiurl,$apiParams);
+	$api_req = OAuthRequest::from_consumer_and_token( $consumer, $accessToken, "GET", $apiurl, $apiParams );
 	$api_req->sign_request( $signer, $consumer, $accessToken );
 
-	$basicid = mwOAuthAPIcall($apiurl,$apiParams, $api_req);
+	$basicid = mwOAuthAPIcall( $apiurl, $apiParams, $api_req );
 
 
-	if ($basicid) {
+	if ( $basicid ) {
 		echo "<script> $('#insecureinfo').val('".$basicid."'); </script>".PHP_EOL;
 	} else {
 		echo "<script> $('#insecureinfo').val('No data recieved it seems'); </script>".PHP_EOL;
@@ -142,6 +139,6 @@ if ($usertable['mwtoken']) {
 	}
 } else { echo "<script> $('#insecureinfo').val('Did not find user OAuth information, please register.'); </script>".PHP_EOL;}
 flush();
-	?>
+?>
 </body>
 </html>
