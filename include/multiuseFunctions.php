@@ -260,6 +260,6 @@ function getUserData( $user ) {
 }
 
 function makehttps( $url ) {
-	$url = str_replace( "http", "https", $url, 1 );
+	$url = preg_replace("/^http:/", "https:", $url, 1);	
 	return $url;
 }
