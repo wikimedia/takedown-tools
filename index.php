@@ -8,7 +8,7 @@
 	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
 	td { vertical-align: top; }
@@ -62,32 +62,32 @@
 
 			</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 		</div>
 		<?php
-		flush();
-		require_once('include/multiuseFunctions.php');
-		$config = parse_ini_file('lcaToolsConfig.ini');
-		$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
-		$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
-		$produsername = $config['NCMEC_user_prod'];
-		$prodpassword = $config['NCMEC_password_prod'];
-		$testusername = $config['NCMEC_user_test'];
-		$testpassword = $config['NCMEC_password_test'];
+flush();
+require_once 'include/multiuseFunctions.php';
+$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
+$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
+$produsername = $config['NCMEC_user_prod'];
+$prodpassword = $config['NCMEC_password_prod'];
+$testusername = $config['NCMEC_user_test'];
+$testpassword = $config['NCMEC_password_test'];
 
-		$prodresult = NCMECstatus($produsername,$prodpassword,$NCMEC_URL_Production);
-		if ( $prodresult === '0') {
-			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
-		} else {
-			echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-		}
-		flush();
-		$testresult = NCMECstatus($testusername,$testpassword,$NCMEC_URL_Test);
-		if ( $testresult === '0') {
-			echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
-		} else {
-			echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-		}
-		flush();?>
+$prodresult = NCMECstatus( $produsername, $prodpassword, $NCMEC_URL_Production );
+if ( $prodresult === '0' ) {
+	echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+} else {
+	echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+}
+flush();
+$testresult = NCMECstatus( $testusername, $testpassword, $NCMEC_URL_Test );
+if ( $testresult === '0' ) {
+	echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+} else {
+	echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+}
+flush();?>
 	</body>
 </html>
