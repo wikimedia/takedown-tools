@@ -38,14 +38,14 @@
     }).mouseout(function () {
         $this = $(this);
         $this.attr('title', $this.data('title'));
-    }); 
+    });
 
 });
-    
+
 </script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
 	td { vertical-align: top; }
@@ -75,7 +75,7 @@
 					</table>
 					<fieldset>
 						<legend>Release info</legend>
-						<table border='1' id='mw-movepage-table'> 
+						<table border='1' id='mw-movepage-table'>
 							<tr>
 								<td>
 									<label for='who-received'> Who was this released too? </label> <img class='showTooltip' src='images/20px-Help.png' title='Choose as many as make qualify, remember to check the other box if you fill out the text field.'/>
@@ -111,7 +111,7 @@
 									<label for='who-released'> Who released the information? </label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the person&#39;s name'/>
 								</td>
 								<td>
-									<input type='text' value='' name='who-released' id='who-released' size='30' /> 
+									<input type='text' value='' name='who-released' id='who-released' size='30' />
 								</td>
 							</tr>
 							<tr>
@@ -119,7 +119,7 @@
 									<label for='who-released-to'>What is the name of the person to whom it was released?</label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the contacts name'/>
 								</td>
 								<td>
-									<input type='text' value='' name='who-released-to' id='who-released-to' size='30' /> 
+									<input type='text' value='' name='who-released-to' id='who-released-to' size='30' />
 								</td>
 							</tr>
 							<tr>
@@ -136,11 +136,11 @@
 						<legend>Please describe the situation, including any applicable links. </legend>
 						<textarea name='details' wrap='virtual' rows='18' cols='70'></textarea>
 					</fieldset>
-					<input type='submit' value='Process' /> 
+					<input type='submit' value='Process' />
 				</form>
 			</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>
