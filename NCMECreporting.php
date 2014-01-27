@@ -1,29 +1,29 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
-	<title>Child Protection Takedown</title>
-	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/jquery.validate.min.js'></script>
-	<script src='scripts/moment.min.js'></script>
-	<script src='scripts/pikaday.js'></script>
-	<script src='scripts/pikaday.jquery.js'></script>
-	<script src='scripts/lca.js'></script>
-	<script>
-	$(document).ready(function(){
+    <link rel='shortcut icon' href='images/favicon.ico'/>
+    <title>Child Protection Takedown</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <script src='scripts/jquery-1.10.2.min.js'></script>
+    <script src='scripts/jquery.validate.min.js'></script>
+    <script src='scripts/moment.min.js'></script>
+    <script src='scripts/pikaday.js'></script>
+    <script src='scripts/pikaday.jquery.js'></script>
+    <script src='scripts/lca.js'></script>
+    <script>
+    $(document).ready(function(){
 
     //validate
     $("#ncmec-form1").validate();
 
-	//initialize datepickers
+    //initialize datepickers
 
     var $datepicker1 = $('#access-date').pikaday({
         firstDay: 1,
         minDate: new Date('2000-01-01'),
         maxDate: new Date('2020-12-31'),
         yearRange: [2000,2020]
-    });    
+    });
 
     var $datepicker2 = $('#incident-date').pikaday({
         firstDay: 1,
@@ -61,14 +61,14 @@
     }).mouseout(function () {
         $this = $(this);
         $this.attr('title', $this.data('title'));
-    }); 
-    
-    var selectedH = <?php echo "'".gmdate("H",time())."'"?>;
+    });
+
+    var selectedH = <?php echo "'".gmdate( "H", time() )."'"?>;
     $("select#access-time-hour option").filter(function() {
         return $(this).val() == selectedH;
     }).prop('selected', true);
 
-    var selectedi = <?php echo "'".gmdate("i",time())."'"?>;
+    var selectedi = <?php echo "'".gmdate( "i", time() )."'"?>;
     $("select#access-time-min option").filter(function() {
         return $(this).val() == selectedi;
     }).prop('selected', true);
@@ -87,43 +87,43 @@
 
 
 });
-    
+
 </script>
-	<style type='text/css'>
-	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
-	@import 'css/pikaday.css';
-	@import 'css/lca.css';
-	/* ]]> */-->
-	.external, .external:visited { color: #222222; }
-	.autocomment{color:gray}
-	</style>
+    <style type='text/css'>
+    <!--/* <![CDATA[ */
+    @import 'css/main.css';
+    @import 'css/pikaday.css';
+    @import 'css/lca.css';
+    /* ]]> */-->
+    .external, .external:visited { color: #222222; }
+    .autocomment{color:gray}
+    </style>
 </head>
 <body class='mediawiki'>
-	<div id='globalWrapper'>
-		<div id='column-content'>
-			<div id='content'>
-				<h1>Child Protection Takedown</h1>
+    <div id='globalWrapper'>
+        <div id='column-content'>
+            <div id='content'>
+                <h1>Child Protection Takedown</h1>
                 <table border='1' style='position:absolute; left:10spx; top:40px;'>
                         <tr>
                             <td>
                                 Server/Connection Status
                             </td>
                             <td >
-                                Production  
+                                Production
                                 <img id='ncmec-prod' src='images/List-remove.svg' width='15px'/>
                             </td>
                             <td>
-                                Test  
+                                Test
                                 <img id='ncmec-test' src='images/List-remove.svg' width='15px'/>
                             </td>
                         </tr>
                 </table>
-				<br />
-				<form method='post' action='NCMECprocessing.php' id='ncmec-form1' enctype='multipart/form-data'>
+                <br />
+                <form method='post' action='NCMECprocessing.php' id='ncmec-form1' enctype='multipart/form-data'>
                     <fieldset>
                         <legend>Logging Data</legend>
-                        <table border='1' id='mw-movepage-table'> 
+                        <table border='1' id='mw-movepage-table'>
                             <tr>
                                 <td>
                                     <label for='legal-approved'> Was this release to NCMEC Approved by the legal department? </label>
@@ -139,8 +139,8 @@
                                 <td>
                                     <label for='who-approved'>If Yes: Who in the legal department approved the release?</label>
                                 </td>
-                                <td> 
-                                    <input id ='who-approved' name='who-approved' type='text' size='30' value=''> 
+                                <td>
+                                    <input id ='who-approved' name='who-approved' type='text' size='30' value=''>
                                 </td>
                             </tr>
                             <tr>
@@ -172,9 +172,9 @@
                             </tr>
                         </table>
                     </fieldset>
-					<fieldset>
-						<legend> Information about the reporter </legend>
-                        <table border='0' id='mw-movepage-table'> 
+                    <fieldset>
+                        <legend> Information about the reporter </legend>
+                        <table border='0' id='mw-movepage-table'>
                             <tr>
                                 <td>
                                     <label for='is-test'> Is this a test? </label>
@@ -278,7 +278,7 @@
                                         <option value='58'>58</option>
                                         <option value='59'>59</option>
                                     </select>
-                                    <img class='showTooltip' src='images/20px-Help.png' title='All date/times UTC. Please use date selector or format as YYYY-MM-DD for first box. This should be the time and date that YOU (the reporter) accessed the file. 
+                                    <img class='showTooltip' src='images/20px-Help.png' title='All date/times UTC. Please use date selector or format as YYYY-MM-DD for first box. This should be the time and date that YOU (the reporter) accessed the file.
                                     It is preset to the report time as a rough guess given WMF standard process however if you are filling this out much later you should adjust it.' />
                                 </td>
                             </tr>
@@ -489,37 +489,32 @@
                 </form>
             </div>
         </div>
-        <?php include('include/lcapage.php'); ?>
+        <?php include 'include/lcapage.php'; ?>
     </div>
     <?php
-    flush();
-        require_once('include/multiuseFunctions.php');
-        $config = parse_ini_file('lcaToolsConfig.ini');
-        $NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
-        $NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
-        $produsername = $config['NCMEC_user_prod'];
-        $prodpassword = $config['NCMEC_password_prod'];
-        $testusername = $config['NCMEC_user_test'];
-        $testpassword = $config['NCMEC_password_test'];
-        $prodresult = NCMECstatus($produsername,$prodpassword,$NCMEC_URL_Production);
-        if ( $prodresult === '0') {
-            echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
-        } else {
-            echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-        }
-        flush();
-        $testresult = NCMECstatus($testusername,$testpassword,$NCMEC_URL_Test);
-        if ( $testresult === '0') {
-            echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
-        } else {
-            echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-        }
-        flush();
-        ?>
+flush();
+require_once 'include/multiuseFunctions.php';
+$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
+$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
+$produsername = $config['NCMEC_user_prod'];
+$prodpassword = $config['NCMEC_password_prod'];
+$testusername = $config['NCMEC_user_test'];
+$testpassword = $config['NCMEC_password_test'];
+$prodresult = NCMECstatus( $produsername, $prodpassword, $NCMEC_URL_Production );
+if ( $prodresult === '0' ) {
+    echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+} else {
+    echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+}
+flush();
+$testresult = NCMECstatus( $testusername, $testpassword, $NCMEC_URL_Test );
+if ( $testresult === '0' ) {
+    echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+} else {
+    echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+}
+flush();
+?>
 </body>
 </html>
-
-
-
-
-

@@ -5,22 +5,22 @@
 Author : James Alexander
 
 License: MIT (see http://opensource.org/licenses/MIT and LICENSE.txt which should be in the root folder with this file)
-			
+
 Date of creation : 2014-01-06
 
 NCMEC reporting form for Child Protection takedowns
-			
+
 ---------------------------------------------   */
 
-require_once('include/multiuseFunctions.php');
-date_default_timezone_set('UTC');
+require_once 'include/multiuseFunctions.php';
+date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
-$config = parse_ini_file('lcaToolsConfig.ini');
+$config = parse_ini_file( 'lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $istest = $_POST['is-test'];
 
-if ($istest === 'N') {
+if ( $istest === 'N' ) {
 	$NCMECurl = $config['NCMEC_URL_Production'];
 	$ncusername = $config['NCMEC_user_prod'];
 	$ncpassword = $config['NCMEC_password_prod'];
@@ -74,198 +74,198 @@ $openReport = new DOMDocument();
 $openReport->formatOutput = true;
 $openReport->encoding='UTF-8';
 
-$reportroot = $openReport->createElement('report');
-$openReport->appendChild($reportroot);
+$reportroot = $openReport->createElement( 'report' );
+$openReport->appendChild( $reportroot );
 
-$incidentSummary = $openReport->createElement('incidentSummary');
-$reportroot->appendChild($incidentSummary);
+$incidentSummary = $openReport->createElement( 'incidentSummary' );
+$reportroot->appendChild( $incidentSummary );
 
-$incidentType = $openReport->createElement('incidentType');
+$incidentType = $openReport->createElement( 'incidentType' );
 //FIXME ASSUMPTION, not even asking yet
-$incidentTypeText = $openReport->createTextNode('Child Pornography (possession, manufacture, and distribution)');
-$incidentType->appendChild($incidentTypeText);
+$incidentTypeText = $openReport->createTextNode( 'Child Pornography (possession, manufacture, and distribution)' );
+$incidentType->appendChild( $incidentTypeText );
 
-$incidentDateTime = $openReport->createElement('incidentDateTime',$incdatetime);
+$incidentDateTime = $openReport->createElement( 'incidentDateTime', $incdatetime );
 
-$incidentSummary->appendChild($incidentType);
-$incidentSummary->appendChild($incidentDateTime);
+$incidentSummary->appendChild( $incidentType );
+$incidentSummary->appendChild( $incidentDateTime );
 
-$internetDetails = $openReport->createElement('internetDetails');
-$reportroot->appendChild($internetDetails);
+$internetDetails = $openReport->createElement( 'internetDetails' );
+$reportroot->appendChild( $internetDetails );
 
 //FIXME ASSUMPTION, asked but not checking
-$webPageIncident = $openReport->createElement('webPageIncident');
-$internetDetails->appendChild($webPageIncident);
+$webPageIncident = $openReport->createElement( 'webPageIncident' );
+$internetDetails->appendChild( $webPageIncident );
 
-$webPageURL = $openReport->createElement('url');
-$webPageURLvalue = $openReport->createTextNode($incurl);
-$webPageURL->appendChild($webPageURLvalue);
-$webPageIncident->appendChild($webPageURL);
+$webPageURL = $openReport->createElement( 'url' );
+$webPageURLvalue = $openReport->createTextNode( $incurl );
+$webPageURL->appendChild( $webPageURLvalue );
+$webPageIncident->appendChild( $webPageURL );
 
-$reporter = $openReport->createElement('reporter');
-$reportroot->appendChild($reporter);
+$reporter = $openReport->createElement( 'reporter' );
+$reportroot->appendChild( $reporter );
 
-$reportingPerson = $openReport->createElement('reportingPerson');
-$reporter->appendChild($reportingPerson);
+$reportingPerson = $openReport->createElement( 'reportingPerson' );
+$reporter->appendChild( $reportingPerson );
 
 // set up reporting person elements
-$reporterfirstname = $openReport->createElement('firstName');
-$reporterfirstnametext = $openReport->createTextNode($reporterfname);
-$reporterfirstname->appendChild($reporterfirstnametext);
+$reporterfirstname = $openReport->createElement( 'firstName' );
+$reporterfirstnametext = $openReport->createTextNode( $reporterfname );
+$reporterfirstname->appendChild( $reporterfirstnametext );
 
-$reporterlastname = $openReport->createElement('lastName');
-$reporterlastnametext = $openReport->createTextNode($reporterlname);
-$reporterlastname->appendChild($reporterlastnametext);
+$reporterlastname = $openReport->createElement( 'lastName' );
+$reporterlastnametext = $openReport->createTextNode( $reporterlname );
+$reporterlastname->appendChild( $reporterlastnametext );
 
-$reporteremailpost = $openReport->createElement('email');
-$reporteremailtext = $openReport->createTextNode($reporteremail);
-$reporteremailpost->appendChild($reporteremailtext);
+$reporteremailpost = $openReport->createElement( 'email' );
+$reporteremailtext = $openReport->createTextNode( $reporteremail );
+$reporteremailpost->appendChild( $reporteremailtext );
 
-$reporteraddress = $openReport->createElement('address');
-$reporteraddress->setAttribute('type','Business');
+$reporteraddress = $openReport->createElement( 'address' );
+$reporteraddress->setAttribute( 'type', 'Business' );
 
 //set up reporter address elements
-$reportersaddress = $openReport->createElement('address');
-$reportersaddresstext = $openReport->createTextNode($config['NCMEC_Contact_saddress']);
-$reportersaddress->appendChild($reportersaddresstext);
+$reportersaddress = $openReport->createElement( 'address' );
+$reportersaddresstext = $openReport->createTextNode( $config['NCMEC_Contact_saddress'] );
+$reportersaddress->appendChild( $reportersaddresstext );
 
-$reportercity = $openReport->createElement('city');
-$reportercitytext = $openReport->createTextNode($config['NCMEC_Contact_City']);
-$reportercity->appendChild($reportercitytext);
+$reportercity = $openReport->createElement( 'city' );
+$reportercitytext = $openReport->createTextNode( $config['NCMEC_Contact_City'] );
+$reportercity->appendChild( $reportercitytext );
 
-$reporterstate = $openReport->createElement('state');
-$reporsterstatetext = $openReport->createTextNode($config['NCMEC_Contact_State']);
-$reporterstate->appendChild($reporsterstatetext);
+$reporterstate = $openReport->createElement( 'state' );
+$reporsterstatetext = $openReport->createTextNode( $config['NCMEC_Contact_State'] );
+$reporterstate->appendChild( $reporsterstatetext );
 
-$reportercountry = $openReport->createElement('country');
-$reportercountrytext = $openReport->createTextNode($config['NCMEC_Contact_Country']);
-$reportercountry->appendChild($reportercountrytext);
+$reportercountry = $openReport->createElement( 'country' );
+$reportercountrytext = $openReport->createTextNode( $config['NCMEC_Contact_Country'] );
+$reportercountry->appendChild( $reportercountrytext );
 
-$reporterzip = $openReport->createElement('zipCode');
-$reporterziptext = $openReport->createTextNode($config['NCMEC_Contact_Zip']);
-$reporterzip->appendChild($reporterziptext);
+$reporterzip = $openReport->createElement( 'zipCode' );
+$reporterziptext = $openReport->createTextNode( $config['NCMEC_Contact_Zip'] );
+$reporterzip->appendChild( $reporterziptext );
 
 // attach address elements to reporteraddress
-$reporteraddress->appendChild($reportersaddress);
-$reporteraddress->appendChild($reportercity);
-$reporteraddress->appendChild($reporterzip);
-$reporteraddress->appendChild($reporterstate);
-$reporteraddress->appendChild($reportercountry);
+$reporteraddress->appendChild( $reportersaddress );
+$reporteraddress->appendChild( $reportercity );
+$reporteraddress->appendChild( $reporterzip );
+$reporteraddress->appendChild( $reporterstate );
+$reporteraddress->appendChild( $reportercountry );
 
 // attach reporting person elements
-$reportingPerson->appendChild($reporterfirstname);
-$reportingPerson->appendChild($reporterlastname);
-$reportingPerson->appendChild($reporteremailpost);
-$reportingPerson->appendChild($reporteraddress);
+$reportingPerson->appendChild( $reporterfirstname );
+$reportingPerson->appendChild( $reporterlastname );
+$reportingPerson->appendChild( $reporteremailpost );
+$reportingPerson->appendChild( $reporteraddress );
 
-$contact = $openReport->createElement('contactPerson');
-$reporter->appendChild($contact);
+$contact = $openReport->createElement( 'contactPerson' );
+$reporter->appendChild( $contact );
 
 //set up contact person elements (this looks familiar)
-$contactfirstname = $openReport->createElement('firstName');
-$contactfirstnametext = $openReport->createTextNode($config['NCMEC_Contact_fname']);
-$contactfirstname->appendChild($contactfirstnametext);
+$contactfirstname = $openReport->createElement( 'firstName' );
+$contactfirstnametext = $openReport->createTextNode( $config['NCMEC_Contact_fname'] );
+$contactfirstname->appendChild( $contactfirstnametext );
 
-$contactlastname = $openReport->createElement('lastName');
-$contactlastnametext = $openReport->createTextNode($config['NCMEC_Contact_lname']);
-$contactlastname->appendChild($contactlastnametext);
+$contactlastname = $openReport->createElement( 'lastName' );
+$contactlastnametext = $openReport->createTextNode( $config['NCMEC_Contact_lname'] );
+$contactlastname->appendChild( $contactlastnametext );
 
-$contactemailpost = $openReport->createElement('email');
-$contactemailtext = $openReport->createTextNode($config['NCMEC_Contact_Email']);
-$contactemailpost->appendChild($contactemailtext);
+$contactemailpost = $openReport->createElement( 'email' );
+$contactemailtext = $openReport->createTextNode( $config['NCMEC_Contact_Email'] );
+$contactemailpost->appendChild( $contactemailtext );
 
-$contactphone = $openReport->createElement('phone');
-$contactphone->setAttribute('type','Business');
-$contactphonetext = $openReport->createTextNode($config['NCMEC_Contact_phone']);
-$contactphone->appendChild($contactphonetext);
+$contactphone = $openReport->createElement( 'phone' );
+$contactphone->setAttribute( 'type', 'Business' );
+$contactphonetext = $openReport->createTextNode( $config['NCMEC_Contact_phone'] );
+$contactphone->appendChild( $contactphonetext );
 
-$contactaddress = $openReport->createElement('address');
-$contactaddress->setAttribute('type','Business');
+$contactaddress = $openReport->createElement( 'address' );
+$contactaddress->setAttribute( 'type', 'Business' );
 
 //set up reporter address elements
-$contactsaddress = $openReport->createElement('address');
-$contactsaddresstext = $openReport->createTextNode($config['NCMEC_Contact_saddress']);
-$contactsaddress->appendChild($contactsaddresstext);
+$contactsaddress = $openReport->createElement( 'address' );
+$contactsaddresstext = $openReport->createTextNode( $config['NCMEC_Contact_saddress'] );
+$contactsaddress->appendChild( $contactsaddresstext );
 
-$contactcity = $openReport->createElement('city');
-$contactcitytext = $openReport->createTextNode($config['NCMEC_Contact_City']);
-$contactcity->appendChild($contactcitytext);
+$contactcity = $openReport->createElement( 'city' );
+$contactcitytext = $openReport->createTextNode( $config['NCMEC_Contact_City'] );
+$contactcity->appendChild( $contactcitytext );
 
-$contactstate = $openReport->createElement('state');
-$contactstatetext = $openReport->createTextNode($config['NCMEC_Contact_State']);
-$contactstate->appendChild($contactstatetext);
+$contactstate = $openReport->createElement( 'state' );
+$contactstatetext = $openReport->createTextNode( $config['NCMEC_Contact_State'] );
+$contactstate->appendChild( $contactstatetext );
 
-$contactcountry = $openReport->createElement('country');
-$contactcountrytext = $openReport->createTextNode($config['NCMEC_Contact_Country']);
-$contactcountry->appendChild($contactcountrytext);
+$contactcountry = $openReport->createElement( 'country' );
+$contactcountrytext = $openReport->createTextNode( $config['NCMEC_Contact_Country'] );
+$contactcountry->appendChild( $contactcountrytext );
 
-$contactzip = $openReport->createElement('zipCode');
-$contactziptext = $openReport->createTextNode($config['NCMEC_Contact_Zip']);
-$contactzip->appendChild($contactziptext);
+$contactzip = $openReport->createElement( 'zipCode' );
+$contactziptext = $openReport->createTextNode( $config['NCMEC_Contact_Zip'] );
+$contactzip->appendChild( $contactziptext );
 
 // attach address elements to reporteraddress
-$contactaddress->appendChild($contactsaddress);
-$contactaddress->appendChild($contactcity);
-$contactaddress->appendChild($contactzip);
-$contactaddress->appendChild($contactstate);
-$contactaddress->appendChild($contactcountry);
+$contactaddress->appendChild( $contactsaddress );
+$contactaddress->appendChild( $contactcity );
+$contactaddress->appendChild( $contactzip );
+$contactaddress->appendChild( $contactstate );
+$contactaddress->appendChild( $contactcountry );
 
 // attach reporting person elements
-$contact->appendChild($contactfirstname);
-$contact->appendChild($contactlastname);
-$contact->appendChild($contactphone);
-$contact->appendChild($contactemailpost);
-$contact->appendChild($contactaddress);
+$contact->appendChild( $contactfirstname );
+$contact->appendChild( $contactlastname );
+$contact->appendChild( $contactphone );
+$contact->appendChild( $contactemailpost );
+$contact->appendChild( $contactaddress );
 
 
-$incidentUser = $openReport->createElement('personOrUserReported');
-$reportroot->appendChild($incidentUser);
+$incidentUser = $openReport->createElement( 'personOrUserReported' );
+$reportroot->appendChild( $incidentUser );
 
-if (!empty($uploaderemail)) {
-	$usernameperson = $openReport->createElement('personOrUserReportedPerson');
-	$incidentUser->appendChild($usernameperson);
-	$usernameemail = $openReport->createElement('email');
-	$usernameemailtext = $openReport->createTextNode($uploaderemail);
-	$usernameemail->appendChild($usernameemailtext);
-	$usernameperson->appendChild($usernameemail);
+if ( !empty( $uploaderemail ) ) {
+	$usernameperson = $openReport->createElement( 'personOrUserReportedPerson' );
+	$incidentUser->appendChild( $usernameperson );
+	$usernameemail = $openReport->createElement( 'email' );
+	$usernameemailtext = $openReport->createTextNode( $uploaderemail );
+	$usernameemail->appendChild( $usernameemailtext );
+	$usernameperson->appendChild( $usernameemail );
 }
 
-$username = $openReport->createElement('screenName');
-$usernametext = $openReport->createTextNode($uploaderusername);
-$username->appendChild($usernametext);
-$incidentUser->appendChild($username);
+$username = $openReport->createElement( 'screenName' );
+$usernametext = $openReport->createTextNode( $uploaderusername );
+$username->appendChild( $usernametext );
+$incidentUser->appendChild( $username );
 
-if (!empty($uploaderip)) {
-	$uploadipevent = $openReport->createElement('ipCaptureEvent');
-	$incidentUser->appendChild($uploadipevent);
-	
-	$uploadactualip = $openReport->createElement('ipAddress');
-	$uploadactualiptext = $openReport->createTextNode($uploaderip);
-	$uploadactualip->appendChild($uploadactualiptext);
+if ( !empty( $uploaderip ) ) {
+	$uploadipevent = $openReport->createElement( 'ipCaptureEvent' );
+	$incidentUser->appendChild( $uploadipevent );
 
-	$uploadiptype = $openReport->createElement('eventName');
-	$uploadiptypetext = $openReport->createTextNode('Upload');
-	$uploadiptype->appendChild($uploadiptypetext);
+	$uploadactualip = $openReport->createElement( 'ipAddress' );
+	$uploadactualiptext = $openReport->createTextNode( $uploaderip );
+	$uploadactualip->appendChild( $uploadactualiptext );
 
-	$uploaddatetime = $openReport->createElement('dateTime');
-	$uploaddatetimetext = $openReport->createTextNode($incdatetime);
-	$uploaddatetime->appendChild($uploaddatetimetext);
+	$uploadiptype = $openReport->createElement( 'eventName' );
+	$uploadiptypetext = $openReport->createTextNode( 'Upload' );
+	$uploadiptype->appendChild( $uploadiptypetext );
 
-	$uploadipevent->appendChild($uploadactualip);
-	$uploadipevent->appendChild($uploadiptype);
-	$uploadipevent->appendChild($uploaddatetime);
+	$uploaddatetime = $openReport->createElement( 'dateTime' );
+	$uploaddatetimetext = $openReport->createTextNode( $incdatetime );
+	$uploaddatetime->appendChild( $uploaddatetimetext );
+
+	$uploadipevent->appendChild( $uploadactualip );
+	$uploadipevent->appendChild( $uploadiptype );
+	$uploadipevent->appendChild( $uploaddatetime );
 }
 
-$details = $openReport->createElement('additionalInfo');
-$detailstext = $openReport->createTextNode($comments);
-$details->appendChild($detailstext);
-$incidentUser->appendChild($details);
+$details = $openReport->createElement( 'additionalInfo' );
+$detailstext = $openReport->createTextNode( $comments );
+$details->appendChild( $detailstext );
+$incidentUser->appendChild( $details );
 
 $Report = $openReport->saveXML();
 $xmlHeader = array (
 	'Content-Type: text/xml; charset=utf-8',
 	'Accept: text/xml',
-	);
+);
 $openurl = $NCMECurl.'submit';
 $fileurl = $NCMECurl.'upload';
 $fileinfourl = $NCMECurl.'fileinfo';
@@ -290,7 +290,7 @@ $filehash = null;
 	<script src='scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
@@ -304,235 +304,235 @@ $filehash = null;
 				<h1>Processed Submission</h1>
 				<fieldset>
 					<legend> Temp debugging: Array of submitted data </legend>
-					<?php 
-					echo '<pre>';
-					echo print_r($_POST);
-					echo '</pre>'; 
-					echo '<pre>';
-					echo print_r($_FILES);
-					echo '</pre>'; ?>
+					<?php
+echo '<pre>';
+echo print_r( $_POST );
+echo '</pre>';
+echo '<pre>';
+echo print_r( $_FILES );
+echo '</pre>'; ?>
 				</fieldset>
 				<fieldset>
 					<legend> Initial Data displayed and verified, errors from the same.</legend>
 					<textarea name='reportxml' wrap='virtual' rows='18' cols='70'><?php
-						echo $openReport->saveXML();
-						?></textarea>
-					<textarea name='reportxmlvalidate' wrap='virtual' rows='18' cols='70'><?php 
-						if (!$openReport->schemaValidate('include/espsubmittal.xsd')) {
-							echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-							libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; $openReportValid = true;}?></textarea>
+echo $openReport->saveXML();
+?></textarea>
+					<textarea name='reportxmlvalidate' wrap='virtual' rows='18' cols='70'><?php
+if ( !$openReport->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+	echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+	libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; $openReportValid = true;}?></textarea>
 				</fieldset>
 				<fieldset>
 					<legend>Submit initial data and report back with response </legend>
 					<?php
-					if ($openReportValid) {
-						$result = curlauthdAPIpost($ncusername,$ncpassword,$openurl,$Report,$xmlHeader);
-						//list($headers, $response) = explode("\r\n\r\n", $result, 2);
-						//$headers = explode("\n", $headers);
-						$responseXML = new DOMDocument();
-						$responseXML->loadXML($result);
-						$reportIDNodes = $responseXML->getElementsByTagName('reportId');
-						if ($reportIDNodes->length==0) {
-							$reportID = null;
-						} else {
-							foreach ($reportIDNodes as $ID) {
-								$reportID = $ID->nodeValue;
-							}
-						}
-					} else { 
-						$reportID = null;
-						echo '<b><u>NO REPORT SENT: Report not valid</u></b>';}
-					 ?>
+if ( $openReportValid ) {
+	$result = curlauthdAPIpost( $ncusername, $ncpassword, $openurl, $Report, $xmlHeader );
+	//list($headers, $response) = explode("\r\n\r\n", $result, 2);
+	//$headers = explode("\n", $headers);
+	$responseXML = new DOMDocument();
+	$responseXML->loadXML( $result );
+	$reportIDNodes = $responseXML->getElementsByTagName( 'reportId' );
+	if ( $reportIDNodes->length==0 ) {
+		$reportID = null;
+	} else {
+		foreach ( $reportIDNodes as $ID ) {
+			$reportID = $ID->nodeValue;
+		}
+	}
+} else {
+	$reportID = null;
+	echo '<b><u>NO REPORT SENT: Report not valid</u></b>';}
+?>
 					<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
-					if ($reportID) {
-						if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
-						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else {echo 'no verification because no valid report sent'; }?></textarea>
+if ( $reportID ) {
+	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else {echo 'no verification because no valid report sent'; }?></textarea>
 					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'><?php
-					if ($responseXML) {
-						echo $responseXML->saveXML();
-						$responseXML = null;
-						} else { echo 'no response xml because no valid response recieved or no valid report sent';}?></textarea>
+if ( $responseXML ) {
+	echo $responseXML->saveXML();
+	$responseXML = null;
+} else { echo 'no response xml because no valid response recieved or no valid report sent';}?></textarea>
 					<textarea name='responsefull' wrap='virtual' rows='18' cols='20'><?php
-						if ($result) { echo $result; $result = null; } else { echo 'no result';} ?></textarea>
+if ( $result ) { echo $result; $result = null; } else { echo 'no result';} ?></textarea>
 					<p> The report ID is: <?php echo $reportID; ?> </p>
 				</fieldset>
 				<fieldset>
 					<legend>File setup, sending and processing</legend>
 					<?php
-						if (!empty($uploadedfiletmploc) && !empty($reportID)) {
-							$file = '@'.$uploadedfiletmploc;
-							$postdata = array (
-								'id' => $reportID,
-								'file' => $file, );
-							$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$fileurl,$postdata);
-							$responseXML = new DOMDocument();
-							$responseXML->loadXML($result);
-							$fileIdNodes = $responseXML->getElementsByTagName('fileId');
-							$fileHashNodes = $responseXML->getElementsByTagName('hash');
-							if ($fileIdNodes->length==0) {
-								$fileID = null;
-							} else {
-								foreach ($fileIdNodes AS $ID) {
-									$fileID = $ID->nodeValue;
-								}
-							}
-							if ($fileHashNodes->length==0) {
-								$filehash = null;
-							} else {
-								foreach ($fileHashNodes AS $hash) {
-									$filehash = $hash->nodeValue;
-								}
-							}
-						} else {echo 'something is wrong! Either there is no report ID or no file info!';} ?>
+if ( !empty( $uploadedfiletmploc ) && !empty( $reportID ) ) {
+	$file = '@'.$uploadedfiletmploc;
+	$postdata = array (
+		'id' => $reportID,
+		'file' => $file, );
+	$result = NCMECsimpleauthdcurlPost( $ncusername, $ncpassword, $fileurl, $postdata );
+	$responseXML = new DOMDocument();
+	$responseXML->loadXML( $result );
+	$fileIdNodes = $responseXML->getElementsByTagName( 'fileId' );
+	$fileHashNodes = $responseXML->getElementsByTagName( 'hash' );
+	if ( $fileIdNodes->length==0 ) {
+		$fileID = null;
+	} else {
+		foreach ( $fileIdNodes as $ID ) {
+			$fileID = $ID->nodeValue;
+		}
+	}
+	if ( $fileHashNodes->length==0 ) {
+		$filehash = null;
+	} else {
+		foreach ( $fileHashNodes as $hash ) {
+			$filehash = $hash->nodeValue;
+		}
+	}
+} else {echo 'something is wrong! Either there is no report ID or no file info!';} ?>
 						<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
-						if (!empty($uploadedfiletmploc) && !empty($reportID)) {
-							if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
-							echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-							libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else { echo 'no file sent'; }?></textarea>
+if ( !empty( $uploadedfiletmploc ) && !empty( $reportID ) ) {
+	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else { echo 'no file sent'; }?></textarea>
 					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'<?php
-					if ($responseXML) {
-						echo $responseXML->saveXML();
-						$responseXML = null; } else { echo 'no response XML because no file sent or no valid report sent';}
-						?></textarea>
+if ( $responseXML ) {
+	echo $responseXML->saveXML();
+	$responseXML = null; } else { echo 'no response XML because no file sent or no valid report sent';}
+?></textarea>
 					<textarea name='responsefull' wrap='virtual' rows='18' cols='20'><?php
-					if ($result) {
-						echo $result; $result=null; } else { echo 'no result'; } ?></textarea>
+if ( $result ) {
+	echo $result; $result=null; } else { echo 'no result'; } ?></textarea>
 					<p> The File ID is: <?php echo $fileID; ?> </p>
 				</fieldset>
 				<fieldset>
 					<legend> File data set up, processing and sending.</legend>
 					<?php
-					if ($fileID) {
-						// FIXME NOTE: Only sending file name at this time, all other exif should be contained in the file.
-						$filedetaildom = new DOMDocument();
-						$filedetaildom->formatOutput = true;
-						$filedetaildom->encoding='UTF-8';
+if ( $fileID ) {
+	// FIXME NOTE: Only sending file name at this time, all other exif should be contained in the file.
+	$filedetaildom = new DOMDocument();
+	$filedetaildom->formatOutput = true;
+	$filedetaildom->encoding='UTF-8';
 
-						$reportroot = $filedetaildom->createElement('fileDetails');
-						$filedetaildom->appendChild($reportroot);
+	$reportroot = $filedetaildom->createElement( 'fileDetails' );
+	$filedetaildom->appendChild( $reportroot );
 
-						$filereportid = $filedetaildom->createElement('reportId');
-						$filereportidtext = $filedetaildom->createTextNode($reportID);
-						$filereportid->appendChild($filereportidtext);
-						$reportroot->appendChild($filereportid);
+	$filereportid = $filedetaildom->createElement( 'reportId' );
+	$filereportidtext = $filedetaildom->createTextNode( $reportID );
+	$filereportid->appendChild( $filereportidtext );
+	$reportroot->appendChild( $filereportid );
 
-						$fileidpost = $filedetaildom->createElement('fileId');
-						$fileidposttext = $filedetaildom->createTextNode($fileID);
-						$fileidpost->appendChild($fileidposttext);
-						$reportroot->appendChild($fileidpost);
+	$fileidpost = $filedetaildom->createElement( 'fileId' );
+	$fileidposttext = $filedetaildom->createTextNode( $fileID );
+	$fileidpost->appendChild( $fileidposttext );
+	$reportroot->appendChild( $fileidpost );
 
-						$filename = $filedetaildom->createElement('fileName');
-						$filenametext = $filedetaildom->createTextNode($uploadedfilename);
-						$filename->appendChild($filenametext);
-						$reportroot->appendChild($filename);
+	$filename = $filedetaildom->createElement( 'fileName' );
+	$filenametext = $filedetaildom->createTextNode( $uploadedfilename );
+	$filename->appendChild( $filenametext );
+	$reportroot->appendChild( $filename );
 
-						$filedetailXML = $filedetaildom->saveXML();
+	$filedetailXML = $filedetaildom->saveXML();
 
-						$result = curlauthdAPIpost($ncusername,$ncpassword,$fileinfourl,$filedetailXML,$xmlHeader);
-						$responseXML = new DOMDocument();
-						$responseXML->loadXML($result);
-						$responseNodes = $responseXML->getElementsByTagName('responseCode');
-						if ($responseNodes->length==0) {
-							$responsecode = null;
-						} else {
-							foreach ($responseNodes as $r) {
-								$responsecode = $r->nodeValue;
-							}
-						}
-						}?>
+	$result = curlauthdAPIpost( $ncusername, $ncpassword, $fileinfourl, $filedetailXML, $xmlHeader );
+	$responseXML = new DOMDocument();
+	$responseXML->loadXML( $result );
+	$responseNodes = $responseXML->getElementsByTagName( 'responseCode' );
+	if ( $responseNodes->length==0 ) {
+		$responsecode = null;
+	} else {
+		foreach ( $responseNodes as $r ) {
+			$responsecode = $r->nodeValue;
+		}
+	}
+}?>
 					<textarea name='filedetailxml' wrap='virtual' rows='18' cols='70'><?php
-					if ($filedetaildom) {
-						echo $filedetaildom->saveXML();} else { echo 'no filedetail submission created';}
-						?></textarea>
+if ( $filedetaildom ) {
+	echo $filedetaildom->saveXML();} else { echo 'no filedetail submission created';}
+?></textarea>
 					<textarea name='filedetailxmlvalidate' wrap='virtual' rows='18' cols='70'><?php
-					if ($filedetaildom) {
-						if (!$filedetaildom->schemaValidate('include/espsubmittal.xsd')) {
-						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }} else { echo 'no filedetail submission created'; } ?></textarea>
+if ( $filedetaildom ) {
+	if ( !$filedetaildom->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+		libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }} else { echo 'no filedetail submission created'; } ?></textarea>
 					<textarea name='fileinforesponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
-					if ($responseXML) {
-						if (!$responseXML->schemaValidate('include/espsubmittal.xsd')) {
-						echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
-						libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }} else { echo 'no responseXML available'; }?></textarea>
+if ( $responseXML ) {
+	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
+		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }} else { echo 'no responseXML available'; }?></textarea>
 					<textarea name='fileinforesponsexml' wrap='virtual' rows='18' cols='20'><?php
-					if ($responseXML) {
-						echo $responseXML->saveXML(); $responseXML = null;} else {echo 'no responseXML available';}
-						?></textarea>
-					<p> <?php if ($responsecode == 0) {echo 'File details were recieved successfully';} else {echo 'there appears to have been a problem sending file details, check response'; }?> </p>
+if ( $responseXML ) {
+	echo $responseXML->saveXML(); $responseXML = null;} else {echo 'no responseXML available';}
+?></textarea>
+					<p> <?php if ( $responsecode == 0 ) {echo 'File details were recieved successfully';} else {echo 'there appears to have been a problem sending file details, check response'; }?> </p>
 				</fieldset>
 				<fieldset>
 					<legend>Closing Report</legend>
 					<textarea name='reportxml' wrap='virtual' rows='18' cols='70'><?php
-					if (!empty($reportID)) {
-						echo 'Report ID: '.$reportID.' marked for closure'.PHP_EOL.PHP_EOL;
-						$postdata = array ('id' => $reportID);
-						$result = NCMECsimpleauthdcurlPost($ncusername,$ncpassword,$finishurl,$postdata);
-						echo $result;
-						$responseXML = new DOMDocument();
-						$responseXML->loadXML($result);
-						$responseNodes = $responseXML->getElementsByTagName('responseCode');
-							if ($responseNodes->length==0) {
-								$responsecode = null;
-							} else {
-								foreach ($responseNodes as $r) {
-								$responsecode = $r->nodeValue;
-							}
-						}} else {echo 'No reportID detected, did you ever actually open a report?';}?></textarea>
-						<p> <?php if ($responsecode == 0) { echo '<b><u>Thank you, your report has been submitted with Report ID: '.$reportID.' and all log information has been saved. Please remember to email legal@rt.wikimedia.org in order to get the image permenantly deleted.</u></b>'; } else { echo 'It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above';} ?></p>
+if ( !empty( $reportID ) ) {
+	echo 'Report ID: '.$reportID.' marked for closure'.PHP_EOL.PHP_EOL;
+	$postdata = array ( 'id' => $reportID );
+	$result = NCMECsimpleauthdcurlPost( $ncusername, $ncpassword, $finishurl, $postdata );
+	echo $result;
+	$responseXML = new DOMDocument();
+	$responseXML->loadXML( $result );
+	$responseNodes = $responseXML->getElementsByTagName( 'responseCode' );
+	if ( $responseNodes->length==0 ) {
+		$responsecode = null;
+	} else {
+		foreach ( $responseNodes as $r ) {
+			$responsecode = $r->nodeValue;
+		}
+	}} else {echo 'No reportID detected, did you ever actually open a report?';}?></textarea>
+						<p> <?php if ( $responsecode == 0 ) { echo '<b><u>Thank you, your report has been submitted with Report ID: '.$reportID.' and all log information has been saved. Please remember to email legal@rt.wikimedia.org in order to get the image permenantly deleted.</u></b>'; } else { echo 'It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above';} ?></p>
 				</fieldset>
 			</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 	</div>
 </body>
 </html><?php
-if ($reportID) {
-// Central Log
-$log_type = 'Child Protection';
-$log_title = 'Report to NCMEC for file uploaded by '.$uploaderusername.' '.$incdate.' '.$inchour.':'.$incmin.' UTC - Report# '.$reportID;
-$log_row = lcalog($user,$log_type,$log_title,$istest);
-// Log details
-$template = 'INSERT INTO ncmecrelease (log_id,user,timestamp,username,project,filename,legalapproved,whoapproved,whynotapproved,logging_metadata,logging_details,test,report_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
-$mysql = new mysqli($dbaddress,$dbuser,$dbpw,$db);
-$mysql->set_charset("utf8");
+if ( $reportID ) {
+	// Central Log
+	$log_type = 'Child Protection';
+	$log_title = 'Report to NCMEC for file uploaded by '.$uploaderusername.' '.$incdate.' '.$inchour.':'.$incmin.' UTC - Report# '.$reportID;
+	$log_row = lcalog( $user, $log_type, $log_title, $istest );
+	// Log details
+	$template = 'INSERT INTO ncmecrelease (log_id,user,timestamp,username,project,filename,legalapproved,whoapproved,whynotapproved,logging_metadata,logging_details,test,report_id) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
+	$mysql = new mysqli( $dbaddress, $dbuser, $dbpw, $db );
+	$mysql->set_charset( "utf8" );
 
-if (!empty($incprojectlang)) {
-	$incproject = $incprojectlang.".".$incproject;
-}
-$submittime = gmdate("Y-m-d H:i:s", time());
-$insert_user = $user;
-$insert_username = $uploaderusername;
-$insert_project = $incproject;
-$insert_filename = $incfilename;
-$insert_whoapproved = $_POST['who-approved'];
-$insert_whynot = $_POST['why-not-approved'];
-$insert_logdata = serialize($_POST['logging-metadata']);
-$insert_details = $_POST['logging-details'];
-$insert_legalapproved = $_POST['legal-approved'];
+	if ( !empty( $incprojectlang ) ) {
+		$incproject = $incprojectlang.".".$incproject;
+	}
+	$submittime = gmdate( "Y-m-d H:i:s", time() );
+	$insert_user = $user;
+	$insert_username = $uploaderusername;
+	$insert_project = $incproject;
+	$insert_filename = $incfilename;
+	$insert_whoapproved = $_POST['who-approved'];
+	$insert_whynot = $_POST['why-not-approved'];
+	$insert_logdata = serialize( $_POST['logging-metadata'] );
+	$insert_details = $_POST['logging-details'];
+	$insert_legalapproved = $_POST['legal-approved'];
 
-$insert = $mysql->prepare($template);
-	if ($insert === false) {
+	$insert = $mysql->prepare( $template );
+	if ( $insert === false ) {
 		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 	}
-$insert->bind_param('isssssssssssi',$log_row,$insert_user,$submittime,$insert_username,$insert_project,$insert_filename,$insert_legalapproved,$insert_whoapproved,$insert_whynot,$insert_logdata,$insert_details,$istest,$reportID);
+	$insert->bind_param( 'isssssssssssi', $log_row, $insert_user, $submittime, $insert_username, $insert_project, $insert_filename, $insert_legalapproved, $insert_whoapproved, $insert_whynot, $insert_logdata, $insert_details, $istest, $reportID );
 
-$insert->execute();
+	$insert->execute();
 
-if ($filehash) {
-$details_row = $insert->insert_id;
+	if ( $filehash ) {
+		$details_row = $insert->insert_id;
 
-// filehash log
-$template = 'INSERT INTO submittedfilehashes (clog_id, type, tlog_id, hash) VALUES (?,?,?,UNHEX(?))';
-$insert = $mysql->prepare($template);
-	if ($insert === false) {
-		echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		// filehash log
+		$template = 'INSERT INTO submittedfilehashes (clog_id, type, tlog_id, hash) VALUES (?,?,?,UNHEX(?))';
+		$insert = $mysql->prepare( $template );
+		if ( $insert === false ) {
+			echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		}
+		$insert->bind_param( 'isis', $log_row, $log_type, $details_row, $filehash );
+		$insert->execute();
 	}
-$insert->bind_param('isis',$log_row,$log_type,$details_row,$filehash);
-$insert->execute();
-}
 
-$mysql->close();
+	$mysql->close();
 }
 
 ?>
