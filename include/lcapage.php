@@ -51,11 +51,11 @@
 							<li id='ncmec-retract'>
 								<a href="NCMECretract.php"> NCMEC report retraction form </a>
 							</li>
-							<li id='oauth-register'>
+							<li id='oauth-register' style='border-top:1px solid black;'>
 								<a href="beginmwoauthregistration.php"> Register with Mediawiki OAuth</a>
 							</li>
 							<li id='test-oauth'>
-								<a href="testOAuth.php"> Test your stored OAuth data </a>
+								<a href="testOAuth.php"> Test your stored MW OAuth data </a>
 							</li>
 						</ul>
 					</div>
