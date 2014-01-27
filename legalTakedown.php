@@ -53,16 +53,16 @@
     }).mouseout(function () {
         $this = $(this);
         $this.attr('title', $this.data('title'));
-    }); 
+    });
 
 
 
 });
-    
+
 </script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css'; 
+	@import 'css/main.css';
 	@import 'css/pikaday.css';
 	@import 'css/lca.css';
 	/* ]]> */-->
@@ -79,10 +79,10 @@
 				<form method='post' action='legalTakedownProcessor.php' id='takedown-form1' enctype='multipart/form-data'>
 					<fieldset>
 						<legend> Processing and Logging information </legend>
-						<table border='0' id='mw-movepage-table'> 
+						<table border='0' id='mw-movepage-table'>
 							<tr class='spaceOut'>
 								<td>
-									<label for='ce-send'> Send to Chilling Effects?</label> 
+									<label for='ce-send'> Send to Chilling Effects?</label>
 									<select name='ce-send' id='ce-send'>
 										<option>No</option>
 										<option>Yes</option>
@@ -143,7 +143,7 @@
 					</fieldset>
 					<fieldset>
 						<legend>Who sent the takedown?</legend>
-						<table border='0' id='mw-movepage-table'> 
+						<table border='0' id='mw-movepage-table'>
 							<tr>
 								<td class='lca-label'>
 									<label for='sender-name'>Sender (person or organization)</label>
@@ -196,7 +196,7 @@
 								</td>
 								<td class='lca-input'>
 									<select id='sender-country' name='sender-country' value=''>
-									<?php include('include/countrySelect.php'); ?>
+									<?php include 'include/countrySelect.php'; ?>
 									</select>
 								</td>
 							</tr>
@@ -205,9 +205,9 @@
 					<fieldset>
 						<legend>Takedown meta data</legend>
 						<input type='hidden' name='ce-report-type' id ='ce-report-type' value='dmca' />
-						<table border='0' id='mw-movepage-table'> 
+						<table border='0' id='mw-movepage-table'>
 							<tr>
-								<td class='lca-label'> 
+								<td class='lca-label'>
 									<label for='takedown-date'> Date the takedown was sent </label>
 								</td>
 								<td>
@@ -282,7 +282,7 @@
 				</form>
 			</div>
 		</div>
-			<?php include('include/lcapage.php'); ?>
+			<?php include 'include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>
