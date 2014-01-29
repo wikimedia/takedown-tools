@@ -113,22 +113,18 @@
 									<input id='involved-user' name='involved-user' value='' type='text' size='15' required/>
 								</td>
 							</tr>
-							<tr>
-								<td rowspan='2' >
+							<tr style='outline: solid black thin;'>
+								<td>
 									<label for='logging-metadata'> Place a checkmark by all items which are true. </label>
 								</td>
 								<td>
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and the user was clearly warned and discouraged from future violations.' /> The content was taken down and the user was clearly warned and discouraged from future violations.  <br />
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have actual knowledge that the content was infringing copyright ' /> The content was taken down and we have actual knowledge that the content was infringing copyright.  <br />
-								</td>
-							</tr>
-							<tr>
-								<td>
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. ' /> The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. <br />
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down pursuant to a DMCA notice.' /> The content was taken down pursuant to a DMCA notice. <br />
 								</td>
 							</tr>
-							<tr>
+							<tr style='outline: solid black thin;'>
 								<td>
 									<label for='strike-note'> The takedown does NOT count as a "strike" for purposes of the repeat infinger policy because: </label>
 								</td>
