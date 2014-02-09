@@ -3,7 +3,6 @@
 require_once 'include/multiuseFunctions.php';
 require_once 'include/OAuth.php';
 require_once 'include/MWOAuthSignatureMethod.php';
-require_once 'include/JWT.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables

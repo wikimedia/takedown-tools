@@ -32,7 +32,7 @@ beginmwoauthregistration.php - page to start the authorization process with medi
 mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
 	Takes verification script and token, verifies against session started on beginoauthregistration.php.  
 	If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
-testOAuth.php - tests current users stored OAuth credentials by doing an API user information check.
+testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.
 
 lcatools.sql - installation script for database required for tools.  
 LICENSE.txt (MIT License for all files not otherwise marked)  
