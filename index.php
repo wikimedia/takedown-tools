@@ -55,9 +55,13 @@
 					<a href="centralLog.php"> Central submission Log </a> <br />
 					<a href="NCMECretract.php"> NCMEC report retraction form </a> <br /> <br />
 
-					<u> Mediawiki OAuth (beta)</u> <br />
-					<a href="beginmwoauthregistration.php"> Register with Mediawiki OAuth</a> <br />
-					<a href="testOAuth.php"> Test your stored OAuth data </a> <br />
+					<u> Mediawiki OAuth </u> <br />
+					<a href="beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a> <br />
+					<a href="testmwOAuth.php"> Test your stored Wikimedia OAuth data </a> <br /> <br />
+
+					<u> SugarCRM OAuth </u> <br />
+					<a href="sugarOAuthRegistration.php"> Connect your SugarCRM Account </a><br />
+					<a href="testSugarOAuth.php"> Test your stored SugarCRM OAuth data </a><br />
 			</div>
 
 			</div>

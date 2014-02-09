@@ -52,10 +52,16 @@
 								<a href="NCMECretract.php"> NCMEC report retraction form </a>
 							</li>
 							<li id='oauth-register' style='border-top:1px solid black;'>
-								<a href="beginmwoauthregistration.php"> Register with Mediawiki OAuth</a>
+								<a href="beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a>
 							</li>
 							<li id='test-oauth'>
-								<a href="testOAuth.php"> Test your stored MW OAuth data </a>
+								<a href="testmwOAuth.php"> Test your stored Wikimedia OAuth data </a>
+							</li>
+							<li id='oauth-register' style='border-top:1px solid black;'>
+								<a href="sugarOAuthRegistration.php"> Connect your SugarCRM Account </a>
+							</li>
+							<li id='oauth-register'>
+								<a href="testSugarOAuth.php"> Test your stored SugarCRM OAuth data  </a>
 							</li>
 						</ul>
 					</div>
