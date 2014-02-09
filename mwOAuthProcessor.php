@@ -25,10 +25,7 @@ $secretKey = file_get_contents( 'lcatoolskey.pem' );
 $useragent = $config['useragent'];
 if ( isset( $_POST['action'] ) ) {
 	$action = $_POST['action'];
-} else {
-	$action = 'none';
 }
-
 
 function mwOAuthpost( $mwtoken, $mwsecret, $apiurl, $request, &$ch = null ) {
 	global $consumerKey, $secretKey, $useragent;
@@ -87,6 +84,7 @@ function getEditToken( $mwtoken, $mwsecret, $apiurl, &$ch = null ) {
 
 /* FIXME's Assumptions: assuming no captcha */
 
+if ( $action ) {
 switch ( $action ) {
 case 'none':
 	echo json_encode( 'you appear to not actually asked me to do anything ......' );
@@ -152,4 +150,5 @@ case 'appendtext':
 default:
 	echo json_encode( 'you appear to have sent an unrecogized action option, please contact the developer or hit yourself if you are said developer' );
 	break;
+}
 }
