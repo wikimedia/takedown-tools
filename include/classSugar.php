@@ -135,6 +135,7 @@ class sugar {
 		$this->consumer = new OAuthConsumer( $consumerKey, $consumerSecret );
 		$this->signer = new OAuthSignatureMethod_HMAC_SHA1();
 		$this->api_url = $url;
+		$this->getcURL();
 
 		if ( $userKey && $userSecret ) {
 			$this->token = new OAuthToken( $userKey, $userSecret );
@@ -149,6 +150,8 @@ class sugar {
 	*/
 	function __destruct() {
 		$this->logout();
+		curl_close( $this->ch );
+
 	}
 
 	/*************************************************************************************
