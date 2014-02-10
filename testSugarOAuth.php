@@ -22,6 +22,30 @@ $usertable = getUserData( $user );
 $secret = $usertable['sugarsecret'];
 $token = $usertable['sugartoken'];
 
+if ( $secret && $token ) {
+	
+	$sugar = new sugar( $consumerkey, $consumersecret, $sugarapiurl, $token, $secret );
+
+	$login = $sugar->login();
+
+	$userid = $sugar->getUserID();
+	$sugaruname = $sugar->getUserName();
+	$modulesraw = $sugar->getModules();
+
+	foreach ( $modulesraw['modules'] as $array ) {
+		foreach ( $array as $key => $value )
+		if ( $key == 'module_key' ) {
+			$modules[] = $value;
+		}
+	}
+
+	$fieldresponse = $sugar->getAvailableFields( 'Cases' );
+	$fields = $fieldresponse['module_fields'];
+
+
+
+}
+
 ?>
 
 
@@ -47,9 +71,9 @@ $token = $usertable['sugartoken'];
 			$("#result").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
 			var dpagetitle = "User_talk:Jalexander/sandbox";
 			var dsectiontitle = "Test edit from LCA Tools";
-			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
-			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
-			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
+			var dmwtoken = <?php/* echo '"'.$mwtoken.'"' /*?>;
+			var dmwsecret = <?php/* echo '"'.$mwsecret.'"' /*?>;
+			var dapiurl = <?php/* echo '"'.$apiurl.'"' */?>;
 			var deditsummary = "Test edit from LCA Tools system using mediawiki OAuth";
 			var dtext = $("#testedit").val();
 			var daction = "newsection";
@@ -100,7 +124,15 @@ $token = $usertable['sugartoken'];
 								Sugar User ID for logged in user:
 							</td>
 							<td>
-								<div id='userid'></div>
+								<?php echo $userid; ?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Sugar User Name for logged in user:
+							</td>
+							<td>
+								<?php echo $sugaruname; ?>
 							</td>
 						</tr>
 						<tr>
@@ -108,7 +140,7 @@ $token = $usertable['sugartoken'];
 								Modules available to logged in user:
 							</td>
 							<td>
-								<textarea id='availablemodules' wrap='virtual' rows='18' cols='30' style="outline: black solid 2px;"></textarea>
+								<textarea id='availablemodules' wrap='virtual' rows='18' cols='30' style="outline: black solid 2px;"><?php echo json_encode( $modules, JSON_PRETTY_PRINT );?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -116,7 +148,7 @@ $token = $usertable['sugartoken'];
 								Available fields for the Case Module
 							</td>
 							<td>
-								<textarea id='availablemodules' wrap='virtual' rows='18' cols='90' style="outline: black solid 2px;"></textarea>
+								<textarea id='availablefields' wrap='virtual' rows='18' cols='90' style="outline: black solid 2px;"><?php echo json_encode( $fields, JSON_PRETTY_PRINT )?></textarea>
 							</td>
 						</tr>
 					</table>
@@ -132,48 +164,6 @@ $token = $usertable['sugartoken'];
 			<?php include 'include/lcapage.php'; ?>
 	</div>
 	<?php
-flush();
-if ( $secret && $token ) {
-	
-	$sugar = new sugar( $consumerkey, $consumersecret, $sugarapiurl, $token, $secret );
-
-	$login = $sugar->login();
-
-	if ( !$login ) {
-		echo "<script> $('#userid').html('Was not able to login'); </script>".PHP_EOL;
-		die();
-	}
-
-	$userid = $sugar->getUserID();
-
-	if ( $userid ) {
-		echo "<script> $('#userid').html('".$userid."'); </script>".PHP_EOL;
-	} else {
-		echo "<script> $('#userid').html('Was not able to retrieve user id'); </script>".PHP_EOL;
-	}
-	flush();
-
-	$modulesraw = $sugar->getModules();
-
-	foreach ( $modulesraw['modules'] as $array ) {
-		foreach ( $array as $key => $value )
-		if ( $key == 'module_key' ) {
-			$modules[] = $value;
-		}
-	}
-
-	if ( $modules ) {
-		echo "<script> 
-		modules = '".json_encode( $modules )."';
-		$('#availablemodules').val(modules); 
-		</script>".PHP_EOL;
-	} else {
-		echo "<script> $('#availablemodules').val('Was not able to retrieve available modules'); </script>".PHP_EOL;
-	}
-
-
-
-}
 flush();
 ?>
 </body>
