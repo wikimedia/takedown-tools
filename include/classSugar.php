@@ -241,6 +241,36 @@ class sugar {
 		return $this->token;
 	}
 
+
+	/**
+	 * Get SugarCRM userID of logged in user.
+	 *
+	 * Public function to get the user ID number of the logged in user.
+	 * Stores userID in object and returns it as a string.
+	 *
+	 * @return string SugarCRM userID of logged in user
+	 */
+	public function getUserID() {
+
+		if ( isset( $this->userid ) ) {
+			return $this->userid;
+		} else {
+
+			$method = 'get_user_id';
+			$params['session'] = $this->getSession();
+
+			$rawresponse = $this->rest_post( $method, $params );
+
+			$id = json_decode( $rawresponse, true );
+
+			$this->userid = $result;
+
+			return $id;
+		}
+
+	}
+
+
 	/*************************************************************************
 
 	Shared, private, internal functions to make requests to the sugarCRM API
@@ -462,27 +492,87 @@ class sugar {
 		return $result;
 	}
 
-
 	/**
-	 * Get SugarCRM userID of logged in user.
+	 * Get the available fields for a specific module
 	 *
-	 * Public function to get the user ID number of the logged in user.
-	 * Stores userID in object and returns it as a string.
+	 * Public function to get the available fields for a specific Sugar module and their definitions.
+	 * If desired can be used to get the definitions of only specific fields for the module.
 	 *
-	 * @return string SugarCRM userID of logged in user
+	 * @param string $module SugarCRM Module name to be queried.
+	 * @param array $specificfields optional array of fields which you want to get the definition of.
+	 * 
+	 * @return array of response from API
 	 */
-	public function getUserID() {
-		$method = 'get_user_id';
+	public function getAvailableFields( $module, array $specificfields = null ) {
+		$method = 'get_module_fields';
 		$params['session'] = $this->getSession();
+		$params['module'] = $module;
+
+		if ( $specificfields ) {
+			$params['fields'] = $specificfields;
+		}
 
 		$rawresponse = $this->rest_post( $method, $params );
 
-		$id = json_decode( $rawresponse, true );
+		return json_decode( $rawresponse, true );
 
-		$this->userid = $result;
+	}
 
-		return $id;
 
+	/**
+	 * Get the value of fields for a specific module item
+	 *
+	 * Public function to get a specific sugar item (case, user, contact etc.)
+	 * Optional array taken to allow you to only get specific fields rather then the entire item.
+	 *
+	 * @param string $module SugarCRM Module name to be queried.
+	 * @param string ID of the SugarCRM item taht you are attempting to query about.
+	 * @param array $specificfields optional array of fields which you want to get the definition of.
+	 * 
+	 * @return array Fields in the format of array ( 'name' => field_name, 'value' => field_value )
+	 */
+	public function getfields( $module, $id, array $specificfields = null ) {
+		$method = 'get_entry';
+		$params['session'] = $this->getSession();
+		$params['module_name'] = $module;
+		$params['id'] = $id;
+
+		if ( $specificfields ) {
+			$params['select_fields'] = $specificfields;
+		}
+
+		$rawresponse = $this->rest_post( $method, $params );
+
+		$rawresponsearray = json_decode( $rawresponse, true );
+
+		// Convert to just the entry list and eliminate cruft from api call.
+		$value_list = $rawresponsearray['entry_list'][0]['name_value_list'];
+
+		foreach ( $value_list as $field ) {
+			$response[$field['name']] =  $field['value'] ;
+		}
+
+		return $response;
+
+	}
+
+	/**
+	 * Get SugarCRM User Name of logged in user.
+	 *
+	 * Public function to get the user name of the logged in user.
+	 *
+	 * @return string SugarCRM userID of logged in user
+	 */
+	public function getUserName() {
+		$module = 'Users';
+		$id = $this->getUserID();
+		$specificfields = array( 'user_name' );
+
+		$response = $this->getfields( $module, $id, $specificfields );
+//['user_name']['value'];
+		$username = $response['user_name'];
+
+		return $username;
 	}
 
 
