@@ -141,6 +141,16 @@ class sugar {
 		}
 	}
 
+	/**
+	* Destruction class to be called at script completion.
+	*
+	* Called when the class is no longer in use or the calling script is finishing.
+	* Used mostly to make sure we log out and release the session so that no one else could use it.
+	*/
+	function __destruct() {
+		$this->logout();
+	}
+
 	/*************************************************************************************
 
 	Private internal functions to retrieve necessary variables with appropriate fallback
@@ -472,6 +482,25 @@ class sugar {
 		}
 	}
 
+	/**
+	 * Logout function
+	 *
+	 * Called either externally to destroy current session or internally as class is destroyed.
+	 * Releases the current session so that it can not be used by others.
+	 *
+	 * @param string $session optional string to terminate a specific session. Otherwise terminates currently set session.
+	 */
+	function logout( $session = null ) {
+		$method = 'logout';
+
+		if ( $session ) {
+			$params['session'] = $session;
+		} else {
+			$params['session'] = $this->session;
+		}
+
+		$this->rest_post( $method, $params );
+	}
 
 	/**
 	 * Get available SugarCRM Modules
