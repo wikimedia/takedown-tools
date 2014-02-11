@@ -13,8 +13,8 @@ $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 
-//$sugarapiurl = $config['sugar_apiurl'];
-$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
+$sugarapiurl = $config['sugar_apiurl'];
+//$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
 $sugarkey = $config['sugarconsumer_key'];
 $sugarsecret = $config['sugarconsumer_secret'];
 

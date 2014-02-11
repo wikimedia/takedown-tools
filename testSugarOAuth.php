@@ -13,8 +13,8 @@ $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 
-//$sugarapiurl = $config['sugar_apiurl'];
-$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
+$sugarapiurl = $config['sugar_apiurl'];
+//$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
 $consumerkey = $config['sugarconsumer_key'];
 $consumersecret = $config['sugarconsumer_secret'];
 
@@ -155,6 +155,27 @@ if ( $secret && $token ) {
 				</fieldset>
 				<fieldset>
 					<legend> Create a case </legend>
+					<form id='createcase'>
+						<table border='1'>
+							<tr>
+								<td>
+									<label for='name'> Case Subject/Title: </label>
+								</td>
+								<td>
+									<input type='text' size='30' id='name' name='name' />
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for='description'> Description/Case Body: </label>
+								</td>
+								<td>
+									<textarea id='description' name='description' wrap='virtual' rows='4' ></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td>
+
 				</fieldset>
 				<fieldset>
 					<legend> Delete your case </legend>

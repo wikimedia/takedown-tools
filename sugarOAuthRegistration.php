@@ -8,9 +8,9 @@ date_default_timezone_set( 'UTC' );
 $config = parse_ini_file( 'lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 
-//$sugarapiurl = $config['sugar_apiurl'];
+$sugarapiurl = $config['sugar_apiurl'];
+//$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
 
-$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
 $sugarkey = $config['sugarconsumer_key'];
 $sugarsecret = $config['sugarconsumer_secret'];
 $callback_url = $config['sugar_callback'];
