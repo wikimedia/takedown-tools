@@ -173,8 +173,8 @@ if ( $secret && $token ) {
 									<textarea id='description' name='description' wrap='virtual' rows='4' ></textarea>
 								</td>
 							</tr>
-							<tr>
-								<td>
+						</table>
+					</form>
 
 				</fieldset>
 				<fieldset>
