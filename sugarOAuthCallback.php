@@ -69,10 +69,10 @@ $sugarsecret = $config['sugarconsumer_secret'];
                             <img id='session' src='images/List-remove.svg' width='40px'/>
                         </td>
                         <td >
-                            <u>Step 5:</u> <br /> Information saved.
+                            <u>Step 5:</u> <br /> Your Username is: <span id='username'></span>
                         </td>
                         <td>
-                            <img id='logged' src='images/List-remove.svg' width='40px'/>
+                            <img id='usernamecheck' src='images/List-remove.svg' width='40px'/>
                         </td>
                     </tr>
                     <tr>
@@ -82,11 +82,11 @@ $sugarsecret = $config['sugarconsumer_secret'];
                         <td>
                             <img id='permrequest' src='images/List-remove.svg' width='40px'/>
                         </td>
-                         <td style='background-color:#CCCCCC'>
-                            
+                         <td >
+                            <u>Step 5:</u> <br /> Information saved.
                         </td>
-                        <td style='background-color:#CCCCCC'>
-                            
+                        <td>
+                            <img id='logged' src='images/List-remove.svg' width='40px'/>
                         </td>
                     </tr>
                     <tr>
@@ -160,13 +160,22 @@ $sugarsecret = $config['sugarconsumer_secret'];
 		die();
 	}
 
-	$insertemplate = 'INSERT INTO user (user,sugartoken,sugarsecret,sugar_registration_time) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE sugartoken = VALUES(sugartoken), sugarsecret = VALUES(sugarsecret), sugar_registration_time = VALUES(sugar_registration_time)';
+	$insertemplate = 'INSERT INTO user (user,sugartoken,sugarsecret,sugaruser,sugar_registration_time) VALUES (?,?,?,?,?) ON DUPLICATE KEY UPDATE sugartoken = VALUES(sugartoken), sugarsecret = VALUES(sugarsecret), sugaruser = VALUES(sugaruser), sugar_registration_time = VALUES(sugar_registration_time)';
 	$submittime = gmdate( "Y-m-d H:i:s", time() );
 
 	$mysql = new mysqli( $dbaddress, $dbuser, $dbpw, $db );
 	$mysql->set_charset( "utf8" );
 	$sugartoken = $sugar->getToken()->key;
 	$sugarsecret = $sugar->getToken()->secret;
+	$sugarusername = $sugar->getUserName();
+
+	if ( $sugarusername ) {
+		echo "<script> $('#username').html('".$sugarusername."'); </script>".PHP_EOL;
+		echo "<script> $('#usernamecheck').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL;
+	} else {
+		echo "<script> $('#username').html('<span style=\'color:red\'>clasusername check failed</span>'); </script>".PHP_EOL;
+		echo "<script> $('#usernamecheck').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+	}
 
 	$insert = $mysql->prepare( $insertemplate );
 	if ( $insert === false ) {
@@ -178,7 +187,7 @@ $sugarsecret = $config['sugarconsumer_secret'];
 	}
 	flush();
 
-	$insert->bind_param( 'ssss', $user, $sugartoken, $sugarsecret, $submittime );
+	$insert->bind_param( 'sssss', $user, $sugartoken, $sugarsecret, $sugarusername, $submittime );
 
 	$insert->execute();
 
