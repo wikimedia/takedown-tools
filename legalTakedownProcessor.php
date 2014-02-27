@@ -341,7 +341,7 @@ $mwtoken = $usertable['mwtoken'];
 						<tr>
 							<td>
 								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90'><?php
-echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word; ''><nowiki>".PHP_EOL.
+echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><nowiki>".PHP_EOL.
 	$takedown_text.PHP_EOL.
 	"</nowiki></div>".PHP_EOL.
 	"[[Category:DMCA ".date( "Y" )."]]";?>
