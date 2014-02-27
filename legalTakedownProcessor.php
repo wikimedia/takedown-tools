@@ -81,6 +81,12 @@ if ( $_POST['is-test'] === 'No' ) {
 
 if ( !empty( $_POST['files-affected'] ) ) {
 	$filearray=explode( ',', $_POST['files-affected'] );
+	// Error check for file prefix
+	foreach ($filearray as $key => $value) {
+		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
+			$filearray[$key] = substr( $value, 5 );
+		}
+	}
 }
 
 if ( !empty( $filearray ) ) {
