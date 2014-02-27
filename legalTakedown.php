@@ -222,6 +222,7 @@
 								</td>
 								<td>
 									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
+									<br /> <span style='font-size:0.7em; color:red;'>Pleaes do not include the File: Prefix. </span>
 								</td>
 							</tr>
 							<tr>
