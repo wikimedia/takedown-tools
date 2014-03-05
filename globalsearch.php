@@ -69,6 +69,7 @@ $mwtoken = $usertable['mwtoken'];
 			<?php if ( !isset( $_POST['searchfor'] ) ) : ?>
 				<fieldset>
 					<legend>What do you want to search for? Please note this will search ALL wikis and may take time.</legend>
+					<b> Please Note: Currently Hardcoded to only search Project, Project Talk and User talk namespaces. To change ask James and he will adjust or put in an interface </b> 
 					<form id='inputform' method='POST'>
 					<table>
 						<tr>
