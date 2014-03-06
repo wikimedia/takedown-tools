@@ -69,7 +69,8 @@ $mwtoken = $usertable['mwtoken'];
 			<?php if ( !isset( $_POST['searchfor'] ) ) : ?>
 				<fieldset>
 					<legend>What do you want to search for? Please note this will search ALL wikis and may take time.</legend>
-					<b> Please Note: Currently Hardcoded to only search Project, Project Talk and User talk namespaces. To change ask James and he will adjust or put in an interface </b> 
+					<b> Please Note: Currently Hardcoded to only search Project, Project Talk and User talk namespaces. To change ask James and he will adjust or put in an interface. </b> 
+					<br /> <u> Remember to do anything in the search box you normally would for a search (especially using quotes if you want to look only for a specific phrase)</u>
 					<form id='inputform' method='POST'>
 					<table>
 						<tr>
@@ -101,7 +102,7 @@ if ( $usertable['mwtoken'] ) {
 } else {
 	echo '<table><tr><td style="color:red;">Did not find user OAuth information, please register using the link on the sidebar</td></tr></table>'.'<script> $("#searchfor").attr("readonly", true);</script>';
 }?>
-					<div id='results'></div>
+					<table border='1' id='results'></table>
 				</fieldset>
 			<?php endif; ?>
 
@@ -154,8 +155,6 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		$sites[] = $sitearray;
 	}
 
-	echo '<script> $("#results").append("<table border=\'1\'>");</script>';
-
 	foreach ( $sites as $key => $sitearray ) {
 		$apiurl = makehttps( $sitearray['url'] ).'/w/api.php';
 		$siteurl = makehttps( $sitearray['url'] );
@@ -180,7 +179,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		'srredirects' => 'true',
 		'srwhat' => 'text',
 		'srsearch' => $searchfor,
-		'srprop' => 'sectionsnippet|sectiontitle|titlesnippet',
+		'srprop' => 'snippet|sectiontitle|titlesnippet',
 		'srlimit' => '500',
 		'srnamespace' => '3|4|5',
 		);
@@ -211,8 +210,8 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 					}
 					echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\'>'.$location.'</a></td></tr>");</script>';
 					flush();
-					if ( isset( $result['sectionsnippet'] ) ) {
-						echo '<script> $("#results").append("<tr><td>'.$result['sectionsnippet'].'</td></tr>");</script>';
+					if ( isset( $result['snippet'] ) ) {
+						echo '<script> $("#results").append("<tr><td>'.$result['snippet'].'</td></tr>");</script>';
 						flush();
 					}
 				}
@@ -229,7 +228,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		}
 
 	}
-	echo '<script> $("#results").append("<tr><th>DONE!</th></tr></table>");</script>';
+	echo '<script> $("#results").append("<tr><th>DONE!</th></tr>");</script>';
 
 } 
 ?>
