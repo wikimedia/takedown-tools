@@ -208,7 +208,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 					if ( isset( $result['sectiontitle'] ) ) {
 						$location = $location.'#'.$result['sectiontitle'];
 					}
-					echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\'>'.$location.'</a></td></tr>");</script>';
+					echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\' target=\'_blank\'>'.$location.'</a></td></tr>");</script>';
 					flush();
 					if ( isset( $result['snippet'] ) ) {
 						echo '<script> $("#results").append("<tr><td>'.$result['snippet'].'</td></tr>");</script>';
