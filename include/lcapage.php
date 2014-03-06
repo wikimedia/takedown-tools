@@ -26,7 +26,17 @@
 					</div>
 				</div>
 				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
-					<h3>LCATools Forms</h3>
+					<h3> LCA Tools </h3>
+					<div class='pBody'>
+						<ul>
+							<li id='global-search-form'>
+								<a href="globalsearch.php"> Global search </a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
+					<h3>Reporting Forms</h3>
 					<div class='pBody'>
 						<ul>
 							<li id='dmca-takedown-form'>

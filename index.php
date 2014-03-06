@@ -46,6 +46,8 @@
 						</tr>
 				</table>
 					<img style="display:block; margin:auto;" width="500px" src="images/roryshield.jpg" />
+					<u> LCA Tools </u> <br />
+					<a href="globalsearch.php"> Global search (ALPHA) </a> <br /> <br />
 					<u> Reporting forms </u> <br />
 					<a href="legalTakedown.php">DMCA Takedown Form</a> <br />
 					<a href="NCMECreporting.php"> Child Protection Takedown Form </a> <br />
