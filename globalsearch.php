@@ -180,7 +180,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		'srwhat' => 'text',
 		'srsearch' => $searchfor,
 		'srprop' => 'snippet|sectiontitle|titlesnippet',
-		'srlimit' => '500',
+		'srlimit' => 'max',
 		'srnamespace' => '3|4|5',
 		);
 
@@ -225,6 +225,8 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 				//FIXME DONT USE GOTO
 				goto a;
 			}
+		} else {
+			echo '<script> $("#results").append("<tr><td style=\'color:red;\'>There was an error with this search. If the wiki exists this appears it appears that you don\'t have an account on it. <br /> You may want to do a manual search on the wiki (click above) or re run this search after you have visited the wiki with the link above and seen your username in the top right corner. </td></tr>");</script>';
 		}
 
 	}
