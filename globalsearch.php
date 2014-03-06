@@ -159,7 +159,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		$apiurl = makehttps( $sitearray['url'] ).'/w/api.php';
 		$siteurl = makehttps( $sitearray['url'] );
 		$dbname = $sitearray['dbname'];
-		echo '<script> $("#results").append("<tr><th> <a href=\''.$siteurl.'\'>'.$dbname.'</a></th></tr>");</script>';
+		echo '<script> $("#results").append("<tr><th> <a href=\''.$siteurl.'\' target=\'_blank\'>'.$dbname.'</a></th></tr>");</script>';
 		if ( array_key_exists('closed', $sitearray ) ) {
 			echo '<script> $("#results").append("<tr><td style=\'font-weight:bold;\'> Closed Wiki, Skipping </td</tr>");</script>';
 			continue;
