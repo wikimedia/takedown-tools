@@ -147,7 +147,11 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 			foreach ( $langarray['site'] as $langkey => $sitearray ) {
 					$sites[] = $sitearray;
 				}
-		} 
+		}
+	}
+
+	foreach ( $response['sitematrix']['specials'] as $key => $sitearray) {
+		$sites[] = $sitearray;
 	}
 
 	echo '<script> $("#results").append("<table border=\'1\'>");</script>';
@@ -157,6 +161,16 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		$siteurl = makehttps( $sitearray['url'] );
 		$dbname = $sitearray['dbname'];
 		echo '<script> $("#results").append("<tr><th> <a href=\''.$siteurl.'\'>'.$dbname.'</a></th></tr>");</script>';
+		if ( array_key_exists('closed', $sitearray ) ) {
+			echo '<script> $("#results").append("<tr><td style=\'font-weight:bold;\'> Closed Wiki, Skipping </td</tr>");</script>';
+			continue;
+		} elseif ( array_key_exists( 'private', $sitearray ) ) {
+			echo '<script> $("#results").append("<tr><td style=\'font-weight:bold;\'> Private Wiki, Skipping </td</tr>");</script>';
+			continue;
+		} elseif ( array_key_exists( 'fishbowl' , $sitearray ) ) {
+			echo '<script> $("#results").append("<tr><td style=\'font-weight:bold;\'> Fishbowl Wiki, Skipping </td</tr>");</script>';
+			continue;
+		}
 
 		$request = array(
 		'action' => 'query',
@@ -167,9 +181,11 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		'srwhat' => 'text',
 		'srsearch' => $searchfor,
 		'srprop' => 'sectionsnippet|sectiontitle|titlesnippet',
-		'srlimit' => 'max',
+		'srlimit' => '500',
 		'srnamespace' => '3|4|5',
 		);
+
+		a:
 
 		$api_req = OAuthRequest::from_consumer_and_token( $consumer, $accessToken, "POST", $apiurl, $request );
 		$api_req->sign_request( $signer, $consumer, $accessToken );
@@ -183,23 +199,33 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		curl_setopt( $ch, CURLOPT_HTTPHEADER, array( $api_req->to_header() ) );
 		$jsonresponse = curl_exec( $ch );
 		$response = json_decode( $jsonresponse, true );
+
+		if ( $response ) {
 		
-		if ( $response['query']['searchinfo']['totalhits'] > 0 ) {
-			$searchresults = $response['query']['search'];
-			foreach ($searchresults as $key => $result) {
-				$location = $siteurl.'/wiki/'.$result['title'];
-				if ( isset( $result['sectiontitle'] ) ) {
-					$location = $location.'#'.$result['sectiontitle'];
-				}
-				echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\'>'.$location.'</a></td></tr>");</script>';
-				flush();
-				if ( isset( $result['sectionsnippet'] ) ) {
-					echo '<script> $("#results").append("<tr><td>'.$result['sectionsnippet'].'</td></tr>");</script>';
+			if ( $response['query']['searchinfo']['totalhits'] > 0 ) {
+				$searchresults = $response['query']['search'];
+				foreach ($searchresults as $key => $result) {
+					$location = $siteurl.'/wiki/'.$result['title'];
+					if ( isset( $result['sectiontitle'] ) ) {
+						$location = $location.'#'.$result['sectiontitle'];
+					}
+					echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\'>'.$location.'</a></td></tr>");</script>';
 					flush();
+					if ( isset( $result['sectionsnippet'] ) ) {
+						echo '<script> $("#results").append("<tr><td>'.$result['sectionsnippet'].'</td></tr>");</script>';
+						flush();
+					}
 				}
+			} else {
+				echo '<script> $("#results").append("<tr><td>No search results found</td></tr>");</script>';
 			}
-		} else {
-			echo '<script> $("#results").append("<tr><td>No search results found</td></tr>");</script>';
+
+			if ( array_key_exists( 'query-continue', $response ) ) {
+				$offset = $response['query-continue']['search']['sroffset'];
+				$request['sroffset'] = $offset;
+				//FIXME DONT USE GOTO
+				goto a;
+			}
 		}
 
 	}
