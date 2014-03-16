@@ -50,7 +50,7 @@ $sortby = ( !empty( $_GET['sort'] ) ) ? $_GET['sort'] : "id"; // grab sort optio
 
 $order = ( !empty( $_GET['order'] ) ) ? $_GET['order'] : "DESC"; // grab order options
 
-$displaytest = ( !empty( $_GET['displaytest'] ) ) ? $_GET['displaytest'] : 'Y'; // grab test options
+$displaytest = ( !empty( $_GET['displaytest'] ) ) ? $_GET['displaytest'] : 'N'; // grab test options
 
 $displaytype = ( !empty( $_GET['displaytype'] ) ) ? $_GET['displaytype'] : 'all'; // grab test options
 
