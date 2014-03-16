@@ -181,8 +181,8 @@
                                 </td>
                                 <td>
                                     <select name='is-test' id='is-test'>
-                                        <option value='N'>No</option>
-                                        <option value='Y' selected>Yes</option>
+                                        <option value='N' selected>No</option>
+                                        <option value='Y'>Yes</option>
                                     </select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
                                 </td>
                             </tr>
