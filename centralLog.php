@@ -244,7 +244,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 										<table border='0'>
 											<tr>
 												<td>
-													<label for='displaytest'> Display test actions </label>
+													<label for='displaytest'> Display test actions: </label>
 												</td>
 												<td>
 													<select name='displaytest' id='displaytest'>
