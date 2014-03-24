@@ -153,7 +153,7 @@
                             </tr>
                             <tr>
                                 <td >
-                                    <label for='logging-metadata'> Please check all statements which are true </label>
+                                    <label for='logging-metadata'> Please check all statements which are true. </label>
                                 </td>
                                 <td>
                                     <input type='checkbox' name='logging-metadata[]' value='The content was taken down and suppressed.'> The content was taken down and suppressed. <br />
@@ -183,7 +183,7 @@
                                     <select name='is-test' id='is-test'>
                                         <option value='N' selected>No</option>
                                         <option value='Y'>Yes</option>
-                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
+                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to NCMEC. '/>
                                 </td>
                             </tr>
                             <tr>
@@ -287,7 +287,7 @@
                                     <label for='reporter-fName'> Your name: </label>
                                 </td>
                                 <td>
-                                    <input id='reporter-fName' name='reporter-fName' type='text' size='25' value='' required/> <input id='reporter-lName' name='reporter-lName' type='text' size='25' value='' />  <img class='showTooltip' src='images/20px-Help.png' title='this is YOUR name as the reporter' required/>
+                                    <input id='reporter-fName' name='reporter-fName' type='text' size='25' value='' required/> <input id='reporter-lName' name='reporter-lName' type='text' size='25' value='' />  <img class='showTooltip' src='images/20px-Help.png' title='This is YOUR name as the reporter.' required/>
                                 </td>
                             </tr>
                             <tr>
@@ -295,7 +295,7 @@
                                     <label for'reporter-email'> Your email: </label>
                                 </td>
                                 <td>
-                                    <input id='reporter-email' name='reporter-email' type='text' size='50' value=<?php echo "'".$_SERVER['PHP_AUTH_USER']."@wikimedia.org'";?> required email/> <img class='showTooltip' src='images/20px-Help.png' title='YOUR email as the reporter, defaults to username logged in' />
+                                    <input id='reporter-email' name='reporter-email' type='text' size='50' value=<?php echo "'".$_SERVER['PHP_AUTH_USER']."@wikimedia.org'";?> required email/> <img class='showTooltip' src='images/20px-Help.png' title='YOUR email as the reporter, defaults to username logged in.' />
                                 </td>
                             </tr>
                         <!--<tr>
@@ -313,7 +313,7 @@
                         <table border='0' id='mw-movepage-table'>
                             <tr>
                                 <td>
-                                    <label for='file-name'> File name (without File:)</label>
+                                    <label for='file-name'> File name (without File:) </label>
                                 </td>
                                 <td>
                                     File:<input id='file-name' name='file-name' value='' type='text' size='50' required />
@@ -344,7 +344,7 @@
                                     <label for='project-language'>Project language code (if necessary)</label>
                                 </td>
                                 <td>
-                                    <input type='text' size='10' value='' name='project-language' id='project-language' /><img class='showTooltip' src='images/20px-Help.png' title='For projects which require a language code, type it here (not for commons/wikidata/meta etc' />
+                                    <input type='text' size='10' value='' name='project-language' id='project-language' /><img class='showTooltip' src='images/20px-Help.png' title='For projects which require a language code, type it here (not for commons/wikidata/meta) etc.' />
                                 </td>
                             </tr>
                             <tr>
@@ -444,12 +444,12 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label for='incident-location'> Incident location (webpage/IRC etc) </label>
+                                    <label for='incident-location'> Incident location: </label>
                                 </td>
                                 <td>
                                     <select name='incident-location' id='incident-location'>
                                         <option value='webPageIncident' selected>Web Page </option>
-                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Where the incident happened (web page/IRC/email etc) currently only supporting web page' />
+                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Where the incident happened (web page/IRC/email etc) currently only supporting web page.' />
                                 </td>
                             </tr>
                             <tr>
@@ -471,7 +471,7 @@
                                     <label for='uploader-email'> Email of uploader: </label>
                                 </td>
                                 <td>
-                                    <input type='text' size='50' name='uploader-email' id='uploader-email' /> <img class='showTooltip' src='images/20px-Help.png' title='This may be available in the database, James or a developer with full DB access can check'/>
+                                    <input type='text' size='50' name='uploader-email' id='uploader-email' /> <img class='showTooltip' src='images/20px-Help.png' title='This may be available in the database, James or a developer with full DB access can check.'/>
                                 </td>
                             </tr>
                         </table>

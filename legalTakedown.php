@@ -93,7 +93,7 @@
 									<select name='is-test' id='is-test'>
 										<option>No</option>
 										<option>Yes</option>
-									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
+									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to Chilling Effects. '/>
 								</td>
 							</tr>
 							<!-- <tr class='spaceOut'>
@@ -238,7 +238,7 @@
 									<label for='takedown-commons-title'>Commons Title</label>
 								</td>
 								<td>
-									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement'/>
+									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement.'/>
 								</td>
 							</tr>
 							<tr>
@@ -246,7 +246,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting. (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
 								</td>
 							</tr>
 							<tr>
@@ -262,7 +262,7 @@
 									<label for='takedown-subject'> Subject Line </label>
 								</td>
 								<td>
-									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax received'/>
+									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax received.'/>
 								</td>
 							</tr>
 						</table>
