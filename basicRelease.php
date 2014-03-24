@@ -69,7 +69,7 @@
 								<select name='is-test' id='is-test'>
 									<option>No</option>
 									<option>Yes</option>
-								</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sendign to Chilling Effects '/>
+								</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for logging of the release in full. '/>
 							</td>
 						</tr>
 					</table>
@@ -108,7 +108,7 @@
 							</tr>
 							<tr>
 								<td>
-									<label for='who-released'> Who released the information? </label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the person&#39;s name'/>
+									<label for='who-released'> Who released the information? </label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the person&#39;s name.'/>
 								</td>
 								<td>
 									<input type='text' value='' name='who-released' id='who-released' size='30' />
@@ -116,7 +116,7 @@
 							</tr>
 							<tr>
 								<td>
-									<label for='who-released-to'>What is the name of the person to whom it was released?</label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the contacts name'/>
+									<label for='who-released-to'>What is the name of the person to whom it was released?</label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the contacts name.'/>
 								</td>
 								<td>
 									<input type='text' value='' name='who-released-to' id='who-released-to' size='30' />
