@@ -276,7 +276,7 @@ class sugar {
 
 			$id = json_decode( $rawresponse, true );
 
-			$this->userid = $result;
+			$this->userid = $id;
 
 			return $id;
 		}
