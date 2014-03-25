@@ -42,7 +42,7 @@ if ( $usertable['mwtoken'] ) {
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
 	<link rel='shortcut icon' href='images/favicon.ico'/>
-	<title>OAuth Registration</title>
+	<title>Mediawiki OAuth Registration</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='scripts/jquery-1.10.2.min.js'></script>
 	<script src='scripts/jquery.validate.min.js'></script>
