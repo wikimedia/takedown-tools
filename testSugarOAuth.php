@@ -2,7 +2,7 @@
 
 require_once 'include/multiuseFunctions.php';
 require_once 'include/OAuth.php';
-require_once 'include/classSugar.php';
+require_once 'include/sugar.class.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
