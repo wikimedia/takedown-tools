@@ -164,7 +164,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <label for='logging-details'> Is there any information that you would like to record in the permenant log? <br /> <b><u>Note:</u> Do not include Checkuser data you are not ok with being permenantly kept </b></label>
+                                    <label for='logging-details'> Is there any information that you would like to record in the permanent log? <br /> <b><u>Note:</u> Do not include Checkuser data you are not ok with being permanently kept </b></label>
                                 </td>
                                 <td>
                                     <textarea id ='logging-details' name='logging-details' wrap='virtual' rows='4' ></textarea>

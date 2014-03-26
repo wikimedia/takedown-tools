@@ -479,7 +479,7 @@ if ( !empty( $reportID ) ) {
 			$responsecode = $r->nodeValue;
 		}
 	}} else {echo 'No reportID detected, did you ever actually open a report?';}?></textarea>
-						<p> <?php if ( $responsecode == 0 ) { echo '<b><u>Thank you, your report has been submitted with Report ID: '.$reportID.' and all log information has been saved. Please remember to email legal@rt.wikimedia.org in order to get the image permenantly deleted.</u></b>'; } else { echo 'It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above';} ?></p>
+						<p> <?php if ( $responsecode == 0 ) { echo '<b><u>Thank you, your report has been submitted with Report ID: '.$reportID.' and all log information has been saved. Please remember to email legal@rt.wikimedia.org in order to get the image permanently deleted.</u></b>'; } else { echo 'It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above';} ?></p>
 				</fieldset>
 			</div>
 		</div>

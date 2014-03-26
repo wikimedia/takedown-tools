@@ -77,7 +77,7 @@ $sugarsecret = $config['sugarconsumer_secret'];
                     </tr>
                     <tr>
                         <td>
-                            <u>Step 3:</u> <br /> Permenant access token requested and received.
+                            <u>Step 3:</u> <br /> Permanent access token requested and received.
                         </td>
                         <td>
                             <img id='permrequest' src='images/List-remove.svg' width='40px'/>
@@ -145,7 +145,7 @@ $sugarsecret = $config['sugarconsumer_secret'];
 		echo "<script> $('#permrequest').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL; 
 	} else {
 		echo "<script> $('#permrequest').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-		echo "<script> $('#result').html('<span style=\'color:red\'> There appears to have been a problem retriving your permenant credentials. Please try again by going <a href=\'sugarOAuthRegistration.php\''>Here</a> or contact James. </span>');</script>".PHP_EOL;
+		echo "<script> $('#result').html('<span style=\'color:red\'> There appears to have been a problem retriving your permanent credentials. Please try again by going <a href=\'sugarOAuthRegistration.php\''>Here</a> or contact James. </span>');</script>".PHP_EOL;
 		die();
 	}
 	flush();
@@ -156,7 +156,7 @@ $sugarsecret = $config['sugarconsumer_secret'];
 		echo "<script> $('#basictest').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL; 
 	} else {
 		echo "<script> $('#basictest').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-		echo "<script> $('#result').html('<span style=\'color:red\'> There appears to have been a problem verifying your permenant credentials. Please try again by going <a href=\'sugarOAuthRegistration.php\'>Here</a> or contact James. </span>');</script>".PHP_EOL;
+		echo "<script> $('#result').html('<span style=\'color:red\'> There appears to have been a problem verifying your permanent credentials. Please try again by going <a href=\'sugarOAuthRegistration.php\'>Here</a> or contact James. </span>');</script>".PHP_EOL;
 		die();
 	}
 

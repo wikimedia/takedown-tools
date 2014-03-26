@@ -830,7 +830,7 @@ if ( $reportID ) {
 	if error code or no success code then just check off logging since message already printed about failure */
 	if ( $responsecode === '0' ) {
 		echo "<script> $('#logged').attr('src', 'images/Dialog-accept.svg');
-		$('#result').html('<u>Thank you, your report has been submitted with Report ID: ".$reportID." and all log information has been saved. <br /> Please remember to email legal@rt.wikimedia.org in order to get the image permenantly deleted.</u>');</script>".PHP_EOL;
+		$('#result').html('<u>Thank you, your report has been submitted with Report ID: ".$reportID." and all log information has been saved. <br /> Please remember to email legal@rt.wikimedia.org in order to get the image permanently deleted.</u>');</script>".PHP_EOL;
 	} else {
 		echo "<script>$('#logged').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
 	}

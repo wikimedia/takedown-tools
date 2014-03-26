@@ -100,7 +100,7 @@ $server = $config['mw_oauthserver'];
                     </tr>
                     <tr>
                         <td>
-                            <u>Step 3:</u> <br /> Permenant access token requested and received.
+                            <u>Step 3:</u> <br /> Permanent access token requested and received.
                         </td>
                         <td>
                             <img id='permrequest' src='images/List-remove.svg' width='40px'/>
@@ -185,7 +185,7 @@ $data = curl_exec( $ch );
 if ( !$data ) {
 	echo 'Curl error: ' . curl_error( $ch );
 	echo "<script> $('#permrequest').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
-	echo "<script> $('#result').html('<span style=\'color:red\'>We appear to have had an issue requesting your permenant authorization data, either because of a problem on our side or the wiki side. Please try again or contact James. </span>'); </script>".PHP_EOL;
+	echo "<script> $('#result').html('<span style=\'color:red\'>We appear to have had an issue requesting your permanent authorization data, either because of a problem on our side or the wiki side. Please try again or contact James. </span>'); </script>".PHP_EOL;
 	die();
 }
 

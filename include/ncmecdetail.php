@@ -106,7 +106,7 @@ if ( $reportID ) {
         </table>
     </fieldset>
     <fieldset>
-        <legend>Is there any information that you would like to record in the permenant log? </legend>
+        <legend>Is there any information that you would like to record in the permanent log? </legend>
         <textarea name='details' wrap='virtual' rows='18' cols='70' readonly><?php if ( !empty( $details ) ) {
     echo $details;
 }  else { echo 'This option was not set'; } ?></textarea>
