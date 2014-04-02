@@ -11,34 +11,60 @@ Basic Installation instructions:
 3. Fill out missing variables, especially API key for Chilling Effects (if using) and database credentials.  
 
 Root folder:
-index.php - Central start home page for all tools within the repository.  
+index.php - Central start home page for all tools within the repository.
 
-legalTakedown.php - form to fill out for Wikimedia Commons DMCA take downs.  
-legalTakedownProcessor.php - file to process input from legalTakedown.php, takes data/logs/sends to Chilling Effects on demand/processes templates to post on wiki.  
 
-basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
-basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
-
+childprotection folder:  
 NCMECreporting.php - form to fill out when carrying out child protection takedowns gathering log info and the information needed for reporting to the National Center for Missing and Exploited Children.  
 NCMECprocessing.php - processor to take NCMECreporting.php information and files, package it up and send it to NCMEC as well as record information for central logging. Sends to either test or production NCEMC servers depending on setting on collection form.  
 NCMECprocessingOldDebug.php - older processor for NCMECreporting which is kept to allow on demand switching. Outputs significantly more debug info then production processor. Also sends to either test or production servers.  
 NCMECretract.php - form to allow retracting a report to NCMEC before the report has been closed. Reports auto close as part of the processor so only valuable if something errored out during the submission process.  
 
+configs folder:  
+lcatools.sql - installation script for database required for tools.  
+In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
+
+mwoauth folder:  
+beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
+	Begins blank request process then sends user to meta to finish authorization  
+testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
+mwOAuthProcessor.php - ajax ready php script for other parts of the program to use when doing edits or other post actions on demand.  
+
+release folder:  
+basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
+basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
+
+standalone folder:  
+globalsearch.php - ALPHA tool for searching for a phrase on all wikimedia wikis, currently requires and uses mediawiki OAuth.  
+
+sugaroauth folder:  
+sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
+	Checks for active registration session  
+	Takes verification code and requests permemnant credentials from sugarCRM  
+	Verifies that credentials work and then registers them in the database along with sugarCRM username  
+sugarOAuthRegistration.php - Initial registration/account connection script for connecting lcatools and sugarCRM accounts.  
+testSugarOAuth.php - tests current users stored OAuth credentials for sugarCRM by doing multiple API calls.  
+
+
+takedown folder:  
+legalTakedown.php - form to fill out for Wikimedia Commons DMCA take downs.  
+legalTakedownProcessor.php - file to process input from legalTakedown.php, takes data/logs/sends to Chilling Effects on demand/processes templates to post on wiki.  
+
+
 centralLog.php - calls and displays log for submissions done on all lcatool forms.  
 logDetails.php - displays details of logged events on demand (by clicking title on centraLog.php).  
 
-beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
-	Begins blank request process then sends user to meta to finish authorization  
+
 mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
 	Takes verification script and token, verifies against session started on beginoauthregistration.php.  
 	If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
-testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.
-
-lcatools.sql - installation script for database required for tools.  
+ 
 LICENSE.txt (MIT License for all files not otherwise marked)  
 README.md (this readme)  
 lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  
-.gitignore - ignore real config files which have private keys/passwords and .htaccess file  
+You should create a copy and a real 'lcaToolsConfig.ini' during tool setup.  
+
+.gitignore - ignore real config files which have private keys/passwords, key files and .htaccess file  
 
 include folder:  
 lcapage.php - template for surrounding pieces of lcatools pages (toolbar/logo/login header etc)  
@@ -109,7 +135,7 @@ List-remove.svg
 CSS folder:  
 main.css (mediawiki monobook styling Gabriel Wicke GPL)  
 pikaday.css (BSD and MIT)  
-lca.css - page specific css/overrides  
+lca.css - page specific /css/overrides  
 
 Scripts folder:  
 lca.js - shared scripts for lcatools pages (currently logout script).  
