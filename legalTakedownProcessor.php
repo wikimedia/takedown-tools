@@ -40,46 +40,56 @@ if ( $_POST['is-test'] === 'No' ) {
 }
 $log_row = lcalog( $user, $log_type, $log_title, $istest );
 
-$involved_user = $_POST['involved-user'];
-$logging_metadata = $_POST['logging-metadata'];
-$strike_note = $_POST['strike-note'];
-if ( in_array( 'other', $strike_note ) ) {
+$involved_user = !isset( $_POST['involved-user'] ) ? null : $_POST['involved-user'];
+$logging_metadata = !isset( $_POST['logging-metadata'] ) ? null : $_POST['logging-metadata'];
+$strike_note = !isset( $_POST['strike-note'] ) ? null : $_POST['strike-note'];
+if ( is_array( $strike_note ) && in_array( 'other', $strike_note ) ) {
 	$strike_note[array_search( 'other', $strike_note )] = 'Other: ' . $_POST['strike-note-other'];
 }
-$sender_name = $_POST['sender-name'];
-$sender_person = $_POST['sender-person'];
-$sender_firm = $_POST['sender-firm'];
-$sender_address1 = $_POST['sender-address1'];
-$sender_address2 = $_POST['sender-address2'];
-$sender_city = $_POST['sender-city'];
-$sender_zip = $_POST['sender-zip'];
-$sender_state = $_POST['sender-state'];
-$sender_country = $_POST['sender-country'];
-$takedown_date = $_POST['takedown-date'];
-$action_taken = $_POST['action-taken'];
-$takedown_title = $_POST['takedown-title'];
-$commons_title = $_POST['takedown-commons-title'];
-$wmfwiki_title = $_POST['takedown-wmf-title'];
-$takedown_method = $_POST['takedown-method'];
-$takedown_subject = $_POST['takedown-subject'];
-$takedown_text = $_POST['takedown-body'];
+$sender_name = !isset( $_POST['sender-name'] ) ? null : $_POST['sender-name'];
+$sender_person = !isset( $_POST['sender-person'] )  null : $_POST['sender-person'];
+$sender_firm = !isset( $_POST['sender-firm']) ? null : $_POST['sender-firm'];
+$sender_address1 = !isset( $_POST['sender-address1'] ) ? null : $_POST['sender-address1'];
+$sender_address2 = !isset( $_POST['sender-address2'] ) ? null : $_POST['sender-address2'];
+$sender_city = !isset( $_POST['sender-city'] ) ? null : $_POST['sender-city'];
+$sender_zip = !isset( $_POST['sender-zip'] ) ? null : $_POST['sender-zip'];
+$sender_state = !isset( $_POST['sender-state'] ) ? null : $_POST['sender-state'];
+$sender_country = !isset( $_POST['sender-country'] ) ? null : ;
+$takedown_date = !isset( $_POST['takedown-date'] ) ? null : $_POST['takedown-date'];
+$action_taken = !isset( $_POST['action-taken'] ) ? null : $_POST['action-taken'];
+$takedown_title = !isset( $_POST['takedown-title'] ) ? null : $_POST['takedown-title'];
+$commons_title = !isset( $_POST['takedown-commons-title'] ) ? null : $_POST['takedown-commons-title'];
+$wmfwiki_title = !isset( $_POST['takedown-wmf-title'] ) ? null : $_POST['takedown-wmf-title'];
+$takedown_method = !isset( $_POST['takedown-method'] ) ? null : $_POST['takedown-method'];
+$takedown_subject = !isset( $_POST['takedown-subject'] ) ? null : $_POST['takedown-subject'];
+$takedown_text = !isset( $_POST['takedown-body'] ) ? null : $_POST['takedown-body'];
 
 
 // cast form ce-send variable.
-if ( $_POST['ce-send'] === 'Yes' ) {
+if ( isset( $_POST['ce-send'] ) && $_POST['ce-send'] === 'Yes' ) {
 	$formsendtoCE = true;
 } else {
 	$formsendtoCE = false;
 }
 
 // cast test variable
-if ( $_POST['is-test'] === 'No' ) {
+if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
 	$istest = 'Y';
 } else {
 	$istest = 'N';
 }
 
 if ( !empty( $_POST['files-affected'] ) ) {
+	$filearray=explode( ',', $_POST['files-affected'] );
+	// Error check for file prefix
+	foreach ($filearray as $key => $value) {
+		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
+			$filearray[$key] = substr( $value, 5 );
+		}
+	}
+}
+
+if ( !empty( $_POST['pages-affected'] ) ) {
 	$filearray=explode( ',', $_POST['files-affected'] );
 	// Error check for file prefix
 	foreach ($filearray as $key => $value) {
