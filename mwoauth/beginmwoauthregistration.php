@@ -103,7 +103,7 @@ if ( $usertable['mwtoken'] ) {
 }
 
 if ( empty( $secretKey ) ) {
-	die( 'You do not seem to have the required RSA Private key in the main app folder, please alert your nearest developer and tell them to get their shit together' );
+	die( 'You do not seem to have the required RSA Private key in the configs folder, please alert your nearest developer and tell them to get their shit together' );
 }
 
 $request_url = $oauthurl . '/initiate?format=json&oauth_callback=oob';
