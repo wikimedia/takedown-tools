@@ -124,11 +124,11 @@ class sugar {
 	 * If it recieves (optionally) a user key and secret it will also create an OAuthToken object to use when making a request.
 	 * It will always create a signature object to be used signing the request.
 	 * If only the consumer is made the addToken function can be used to add a token.
-	 * Before that the object can only be used to register a new user and request their permenant OAuth information.
+	 * Before that the object can only be used to register a new user and request their permanent OAuth information.
 	 *
 	 * @param string  $consumerKey    Public consumer key for sugar OAuth application. Set in sugar database and recorded in config file.
 	 * @param string  $consumerSecret Consumer secret for sugar OAuth application. Set in sugar database and recorded in config file.
-	 * @param string  $userKey        (optional) user specific permenant token for OAuth application. Recieved after registration process with user and sugar.
+	 * @param string  $userKey        (optional) user specific permanent token for OAuth application. Recieved after registration process with user and sugar.
 	 * @param string  $userSecret     (optional) user specific secret token for OAuth application. Recieved after registration process with user and sugar.
 	 */
 	function __construct( $consumerKey, $consumerSecret, $url, $userKey = null, $userSecret = null ) {
@@ -213,7 +213,7 @@ class sugar {
 	/**
 	 * Set or change OAuth user token for SugarCRM
 	 *
-	 * @param string  $userKey        User specific permenant token for OAuth application. Recieved after registration process with user and sugar.
+	 * @param string  $userKey        User specific permanent token for OAuth application. Recieved after registration process with user and sugar.
 	 * @param string  $userSecret     Uer specific secret token for OAuth application. Recieved after registration process with user and sugar.
 	 */
 	public function settoken( $userKey, $userSecret ) {
