@@ -80,7 +80,7 @@ if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
 }
 
 if ( !empty( $_POST['files-affected'] ) ) {
-	$filearray=explode( ',', $_POST['files-affected'] );
+	$filearray = explode( ',', $_POST['files-affected'] );
 	// Error check for file prefix
 	foreach ($filearray as $key => $value) {
 		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
@@ -90,13 +90,7 @@ if ( !empty( $_POST['files-affected'] ) ) {
 }
 
 if ( !empty( $_POST['pages-affected'] ) ) {
-	$filearray=explode( ',', $_POST['files-affected'] );
-	// Error check for file prefix
-	foreach ($filearray as $key => $value) {
-		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
-			$filearray[$key] = substr( $value, 5 );
-		}
-	}
+	$pagesarray = explode( ',', $_POST['pages-affected'] );
 }
 
 if ( !empty( $filearray ) ) {
