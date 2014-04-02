@@ -13,11 +13,11 @@ New processor with pretty output - Beta
 
 ---------------------------------------------   */
 
-require_once 'include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $istest = $_POST['is-test'];
 
@@ -87,15 +87,15 @@ $legalapproved = $_POST['legal-approved'];
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>NCMEC Submission</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -114,13 +114,13 @@ $legalapproved = $_POST['legal-approved'];
                                 <u>Step 1:</u> Data gathered and put together:
                             </td>
                             <td >
-                                <img id='gathered' src='images/List-remove.svg' width='40px'/>
+                                <img id='gathered' src='/images/List-remove.svg' width='40px'/>
                             </td>
                             <td >
                                 <u> Step 4:</u> File information sent:
                             </td>
                             <td >
-                                <img id='file-info' src='images/List-remove.svg' width='40px'/>
+                                <img id='file-info' src='/images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                         <tr>
@@ -128,13 +128,13 @@ $legalapproved = $_POST['legal-approved'];
                                 <u>Step 2:</u> Report opened with NCMEC:
                             </td>
                             <td>
-                                <img id='opened' src='images/List-remove.svg' width='40px'/>
+                                <img id='opened' src='/images/List-remove.svg' width='40px'/>
                             </td>
                             <td >
                                 <u>Step 5:</u> Report closed:
                             </td>
                             <td>
-                                <img id='closed' src='images/List-remove.svg' width='40px'/>
+                                <img id='closed' src='/images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                         <tr>
@@ -142,13 +142,13 @@ $legalapproved = $_POST['legal-approved'];
                                 <u>Step 3:</u> File sent:
                             </td>
                             <td>
-                                <img id='file-sent' src='images/List-remove.svg' width='40px'/>
+                                <img id='file-sent' src='/images/List-remove.svg' width='40px'/>
                             </td>
                              <td >
                                 <u>Step 6:</u> Log created and data stored:
                             </td>
                             <td>
-                                <img id='logged' src='images/List-remove.svg' width='40px'/>
+                                <img id='logged' src='/images/List-remove.svg' width='40px'/>
                             </td>
                         </tr>
                         <tr>
@@ -349,7 +349,7 @@ echo print_r( $_FILES );?></textarea>
                 </fieldset>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 	</div>
 <?php
 echo '...';
@@ -570,10 +570,10 @@ echo "<script> $('#xml-report').val(".json_encode( $openReport->saveXML() ).");<
 // DECISION POINT: Step 1
 if ( !$openReport->schemaValidate( 'include/espsubmittal.xsd' ) ) {
 	echo "<script> $('#xml-report-val').val('DOMDocument::schemaValidate() Generated Errors!".json_encode( libxml_display_errors() )."');</script>;";
-	echo "<script> $('img#gathered').attr('src', 'images/Dialog-error-round.svg');</script>".PHP_EOL;
+	echo "<script> $('img#gathered').attr('src', '/images/Dialog-error-round.svg');</script>".PHP_EOL;
 } else {
 	echo "<script> $('#xml-report-val').val('There are no validation errors and the XML above matches the schema provided by NCMEC');</script>".PHP_EOL;
-	echo "<script> $('img#gathered').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL; $openReportValid = true;
+	echo "<script> $('img#gathered').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL; $openReportValid = true;
 }
 
 echo '...';
@@ -589,16 +589,16 @@ if ( $openReportValid ) {
 	// DECISION POINT: Step 2
 	if ( $reportIDNodes->length==0 ) {
 		$reportID = null;
-		echo "<script> $('img#opened').attr('src', 'images/Dialog-error-round.svg'); $('div#report-id').html('<b><u>NO REPORT SENT: Response error</u></b>');</script>".PHP_EOL;
+		echo "<script> $('img#opened').attr('src', '/images/Dialog-error-round.svg'); $('div#report-id').html('<b><u>NO REPORT SENT: Response error</u></b>');</script>".PHP_EOL;
 	} else {
 		foreach ( $reportIDNodes as $ID ) {
 			$reportID = $ID->nodeValue;
-			echo "<script> $('img#opened').attr('src', 'images/Dialog-accept.svg'); $('div#report-id').text('".$reportID."');</script>".PHP_EOL;
+			echo "<script> $('img#opened').attr('src', '/images/Dialog-accept.svg'); $('div#report-id').text('".$reportID."');</script>".PHP_EOL;
 		}
 	}
 } else {
 	$reportID = null;
-	echo "<script> $('img#opened').attr('src', 'images/Dialog-error-round.svg'); $('div#report-id').html('<b><u>NO REPORT SENT: Report not valid</u></b>');</script>".PHP_EOL;
+	echo "<script> $('img#opened').attr('src', '/images/Dialog-error-round.svg'); $('div#report-id').html('<b><u>NO REPORT SENT: Report not valid</u></b>');</script>".PHP_EOL;
 }
 
 if ( $reportID && $responseXML ) {
@@ -625,11 +625,11 @@ if ( !empty( $uploadedfiletmploc ) && !empty( $reportID ) ) {
 	// DECISION POINT: Step 3
 	if ( $fileIdNodes->length==0 ) {
 		$fileID = null;
-		echo "<script> $('img#file-sent').attr('src', 'images/Dialog-error-round.svg');</script>".PHP_EOL;
+		echo "<script> $('img#file-sent').attr('src', '/images/Dialog-error-round.svg');</script>".PHP_EOL;
 	} else {
 		foreach ( $fileIdNodes as $ID ) {
 			$fileID = $ID->nodeValue;
-			echo "<script> $('img#file-sent').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+			echo "<script> $('img#file-sent').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL;
 		}
 	}
 
@@ -738,9 +738,9 @@ if ( $result ) {
 /* If we got a response code of success (0) mark as success, if we got another response code mark as fail,
 if we don't have a response code at all probably didn't send anything and so don't do anything and leave at current symbol. */
 if ( $responsecode === '0' ) {
-	echo "<script> $('img#file-info').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+	echo "<script> $('img#file-info').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL;
 } elseif ( $responsecode ) {
-	echo "<script> $('img#file-info).attr('src', 'images/Dialog-error-round.svg');</script>".PHP_EOL;
+	echo "<script> $('img#file-info).attr('src', '/images/Dialog-error-round.svg');</script>".PHP_EOL;
 }
 
 echo '...';
@@ -766,9 +766,9 @@ if ( !empty( $reportID ) ) {
 
 /* If success code print result text, if another code error out, if no code do nothing */
 if ( $responsecode === '0' ) {
-	echo "<script> $('#closed').attr('src', 'images/Dialog-accept.svg'); </script>".PHP_EOL;
+	echo "<script> $('#closed').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
 } elseif ( $responsecode ) {
-	echo "<script> $('#closed').attr('src', 'images/Dialog-error-round.svg');
+	echo "<script> $('#closed').attr('src', '/images/Dialog-error-round.svg');
 	$('#result').html('<u>It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above</u>'); </script>".PHP_EOL;
 }
 
@@ -829,10 +829,10 @@ if ( $reportID ) {
 	/* If success code from close then put full result message AND check off logging,
 	if error code or no success code then just check off logging since message already printed about failure */
 	if ( $responsecode === '0' ) {
-		echo "<script> $('#logged').attr('src', 'images/Dialog-accept.svg');
+		echo "<script> $('#logged').attr('src', '/images/Dialog-accept.svg');
 		$('#result').html('<u>Thank you, your report has been submitted with Report ID: ".$reportID." and all log information has been saved. <br /> Please remember to email legal@rt.wikimedia.org in order to get the image permanently deleted.</u>');</script>".PHP_EOL;
 	} else {
-		echo "<script>$('#logged').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+		echo "<script>$('#logged').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL;
 	}
 } else {
 	echo "<script> $('#result').html('<u>It appears there may have been an issue either with closing the report or earlier in the process, please see possible errors above</u>'); </script>".PHP_EOL;

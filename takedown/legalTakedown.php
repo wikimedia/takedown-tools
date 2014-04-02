@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Legal Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/jquery.validate.min.js'></script>
-	<script src='scripts/moment.min.js'></script>
-	<script src='scripts/pikaday.js'></script>
-	<script src='scripts/pikaday.jquery.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/jquery.validate.min.js'></script>
+	<script src='/scripts/moment.min.js'></script>
+	<script src='/scripts/pikaday.js'></script>
+	<script src='/scripts/pikaday.jquery.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<script>
 	$(document).ready(function(){
 
@@ -90,9 +90,9 @@
 </script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/pikaday.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/pikaday.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -114,14 +114,14 @@
 									<select name='ce-send' id='ce-send'>
 										<option>No</option>
 										<option>Yes</option>
-									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes to send this report to Chilling Effects, No to internally process only and not send.'/>
+									</select> <img class='showTooltip' src='/images/20px-Help.png' title='Select Yes to send this report to Chilling Effects, No to internally process only and not send.'/>
 								</td>
 								<td>
 									<label for='is-test'> Is this a test? </label>
 									<select name='is-test' id='is-test'>
 										<option>No</option>
 										<option>Yes</option>
-									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to Chilling Effects. '/>
+									</select> <img class='showTooltip' src='/images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to Chilling Effects. '/>
 								</td>
 							</tr>
 							<tr class='spaceOut'>
@@ -234,7 +234,7 @@
 								</td>
 								<td class='lca-input'>
 									<select id='sender-country' name='sender-country' value=''>
-									<?php include 'include/countrySelect.php'; ?>
+									<?php include dirname( __FILE__ ) . '/../include/countrySelect.php'; ?>
 									</select>
 								</td>
 							</tr>
@@ -249,7 +249,7 @@
 									<label for='takedown-date'> Date the takedown was sent </label>
 								</td>
 								<td>
-									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' required/> <img class='showTooltip' src='images/20px-Help.png' title='Please use date selector or format as YYYY-MM-DD' />
+									<input id='takedown-date' name='takedown-date' value='' type='text' size='25' required/> <img class='showTooltip' src='/images/20px-Help.png' title='Please use date selector or format as YYYY-MM-DD' />
 									<label for='action-taken'> Action taken? </label>
 									<select name='action-taken' id='action-taken'>
 									<option>Yes</option>
@@ -263,7 +263,7 @@
 									<label for='files-affected'> File(s) affected </label>
 								</td>
 								<td>
-									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
+									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
 									<br /> <span style='font-size:0.7em; color:red;'>Pleaes do not include the File: Prefix. </span>
 								</td>
 							</tr>
@@ -272,7 +272,7 @@
 									<label for='pages-affected'> Page(s) affected </label>
 								</td>
 								<td>
-									<input id='pages-affected' name='pages-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Pages affected by takedown, seperated by commas. Will take up to 5 then ignore the rest.'/>
+									<input id='pages-affected' name='pages-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='Pages affected by takedown, seperated by commas. Will take up to 5 then ignore the rest.'/>
 									<br /> <span style='font-size:0.7em; color:red;'>Pleaes list page names (seperated by comma) including any prefixes . </span>
 								</td>
 							</tr>
@@ -281,7 +281,7 @@
 									<label for='takedown-title'> Chilling Effects 'Title' </label>
 								</td>
 								<td>
-									<input id='takedown-title' name='takedown-title' type='text' value='DMCA (Copyright) Complaint to Wikimedia Foundation' size='50'/> <img class='showTooltip' src='images/20px-Help.png' title='Feel free to override the default with a witty title for Chilling Effects if it suits you.'/>
+									<input id='takedown-title' name='takedown-title' type='text' value='DMCA (Copyright) Complaint to Wikimedia Foundation' size='50'/> <img class='showTooltip' src='/images/20px-Help.png' title='Feel free to override the default with a witty title for Chilling Effects if it suits you.'/>
 								</td>
 							</tr>
 							<tr class='commonsonly'>
@@ -289,7 +289,7 @@
 									<label for='takedown-commons-title'>Commons Title</label>
 								</td>
 								<td>
-									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the Commons announcement.'/>
+									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for the Commons announcement.'/>
 								</td>
 							</tr>
 							<tr>
@@ -297,7 +297,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='The title to use for the WMF wiki posting. (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for the WMF wiki posting. (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
 								</td>
 							</tr>
 							<tr>
@@ -305,7 +305,7 @@
 									<label for='takedown-method'>How was the C&amp;D sent?</label>
 								</td>
 								<td>
-									<input id='takedown-method' name='takedown-method' value='email' type='text' size='25' /> <img class='showTooltip' src='images/20px-Help.png' title='(e.g. email, postal mail, fax ...)'/>
+									<input id='takedown-method' name='takedown-method' value='email' type='text' size='25' /> <img class='showTooltip' src='/images/20px-Help.png' title='(e.g. email, postal mail, fax ...)'/>
 								</td>
 							</tr>
 							<tr>
@@ -313,7 +313,7 @@
 									<label for='takedown-subject'> Subject Line </label>
 								</td>
 								<td>
-									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='images/20px-Help.png' title='Subject line of the email or fax received.'/>
+									<input id='takedown-subject' name='takedown-subject' value='' type='text' size='50' /> <img class='showTooltip' src='/images/20px-Help.png' title='Subject line of the email or fax received.'/>
 								</td>
 							</tr>
 						</table>
@@ -330,7 +330,7 @@
 				</form>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>

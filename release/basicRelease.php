@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Release of Confidential Information</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<script>
 	$(document).ready(function(){
 
@@ -45,8 +45,8 @@
 </script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	td { vertical-align: top; }
 	.external, .external:visited { color: #222222; }
@@ -69,7 +69,7 @@
 								<select name='is-test' id='is-test'>
 									<option>No</option>
 									<option>Yes</option>
-								</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for logging of the release in full. '/>
+								</select> <img class='showTooltip' src='/images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for logging of the release in full. '/>
 							</td>
 						</tr>
 					</table>
@@ -78,7 +78,7 @@
 						<table border='1' id='mw-movepage-table'>
 							<tr>
 								<td>
-									<label for='who-received'> Who was this released too? </label> <img class='showTooltip' src='images/20px-Help.png' title='Choose as many as make qualify, remember to check the other box if you fill out the text field.'/>
+									<label for='who-received'> Who was this released too? </label> <img class='showTooltip' src='/images/20px-Help.png' title='Choose as many as make qualify, remember to check the other box if you fill out the text field.'/>
 								</td>
 								<td>
 									<input type='checkbox' name='who-received[]' value='Legal' /> Legal <br />
@@ -108,7 +108,7 @@
 							</tr>
 							<tr>
 								<td>
-									<label for='who-released'> Who released the information? </label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the person&#39;s name.'/>
+									<label for='who-released'> Who released the information? </label> <img class='showTooltip' src='/images/20px-Help.png' title='Enter the person&#39;s name.'/>
 								</td>
 								<td>
 									<input type='text' value='' name='who-released' id='who-released' size='30' />
@@ -116,7 +116,7 @@
 							</tr>
 							<tr>
 								<td>
-									<label for='who-released-to'>What is the name of the person to whom it was released?</label> <img class='showTooltip' src='images/20px-Help.png' title='Enter the contacts name.'/>
+									<label for='who-released-to'>What is the name of the person to whom it was released?</label> <img class='showTooltip' src='/images/20px-Help.png' title='Enter the contacts name.'/>
 								</td>
 								<td>
 									<input type='text' value='' name='who-released-to' id='who-released-to' size='30' />
@@ -124,7 +124,7 @@
 							</tr>
 							<tr>
 								<td>
-									<label for='released-to-contact'> If to a non-WMF contact, how could we contact that person if necessary? </label><img class='showTooltip' src='images/20px-Help.png' title='Enter contact information here if they are NOT a WMF employee.'/>
+									<label for='released-to-contact'> If to a non-WMF contact, how could we contact that person if necessary? </label><img class='showTooltip' src='/images/20px-Help.png' title='Enter contact information here if they are NOT a WMF employee.'/>
 								</td>
 								<td>
 									<input type='text' name='released-to-contact' id='released-to-contact' size='30' />
@@ -140,7 +140,7 @@
 				</form>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>

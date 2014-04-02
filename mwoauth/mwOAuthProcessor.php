@@ -12,16 +12,16 @@ Mediawiki oAuth functions for LCA Tools
 
 ---------------------------------------------   */
 
-require_once 'include/multiuseFunctions.php';
-require_once 'include/OAuth.php';
-require_once 'include/MWOAuthSignatureMethod.php';
-require_once 'include/JWT.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
+require_once dirname( __FILE__ ) . '/../include/JWT.php';
 
 date_default_timezone_set( 'UTC' );
 
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $consumerKey = $config['mwconsumer_key'];
-$secretKey = file_get_contents( 'lcatoolskey.pem' );
+$secretKey = file_get_contents( dirname( __FILE__ ) . '/../configs/lcatoolskey.pem' );
 $useragent = $config['useragent'];
 if ( isset( $_POST['action'] ) ) {
 	$action = $_POST['action'];

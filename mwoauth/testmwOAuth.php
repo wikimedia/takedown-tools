@@ -1,19 +1,19 @@
 <?php
 
-require_once 'include/multiuseFunctions.php';
-require_once 'include/OAuth.php';
-require_once 'include/MWOAuthSignatureMethod.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 $consumerKey = $config['mwconsumer_key'];
-$secretKey = file_get_contents( 'lcatoolskey.pem' );
+$secretKey = file_get_contents( dirname( __FILE__ ) . '/../configs/lcatoolskey.pem' );
 
 if ( empty( $secretKey ) ) {
 	die( 'You do not seem to have the required RSA Private key in the main app folder, please alert your nearest developer and tell them to get their shit together' );
@@ -30,15 +30,15 @@ $mwtoken = $usertable['mwtoken'];
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Mediawiki OAuth Test</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -46,7 +46,7 @@ $mwtoken = $usertable['mwtoken'];
 	<script>
 	$(document).ready(function(){
 		$("#editbutton").click( function() {
-			$("#result").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			$("#result").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
 			var dpagetitle = "User_talk:Jalexander/sandbox";
 			var dsectiontitle = "Test edit from LCA Tools";
 			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
@@ -61,7 +61,7 @@ $mwtoken = $usertable['mwtoken'];
 			$.post( "mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
 				$('#testedit').val(JSON.stringify(data));
-				$('#result').html(data.edit.result + 'you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); }
+				$('#result').html(data.edit.result + ': you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); }
 			else if ( data && data.error ) {
 				$('#testedit').val(JSON.stringify(data));
 				$('#result').html(data.edit.error); }
@@ -108,7 +108,7 @@ if ( $usertable['mwtoken'] ) {
 
 				</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 	</div>
 	<?php
 flush();

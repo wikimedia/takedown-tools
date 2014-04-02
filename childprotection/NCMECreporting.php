@@ -1,15 +1,15 @@
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-    <link rel='shortcut icon' href='images/favicon.ico'/>
+    <link rel='shortcut icon' href='/images/favicon.ico'/>
     <title>Child Protection Takedown</title>
     <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-    <script src='scripts/jquery-1.10.2.min.js'></script>
-    <script src='scripts/jquery.validate.min.js'></script>
-    <script src='scripts/moment.min.js'></script>
-    <script src='scripts/pikaday.js'></script>
-    <script src='scripts/pikaday.jquery.js'></script>
-    <script src='scripts/lca.js'></script>
+    <script src='/scripts/jquery-1.10.2.min.js'></script>
+    <script src='/scripts/jquery.validate.min.js'></script>
+    <script src='/scripts/moment.min.js'></script>
+    <script src='/scripts/pikaday.js'></script>
+    <script src='/scripts/pikaday.jquery.js'></script>
+    <script src='/scripts/lca.js'></script>
     <script>
     $(document).ready(function(){
 
@@ -91,9 +91,9 @@
 </script>
     <style type='text/css'>
     <!--/* <![CDATA[ */
-    @import 'css/main.css';
-    @import 'css/pikaday.css';
-    @import 'css/lca.css';
+    @import '/css/main.css';
+    @import '/css/pikaday.css';
+    @import '/css/lca.css';
     /* ]]> */-->
     .external, .external:visited { color: #222222; }
     .autocomment{color:gray}
@@ -111,11 +111,11 @@
                             </td>
                             <td >
                                 Production
-                                <img id='ncmec-prod' src='images/List-remove.svg' width='15px'/>
+                                <img id='ncmec-prod' src='/images/List-remove.svg' width='15px'/>
                             </td>
                             <td>
                                 Test
-                                <img id='ncmec-test' src='images/List-remove.svg' width='15px'/>
+                                <img id='ncmec-test' src='/images/List-remove.svg' width='15px'/>
                             </td>
                         </tr>
                 </table>
@@ -183,7 +183,7 @@
                                     <select name='is-test' id='is-test'>
                                         <option value='N' selected>No</option>
                                         <option value='Y'>Yes</option>
-                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to NCMEC. '/>
+                                    </select> <img class='showTooltip' src='/images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to NCMEC. '/>
                                 </td>
                             </tr>
                             <tr>
@@ -278,7 +278,7 @@
                                         <option value='58'>58</option>
                                         <option value='59'>59</option>
                                     </select>
-                                    <img class='showTooltip' src='images/20px-Help.png' title='All date/times UTC. Please use date selector or format as YYYY-MM-DD for first box. This should be the time and date that YOU (the reporter) accessed the file.
+                                    <img class='showTooltip' src='/images/20px-Help.png' title='All date/times UTC. Please use date selector or format as YYYY-MM-DD for first box. This should be the time and date that YOU (the reporter) accessed the file.
                                     It is preset to the report time as a rough guess given WMF standard process however if you are filling this out much later you should adjust it.' />
                                 </td>
                             </tr>
@@ -287,7 +287,7 @@
                                     <label for='reporter-fName'> Your name: </label>
                                 </td>
                                 <td>
-                                    <input id='reporter-fName' name='reporter-fName' type='text' size='25' value='' required/> <input id='reporter-lName' name='reporter-lName' type='text' size='25' value='' />  <img class='showTooltip' src='images/20px-Help.png' title='This is YOUR name as the reporter.' required/>
+                                    <input id='reporter-fName' name='reporter-fName' type='text' size='25' value='' required/> <input id='reporter-lName' name='reporter-lName' type='text' size='25' value='' />  <img class='showTooltip' src='/images/20px-Help.png' title='This is YOUR name as the reporter.' required/>
                                 </td>
                             </tr>
                             <tr>
@@ -295,7 +295,7 @@
                                     <label for'reporter-email'> Your email: </label>
                                 </td>
                                 <td>
-                                    <input id='reporter-email' name='reporter-email' type='text' size='50' value=<?php echo "'".$_SERVER['PHP_AUTH_USER']."@wikimedia.org'";?> required email/> <img class='showTooltip' src='images/20px-Help.png' title='YOUR email as the reporter, defaults to username logged in.' />
+                                    <input id='reporter-email' name='reporter-email' type='text' size='50' value=<?php echo "'".$_SERVER['PHP_AUTH_USER']."@wikimedia.org'";?> required email/> <img class='showTooltip' src='/images/20px-Help.png' title='YOUR email as the reporter, defaults to username logged in.' />
                                 </td>
                             </tr>
                         <!--<tr>
@@ -303,7 +303,7 @@
                                     <label for='reporter-phone'> Phone number (xxx-xxx-xxx) <br /> and extension (xxxx) if necessary: </label>
                                 </td>
                                 <td>
-                                    <input id='reporter-phone' name='reporter-phone' type='text' size='20' value='415-839-6885' /> <input id='reporter-phone-ext' name='reporter-phone-ext' type='text' size='5' /> <img class='showTooltip' src='images/20px-Help.png' title='Phone number for followup, defaults to office with no extension' />
+                                    <input id='reporter-phone' name='reporter-phone' type='text' size='20' value='415-839-6885' /> <input id='reporter-phone-ext' name='reporter-phone-ext' type='text' size='5' /> <img class='showTooltip' src='/images/20px-Help.png' title='Phone number for followup, defaults to office with no extension' />
                                 </td>
                             </tr> REMOVED FOR NOW BECAUSE OF CONTACT INFO BEING SENT ELSEWHERE-->
                         </table>
@@ -336,7 +336,7 @@
                                         <option value='Wiktionary'> Wiktionary </option>
                                         <option value='Wikisource'> Wikisource </option>
                                         <option value='Wikiversity'> Wikiversity</option>
-                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='The project where the image was uploaded (usually Commons). [note: Non Commons sites not YET implemented]' />
+                                    </select> <img class='showTooltip' src='/images/20px-Help.png' title='The project where the image was uploaded (usually Commons). [note: Non Commons sites not YET implemented]' />
                                 </td>
                             </tr>
                             <tr>
@@ -344,7 +344,7 @@
                                     <label for='project-language'>Project language code (if necessary)</label>
                                 </td>
                                 <td>
-                                    <input type='text' size='10' value='' name='project-language' id='project-language' /><img class='showTooltip' src='images/20px-Help.png' title='For projects which require a language code, type it here (not for commons/wikidata/meta) etc.' />
+                                    <input type='text' size='10' value='' name='project-language' id='project-language' /><img class='showTooltip' src='/images/20px-Help.png' title='For projects which require a language code, type it here (not for commons/wikidata/meta) etc.' />
                                 </td>
                             </tr>
                             <tr>
@@ -439,7 +439,7 @@
                                         <option value='58'>58</option>
                                         <option value='59'>59</option>
                                     </select>
-                                    <img class='showTooltip' src='images/20px-Help.png' title='Date and time of the image upload, please use the date picker or the format YYYY-MM-DD' />
+                                    <img class='showTooltip' src='/images/20px-Help.png' title='Date and time of the image upload, please use the date picker or the format YYYY-MM-DD' />
                                 </td>
                             </tr>
                             <tr>
@@ -449,7 +449,7 @@
                                 <td>
                                     <select name='incident-location' id='incident-location'>
                                         <option value='webPageIncident' selected>Web Page </option>
-                                    </select> <img class='showTooltip' src='images/20px-Help.png' title='Where the incident happened (web page/IRC/email etc) currently only supporting web page.' />
+                                    </select> <img class='showTooltip' src='/images/20px-Help.png' title='Where the incident happened (web page/IRC/email etc) currently only supporting web page.' />
                                 </td>
                             </tr>
                             <tr>
@@ -471,7 +471,7 @@
                                     <label for='uploader-email'> Email of uploader: </label>
                                 </td>
                                 <td>
-                                    <input type='text' size='50' name='uploader-email' id='uploader-email' /> <img class='showTooltip' src='images/20px-Help.png' title='This may be available in the database, James or a developer with full DB access can check.'/>
+                                    <input type='text' size='50' name='uploader-email' id='uploader-email' /> <img class='showTooltip' src='/images/20px-Help.png' title='This may be available in the database, James or a developer with full DB access can check.'/>
                                 </td>
                             </tr>
                         </table>
@@ -489,12 +489,12 @@
                 </form>
             </div>
         </div>
-        <?php include 'include/lcapage.php'; ?>
+        <?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
     </div>
     <?php
 flush();
-require_once 'include/multiuseFunctions.php';
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
 $NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
 $produsername = $config['NCMEC_user_prod'];
@@ -503,16 +503,16 @@ $testusername = $config['NCMEC_user_test'];
 $testpassword = $config['NCMEC_password_test'];
 $prodresult = NCMECstatus( $produsername, $prodpassword, $NCMEC_URL_Production );
 if ( $prodresult === '0' ) {
-    echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+    echo "<script> $('#ncmec-prod').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL;
 } else {
-    echo "<script> $('#ncmec-prod').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+    echo "<script> $('#ncmec-prod').attr('src', '/images/Dialog-error-round.svg'); </script>".PHP_EOL;
 }
 flush();
 $testresult = NCMECstatus( $testusername, $testpassword, $NCMEC_URL_Test );
 if ( $testresult === '0' ) {
-    echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-accept.svg');</script>".PHP_EOL;
+    echo "<script> $('#ncmec-test').attr('src', '/images/Dialog-accept.svg');</script>".PHP_EOL;
 } else {
-    echo "<script> $('#ncmec-test').attr('src', 'images/Dialog-error-round.svg'); </script>".PHP_EOL;
+    echo "<script> $('#ncmec-test').attr('src', '/images/Dialog-error-round.svg'); </script>".PHP_EOL;
 }
 flush();
 ?>

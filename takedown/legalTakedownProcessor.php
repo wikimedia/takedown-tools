@@ -18,7 +18,7 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 
 ---------------------------------------------   */
 
-require_once 'include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
 date_default_timezone_set( 'UTC' );
 
 //null variables that may or may not be set later depending on how it goes
@@ -26,7 +26,7 @@ $locationURL = null;
 $filessent = null;
 
 // cast config and log variables
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $sendtoCE = $config['sendtoCE'];
 $user = $_SERVER['PHP_AUTH_USER'];
 $log_type = 'DMCA';
@@ -47,14 +47,14 @@ if ( is_array( $strike_note ) && in_array( 'other', $strike_note ) ) {
 	$strike_note[array_search( 'other', $strike_note )] = 'Other: ' . $_POST['strike-note-other'];
 }
 $sender_name = !isset( $_POST['sender-name'] ) ? null : $_POST['sender-name'];
-$sender_person = !isset( $_POST['sender-person'] )  null : $_POST['sender-person'];
+$sender_person = !isset( $_POST['sender-person'] ) ? null : $_POST['sender-person'];
 $sender_firm = !isset( $_POST['sender-firm']) ? null : $_POST['sender-firm'];
 $sender_address1 = !isset( $_POST['sender-address1'] ) ? null : $_POST['sender-address1'];
 $sender_address2 = !isset( $_POST['sender-address2'] ) ? null : $_POST['sender-address2'];
 $sender_city = !isset( $_POST['sender-city'] ) ? null : $_POST['sender-city'];
 $sender_zip = !isset( $_POST['sender-zip'] ) ? null : $_POST['sender-zip'];
 $sender_state = !isset( $_POST['sender-state'] ) ? null : $_POST['sender-state'];
-$sender_country = !isset( $_POST['sender-country'] ) ? null : ;
+$sender_country = !isset( $_POST['sender-country'] ) ? null : $_POST['sender-country'];
 $takedown_date = !isset( $_POST['takedown-date'] ) ? null : $_POST['takedown-date'];
 $action_taken = !isset( $_POST['action-taken'] ) ? null : $_POST['action-taken'];
 $takedown_title = !isset( $_POST['takedown-title'] ) ? null : $_POST['takedown-title'];
@@ -245,15 +245,15 @@ $mwtoken = $usertable['mwtoken'];
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Legal Takedowns</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -261,7 +261,7 @@ $mwtoken = $usertable['mwtoken'];
 	<script>
 	$(document).ready(function(){
 		$("#editdmcapage").click( function() {
-			$("#dmcapageresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			$("#dmcapageresult").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
 			var dpagetitle = "Commons:Office_actions/DMCA_notices";
 			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
 			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
@@ -283,7 +283,7 @@ $mwtoken = $usertable['mwtoken'];
 		});
 
 		$("#editvppage").click( function() {
-			$("#commonsvpresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			$("#commonsvpresult").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
 			var dpagetitle = "Commons:Village_pump";
 			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
 			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
@@ -305,7 +305,7 @@ $mwtoken = $usertable['mwtoken'];
 		});
 
 		$("#editusertalk").click( function() {
-			$("#usertalkresult").html("<img src='images/progressbar.gif' alt='waiting for edit progressbar'>");
+			$("#usertalkresult").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
 			var dpagetitle = <?php echo '"User_talk:'.$involved_user.'"';?>;
 			var dsectiontitle = "Notice of upload removal";
 			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
@@ -566,7 +566,7 @@ if ( $usertable['mwtoken'] ) {
 				</fieldset>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 		</div>
 	</body>
 </html>

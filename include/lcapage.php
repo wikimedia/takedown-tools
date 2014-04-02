@@ -30,7 +30,7 @@
 					<div class='pBody'>
 						<ul>
 							<li id='global-search-form'>
-								<a href="globalsearch.php"> Global search </a>
+								<a href="/standalone/globalsearch.php"> Global search </a>
 							</li>
 						</ul>
 					</div>
@@ -40,13 +40,13 @@
 					<div class='pBody'>
 						<ul>
 							<li id='dmca-takedown-form'>
-								<a href="legalTakedown.php">DMCA Takedown Form</a>
+								<a href="/takedown/legalTakedown.php">DMCA Takedown Form</a>
 							</li>
 							<li id='ncmec-form'>
-								<a href="NCMECreporting.php"> Child Protection Takedown Form </a>
+								<a href="/childprotection/NCMECreporting.php"> Child Protection Takedown Form </a>
 							</li>
 							<li id='basic-release'>
-								<a href="basicRelease.php"> Basic Release of Confidential Information </a>
+								<a href="/release/basicRelease.php"> Basic Release of Confidential Information </a>
 							</li>
 						</ul>
 					</div>
@@ -56,22 +56,22 @@
 					<div class='pBody'>
 						<ul>
 							<li id='central-log'>
-								<a href="centralLog.php"> Central submission Log </a>
+								<a href="/centralLog.php"> Central submission Log </a>
 							</li>
 							<li id='ncmec-retract'>
-								<a href="NCMECretract.php"> NCMEC report retraction form </a>
+								<a href="/childprotection/NCMECretract.php"> NCMEC report retraction form </a>
 							</li>
-							<li id='oauth-register' style='border-top:1px solid black;'>
-								<a href="beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a>
+							<li id='mw-oauth-register' style='border-top:1px solid black;'>
+								<a href="/mwoauth/beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a>
 							</li>
-							<li id='test-oauth'>
-								<a href="testmwOAuth.php"> Test your stored Wikimedia OAuth data </a>
+							<li id='mw-test-oauth'>
+								<a href="/mwoauth/testmwOAuth.php"> Test your stored Wikimedia OAuth data </a>
 							</li>
-							<li id='oauth-register' style='border-top:1px solid black;'>
-								<a href="sugarOAuthRegistration.php"> Connect your SugarCRM Account </a>
+							<li id='sugar-oauth-register' style='border-top:1px solid black;'>
+								<a href="/sugaroauth/sugarOAuthRegistration.php"> Connect your SugarCRM Account </a>
 							</li>
-							<li id='oauth-register'>
-								<a href="testSugarOAuth.php"> Test your stored SugarCRM OAuth data  </a>
+							<li id='sugar-oauth-test'>
+								<a href="/sugaroauth/testSugarOAuth.php"> Test your stored SugarCRM OAuth data  </a>
 							</li>
 						</ul>
 					</div>

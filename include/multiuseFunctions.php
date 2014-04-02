@@ -14,7 +14,7 @@ Stored here mostly to keep main files cleaner.
 
 ---------------------------------------------   */
 
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];

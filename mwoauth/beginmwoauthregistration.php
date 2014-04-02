@@ -13,16 +13,16 @@ Mediawiki oAuth registration page. start of process.
 Huge help from example cli file by Chris Steipp https://www.mediawiki.org/wiki/OAuth/For_Developers#PHP_demo_cli_client_with_RSA_keys
 
 ---------------------------------------------   */
-require_once 'include/multiuseFunctions.php';
-require_once 'include/OAuth.php';
-require_once 'include/MWOAuthSignatureMethod.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $consumerKey = $config['mwconsumer_key'];
-$secretKey = file_get_contents( 'lcatoolskey.pem' );
+$secretKey = file_get_contents( dirname( __FILE__ ) . '/../configs/lcatoolskey.pem' );
 $oauthurl = makehttps( $config['mw_oauthserver'] ).'/wiki/Special:OAuth';
 $usertable['mwtoken'] = null;
 if ( isset( $_GET['force'] ) ) {
@@ -41,12 +41,12 @@ if ( $usertable['mwtoken'] ) {
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Mediawiki OAuth Registration</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/jquery.validate.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/jquery.validate.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<script>
 		$(document).ready(function(){
 
@@ -54,11 +54,11 @@ if ( $usertable['mwtoken'] ) {
 	    $("#forceregister").validate();
 	}
 	</script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -94,7 +94,7 @@ if ( $usertable['mwtoken'] ) {
 					</form>
 			</div>
 	    </div>
-	        <?php include 'include/lcapage.php'; ?>
+	        <?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 	</div>
 </body>
 </html>

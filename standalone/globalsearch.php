@@ -12,22 +12,21 @@ Quick and Dirty cross wiki search function for Wikimedia Wikis. Will make better
 
 ---------------------------------------------   */
 
-require_once 'include/multiuseFunctions.php';
-require_once 'include/OAuth.php';
-require_once 'include/MWOAuthSignatureMethod.php';
-require_once 'include/JWT.php';
+require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
 date_default_timezone_set( 'UTC' );
 ini_set('max_execution_time', 300);
 
 // cast config and log variables
-$config = parse_ini_file( 'lcaToolsConfig.ini' );
+$config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
 $user = $_SERVER['PHP_AUTH_USER'];
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 $consumerKey = $config['mwconsumer_key'];
-$secretKey = file_get_contents( 'lcatoolskey.pem' );
+$secretKey = file_get_contents( dirname( __FILE__ ) . '/../configs/lcatoolskey.pem' );
 $useragent = $config['useragent'];
 
 if ( empty( $secretKey ) ) {
@@ -45,15 +44,15 @@ $mwtoken = $usertable['mwtoken'];
 <!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
-	<link rel='shortcut icon' href='images/favicon.ico'/>
+	<link rel='shortcut icon' href='/images/favicon.ico'/>
 	<title>Global Search (ALPHA)</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-	<script src='scripts/jquery-1.10.2.min.js'></script>
-	<script src='scripts/lca.js'></script>
+	<script src='/scripts/jquery-1.10.2.min.js'></script>
+	<script src='/scripts/lca.js'></script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
-	@import 'css/main.css';
-	@import 'css/lca.css';
+	@import '/css/main.css';
+	@import '/css/lca.css';
 	/* ]]> */-->
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
@@ -108,7 +107,7 @@ if ( $usertable['mwtoken'] ) {
 
 				</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 	</div>
 	<?php
 flush();
