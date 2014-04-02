@@ -55,6 +55,34 @@
         $this.attr('title', $this.data('title'));
     });
 
+    $('select#project').change( function() {
+    	if ( $('select#project option:selected').val() == 'commons' ) {
+    		$('.commonsonly').show();
+    	} else {
+    		$('.commonsonly').hide();
+    	}
+    	if ( $('select#project option:selected').val() == 'enwiki' ) {
+    		$('.enwikionly').show();
+    	} else {
+    		$('.enwikionly').hide();
+    	}
+    })
+
+    $('select#content-type').change( function() {
+    	if ( $('select#content-type option:selected').val() == ( 'file' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
+    		$('.fileonly').show();
+    	} else {
+    		$('.fileonly').hide();
+    	}
+    	if ( $('select#content-type option:selected').val() == ( 'text' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
+    		$('.textonly').show();
+    	} else {
+    		$('.textonly').hide();
+    	}
+    })
+
+
+
 
 
 });
@@ -96,21 +124,35 @@
 									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select Yes if this is a test of the processing system. Remember to select No for sending to Chilling Effects. '/>
 								</td>
 							</tr>
-							<!-- <tr class='spaceOut'>
-								<td>
-									<label for='is-dmca'> Is this a DMCA Takedown?</label>
-									<select name='is-dmca' id='is-dmca'>
-										<option>Yes</option>
-										<option>No</option>
-									</select> <img class='showTooltip' src='images/20px-Help.png' title='Select no if this is a non DMCA based takedown'/>
-								</td>
-							</tr> -->
 							<tr class='spaceOut'>
 								<td>
 									<label for='involved-user'> Username who added the content: </label>
 								</td>
 								<td>
 									<input id='involved-user' name='involved-user' value='' type='text' size='15' required/>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for='project'> Project where takedown is being implemented: </label>
+								</td>
+								<td>
+									<select id='project' name='project'>
+										<option value='commons' selected>Wikimedia Commons</option>
+										<option value='enwiki'>English Wikipedia</option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<label for='content-type'> What type of content is being taken down? </label>
+								</td>
+								<td>
+									<select id='content-type' name='content-type'>
+										<option value='file' selected>File/Image </option>
+										<option value='text'> Text </option>
+										<option value='both'> Both </option>
+									</select>
 								</td>
 							</tr>
 							<tr style='outline: solid black thin;'>
@@ -216,13 +258,22 @@
 									</select>
 								</td>
 							</tr>
-							<tr>
+							<tr class='fileonly'>
 								<td>
-									<label for='files-affected'> Files affected </label>
+									<label for='files-affected'> File(s) affected </label>
 								</td>
 								<td>
 									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by commas. Will take up to 5 then ignore the rest.'/>
 									<br /> <span style='font-size:0.7em; color:red;'>Pleaes do not include the File: Prefix. </span>
+								</td>
+							</tr>
+							<tr class='textonly' style='display:none;'>
+								<td>
+									<label for='pages-affected'> Page(s) affected </label>
+								</td>
+								<td>
+									<input id='pages-affected' name='pages-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='images/20px-Help.png' title='Pages affected by takedown, seperated by commas. Will take up to 5 then ignore the rest.'/>
+									<br /> <span style='font-size:0.7em; color:red;'>Pleaes list page names (seperated by comma) including any prefixes . </span>
 								</td>
 							</tr>
 							<tr>
@@ -233,7 +284,7 @@
 									<input id='takedown-title' name='takedown-title' type='text' value='DMCA (Copyright) Complaint to Wikimedia Foundation' size='50'/> <img class='showTooltip' src='images/20px-Help.png' title='Feel free to override the default with a witty title for Chilling Effects if it suits you.'/>
 								</td>
 							</tr>
-							<tr>
+							<tr class='commonsonly'>
 								<td class='lca-label'>
 									<label for='takedown-commons-title'>Commons Title</label>
 								</td>
