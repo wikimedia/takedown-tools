@@ -272,7 +272,7 @@ $mwtoken = $usertable['mwtoken'];
 
 			postdata = { action: daction, pagetitle: dpagetitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
 
-			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			$.post( "../mwoauth/mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
 				$('#dmcapageresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices#'+dsectiontitle+'" target="_blank">Commons:DMCA#'+dsectiontitle+'</a>'); }
 			else if ( data && data.error ) {
@@ -294,7 +294,7 @@ $mwtoken = $usertable['mwtoken'];
 
 			postdata = { action: daction, pagetitle: dpagetitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
 
-			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			$.post( "../mwoauth/mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
 				$('#commonsvpresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/Commons:Village_pump" target="_blank">Commons:Village_pump</a>'); }
 			else if ( data && data.error ) {
@@ -317,7 +317,7 @@ $mwtoken = $usertable['mwtoken'];
 
 			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
 
-			$.post( "mwOAuthProcessor.php", postdata, function(data) {
+			$.post( "../mwoauth/mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
 				$('#usertalkresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); }
 			else if ( data && data.error ) {
