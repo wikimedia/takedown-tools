@@ -338,7 +338,7 @@ $mwtoken = $usertable['mwtoken'];
 				<h1>Processed Takedown</h1>
 				<br />
 				<?php if ( $locationURL ) {
-	echo '<p> The DMCA Takedown was send to Chilling Effects and you can find the submission at <a href="'.$locationURL.'" target="_blank">'.$locationURL.'</a>';
+	echo '<p> The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href="'.$locationURL.'" target="_blank">'.$locationURL.'</a>';
 } else echo '<p> It does not appear that a report was sent to Chilling Effects (either because you asked the report not to, reporting is turned off on the server level or there was an error) <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE'; ?>
 				<fieldset>
 					<legend> wmfWiki post </legend>
