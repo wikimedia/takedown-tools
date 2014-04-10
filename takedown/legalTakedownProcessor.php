@@ -80,7 +80,7 @@ if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
 }
 
 if ( !empty( $_POST['files-affected'] ) ) {
-	$filearray = explode( ',', $_POST['files-affected'] );
+	$filearray = explode( '|', $_POST['files-affected'] );
 	// Error check for file prefix
 	foreach ($filearray as $key => $value) {
 		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
