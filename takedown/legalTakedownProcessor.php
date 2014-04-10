@@ -380,7 +380,21 @@ echo "{{subst:DMCA_takedown_notice|".$commons_title.
 	( array_key_exists( 2, $filearray ) ? "|".$filearray[2] : "" ).
 	( array_key_exists( 3, $filearray ) ? "|".$filearray[3] : "" ).
 	( array_key_exists( 4, $filearray ) ? "|".$filearray[4] : "" ).
-	"}}";?></textarea>
+	"}}"; 
+	if ( array_key_exists( 5, $filearray ) ) {
+		echo "
+* Additional Files:
+";
+		foreach ($filearray as $index => $file) {
+			if ( $index < 5 ) {
+				continue;
+			} else {
+				echo "** [[File:".$file."|".$file."]]
+";
+			}
+		}
+	}
+		?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -416,7 +430,20 @@ echo "{{subst:DMCA_takedown_notice|".$commons_title.
 	( array_key_exists( 2, $filearray ) ? "|".$filearray[2] : "" ).
 	( array_key_exists( 3, $filearray ) ? "|".$filearray[3] : "" ).
 	( array_key_exists( 4, $filearray ) ? "|".$filearray[4] : "" ).
-	"}}";?></textarea>
+	"}}";
+	if ( array_key_exists( 5, $filearray ) ) {
+		echo "
+* Additional Files:
+";
+		foreach ($filearray as $index => $file) {
+			if ( $index < 5 ) {
+				continue;
+			} else {
+				echo "** [[File:".$file."|".$file."]]
+";
+			}
+		}
+	}?></textarea>
 							</td>
 						</tr>
 						<tr>
