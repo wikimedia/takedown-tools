@@ -82,6 +82,31 @@
     })
 
 
+    var filetakedownwrapper = $("#takedownfiles");
+    var userwrapper = $("#takedownusers");
+    var filetakedownadder = $("#takedownmorefiles");
+    var useradder = $("#notifymoreusers");
+
+    $(filetakedownadder).click(function (e)
+    {
+
+    	$(filetakedownwrapper).append('<div><input class=\'files-affected\' name=\'files-affected[]\' value=\'\' type=\'text\' size=\'50\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+    });
+
+    $(useradder).click(function (e)
+    {
+
+    	$(userwrapper).append('<div><input class=\'involved-user\' name=\'involved-user[]\' value=\'\' type=\'text\' size=\'15\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+    });
+
+    $("body").on("click",".removefield", function(e) {
+
+    	$(this).parent('div').remove();
+
+    });
+
 
 
 
@@ -129,7 +154,10 @@
 									<label for='involved-user'> Username who added the content: </label>
 								</td>
 								<td>
-									<input id='involved-user' name='involved-user' value='' type='text' size='15' required/>
+								<div id="takedownusers">
+									<span>One name per line, press + to add x to remove. </span> <br />
+									<div><input id='involved-user' name='involved-user[]' value='' type='text' size='15' required/><img id='notifymoreusers' src='/images/List-add.svg' width='20px' title='add a user field'/></div>
+								</div>
 								</td>
 							</tr>
 							<tr>
@@ -263,8 +291,10 @@
 									<label for='files-affected'> File(s) affected </label>
 								</td>
 								<td>
-									<input id='files-affected' name='files-affected' value='' type='text' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='Files affected by takedown, no File: prefix and seperated by |.'/>
-									<br /> <span style='font-size:0.7em; color:red;'>Pleaes do not include the File: Prefix. </span>
+								<div id="takedownfiles">
+									<span>One file name per line (no file:), press + to add x to remove. </span> <br />
+									<div><input id='files-affected' name='files-affected[]' value='' type='text' size='50' required/> <img id='takedownmorefiles' src='/images/List-add.svg' width='20px' title='add a file field'/></div>
+								</div>
 								</td>
 							</tr>
 							<tr class='textonly' style='display:none;'>
