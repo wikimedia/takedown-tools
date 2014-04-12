@@ -86,7 +86,17 @@ if ( $drillto ) {
 			$timestamp = $logDetails['timestamp'];
 			$ce_url = $logDetails['ce_url'];
 			$takedown_date = $logDetails['takedown_date'];
-			$involved_user = $logDetails['involved_user'];
+			//hack at the moment since I switched to serialized when it didn't used to be
+			if ( isset( $logDetails['involved_user'] ) ) {
+				$userarray = unserialize( $logDetails['involved_user'] );
+				if ( $userarray === false && $logDetails['involved_user'] !== 'b:0;' ) {
+			    	$involved_user = $logDetails['involved_user'];
+				} else {
+					$involved_user = $userarray;
+				}
+
+			}
+
 			$linksarray = unserialize( stripslashes( $logDetails['files_affected'] ) );
 			$wmfwiki_title = $logDetails['wmfwiki_title'];
 			$commons_title = $logDetails['commons_title'];

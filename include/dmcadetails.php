@@ -40,9 +40,15 @@ if ( $takedown_date ) {
 				</td>
 				<td>
 					<?php
-if ( $involved_user ) {
-	echo htmlspecialchars( $involved_user );
-} else { echo 'This does not appear to be set';}?>
+if ( is_array( $involved_user ) ) {
+	foreach ( $involved_user as $key => $value ) {
+		echo htmlspecialchars( $value ).'<br />';
+	} 
+} elseif ( $involved_user ) {
+		echo htmlspecialchars( $involved_user );
+	} else { 
+		echo 'This does not appear to be set';
+	}?>
 				</td>
 			</tr>
 			<tr>
