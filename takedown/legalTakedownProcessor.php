@@ -40,7 +40,7 @@ if ( $_POST['is-test'] === 'No' ) {
 }
 $log_row = lcalog( $user, $log_type, $log_title, $istest );
 
-$involved_user = !isset( $_POST['involved-user'] ) ? null : $_POST['involved-user'];
+$involved_users = !isset( $_POST['involved-user'] ) ? null : $_POST['involved-user'];
 $logging_metadata = !isset( $_POST['logging-metadata'] ) ? null : $_POST['logging-metadata'];
 $strike_note = !isset( $_POST['strike-note'] ) ? null : $_POST['strike-note'];
 if ( is_array( $strike_note ) && in_array( 'other', $strike_note ) ) {
@@ -80,7 +80,7 @@ if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
 }
 
 if ( !empty( $_POST['files-affected'] ) ) {
-	$filearray = explode( '|', $_POST['files-affected'] );
+	$filearray = $_POST['files-affected'];
 	// Error check for file prefix
 	foreach ($filearray as $key => $value) {
 		if ( substr( $value, 0, 5 ) == 'File:' || substr( $value, 0, 5 ) == 'file:' ) {
@@ -90,7 +90,7 @@ if ( !empty( $_POST['files-affected'] ) ) {
 }
 
 if ( !empty( $_POST['pages-affected'] ) ) {
-	$pagesarray = explode( ',', $_POST['pages-affected'] );
+	$pagesarray = $_POST['pages-affected'];
 }
 
 if ( !empty( $filearray ) ) {
@@ -101,15 +101,24 @@ if ( !empty( $filearray ) ) {
 
 
 // Set up file uploads if they exist.
-if ( is_uploaded_file( $_FILES['takedown-file1']['tmp_name'] ) ) {
-	$CE_post_files[] = setupdataurl( $_FILES['takedown-file1'] );
-	$filessent[] = $_FILES['takedown-file1']['name'];
+if ( is_uploaded_file( $_FILES['takedown-files']['tmp_name'][0] ) ) {
+
+	foreach ( $_FILES['takedown-files']['tmp_name'] as $key => $value ) {
+
+		$tempfile = array();
+		$tempfile['kind'] = 'original';
+		$tempfile['file_name'] = $_FILES['takedown-files']['name'][$key];
+		$datatemp = file_get_contents( $_FILES['takedown-files']['tmp_name'][$key] );
+		$datatemp = base64_encode( $datatemp );
+		$uri = 'data:'.$_FILES['takedown-files']['type'][$key].';base64,'.$datatemp;
+		$tempfile['file'] = $uri;
+
+		$CE_post_files[] = $tempfile;
+		$filessent[] = $_FILES['takedown-files']['name'][$key];
+	}
+
 }
 
-if ( is_uploaded_file( $_FILES['takedown-file2']['tmp_name'] ) ) {
-	$CE_post_files[] = setupdataurl( $_FILES['takedown-file2'] );
-	$filessent[] = $_FILES['takedown-file2']['name'];
-}
 
 // Set up initial post data for Chilling Effects
 $CE_post_data = array (
@@ -213,7 +222,7 @@ $insert_commons_title = $commons_title;
 $insert_wmfwiki_title = $wmfwiki_title;
 $insert_takedown_method = $takedown_method;
 $insert_takedown_subject = $takedown_subject;
-$insert_involved_user = $involved_user;
+$insert_involved_users = serialize( $involved_users );
 $insert_logging_metadata = serialize( $logging_metadata );
 $insert_strike_note = serialize( $strike_note );
 $insert_ce_url = $locationURL;
@@ -229,7 +238,7 @@ if ( $insert === false ) {
 	echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 }
 
-$insert->bind_param( 'issssssssssssssssssss', $log_row, $insert_user, $submittime, $insert_sender_city, $insert_sender_zip, $insert_sender_state, $insert_sender_country, $insert_takedown_date, $insert_action_taken, $insert_takedown_title, $insert_commons_title, $insert_wmfwiki_title, $insert_takedown_method, $insert_takedown_subject, $insert_involved_user, $insert_logging_metadata, $insert_strike_note, $insert_ce_url, $insert_files_sent, $insert_files_affected, $istest );
+$insert->bind_param( 'issssssssssssssssssss', $log_row, $insert_user, $submittime, $insert_sender_city, $insert_sender_zip, $insert_sender_state, $insert_sender_country, $insert_takedown_date, $insert_action_taken, $insert_takedown_title, $insert_commons_title, $insert_wmfwiki_title, $insert_takedown_method, $insert_takedown_subject, $insert_involved_users, $insert_logging_metadata, $insert_strike_note, $insert_ce_url, $insert_files_sent, $insert_files_affected, $istest );
 
 $insert->execute();
 $insert->close();
@@ -304,31 +313,31 @@ $mwtoken = $usertable['mwtoken'];
 					} },"json");
 		});
 
-		$("#editusertalk").click( function() {
+
+	});
+
+function edittalkpage(username,divid,responseid) {
 			$("#usertalkresult").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
-			var dpagetitle = <?php echo '"User_talk:'.$involved_user.'"';?>;
+			var dpagetitle = "User_talk:" + username;
 			var dsectiontitle = "Notice of upload removal";
 			var dmwtoken = <?php echo '"'.$mwtoken.'"' ?>;
 			var dmwsecret = <?php echo '"'.$mwsecret.'"' ?>;
 			var dapiurl = <?php echo '"'.$apiurl.'"' ?>;
 			var deditsummary = "Notice of upload removal";
-			var dtext = $("#commonsusertalk").val();
+			var dtext = $("#"+divid).val();
 			var daction = "newsection";
 
 			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
 
 			$.post( "../mwoauth/mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
-				$('#usertalkresult').html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); }
+				$('#'+responseid).html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); }
 			else if ( data && data.error ) {
-				$('#usertalkresult').html(data.edit.error); }
+				$('#'+responseid).html(data.edit.error); }
 			else {
-				$('#usertalkresult').html('hmmm something weird happened');
+				$('#'+responseid).html('hmmm something weird happened');
 					} },"json");
-		});
-
-
-	});
+		}
 	</script>
 </head>
 <body class='mediawiki'>
@@ -342,7 +351,7 @@ $mwtoken = $usertable['mwtoken'];
 } else echo '<p> It does not appear that a report was sent to Chilling Effects (either because you asked the report not to, reporting is turned off on the server level or there was an error) <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE'; ?>
 				<fieldset>
 					<legend> wmfWiki post </legend>
-					<table>
+					<table style='border:2px solid black;'>
 						<tr>
 							<td>
 								Please post the below text to <?php echo "<a target='_blank' href='https://www.wikimediafoundation.org/wiki/".htmlentities( $wmfwiki_title )."?action=edit'>https://www.wikimediafoundation.org/wiki/".htmlentities( $wmfwiki_title )."</a>"?>
@@ -350,7 +359,7 @@ $mwtoken = $usertable['mwtoken'];
 						</tr>
 						<tr>
 							<td>
-								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90'><?php
+								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'><?php
 echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><nowiki>".PHP_EOL.
 	$takedown_text.PHP_EOL.
 	"</nowiki></div>".PHP_EOL.
@@ -362,123 +371,127 @@ echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><now
 				</fieldset>
 				<fieldset>
 					<legend> Wikimedia Commons Posts </legend>
-					<table>
+					<table style='border:2px solid black;'>
 						<tr>
 							<td>
-								Please post the below text to the <u>BOTTOM</u> of the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
+								<table>
+									<tr>
+										<td><?php
+	if ( $usertable['mwtoken'] ) {
+		echo 'You are logged in with OAuth information, please make any edits necessary below and then click the button to the right to send the edit.     <input id="editdmcapage" type="button" value="send edit">';
+	} else {
+		echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
+	}?>
+										</td>
+									</tr>
+									<tr>
+										<td id='dmcapageresult'  style='border-bottom:1px solid black;'></td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<textarea id='commonsdmcapost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90'>
+								If you are not using the automatic posting ( above ) please post the below text to the <u>BOTTOM</u> of the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea id='commonsdmcapost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
 
 <?php
-echo "{{subst:DMCA_takedown_notice|".$commons_title.
-	( !empty( $wmfwiki_title ) ? "|".$wmfwiki_title : "" ).
-	( array_key_exists( 0, $filearray ) ? "|".$filearray[0] : "" ).
-	( array_key_exists( 1, $filearray ) ? "|".$filearray[1] : "" ).
-	( array_key_exists( 2, $filearray ) ? "|".$filearray[2] : "" ).
-	( array_key_exists( 3, $filearray ) ? "|".$filearray[3] : "" ).
-	( array_key_exists( 4, $filearray ) ? "|".$filearray[4] : "" ).
-	"}}"; 
-	if ( array_key_exists( 5, $filearray ) ) {
-		echo "
-* Additional Files:
+echo "=== ".$commons_title." ===
+In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]].&ensp" : "" )."
+
+Affected file(s):
 ";
-		foreach ($filearray as $index => $file) {
-			if ( $index < 5 ) {
-				continue;
-			} else {
-				echo "** [[File:".$file."|".$file."]]
+foreach ( $filearray as $index => $file ) {
+				echo "* {{lf|".$file."}}
 ";
-			}
 		}
-	}
-		?></textarea>
-							</td>
-						</tr>
-						<tr>
-							<table border='1'>
-								<tr>
-									<td><?php
-if ( $usertable['mwtoken'] ) {
-	echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editdmcapage" type="button" value="send edit">';
-} else {
-	echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
-}?>
-									</td>
-								</tr>
-								<tr>
-									<td id='dmcapageresult'></td>
-								</tr>
-							</table>
-						</tr>
-						<tr>
-							<td>
-								Please post the below text to the Wikimedia Commons Village Pump at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:Village_pump?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:Village_pump</a>
+echo "
+Thank you! ~~~~ "
+?></textarea>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<textarea id='commonsvppost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90'>
+								<table>
+									<tr>
+										<td><?php
+	if ( $usertable['mwtoken'] ) {
+		echo 'You are logged in with OAuth information, please make any edits necessary below and then click the button to the right to send the edit.     <input id="editvppage" type="button" value="send edit">';
+	} else {
+		echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
+	}?>
+										</td>
+									</tr>
+									<tr>
+										<td id='commonsvpresult' style='border-bottom:1px solid black;'></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								If you are not using the automatic posting ( above ) please post the below text to the Wikimedia Commons Village Pump at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:Village_pump?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:Village_pump</a>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<textarea id='commonsvppost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
 
 <?php
-echo "{{subst:DMCA_takedown_notice|".$commons_title.
-	( !empty( $commons_title ) ? "|".$wmfwiki_title : "" ).
-	( array_key_exists( 0, $filearray ) ? "|".$filearray[0] : "" ).
-	( array_key_exists( 1, $filearray ) ? "|".$filearray[1] : "" ).
-	( array_key_exists( 2, $filearray ) ? "|".$filearray[2] : "" ).
-	( array_key_exists( 3, $filearray ) ? "|".$filearray[3] : "" ).
-	( array_key_exists( 4, $filearray ) ? "|".$filearray[4] : "" ).
-	"}}";
-	if ( array_key_exists( 5, $filearray ) ) {
-		echo "
-* Additional Files:
+echo "=== Notification of DMCA takedown demand - ".$commons_title." ===
+In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]].&ensp" : "" )."
+
+Affected file(s):
 ";
-		foreach ($filearray as $index => $file) {
-			if ( $index < 5 ) {
-				continue;
-			} else {
-				echo "** [[File:".$file."|".$file."]]
+foreach ( $filearray as $index => $file ) {
+				echo "* {{lf|".$file."}}
 ";
-			}
 		}
-	}?></textarea>
+echo "
+To discuss this DMCA takedown, please go to [[COM:DMCA#".$commons_title."]] Thank you! ~~~~ ";
+?></textarea>
 							</td>
-						</tr>
-						<tr>
-							<table border='1'>
-								<tr>
-									<td><?php
-if ( $usertable['mwtoken'] ) {
-	echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editvppage" type="button" value="send edit">';
-} else {
-	echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
-}?>
-									</td>
-								</tr>
-								<tr>
-									<td id='commonsvpresult'></td>
-								</tr>
-							</table>
 						</tr>
 					</table>
 				</fieldset>
 				<fieldset>
 					<legend>Warning to uploader</legend>
-					<table>
+					<?php foreach ( $involved_users as $nameid => $involvedname ): ?>
+					<table style='border:2px solid black;'>
 						<tr>
-							<td> Please post the below text to the Wikimedia Commons user talk page of the user who uploaded the File. According to the information you submitted earlier this is <?php echo htmlspecialchars( $involved_user );?>. <br />
-								You can leave them a new message by following this link: <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involved_user ).'?action=edit&section=new&preloadtitle=Notice of upload removal"/> https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involved_user ).'</a>'; ?>
+							<td>
+								<table>
+									<tr>
+										<td><?php
+	if ( $usertable['mwtoken'] ) {
+		echo 'You are logged in with OAuth information, please make any edits necessary below and then click the button to the right to send the edit.     <input id="editusertalk" type="button" value="send edit" onclick="edittalkpage(\''.$involvedname.'\',\'commonsusertalk'.$nameid.'\',\'usertalkresult'.$nameid.'\');">';
+	} else {
+		echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
+	}?>
+										</td>
+									</tr>
+									<tr>
+										<td <?php echo "id ='usertalkresult".$nameid."'"; ?>  style='border-bottom:1px solid black;'></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td> If you are not using the automatic posting ( above ) please post the below text to the Wikimedia Commons user talk page of the user who uploaded the File. According to the information you submitted earlier this is <?php echo htmlspecialchars( $involvedname );?>. <br />
+								You can leave them a new message by following this link: <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involvedname ).'?action=edit&section=new&preloadtitle=Notice of upload removal"/> https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involvedname ).'</a>'; ?>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<textarea id ='commonsusertalk' name='commons-user-warning' wrap='virtual' rows='18' cols='90'>
+								<textarea <?php echo "id ='commonsusertalk".$nameid."'"; ?> name='commons-user-warning' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
 
-Dear <?php echo $involved_user; ?>:
+Dear <?php echo $involvedname; ?>:
 
-The Wikimedia Foundation (“Wikimedia”) has taken down content that you posted at [[:File:<?echo htmlspecialchars($filearray[0]);?>]] due to Wikimedia’s receipt of a validly formulated notice that your posted content was infringing an existing copyright.  When someone sends us a validly formulated notice of copyright infringement, the Digital Millennium Copyright Act (“DMCA”) Section (c)(1)(C) requires Wikimedia to take the content down, and to notify you that we have removed that content.  This notice, by itself, does not mean that the party requesting that the content be taken down are suing you.  The party requesting the take down might only be interested in removing the content from our site.
+The Wikimedia Foundation (“Wikimedia”) has taken down content that you posted at [[:File:<?php echo htmlspecialchars($filearray[0]);?>]] due to Wikimedia’s receipt of a validly formulated notice that your posted content was infringing an existing copyright.  When someone sends us a validly formulated notice of copyright infringement, the Digital Millennium Copyright Act (“DMCA”) Section (c)(1)(C) requires Wikimedia to take the content down, and to notify you that we have removed that content.  This notice, by itself, does not mean that the party requesting that the content be taken down are suing you.  The party requesting the take down might only be interested in removing the content from our site.
 
 '''What Can You Do?'''
 
@@ -514,23 +527,8 @@ Sincerely,
 ~~~~</textarea>
 							</td>
 						</tr>
-						<tr>
-							<table border='1'>
-								<tr>
-									<td><?php
-if ( $usertable['mwtoken'] ) {
-	echo 'You are logged in with OAuth information, please make any edits necessary above and then click the button to the right to send the edit.     <input id="editusertalk" type="button" value="send edit">';
-} else {
-	echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
-}?>
-									</td>
-								</tr>
-								<tr>
-									<td id='usertalkresult'></td>
-								</tr>
-							</table>
-						</tr>
-					</table>
+					</table> <br /> 
+					<?php endforeach; ?>
 				</fieldset>
 				<fieldset>
 					<legend>Debugging and double checking information for James</legend>
@@ -553,10 +551,10 @@ if ( $usertable['mwtoken'] ) {
 						</tr>
 						<tr>
 							<td>
-								Files affected (if given)
+								Takedown users
 							</td>
 							<td>
-								<textarea><?php echo !empty( $files_affected ) ? $files_affected : ""?></textarea>
+								<textarea><?php echo !empty( $involved_users ) ? var_dump( $involved_users ) : ""?></textarea>
 							</td>
 						</tr>
 						<tr>
