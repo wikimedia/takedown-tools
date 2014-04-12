@@ -7,7 +7,7 @@
 					</div>
 				</div>
 				<div class='portlet' id='p-logo' role='banner'>
-					<a href='index.php' title='Back home'></a>
+					<a href='/' title='Back home'></a>
 				</div>
 				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
 					<h3>LCA links</h3>
