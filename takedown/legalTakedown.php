@@ -86,6 +86,8 @@
     var userwrapper = $("#takedownusers");
     var filetakedownadder = $("#takedownmorefiles");
     var useradder = $("#notifymoreusers");
+    var uploadewrapper = $('#uploadfiles');
+    var uploadadder = $('#uploadmorefiles');
 
     $(filetakedownadder).click(function (e)
     {
@@ -98,6 +100,13 @@
     {
 
     	$(userwrapper).append('<div><input class=\'involved-user\' name=\'involved-user[]\' value=\'\' type=\'text\' size=\'15\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+    });
+
+    $(uploadadder).click(function (e)
+    {
+
+    	$(uploadewrapper).append('<div>Supporting file (scanned takedown etc) <input name=\'takedown-files[]\' type=\'file\' /><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
 
     });
 
@@ -353,8 +362,10 @@
 						<p> Takedown text - copy and paste email etc. </p>
 						<textarea name='takedown-body' wrap='virtual' rows='18' cols='70'></textarea>
 						<input type='hidden' name='MAX_FILE_SIZE' value='52428800' />
-						<p>Supporting file 1 (scanned takedown etc) <input name='takedown-file1' type='file' /></p>
-						<p>Supporting file 2 (scanned takedown etc) <input name='takedown-file2' type='file' /></p>
+						<div id='uploadfiles'>
+							<div>Supporting file (scanned takedown etc) <input name='takedown-files[]' type='file' /><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a file field'/></div>
+						</div>
+						
 					</fieldset>
 					<input type='submit' value='Process takedown'>
 				</form>
