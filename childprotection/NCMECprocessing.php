@@ -815,12 +815,12 @@ if ( $reportID ) {
 		$details_row = $insert->insert_id;
 
 		// filehash log
-		$template = 'INSERT INTO submittedfilehashes (clog_id, type, tlog_id, hash) VALUES (?,?,?,UNHEX(?))';
+		$template = 'INSERT INTO submittedfilehashes (clog_id, type, tlog_id, hash, test) VALUES (?,?,?,UNHEX(?),?)';
 		$insert = $mysql->prepare( $template );
 		if ( $insert === false ) {
 			echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 		}
-		$insert->bind_param( 'isis', $log_row, $log_type, $details_row, $filehash );
+		$insert->bind_param( 'isis', $log_row, $log_type, $details_row, $filehash, $istest );
 		$insert->execute();
 	}
 
