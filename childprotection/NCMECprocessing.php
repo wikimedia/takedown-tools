@@ -568,7 +568,7 @@ $filehash = null;
 echo "<script> $('#xml-report').val(".json_encode( $openReport->saveXML() ).");</script>".PHP_EOL;
 
 // DECISION POINT: Step 1
-if ( !$openReport->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
+if ( !$openReport->schemaValidate( 'espsubmittal.xsd' ) ) {
 	echo "<script> $('#xml-report-val').val('DOMDocument::schemaValidate() Generated Errors!".json_encode( libxml_display_errors() )."');</script>;";
 	echo "<script> $('img#gathered').attr('src', '/images/Dialog-error-round.svg');</script>".PHP_EOL;
 } else {
@@ -722,7 +722,7 @@ if ( $fileID ) {
 if ( $filedetaildom ) {
 	echo "<script> $('#xml-file-details').val(".json_encode( $filedetaildom->saveXML() )."); </script>".PHP_EOL;
 
-	if ( !$filedetaildom->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
+	if ( !$filedetaildom->schemaValidate( 'espsubmittal.xsd' ) ) {
 		echo "<script>
 		var filedetails = $('#xml-file-details');
 		input.val( input.val() + 'DOMDocument::schemaValidate() Generated Errors!".libxml_display_errors()."'; </script>".PHP_EOL;
