@@ -820,7 +820,7 @@ if ( $reportID ) {
 		if ( $insert === false ) {
 			echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
 		}
-		$insert->bind_param( 'isis', $log_row, $log_type, $details_row, $filehash, $istest );
+		$insert->bind_param( 'isiss', $log_row, $log_type, $details_row, $filehash, $istest );
 		$insert->execute();
 	}
 
