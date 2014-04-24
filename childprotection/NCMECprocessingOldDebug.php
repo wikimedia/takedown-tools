@@ -318,7 +318,7 @@ echo '</pre>'; ?>
 echo $openReport->saveXML();
 ?></textarea>
 					<textarea name='reportxmlvalidate' wrap='virtual' rows='18' cols='70'><?php
-if ( !$openReport->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+if ( !$openReport->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
 	echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
 	libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; $openReportValid = true;}?></textarea>
 				</fieldset>
@@ -345,7 +345,7 @@ if ( $openReportValid ) {
 ?>
 					<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
 if ( $reportID ) {
-	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+	if ( !$responseXML->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
 		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
 		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else {echo 'no verification because no valid report sent'; }?></textarea>
 					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'><?php
@@ -387,7 +387,7 @@ if ( !empty( $uploadedfiletmploc ) && !empty( $reportID ) ) {
 } else {echo 'something is wrong! Either there is no report ID or no file info!';} ?>
 						<textarea name='reportresponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
 if ( !empty( $uploadedfiletmploc ) && !empty( $reportID ) ) {
-	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+	if ( !$responseXML->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
 		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
 		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; } } else { echo 'no file sent'; }?></textarea>
 					<textarea name='reportresponsexml' wrap='virtual' rows='18' cols='20'<?php
@@ -447,12 +447,12 @@ if ( $filedetaildom ) {
 ?></textarea>
 					<textarea name='filedetailxmlvalidate' wrap='virtual' rows='18' cols='70'><?php
 if ( $filedetaildom ) {
-	if ( !$filedetaildom->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+	if ( !$filedetaildom->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
 		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
 		libxml_display_errors(); } else { echo "There are no validation errors and the XML above matches the schema provided by NCMEC"; }} else { echo 'no filedetail submission created'; } ?></textarea>
 					<textarea name='fileinforesponsexmlvalidate' wrap='virtual' rows='18' cols='20'><?php
 if ( $responseXML ) {
-	if ( !$responseXML->schemaValidate( 'include/espsubmittal.xsd' ) ) {
+	if ( !$responseXML->schemaValidate( '/../include/espsubmittal.xsd' ) ) {
 		echo '<b>DOMDocument::schemaValidate() Generated Errors!</b>';
 		libxml_display_errors(); } else { echo "There are no validation errors and the XML recieved matches the schema provided by NCMEC"; }} else { echo 'no responseXML available'; }?></textarea>
 					<textarea name='fileinforesponsexml' wrap='virtual' rows='18' cols='20'><?php
