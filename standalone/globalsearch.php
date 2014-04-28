@@ -68,7 +68,7 @@ $mwtoken = $usertable['mwtoken'];
 			<?php if ( !isset( $_POST['searchfor'] ) ) : ?>
 				<fieldset>
 					<legend>What do you want to search for? Please note this will search ALL wikis and may take time.</legend>
-					<b> Please Note: Currently Hardcoded to only search Project, Project Talk and User talk namespaces. To change ask James and he will adjust or put in an interface. </b> 
+					<b> Note: If you search the File name space, commons files will show up for ALL wikis </b>
 					<br /> <u> Remember to do anything in the search box you normally would for a search (especially using quotes if you want to look only for a specific phrase)</u>
 					<form id='inputform' method='POST'>
 					<table>
@@ -85,6 +85,186 @@ if ( $usertable['mwtoken'] ) {
 							<td> <label for='searchfor'> Search for: </label>
 							<td>
 								<input id='searchfor' name='searchfor' size='30' type='td' value=''>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input id='ns0' name='ns[]' type='checkbox' value='0'>
+											<label for='ns0'>Main</label>
+										</td>
+										<td>
+											<input id='ns1' name='ns[]' type='checkbox' value='1'>
+											<label for='ns1'>Talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns2' name='ns[]' type='checkbox' value='2'>
+											<label for='ns2'>User</label>
+										</td>
+										<td>
+											<input id='ns3' name='ns[]' type='checkbox' value='3'>
+											<label for='ns3'>User talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns4' name='ns[]' type='checkbox' value='4'>
+											<label for='ns4'>Project</label>
+										</td>
+										<td>
+											<input id='ns5' name='ns[]' type='checkbox' value='5'>
+											<label for='ns5'>Project talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns6' name='ns[]' type='checkbox' value='6'>
+											<label for='ns6'>File</label>
+										</td>
+										<td>
+											<input id='ns7' name='ns[]' type='checkbox' value='7'>
+											<label for='ns7'>File talk</label>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input id='ns8' name='ns[]' type='checkbox' value='8'>
+											<label for='ns8'>MediaWiki</label>
+										</td>
+										<td>
+											<input id='ns9' name='ns[]' type='checkbox' value='9'>
+											<label for='ns9'>MediaWiki talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns10' name='ns[]' type='checkbox' value='10'>
+											<label for='ns10'>Template</label>
+										</td>
+										<td>
+											<input id='ns11' name='ns[]' type='checkbox' value='11'>
+											<label for='ns11'>Template talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns12' name='ns[]' type='checkbox' value='12'>
+											<label for='ns12'>Help</label>
+										</td>
+										<td>
+											<input id='ns13' name='ns[]' type='checkbox' value='13'>
+											<label for='ns13'>Help talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns14' name='ns[]' type='checkbox' value='14'>
+											<label for='ns14'>Category</label>
+										</td>
+										<td>
+											<input id='ns15' name='ns[]' type='checkbox' value='15'>
+											<label for='ns15'>Category talk</label>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input id='ns100' name='ns[]' type='checkbox' value='100'>
+											<label for='ns100'>Portal</label>
+										</td>
+										<td>
+											<input id='ns101' name='ns[]' type='checkbox' value='101'>
+											<label for='ns101'>Portal talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns108' name='ns[]' type='checkbox' value='108'>
+											<label for='ns108'>Book</label>
+										</td>
+										<td>
+											<input id='ns109' name='ns[]' type='checkbox' value='109'>
+											<label for='ns109'>Book talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns118' name='ns[]' type='checkbox' value='118'>
+											<label for='ns118'>Draft</label>
+										</td>
+										<td>
+											<input id='ns119' name='ns[]' type='checkbox' value='119'>
+											<label for='ns119'>Draft talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns446' name='ns[]' type='checkbox' value='446'>
+											<label for='ns446'>Education Program</label>
+										</td>
+										<td>
+											<input id='ns447' name='ns[]' type='checkbox' value='447'>
+											<label for='ns447'>Education Program talk</label>
+										</td>
+									</tr>
+								</table>
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td>
+											<input id='ns828' name='ns[]' type='checkbox' value='828'>
+											<label for='ns828'>Module</label>
+										</td>
+										<td>
+											<input id='ns829' name='ns[]' type='checkbox' value='829'>
+											<label for='ns829'>Module talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns200' name='ns[]' type='checkbox' value='200'>
+											<label for='ns200'>Grants</label>
+										</td>
+										<td>
+											<input id='ns201' name='ns[]' type='checkbox' value='201'>
+											<label for='ns201'>Grants talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns202' name='ns[]' type='checkbox' value='202'>
+											<label for='ns202'>Research</label>
+										</td>
+										<td>
+											<input id='ns203' name='ns[]' type='checkbox' value='203'>
+											<label for='ns203'>Research talk</label>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<input id='ns208' name='ns[]' type='checkbox' value='208'>
+											<label for='ns208'>Programs</label>
+										</td>
+										<td>
+											<input id='ns209' name='ns[]' type='checkbox' value='209'>
+											<label for='ns209'>Programs talk</label>
+										</td>
+									</tr>
+								</table>
 							</td>
 						</tr>
 						<tr>
@@ -180,8 +360,13 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		'srsearch' => $searchfor,
 		'srprop' => 'snippet|sectiontitle|titlesnippet',
 		'srlimit' => 'max',
-		'srnamespace' => '3|4|5',
 		);
+
+		if ( isset( $_POST['ns'] ) ) {
+			$srnamespace = implode('|', $_POST['ns'] );
+			$request['srnamespace'] = $srnamespace; 
+		}
+
 
 		a:
 
