@@ -49,6 +49,19 @@ $mwtoken = $usertable['mwtoken'];
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='/scripts/jquery-1.10.2.min.js'></script>
 	<script src='/scripts/lca.js'></script>
+	<script>
+	$(document).ready(function(){
+
+		 $('#checkall').click( function() {
+		 	$("input[name='ns[]']").prop('checked', true);
+		 })
+
+		 $('#uncheckall').click( function() {
+		 	$("input[name='ns[]']").prop('checked', false);
+		 })
+
+	})
+	</script>
 	<style type='text/css'>
 	<!--/* <![CDATA[ */
 	@import '/css/main.css';
@@ -87,7 +100,7 @@ if ( $usertable['mwtoken'] ) {
 								<input id='searchfor' name='searchfor' size='30' type='td' value=''>
 							</td>
 						</tr>
-						<tr>
+						<tr style='font-size:0.5em;'>
 							<td>
 								<table>
 									<tr>
@@ -176,8 +189,6 @@ if ( $usertable['mwtoken'] ) {
 									</tr>
 								</table>
 							</td>
-						</tr>
-						<tr>
 							<td>
 								<table>
 									<tr>
@@ -267,6 +278,8 @@ if ( $usertable['mwtoken'] ) {
 								</table>
 							</td>
 						</tr>
+						<tr>
+							<td> <a href="#" id='uncheckall'>(none)</a> <a href="#" id='checkall'>(all)</a>
 						<tr>
 							<td> <input type='submit' value='Search' />
 						</tr>
