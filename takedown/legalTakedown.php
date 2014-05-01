@@ -116,6 +116,11 @@
 
     });
 
+    $('#takedown-commons-title').keyup(function(e) {
+    	var chr = $(this).val();
+    	$('#takedown-wmf-title').val('DMCA ' + chr);
+    });
+
 
 
 
@@ -197,7 +202,7 @@
 									<label for='logging-metadata'> Place a checkmark by all items which are true. </label>
 								</td>
 								<td>
-									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and the user was clearly warned and discouraged from future violations.' /> The content was taken down and the user was clearly warned and discouraged from future violations.  <br />
+									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and the user was clearly warned and discouraged from future violations.' /> The content was taken down and the user will be clearly warned and discouraged from future violations.  <br />
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have actual knowledge that the content was infringing copyright ' /> The content was taken down and we have actual knowledge that the content was infringing copyright.  <br />
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. ' /> The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. <br />
 									<input type='checkbox' name='logging-metadata[]' value='The content was taken down pursuant to a DMCA notice.' /> The content was taken down pursuant to a DMCA notice. <br />
@@ -336,7 +341,7 @@
 									<label for='takedown-wmf-title'>WMFwiki Title</label>
 								</td>
 								<td>
-									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for the WMF wiki posting. (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
+									<input id='takedown-wmf-title' name='takedown-wmf-title' type='text' value='DMCA ' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for the WMF wiki posting. (Don&#39;t worry; I&#39;ll give you a link on the next page.)'/>
 								</td>
 							</tr>
 							<tr>
