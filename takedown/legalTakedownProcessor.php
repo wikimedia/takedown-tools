@@ -33,12 +33,11 @@ $sendtoCE = $config['sendtoCE'];
 $user = $_SERVER['PHP_AUTH_USER'];
 $log_type = 'DMCA';
 $log_title = $_POST['takedown-wmf-title'];
-if ( $_POST['is-test'] === 'No' ) {
-	$istest = 'N';
-} elseif ( $_POST['is-test'] === 'Yes' ) {
+// cast test variable
+if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
 	$istest = 'Y';
 } else {
-	$istest = '?';
+	$istest = 'N';
 }
 $log_row = lcalog( $user, $log_type, $log_title, $istest );
 
@@ -81,12 +80,6 @@ if ( isset( $_POST['ce-send'] ) && $_POST['ce-send'] === 'Yes' ) {
 	$formsendtoCE = false;
 }
 
-// cast test variable
-if ( isset( $_POST['is-test'] ) && $_POST['is-test'] === 'Yes' ) {
-	$istest = 'Y';
-} else {
-	$istest = 'N';
-}
 
 if ( !empty( $_POST['files-affected'] ) ) {
 	$filearray = $_POST['files-affected'];
@@ -629,7 +622,7 @@ Sincerely,
 		User(s) who added content: 
 		'.$noteusers;
 
-		if ( $istest='Y' ) {
+		if ( $istest == 'Y' ) {
 			$casedata['description'] .= '
 			This submission was marked as a test';
 		}
