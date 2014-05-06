@@ -596,7 +596,7 @@ Sincerely,
 				}
 			}
 
-			if ( $isset( $locationURL ) ) {
+			if ( isset( $locationURL ) ) {
 				echo "<script> $('#celink').html('The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href=\'".$locationURL."\' target=\'_blank\'>".$locationURL."</a>');</scipt>".PHP_EOL;
 				echo "<scipt> $('#senttoce').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
 			} else {
