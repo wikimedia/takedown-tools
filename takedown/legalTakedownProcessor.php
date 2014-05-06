@@ -65,6 +65,13 @@ $wmfwiki_title = !isset( $_POST['takedown-wmf-title'] ) ? null : $_POST['takedow
 $takedown_method = !isset( $_POST['takedown-method'] ) ? null : $_POST['takedown-method'];
 $takedown_subject = !isset( $_POST['takedown-subject'] ) ? null : $_POST['takedown-subject'];
 $takedown_text = !isset( $_POST['takedown-body'] ) ? null : $_POST['takedown-body'];
+$project_involved = !isset( $_POST['project'] ) ? null : $_POST['project'];
+
+if ( $project_involved == 'enwiki' ) {
+	$linkbase = 'https://en.wikipedia.org';
+} else {
+	$linkbase = 'https://commons.wikimedia.org';
+}
 
 
 // cast form ce-send variable.
@@ -97,7 +104,13 @@ if ( !empty( $_POST['pages-affected'] ) ) {
 
 if ( !empty( $filearray ) ) {
 	foreach ( $filearray as $value ) {
-		$linksarray[] = 'https://commons.wikimedia.org/wiki/File:'.$value;
+		$linksarray[] = $linkbase.'/wiki/File:'.$value;
+	}
+}
+
+if ( !empty( $pagesarray ) ) {
+	foreach ( $pagesarray as $value ) {
+		$linksarray[] = $linkbase.'/wiki/'.$value;
 	}
 }
 
@@ -177,7 +190,7 @@ if ( !empty( $CE_post_files ) ) {
 
 $CE_post = json_encode( $CE_post_data );
 
-$apiurl = 'https://commons.wikimedia.org/w/api.php';
+$apiurl = $linkbase.'/w/api.php';
 $usertable = getUserData( $user );
 $mwsecret = $usertable['mwsecret'];
 $mwtoken = $usertable['mwtoken'];
@@ -260,12 +273,13 @@ function edittalkpage(username,divid,responseid) {
 			var deditsummary = "Notice of upload removal";
 			var dtext = $("#"+divid).val();
 			var daction = "newsection";
+			var linkbase = <?php echo '"'.$linkbase.'"' ?>;
 
 			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
 
 			$.post( "../mwoauth/mwOAuthProcessor.php", postdata, function(data) {
 			if ( data && data.edit && data.edit.result == 'Success' ) {
-				$('#'+responseid).html(data.edit.result + '! You can see the results at <a href="https://commons.wikimedia.org/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); }
+				$('#'+responseid).html(data.edit.result + '! You can see the results at <a href="'+linkbase+'/wiki/'+dpagetitle+'#Notice_of_upload_removal" target="_blank">'+dpagetitle+'#'+dsectiontitle+'</a>'); }
 			else if ( data && data.error ) {
 				$('#'+responseid).html(data.edit.error); }
 			else {
@@ -338,10 +352,10 @@ echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><now
 								<table>
 									<tr>
 										<td><?php
-	if ( $usertable['mwtoken'] ) {
+	if ( $usertable['mwtoken'] && $project_involved == 'commons' ) {
 		echo 'You are logged in with OAuth information, please make any edits necessary below and then click the button to the right to send the edit.     <input id="editdmcapage" type="button" value="send edit">';
 	} else {
-		echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
+		echo 'We did not find your OAuth information, or this is not a Wikimedia Commons takedown. You can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
 	}?>
 										</td>
 									</tr>
@@ -351,11 +365,13 @@ echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><now
 								</table>
 							</td>
 						</tr>
+						<?php if ( $project_involved == 'commons' ) : ?>
 						<tr>
 							<td>
 								If you are not using the automatic posting ( above ) please post the below text to the <u>BOTTOM</u> of the Wikimedia Commons DMCA Board at <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices?action=edit">https://commons.wikimedia.org/wiki/Commons:DMCA</a>';?>
 							</td>
 						</tr>
+					<?php endif; ?>
 						<tr>
 							<td>
 								<textarea id='commonsdmcapost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
@@ -380,10 +396,10 @@ Thank you! ~~~~ "
 								<table>
 									<tr>
 										<td><?php
-	if ( $usertable['mwtoken'] ) {
+	if ( $usertable['mwtoken'] && $project_involved == 'commons' ) {
 		echo 'You are logged in with OAuth information, please make any edits necessary below and then click the button to the right to send the edit.     <input id="editvppage" type="button" value="send edit">';
 	} else {
-		echo 'We did not find your OAuth information, you can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
+		echo 'We did not find your OAuth information, or this is not a Wikimedia Commons takedown. You can register using the link on the sidebar but for this time please use the links provided on the top of the page and paste the template in the edit box';
 	}?>
 										</td>
 									</tr>
@@ -393,11 +409,13 @@ Thank you! ~~~~ "
 								</table>
 							</td>
 						</tr>
+						<?php if ( $project_involved == 'commons' ) : ?>
 						<tr>
 							<td>
 								If you are not using the automatic posting ( above ) please post the below text to the Wikimedia Commons Village Pump at <a target='_blank' href='https://commons.wikimedia.org/wiki/Commons:Village_pump?action=edit&amp;section=new'>https://commons.wikimedia.org/wiki/Commons:Village_pump</a>
 							</td>
 						</tr>
+					<?php endif; ?>
 						<tr>
 							<td>
 								<textarea id='commonsvppost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
@@ -443,7 +461,7 @@ To discuss this DMCA takedown, please go to [[COM:DMCA#".$commons_title."]] Than
 						</tr>
 						<tr>
 							<td> If you are not using the automatic posting ( above ) please post the below text to the Wikimedia Commons user talk page of the user who uploaded the File. According to the information you submitted earlier this is <?php echo htmlspecialchars( $involvedname );?>. <br />
-								You can leave them a new message by following this link: <?php echo '<a target="_blank" href="https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involvedname ).'?action=edit&section=new&preloadtitle=Notice of upload removal"/> https://commons.wikimedia.org/wiki/User talk:'.htmlspecialchars( $involvedname ).'</a>'; ?>
+								You can leave them a new message by following this link: <?php echo '<a target="_blank" href="'.$linkbase.'/wiki/User talk:'.htmlspecialchars( $involvedname ).'?action=edit&section=new&preloadtitle=Notice of upload removal"/> '.$linkbase.'/wiki/User talk:'.htmlspecialchars( $involvedname ).'</a>'; ?>
 							</td>
 						</tr>
 						<tr>
