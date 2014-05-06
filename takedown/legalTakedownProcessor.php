@@ -648,13 +648,13 @@ Sincerely,
 					$noteid = $sugar->create_note( $notedata );
 					if ( $noteid ) {
 						echo "<script> $('#caselink').html('A sugar case was created which you can find <u> <a href=\'".$sugarurl."\' target=\'_blank\'>HERE</a></u>');</script>".PHP_EOL;
-						echo "<scipt> $('#sugarcase').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
+						echo "<script> $('#sugarcase').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
 					} 
 				}
 			}
 		} else {
 				echo "<script> $('#caselink').html('It does not appear that a sugar case was completed (you may not have connected your account) <br /> If there is a problem please see James.');</script>".PHP_EOL;
-				echo "<scipt> $('#sugarcase').attr('src', '/images/Dialog-error-round.svg'.svg'); </script>".PHP_EOL;
+				echo "<script> $('#sugarcase').attr('src', '/images/Dialog-error-round.svg'.svg'); </script>".PHP_EOL;
 			}
 
 
