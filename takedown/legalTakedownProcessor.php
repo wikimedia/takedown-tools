@@ -593,7 +593,7 @@ Sincerely,
 				echo "<script> $('#senttoce').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
 			} else {
 				echo "<script> $('#celink').html('It does not appear that a report was sent to Chilling Effects <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE');</script>".PHP_EOL;
-				echo "<script> $('#senttoce').attr('src', '/images/Dialog-error-round.svg'.svg'); </script>".PHP_EOL;
+				echo "<script> $('#senttoce').attr('src', '/images/Dialog-error-round.svg'); </script>".PHP_EOL;
 			}
 		}
 
