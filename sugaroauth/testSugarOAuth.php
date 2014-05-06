@@ -13,8 +13,8 @@ $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
 $db = $config['database'];
 
-$sugarapiurl = $config['sugar_apiurl'];
-//$sugarapiurl = 'http://localhost/~jamesur/sugar/service/v4_1/rest.php';
+$sugarapiurl = $config['sugar_url'].'/service/v4_1/rest.php';
+$sugarbaseurl = $config['sugar_url'].'/index.php';
 $consumerkey = $config['sugarconsumer_key'];
 $consumersecret = $config['sugarconsumer_secret'];
 
@@ -40,7 +40,11 @@ if ( $secret && $token ) {
 	}
 
 	$fieldresponse = $sugar->getAvailableFields( 'Cases' );
+	//$fieldresponse = $sugar->getAvailableFields( 'Notes' );
 	$fields = $fieldresponse['module_fields'];
+
+	$statusoptions = $fields['status']['options'];
+	$typeoptions = $fields['type']['options'];
 
 
 
@@ -65,32 +69,24 @@ if ( $secret && $token ) {
 	.external, .external:visited { color: #222222; }
 	.autocomment{color:gray}
 	</style>
-	<!--<script>
+	<script>
 	$(document).ready(function(){
-		$("#editbutton").click( function() {
-			$("#result").html("<img src='/images/progressbar.gif' alt='waiting for edit progressbar'>");
-			var dpagetitle = "User_talk:Jalexander/sandbox";
-			var dsectiontitle = "Test edit from LCA Tools";
-			var dmwtoken = <?php/* echo '"'.$mwtoken.'"' /*?>;
-			var dmwsecret = <?php/* echo '"'.$mwsecret.'"' /*?>;
-			var dapiurl = <?php/* echo '"'.$apiurl.'"' */?>;
-			var deditsummary = "Test edit from LCA Tools system using mediawiki OAuth";
-			var dtext = $("#testedit").val();
-			var daction = "newsection";
+		$("#casetest").click( function() {
+			$("#result").html("<img src='/images/progressbar.gif' alt='waiting for post progressbar'>");
+			var duser = <?php echo '"'.$user.'"' ?>;
+			var dataarray = {};
+			dataarray['name'] = $('#name').val();
+			dataarray['description'] = $('#description').val();
+			dataarray['status'] = $('#status').val();
+			dataarray['type'] = $('#type').val();
+			var daction = "createcase";
 
-			postdata = { action: daction, pagetitle: dpagetitle, sectiontitle: dsectiontitle, mwtoken: dmwtoken, mwsecret: dmwsecret, apiurl: dapiurl, editsummary: deditsummary, text: dtext };
+			postdata = { action: daction, user: duser, data: dataarray };
 
-			$.post( "mwOAuthProcessor.php", postdata, function(data) {
-			if ( data && data.edit && data.edit.result == 'Success' ) {
-				$('#testedit').val(JSON.stringify(data));
-				$('#result').html(data.edit.result + 'you can see the results at <a href="https://meta.wikimedia.org/wiki/User_talk:Jalexander/sandbox" target="_blank"> User talk:Jalexander/sandbox</a>'); }
-			else if ( data && data.error ) {
-				$('#testedit').val(JSON.stringify(data));
-				$('#result').html(data.edit.error); }
-			else {
-				$('#testedit').val(JSON.stringify(data));
-				$('#result').html('hmmm something weird happened');
-					} },"json");
+			$.post( "sugarOAuthProcessor.php", postdata, function(data) {
+				var id = data
+				var sugarurl = <?php echo '"'.$sugarbaseurl.'?module=Cases&action=detailview&record="'?>+id;
+			$('#result').html("<a href='"+sugarurl+"' target='_blank'> Click here to view created case </a>")},"json");
 		});
 
 
@@ -159,6 +155,31 @@ if ( $secret && $token ) {
 						<table border='1'>
 							<tr>
 								<td>
+									<label for='type'> Type: </label>
+								</td>
+								<td>
+									<select name='type' id='type'>
+										<?php
+foreach ( $typeoptions as $option ) {
+	echo '<option value="'.$option['name'].'">'.$option['value'].'</option>';
+}
+?>
+									</select>
+							<tr>
+							<tr>
+								<td>
+									<label for='status'> Status: </label>
+								</td>
+								<td>
+									<select name='status' id='status'>
+										<?php
+foreach ( $statusoptions as $option ) {
+	echo '<option value="'.$option['name'].'">'.$option['value'].'</option>';
+}
+?>
+									</select>
+							<tr>
+								<td>
 									<label for='name'> Case Subject/Title: </label>
 								</td>
 								<td>
@@ -172,6 +193,14 @@ if ( $secret && $token ) {
 								<td>
 									<textarea id='description' name='description' wrap='virtual' rows='4' ></textarea>
 								</td>
+							</tr>
+							<tr>
+								<td colspan='2'>
+									<input id='casetest' type='button' value='Create case'>
+								</td>
+							</tr>
+							<tr>
+								<td id='result' colspan='2'></td>
 							</tr>
 						</table>
 					</form>

@@ -558,7 +558,7 @@ class sugar {
 	 * Optional array taken to allow you to only get specific fields rather then the entire item.
 	 *
 	 * @param string $module SugarCRM Module name to be queried.
-	 * @param string ID of the SugarCRM item taht you are attempting to query about.
+	 * @param string $id ID of the SugarCRM item taht you are attempting to query about.
 	 * @param array $specificfields optional array of fields which you want to get the definition of.
 	 * 
 	 * @return array Fields in the format of array ( 'name' => field_name, 'value' => field_value )
@@ -605,6 +605,77 @@ class sugar {
 		$username = $response['user_name'];
 
 		return $username;
+	}
+
+	/**
+	 * Create or update an entity (case/contact etc)
+	 *
+	 * Public function to create a specific sugar item (case, user, contact etc.)
+	 * Optional id taken updates the entity relating to that ID rather, with no ID it creates the entity.
+	 *
+	 * @param string $module SugarCRM Module name to be used.
+	 * @param array $fields array of fields which you want to get the definition of.
+	 * @param string $id ID of the SugarCRM item taht you are attempting to update (optional).
+	 * 
+	 * @return string json raw json response (to be dealt with by calling function or program generally the ID acted upon/created or -1 for error).
+	 */
+	public function edit_entity( $module, array $fields, $id = null ) {
+		$method = 'set_entry';
+		$params['session'] = $this->getSession();
+		$params['module_name'] = $module;
+
+		if ( $id ) {
+			$fields['id'] = $id;
+		}
+
+		$params['name_value_list'] = $fields;
+
+		$rawresponse = $this->rest_post( $method, $params );
+
+		return $rawresponse;
+
+	}
+
+	/**
+	 * Create a case
+	 *
+	 * Public function to create a new sugar case seperated out from editing case because of it's common usage.
+	 *
+	 * @param array $fields array of fields which you want to get the definition of.
+	 * @param string $id ID of the SugarCRM item taht you are attempting to update (optional).
+	 * 
+	 * @return string ID or error.
+	 */
+	public function create_case( array $specifics ) {
+		$module = 'Cases';
+		
+		$rawresponse = $this->edit_entity( $module, $specifics );
+
+		$response = json_decode( $rawresponse, true );
+
+		if ( isset( $response['id'] ) ) {
+			return $response['id'];
+		} else {
+			return false;
+			echo 'error: '.$rawresponse;
+		}
+
+	}
+
+	public function create_note( array $specifics ) {
+		$module = 'Notes';
+		
+		$rawresponse = $this->edit_entity( $module, $specifics );
+
+		$response = json_decode( $rawresponse, true );
+
+		if ( isset( $response['id'] ) ) {
+			return $response['id'];
+		} else {
+			return false;
+			echo 'error: '.$rawresponse;
+		}
+
 	}
 
 

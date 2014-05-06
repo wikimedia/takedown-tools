@@ -19,6 +19,8 @@ Part 2. Submit data to Chilling Effects - in process 2013-12-18
 ---------------------------------------------   */
 
 require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../include/sugar.class.php';
 date_default_timezone_set( 'UTC' );
 
 //null variables that may or may not be set later depending on how it goes
@@ -175,74 +177,6 @@ if ( !empty( $CE_post_files ) ) {
 
 $CE_post = json_encode( $CE_post_data );
 
-// Set up headers for Chilling Effects submission
-$CE_post_headers = array (
-	'Accept: application/json',
-	'Content-Type: application/json',
-	'Content-Length: ' . strlen( $CE_post ),
-	'AUTHENTICATION_TOKEN: '.$config['CE_apikey'],
-);
-
-// Debug info
-/*if (!$sendtoCE || !$formsendtoCE) {
-	echo 'sendtoCE set to False? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];
-	echo 'formsendtoCE set to False? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];
-}*/
-
-// send to Chilling Effects
-// Add new argument 1 to end of function to write to request.txt for debug
-if ( $sendtoCE && $formsendtoCE ) {
-	/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
-	echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
-	$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
-
-	$headers = explode( "\n", $result );
-	foreach ( $headers as $header ) {
-		if ( stripos( $header, 'Location:' ) !== false ) {
-			$locationURL = substr( $header, 10 );
-		}
-	}
-}
-
-// Get ready to store in database
-
-$mysql = new mysqli( $dbaddress, $dbuser, $dbpw, $db );
-$mysql->set_charset( "utf8" );
-
-$submittime = gmdate( "Y-m-d H:i:s", time() );
-$insert_user = $user;
-$insert_sender_city = $sender_city;
-$insert_sender_zip = $sender_zip;
-$insert_sender_state = $sender_state;
-$insert_sender_country = $sender_country;
-$insert_takedown_date = $takedown_date;
-$insert_action_taken = $action_taken;
-$insert_takedown_title = $takedown_title;
-$insert_commons_title = $commons_title;
-$insert_wmfwiki_title = $wmfwiki_title;
-$insert_takedown_method = $takedown_method;
-$insert_takedown_subject = $takedown_subject;
-$insert_involved_users = serialize( $involved_users );
-$insert_logging_metadata = serialize( $logging_metadata );
-$insert_strike_note = serialize( $strike_note );
-$insert_ce_url = $locationURL;
-$insert_filessent = serialize( $filessent );
-$insert_files_affected = serialize( $linksarray );
-
-// do it
-
-$template = 'INSERT INTO dmcatakedowns (log_id,user,timestamp,sender_city,sender_zip,sender_state,sender_country,takedown_date,action_taken,takedown_title,commons_title,wmfwiki_title,takedown_method,takedown_subject,involved_user,logging_metadata,strike_note,ce_url,files_sent,files_affected,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
-
-$insert = $mysql->prepare( $template );
-if ( $insert === false ) {
-	echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
-}
-
-$insert->bind_param( 'issssssssssssssssssss', $log_row, $insert_user, $submittime, $insert_sender_city, $insert_sender_zip, $insert_sender_state, $insert_sender_country, $insert_takedown_date, $insert_action_taken, $insert_takedown_title, $insert_commons_title, $insert_wmfwiki_title, $insert_takedown_method, $insert_takedown_subject, $insert_involved_users, $insert_logging_metadata, $insert_strike_note, $insert_ce_url, $insert_files_sent, $insert_files_affected, $istest );
-
-$insert->execute();
-$insert->close();
-
 $apiurl = 'https://commons.wikimedia.org/w/api.php';
 $usertable = getUserData( $user );
 $mwsecret = $usertable['mwsecret'];
@@ -345,10 +279,37 @@ function edittalkpage(username,divid,responseid) {
 		<div id='column-content'>
 			<div id='content'>
 				<h1>Processed Takedown</h1>
-				<br />
-				<?php if ( $locationURL ) {
-	echo '<p> The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href="'.$locationURL.'" target="_blank">'.$locationURL.'</a>';
-} else echo '<p> It does not appear that a report was sent to Chilling Effects (either because you asked the report not to, reporting is turned off on the server level or there was an error) <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE'; ?>
+				<fieldset>
+					<legend> Process status </legend>
+					<table>
+						<tr>
+							<td>
+								<u> Step 1: </u> Send report to Chilling Effects
+							</td>
+							<td>
+								<img id='senttoce' src='/images/List-remove.svg' width='40px'/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='2'>
+								<div id='celink'></div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<u> Step 2: </u> Create sugarcase
+							</td>
+							<td>
+								<img id='sugarcase' src='/images/List-remove.svg' width='40px'/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan='2'>
+								<div id='caselink'></div>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
 				<fieldset>
 					<legend> wmfWiki post </legend>
 					<table style='border:2px solid black;'>
@@ -593,5 +554,140 @@ Sincerely,
 		</div>
 			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
 		</div>
+		<?php
+
+		// Set up headers for Chilling Effects submission
+		$CE_post_headers = array (
+			'Accept: application/json',
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen( $CE_post ),
+			'AUTHENTICATION_TOKEN: '.$config['CE_apikey'],
+		);
+
+		// send to Chilling Effects
+		// Add new argument 1 to end of function to write to request.txt for debug
+		if ( $sendtoCE && $formsendtoCE ) {
+			/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
+			echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
+			$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
+
+			$headers = explode( "\n", $result );
+			foreach ( $headers as $header ) {
+				if ( stripos( $header, 'Location:' ) !== false ) {
+					$locationURL = substr( $header, 10 );
+				}
+			}
+
+			if ( $isset( $locationURL ) ) {
+				echo "<script> $('#celink').html('The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href=\'".$locationURL."\' target=\'_blank\'>".$locationURL."</a>');</scipt>".PHP_EOL;
+				echo "<scipt> $('#senttoce').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
+			} else {
+				echo "<script> $('#celink').html('It does not appear that a report was sent to Chilling Effects <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE');</script>".PHP_EOL;
+				echo "<scipt> $('#senttoce').attr('src', '/images/Dialog-error-round.svg'.svg'); </script>".PHP_EOL;
+			}
+		}
+
+		//create sugar case
+
+		$casedata['name'] = $log_title;
+		$logurl = $config['toolsurl'].'logDetails.php?logid='.$log_row;
+		$casedata['description'] = $logurl;
+		$casedata['resolution'] = $logurl;
+		$casedata['status'] = 'Closed';
+		$casedata['type'] = 'ca_dmca';
+		$notedata['name'] = 'takedown notes';
+		$notedata['parent_type'] = 'Cases';
+		$noteusers = '';
+		foreach ( $involved_users as $nameid => $involvedname ) {
+			$noteusers .= $involvedname.'
+			';
+		}
+		if ( !isset( $locationURL ) ) {
+			$locationURL = 'This takedown was not sent to Chilling Effects';
+		}
+		$notedata['description'] = '
+		Foundation Wiki Takedown Post: https://www.wikimediafoundation.org/wiki/'.htmlentities( str_replace( ' ', '_', $wmfwiki_title ) ).'
+		Link to Chilling Effects: '.$locationURL.'
+		User(s) who added content: 
+		'.$noteusers;
+
+		if ( $istest='Y' ) {
+			$casedata['description'] .= '
+			This submission was marked as a test';
+		}
+
+		$sugarapiurl = $config['sugar_url'].'/service/v4_1/rest.php';
+		$sugarbaseurl = $config['sugar_url'].'/index.php';
+		$sugarconsumerkey = $config['sugarconsumer_key'];
+		$sugarconsumersecret = $config['sugarconsumer_secret'];
+		$sugarsecret = $usertable['sugarsecret'];
+		$sugartoken = $usertable['sugartoken'];
+
+		if ( isset( $sugarsecret ) && isset( $sugartoken ) ) {
+			$sugar = new sugar( $sugarconsumerkey, $sugarconsumersecret, $sugarapiurl, $sugartoken, $sugarsecret );
+
+			$login = $sugar->login();
+
+			if ( $login ) {
+				$caseid = $sugar->create_case( $casedata );
+
+				if ( $caseid ) {
+					$sugarurl = $sugarbaseurl.'?module=Cases&action=detailview&record='.$caseid;
+					$notedata['parent_id'] = $caseid;
+					$noteid = $sugar->create_note( $notedata );
+					if ( $noteid ) {
+						echo "<script> $('#caselink').html('A sugar case was created which you can find <u> <a href=\'".$sugarurl."\' target=\'_blank\'>HERE</a></u>');</script>".PHP_EOL;
+						echo "<scipt> $('#sugarcase').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
+					} 
+				}
+			}
+		} else {
+				echo "<script> $('#caselink').html('It does not appear that a sugar case was completed (you may not have connected your account) <br /> If there is a problem please see James.');</script>".PHP_EOL;
+				echo "<scipt> $('#sugarcase').attr('src', '/images/Dialog-error-round.svg'.svg'); </script>".PHP_EOL;
+			}
+
+
+
+
+		// Get ready to store full data in database
+
+		$mysql = new mysqli( $dbaddress, $dbuser, $dbpw, $db );
+		$mysql->set_charset( "utf8" );
+
+		$submittime = gmdate( "Y-m-d H:i:s", time() );
+		$insert_user = $user;
+		$insert_sender_city = $sender_city;
+		$insert_sender_zip = $sender_zip;
+		$insert_sender_state = $sender_state;
+		$insert_sender_country = $sender_country;
+		$insert_takedown_date = $takedown_date;
+		$insert_action_taken = $action_taken;
+		$insert_takedown_title = $takedown_title;
+		$insert_commons_title = $commons_title;
+		$insert_wmfwiki_title = $wmfwiki_title;
+		$insert_takedown_method = $takedown_method;
+		$insert_takedown_subject = $takedown_subject;
+		$insert_involved_users = serialize( $involved_users );
+		$insert_logging_metadata = serialize( $logging_metadata );
+		$insert_strike_note = serialize( $strike_note );
+		$insert_ce_url = $locationURL;
+		$insert_filessent = serialize( $filessent );
+		$insert_files_affected = serialize( $linksarray );
+
+		// do it
+
+		$template = 'INSERT INTO dmcatakedowns (log_id,user,timestamp,sender_city,sender_zip,sender_state,sender_country,takedown_date,action_taken,takedown_title,commons_title,wmfwiki_title,takedown_method,takedown_subject,involved_user,logging_metadata,strike_note,ce_url,files_sent,files_affected,test) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+
+		$insert = $mysql->prepare( $template );
+		if ( $insert === false ) {
+			echo 'Error while preparing: ' . $template . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		}
+
+		$insert->bind_param( 'issssssssssssssssssss', $log_row, $insert_user, $submittime, $insert_sender_city, $insert_sender_zip, $insert_sender_state, $insert_sender_country, $insert_takedown_date, $insert_action_taken, $insert_takedown_title, $insert_commons_title, $insert_wmfwiki_title, $insert_takedown_method, $insert_takedown_subject, $insert_involved_users, $insert_logging_metadata, $insert_strike_note, $insert_ce_url, $insert_files_sent, $insert_files_affected, $istest );
+
+		$insert->execute();
+		$insert->close();
+
+		?>
 	</body>
 </html>
