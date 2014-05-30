@@ -188,6 +188,29 @@ $usertable = getUserData( $user );
 $mwsecret = $usertable['mwsecret'];
 $mwtoken = $usertable['mwtoken'];
 
+// Set up headers for Chilling Effects submission
+		$CE_post_headers = array (
+			'Accept: application/json',
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen( $CE_post ),
+		);
+
+		// send to Chilling Effects
+		// Add new argument 1 to end of function to write to request.txt for debug
+		if ( $sendtoCE && $formsendtoCE ) {
+			/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
+			echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
+			$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
+
+			$headers = explode( "\n", $result );
+			foreach ( $headers as $header ) {
+				if ( stripos( $header, 'Location:' ) !== false ) {
+					$locationURL = substr( $header, 10 );
+				}
+			}
+		}
+
+
 ?>
 
 
@@ -567,26 +590,8 @@ Sincerely,
 		</div>
 		<?php
 
-		// Set up headers for Chilling Effects submission
-		$CE_post_headers = array (
-			'Accept: application/json',
-			'Content-Type: application/json',
-			'Content-Length: ' . strlen( $CE_post ),
-		);
 
-		// send to Chilling Effects
-		// Add new argument 1 to end of function to write to request.txt for debug
-		if ( $sendtoCE && $formsendtoCE ) {
-			/*echo 'sendtoCE set to True? - ' . $sendtoCE . ' origin says ' . $config['sendtoCE'];;
-			echo 'formsendtoCE set to True? - ' . $formsendtoCE . ' origin says ' . $_POST['ce-send'];*/
-			$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
-
-			$headers = explode( "\n", $result );
-			foreach ( $headers as $header ) {
-				if ( stripos( $header, 'Location:' ) !== false ) {
-					$locationURL = substr( $header, 10 );
-				}
-			}
+			if ( $sendtoCE && $formsendtoCE ) {
 
 			if ( isset( $locationURL ) ) {
 				echo "<script> $('#celink').html('The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href=\'".$locationURL."\' target=\'_blank\'>".$locationURL."</a>');</script>".PHP_EOL;

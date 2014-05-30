@@ -13,118 +13,120 @@
 	<script>
 	$(document).ready(function(){
 
-	//validate
-    $("#takedown-form1").validate();
+		
 
-	//initialize datepicker
-   var $datepicker = $('#takedown-date').pikaday({
-        firstDay: 1,
-        minDate: new Date('2000-01-01'),
-        maxDate: new Date('2020-12-31'),
-        yearRange: [2000,2020]
-    });
+		//validate
+	    $("#takedown-form1").validate();
 
-   //From http://www.alessioatzeni.com/blog/simple-tooltip-with-jquery-only-text/
-   $('.showTooltip').hover(function(){
-        // Hover over code
-        var title = $(this).attr('title');
-        $(this).data('tipText', title).removeAttr('title');
-        $('<p class="tooltip"></p>')
-        .text(title)
-        .appendTo('body')
-        .fadeIn('slow');
-    }, function() {
-        // Hover out code
-        $(this).attr('title', $(this).data('tipText'));
-        $('.tooltip').remove();
-    }).mousemove(function(e) {
-        var mousex = e.pageX + 20; //Get X coordinates
-        var mousey = e.pageY + 10; //Get Y coordinates
-        $('.tooltip')
-        .css({ top: mousey, left: mousex })
-    });
+		//initialize datepicker
+	   var $datepicker = $('#takedown-date').pikaday({
+	        firstDay: 1,
+	        minDate: new Date('2000-01-01'),
+	        maxDate: new Date('2020-12-31'),
+	        yearRange: [2000,2020]
+	    });
 
-    //remove browser tooltip by removing title on hover
-    $('.showTooltip[title]').mouseover(function () {
-        $this = $(this);
-        $this.data('title', $this.attr('title'));
-        // Using null here wouldn't work in IE, but empty string will work just fine.
-        $this.attr('title', '');
-    }).mouseout(function () {
-        $this = $(this);
-        $this.attr('title', $this.data('title'));
-    });
+	   //From http://www.alessioatzeni.com/blog/simple-tooltip-with-jquery-only-text/
+	   $('.showTooltip').hover(function(){
+	        // Hover over code
+	        var title = $(this).attr('title');
+	        $(this).data('tipText', title).removeAttr('title');
+	        $('<p class="tooltip"></p>')
+	        .text(title)
+	        .appendTo('body')
+	        .fadeIn('slow');
+	    }, function() {
+	        // Hover out code
+	        $(this).attr('title', $(this).data('tipText'));
+	        $('.tooltip').remove();
+	    }).mousemove(function(e) {
+	        var mousex = e.pageX + 20; //Get X coordinates
+	        var mousey = e.pageY + 10; //Get Y coordinates
+	        $('.tooltip')
+	        .css({ top: mousey, left: mousex })
+	    });
 
-    $('select#project').change( function() {
-    	if ( $('select#project option:selected').val() == 'commons' ) {
-    		$('.commonsonly').show();
-    	} else {
-    		$('.commonsonly').hide();
-    	}
-    	if ( $('select#project option:selected').val() == 'enwiki' ) {
-    		$('.enwikionly').show();
-    	} else {
-    		$('.enwikionly').hide();
-    	}
-    })
+	    //remove browser tooltip by removing title on hover
+	    $('.showTooltip[title]').mouseover(function () {
+	        $this = $(this);
+	        $this.data('title', $this.attr('title'));
+	        // Using null here wouldn't work in IE, but empty string will work just fine.
+	        $this.attr('title', '');
+	    }).mouseout(function () {
+	        $this = $(this);
+	        $this.attr('title', $this.data('title'));
+	    });
 
-    $('select#content-type').change( function() {
-    	if ( $('select#content-type option:selected').val() == ( 'file' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
-    		$('.fileonly').show();
-    	} else {
-    		$('.fileonly').hide();
-    	}
-    	if ( $('select#content-type option:selected').val() == ( 'text' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
-    		$('.textonly').show();
-    	} else {
-    		$('.textonly').hide();
-    	}
-    })
+	    $('select#project').change( function() {
+	    	if ( $('select#project option:selected').val() == 'commons' ) {
+	    		$('.commonsonly').show();
+	    	} else {
+	    		$('.commonsonly').hide();
+	    	}
+	    	if ( $('select#project option:selected').val() == 'enwiki' ) {
+	    		$('.enwikionly').show();
+	    	} else {
+	    		$('.enwikionly').hide();
+	    	}
+	    })
 
-
-    var filetakedownwrapper = $("#takedownfiles");
-    var userwrapper = $("#takedownusers");
-    var filetakedownadder = $("#takedownmorefiles");
-    var useradder = $("#notifymoreusers");
-    var uploadewrapper = $('#uploadfiles');
-    var uploadadder = $('#uploadmorefiles');
-
-    $(filetakedownadder).click(function (e)
-    {
-
-    	$(filetakedownwrapper).append('<div><input class=\'files-affected\' name=\'files-affected[]\' value=\'\' type=\'text\' size=\'50\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
-
-    });
-
-    $(useradder).click(function (e)
-    {
-
-    	$(userwrapper).append('<div><input class=\'involved-user\' name=\'involved-user[]\' value=\'\' type=\'text\' size=\'15\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
-
-    });
-
-    $(uploadadder).click(function (e)
-    {
-
-    	$(uploadewrapper).append('<div>Supporting file (scanned takedown etc) <input name=\'takedown-files[]\' type=\'file\' /><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
-
-    });
-
-    $("body").on("click",".removefield", function(e) {
-
-    	$(this).parent('div').remove();
-
-    });
-
-    $('#takedown-commons-title').keyup(function(e) {
-    	var chr = $(this).val();
-    	$('#takedown-wmf-title').val('DMCA ' + chr);
-    });
+	    $('select#content-type').change( function() {
+	    	if ( $('select#content-type option:selected').val() == ( 'file' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
+	    		$('.fileonly').show();
+	    	} else {
+	    		$('.fileonly').hide();
+	    	}
+	    	if ( $('select#content-type option:selected').val() == ( 'text' ) || $('select#content-type option:selected').val() == ( 'both' ) ) {
+	    		$('.textonly').show();
+	    	} else {
+	    		$('.textonly').hide();
+	    	}
+	    })
 
 
+	    var filetakedownwrapper = $("#takedownfiles");
+	    var userwrapper = $("#takedownusers");
+	    var filetakedownadder = $("#takedownmorefiles");
+	    var useradder = $("#notifymoreusers");
+	    var uploadewrapper = $('#uploadfiles');
+	    var uploadadder = $('#uploadmorefiles');
+
+	    $(filetakedownadder).click(function (e)
+	    {
+
+	    	$(filetakedownwrapper).append('<div><input class=\'files-affected\' name=\'files-affected[]\' value=\'\' type=\'text\' size=\'50\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+	    });
+
+	    $(useradder).click(function (e)
+	    {
+
+	    	$(userwrapper).append('<div><input class=\'involved-user\' name=\'involved-user[]\' value=\'\' type=\'text\' size=\'15\'/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+	    });
+
+	    $(uploadadder).click(function (e)
+	    {
+
+	    	$(uploadewrapper).append('<div>Supporting file (scanned takedown etc) <input name=\'takedown-files[]\' type=\'file\' /><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+
+	    });
+
+	    $("body").on("click",".removefield", function(e) {
+
+	    	$(this).parent('div').remove();
+
+	    });
+
+	    $('#takedown-commons-title').keyup(function(e) {
+	    	var chr = $(this).val();
+	    	$('#takedown-wmf-title').val('DMCA ' + chr);
+	    });
 
 
-});
+
+
+	});
 
 </script>
 	<style type='text/css'>
