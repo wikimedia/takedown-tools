@@ -13,80 +13,102 @@
     <script>
     $(document).ready(function(){
 
-    //validate
-    $("#ncmec-form1").validate();
+        //validate
+        $("#ncmec-form1").validate();
 
-    //initialize datepickers
+        //initialize datepickers
 
-    var $datepicker1 = $('#access-date').pikaday({
-        firstDay: 1,
-        minDate: new Date('2000-01-01'),
-        maxDate: new Date('2020-12-31'),
-        yearRange: [2000,2020]
+        var $datepicker1 = $('#access-date').pikaday({
+            firstDay: 1,
+            minDate: new Date('2000-01-01'),
+            maxDate: new Date('2020-12-31'),
+            yearRange: [2000,2020]
+        });
+
+        var $datepicker2 = $('#incident-date').pikaday({
+            firstDay: 1,
+            minDate: new Date('2000-01-01'),
+            maxDate: new Date('2020-12-31'),
+            yearRange: [2000,2020]
+        });
+
+       //From http://www.alessioatzeni.com/blog/simple-tooltip-with-jquery-only-text/
+       $('.showTooltip').hover(function(){
+            // Hover over code
+            var title = $(this).attr('title');
+            $(this).data('tipText', title).removeAttr('title');
+            $('<p class="tooltip"></p>')
+            .text(title)
+            .appendTo('body')
+            .fadeIn('slow');
+        }, function() {
+            // Hover out code
+            $(this).attr('title', $(this).data('tipText'));
+            $('.tooltip').remove();
+        }).mousemove(function(e) {
+            var mousex = e.pageX + 20; //Get X coordinates
+            var mousey = e.pageY + 10; //Get Y coordinates
+            $('.tooltip')
+            .css({ top: mousey, left: mousex })
+        });
+
+        //remove browser tooltip by removing title on hover
+        $('.showTooltip[title]').mouseover(function () {
+            $this = $(this);
+            $this.data('title', $this.attr('title'));
+            // Using null here wouldn't work in IE, but empty string will work just fine.
+            $this.attr('title', '');
+        }).mouseout(function () {
+            $this = $(this);
+            $this.attr('title', $this.data('title'));
+        });
+
+        var selectedH = <?php echo "'".gmdate( "H", time() )."'"?>;
+        $("select#access-time-hour option").filter(function() {
+            return $(this).val() == selectedH;
+        }).prop('selected', true);
+
+        var selectedi = <?php echo "'".gmdate( "i", time() )."'"?>;
+        $("select#access-time-min option").filter(function() {
+            return $(this).val() == selectedi;
+        }).prop('selected', true);
+
+        $('#legal-approved').change(function(){
+            var val = $(this).val();
+
+            if(val == 'Y') {
+                $('#who-approved').attr("readonly", false);
+                $('#why-not-approved').attr("readonly", true);
+            } else {
+                $('#why-not-approved').attr("readonly", false);
+                $('#who-approved').attr("readonly", true);
+            }
+        });
+
+        var uploadewrapper = $('#uploadfiles');
+        var filenamewrapper = $('#uploadfilenames');
+        var uploadadder = $('#uploadmorefiles');
+        var uploadremover = $('#donotuploadfile');
+        var uploadnum = 1;
+
+        $(uploadadder).click(function (e)
+        {
+
+            $(uploadewrapper).append('<div class=\'addition'+uploadnum+'\' > Image taken down: <input name=\'takedown-file[]\' type=\'file\' required/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+            $(filenamewrapper).append('<div class=\'addition'+uploadnum+'\' > File:<input class=\'addition'+uploadnum+'\' id=\'file-name\' name=\'file-name[]\' value=\'\' type=\'text\' size=\'50\' required /><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+            uploadnum++;
+
+        });
+
+         $("body").on("click",".removefield", function(e) {
+
+            var currentclass = '.'+$(this).parent('div').attr('class');
+            $(currentclass).remove();
+
+        });
+
+
     });
-
-    var $datepicker2 = $('#incident-date').pikaday({
-        firstDay: 1,
-        minDate: new Date('2000-01-01'),
-        maxDate: new Date('2020-12-31'),
-        yearRange: [2000,2020]
-    });
-
-   //From http://www.alessioatzeni.com/blog/simple-tooltip-with-jquery-only-text/
-   $('.showTooltip').hover(function(){
-        // Hover over code
-        var title = $(this).attr('title');
-        $(this).data('tipText', title).removeAttr('title');
-        $('<p class="tooltip"></p>')
-        .text(title)
-        .appendTo('body')
-        .fadeIn('slow');
-    }, function() {
-        // Hover out code
-        $(this).attr('title', $(this).data('tipText'));
-        $('.tooltip').remove();
-    }).mousemove(function(e) {
-        var mousex = e.pageX + 20; //Get X coordinates
-        var mousey = e.pageY + 10; //Get Y coordinates
-        $('.tooltip')
-        .css({ top: mousey, left: mousex })
-    });
-
-    //remove browser tooltip by removing title on hover
-    $('.showTooltip[title]').mouseover(function () {
-        $this = $(this);
-        $this.data('title', $this.attr('title'));
-        // Using null here wouldn't work in IE, but empty string will work just fine.
-        $this.attr('title', '');
-    }).mouseout(function () {
-        $this = $(this);
-        $this.attr('title', $this.data('title'));
-    });
-
-    var selectedH = <?php echo "'".gmdate( "H", time() )."'"?>;
-    $("select#access-time-hour option").filter(function() {
-        return $(this).val() == selectedH;
-    }).prop('selected', true);
-
-    var selectedi = <?php echo "'".gmdate( "i", time() )."'"?>;
-    $("select#access-time-min option").filter(function() {
-        return $(this).val() == selectedi;
-    }).prop('selected', true);
-
-    $('#legal-approved').change(function(){
-        var val = $(this).val();
-
-        if(val == 'Y') {
-            $('#who-approved').attr("readonly", false);
-            $('#why-not-approved').attr("readonly", true);
-        } else {
-            $('#why-not-approved').attr("readonly", false);
-            $('#who-approved').attr("readonly", true);
-        }
-    });
-
-
-});
 
 </script>
     <style type='text/css'>
@@ -316,7 +338,9 @@
                                     <label for='file-name'> File name (without File:) </label>
                                 </td>
                                 <td>
-                                    File:<input id='file-name' name='file-name' value='' type='text' size='50' required />
+                                    <div id='uploadfilenames'>
+                                    <div>File:<input id='file-name' name='file-name' value='' type='text' size='50' required /><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/></div>
+                                </div>
                                 </td>
                             </tr>
                             <tr>
@@ -483,7 +507,9 @@
                     <fieldset>
                         <legend> The file </legend>
                         <input type='hidden' name='MAX_FILE_SIZE' value='52428800' />
-                        <p> Image taken down <input name='takedown-file1' type='file' required/></p>
+                        <div id='uploadfiles'>
+                            <div> Image taken down: <input name='takedown-file1' type='file' required/></div>
+                        </div>
                         <input type='submit' value='Process takedown and send to NCMEC'>
                     </fieldset>
                 </form>
