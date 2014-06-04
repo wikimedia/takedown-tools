@@ -206,6 +206,7 @@ $mwtoken = $usertable['mwtoken'];
 			foreach ( $headers as $header ) {
 				if ( stripos( $header, 'Location:' ) !== false ) {
 					$locationURL = substr( $header, 10 );
+					$locationURL = trim( $locationURL );
 				}
 			}
 		}
