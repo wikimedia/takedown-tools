@@ -85,17 +85,14 @@
             }
         });
 
-        var uploadewrapper = $('#uploadfiles');
         var filenamewrapper = $('#uploadfilenames');
         var uploadadder = $('#uploadmorefiles');
-        var uploadremover = $('#donotuploadfile');
         var uploadnum = 1;
 
         $(uploadadder).click(function (e)
         {
 
-            $(uploadewrapper).append('<div class=\'addition'+uploadnum+'\' > Image taken down: <input name=\'takedown-file[]\' type=\'file\' required/><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
-            $(filenamewrapper).append('<div class=\'addition'+uploadnum+'\' > File:<input class=\'addition'+uploadnum+'\' id=\'file-name\' name=\'file-name[]\' value=\'\' type=\'text\' size=\'50\' required /><img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/></div>');
+            $(filenamewrapper).append('<div class=\'addition'+uploadnum+'\' > <img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/>File:<input class=\'addition'+uploadnum+'\' id=\'file-name\' name=\'file-name[]\' value=\'\' type=\'text\' size=\'50\' required /><input name=\'takedown-file[]\' type=\'file\' required/></div>');
             uploadnum++;
 
         });
@@ -339,7 +336,7 @@
                                 </td>
                                 <td>
                                     <div id='uploadfilenames'>
-                                    <div>File:<input id='file-name' name='file-name' value='' type='text' size='50' required /><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/></div>
+                                    <div><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/>File:<input id='file-name' name='file-name' value='' type='text' size='50' required /><input name='takedown-file[]' type='file' required/></div>
                                 </div>
                                 </td>
                             </tr>
@@ -503,13 +500,6 @@
                     <fieldset>
                         <legend> Additional Information (CU data, other info we may have etc) </legend>
                         <textarea name='comments' wrap='virtual' rows='18' cols='70'></textarea>
-                    </fieldset>
-                    <fieldset>
-                        <legend> The file </legend>
-                        <input type='hidden' name='MAX_FILE_SIZE' value='52428800' />
-                        <div id='uploadfiles'>
-                            <div> Image taken down: <input name='takedown-file1' type='file' required/></div>
-                        </div>
                         <input type='submit' value='Process takedown and send to NCMEC'>
                     </fieldset>
                 </form>
