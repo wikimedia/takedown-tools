@@ -92,7 +92,7 @@
         $(uploadadder).click(function (e)
         {
 
-            $(filenamewrapper).append('<div class=\'addition'+uploadnum+'\' > <img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/>File:<input class=\'addition'+uploadnum+'\' id=\'file-name\' name=\'file-name[]\' value=\'\' type=\'text\' size=\'50\' required /><input name=\'takedown-file[]\' type=\'file\' required/></div>');
+            $(filenamewrapper).append('<div class=\'addition'+uploadnum+'\' > <img class=\'removefield\' src=\'/images/Emblem-multiply.svg\' width=\'20px\' title=\'remove field\'/>File:<input class=\'addition'+uploadnum+'\' id=\'file-name\' name=\'file-names[]\' value=\'\' type=\'text\' size=\'50\' required /><input name=\'takedown-files[]\' type=\'file\' required/></div>');
             uploadnum++;
 
         });
@@ -336,7 +336,7 @@
                                 </td>
                                 <td>
                                     <div id='uploadfilenames'>
-                                    <div><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/>File:<input id='file-name' name='file-name' value='' type='text' size='50' required /><input name='takedown-file[]' type='file' required/></div>
+                                    <div><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/>File:<input id='file-name' name='file-names[]' value='' type='text' size='50' required /><input name='takedown-files[]' type='file' required/></div>
                                 </div>
                                 </td>
                             </tr>
