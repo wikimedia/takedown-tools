@@ -404,8 +404,9 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 					$location = $siteurl.'/wiki/'.$result['title'];
 					if ( isset( $result['sectiontitle'] ) ) {
 						$location = $location.'#'.$result['sectiontitle'];
+						$location = json_encode( utf8_encode( $location ) );
 					}
-					echo '<script> $("#results").append("<tr><td><a href=\''.$location.'\' target=\'_blank\'>'.$location.'</a></td></tr>");</script>';
+					echo '<script> $("#results").append("<tr><td><a href=\''.htmlentities( $location, ENT_QUOTES ).'\' target=\'_blank\'>'.$location.'</a></td></tr>");</script>';
 					flush();
 					if ( isset( $result['snippet'] ) ) {
 						echo '<script> $("#results").append("<tr><td>'.$result['snippet'].'</td></tr>");</script>';
