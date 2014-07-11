@@ -32,6 +32,9 @@
 							<li id='global-search-form'>
 								<a href="/standalone/globalsearch.php"> Global search </a>
 							</li>
+							<li id='global-page-text'>
+								<a href='/standalone/globalpagetext.php'>Global page text </a>
+							</li>
 						</ul>
 					</div>
 				</div>
