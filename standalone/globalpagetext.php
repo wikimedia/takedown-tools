@@ -20,8 +20,7 @@ ini_set('max_execution_time', 300);
 
 // cast config and log variables
 $config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );
-//$user = $_SERVER['PHP_AUTH_USER'];
-$user ='jalexander';
+$user = $_SERVER['PHP_AUTH_USER'];
 $dbaddress = $config['database_address'];
 $dbuser = $config['database_user'];
 $dbpw = $config['database_password'];
