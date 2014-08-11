@@ -60,6 +60,9 @@ $takedown_date = !isset( $_POST['takedown-date'] ) ? null : $_POST['takedown-dat
 $action_taken = !isset( $_POST['action-taken'] ) ? null : $_POST['action-taken'];
 $takedown_title = !isset( $_POST['takedown-title'] ) ? null : $_POST['takedown-title'];
 $commons_title = !isset( $_POST['takedown-commons-title'] ) ? null : $_POST['takedown-commons-title'];
+if ( !$commons_title ) {
+	$commons_title = !isset( $_POST['takedown-enwiki-title'] ) ? null : $_POST['takedown-enwiki-title'];
+}
 $wmfwiki_title = !isset( $_POST['takedown-wmf-title'] ) ? null : $_POST['takedown-wmf-title'];
 $takedown_method = !isset( $_POST['takedown-method'] ) ? null : $_POST['takedown-method'];
 $takedown_subject = !isset( $_POST['takedown-subject'] ) ? null : $_POST['takedown-subject'];
