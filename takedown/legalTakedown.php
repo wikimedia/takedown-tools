@@ -338,12 +338,12 @@
 									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for the Commons announcement.'/>
 								</td>
 							</tr>
-							<tr class='enwikionly'>
+							<tr class='enwikionly' style="display:none;">
 								<td class='lca-label'>
-									<label for='takedown-commons-title'>Takedown Title</label>
+									<label for='takedown-enwiki-title'>Takedown Title</label>
 								</td>
 								<td>
-									<input id='takedown-commons-title' name='takedown-commons-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for general announcements, typically the name of the painting or artist or company involved.'/>
+									<input id='takedown-enwiki-title' name='takedown-enwiki-title' type='text' value='' size='50' required/> <img class='showTooltip' src='/images/20px-Help.png' title='The title to use for general announcements, typically the name of the painting or artist or company involved.'/>
 								</td>
 							</tr>
 							<tr>
