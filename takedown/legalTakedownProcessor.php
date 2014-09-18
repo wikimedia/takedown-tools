@@ -355,9 +355,8 @@ function edittalkpage(username,divid,responseid) {
 						<tr>
 							<td>
 								<textarea name='takedown-body-wmf' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'><?php
-echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><nowiki>".PHP_EOL.
+echo PHP_EOL.
 	$takedown_text.PHP_EOL.
-	"</nowiki></div>".PHP_EOL.
 	"[[Category:DMCA ".date( "Y" )."]]";?>
 								</textarea>
 							</td>
@@ -398,7 +397,7 @@ echo "<div class='mw-code' style='white-space: pre; word-wrap: break-word;'><now
 
 <?php
 echo "=== ".$commons_title." ===
-In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]].&ensp" : "" )."
+In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]]." : "" )."
 
 Affected file(s):
 ";
@@ -441,8 +440,8 @@ Thank you! ~~~~ "
 								<textarea id='commonsvppost' name='commons-dmca-post' wrap='virtual' rows='18' cols='90' style='border:1px solid black;'>
 
 <?php
-echo "=== Notification of DMCA takedown demand - ".$commons_title." ===
-In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]].&ensp" : "" )."
+echo "== Notification of DMCA takedown demand - ".$commons_title." ==
+In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]'s legal counsel, one or more files have been deleted from Commons.  Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. If you have valid grounds for a counter-claim under the DMCA, please contact me.".( !empty( $wmfwiki_title ) ? "The takedown can be read [[:wmf:".$wmfwiki_title."|here]]." : "" )."
 
 Affected file(s):
 ";
