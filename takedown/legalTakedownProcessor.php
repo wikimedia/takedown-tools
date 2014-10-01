@@ -621,7 +621,7 @@ Sincerely,
 			';
 		}
 		if ( !isset( $locationURL ) ) {
-			$locationURL = 'This takedown was not sent to Chilling Effects';
+			$locationURL = null;
 		}
 		$notedata['description'] = '
 		Foundation Wiki Takedown Post: https://www.wikimediafoundation.org/wiki/'.htmlentities( str_replace( ' ', '_', $wmfwiki_title ) ).'
