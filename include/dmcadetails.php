@@ -21,7 +21,7 @@ if ( $ce_url ) {
 				<td>
 					<?php
 if ( $ce_url ) {
-	echo htmlspecialchars( $ce_url );
+	echo '<a target="_blank" href="'.htmlspecialchars( $ce_url ).'">'.htmlspecialchars( $ce_url ).'</a></br>';
 } else { echo 'You do not appear to have sent anything to CE';}?>
 				</td>
 			</tr>
