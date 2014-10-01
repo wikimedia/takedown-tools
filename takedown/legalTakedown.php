@@ -144,6 +144,7 @@
 		<div id='column-content'>
 			<div id='content'>
 				<h1> Legal Takedown </h1>
+				<a href="/takedown/CEonlyTakedown.php"> [ Switch to form that does not post on wiki ] </a> <img class='showTooltip' src='/images/20px-Help.png' title='The form you are on is for logging notices which are being posted on wiki (this is the "normal" way). However you can switch forms if you do not want to post the takedown, for example if you are updating an older log entry or notices that we did not act on.'/>
 				<br />
 				<form method='post' action='legalTakedownProcessor.php' id='takedown-form1' enctype='multipart/form-data'>
 					<fieldset>
