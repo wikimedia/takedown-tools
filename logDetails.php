@@ -158,6 +158,23 @@ if ( $drillto ) {
 		}
 	}
 
+	if ( $logType === 'Log update' ) {
+		$detailLookup = 'SELECT * FROM logupdates WHERE log_id='.$drillto;
+		$detailResults = $mysql->query( $detailLookup );
+
+		if ( $detailResults === false ) {
+			echo 'Error while querying: ' . $detailResults . ' Error text: ' . $mysql->error, E_USER_ERROR;
+		}
+
+		if ( $detailResults->num_rows > 0 ) {
+			$logDetails = $detailResults->fetch_assoc();
+			$detailsavailable = true;
+			$redirectid=$logDetails['old_log'];
+			$redirectURL = $config['toolsurl'].'logDetails.php?logid='.$redirectid;
+			header( 'Location: '.$redirectURL );
+		}
+	}
+
 	$mysql->close();
 }
 
