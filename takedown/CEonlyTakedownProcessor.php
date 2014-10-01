@@ -281,7 +281,7 @@ if ( !empty( $pagesarray ) ) {
 					'address_line_1' => $sender_address1,
 					'address_line_2' => $sender_address2,
 					'city' => $sender_city,
-					'state' => $sender_city,
+					'state' => $sender_state,
 					'zip' => $sender_zip,
 					'country_code' => $sender_country,
 				),
