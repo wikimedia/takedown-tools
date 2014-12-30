@@ -63,7 +63,7 @@
 	    	} else {
 	    		$('.commonsonly').hide();
 	    	}
-	    	if ( $('select#project option:selected').val() == 'enwiki' ) {
+	    	if ( $('select#project option:selected').val() == 'enwiki' || $('select#project option:selected').val() == 'wmfwiki') {
 	    		$('.enwikionly').show();
 	    	} else {
 	    		$('.enwikionly').hide();
@@ -185,6 +185,7 @@
 									<select id='project' name='project'>
 										<option value='commons' selected>Wikimedia Commons</option>
 										<option value='enwiki'>English Wikipedia</option>
+										<option value='wmfwiki'>Wikimedia Foundation</option>
 									</select>
 								</td>
 							</tr>

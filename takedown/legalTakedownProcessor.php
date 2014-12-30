@@ -71,6 +71,8 @@ $project_involved = !isset( $_POST['project'] ) ? null : $_POST['project'];
 
 if ( $project_involved == 'enwiki' ) {
 	$linkbase = 'https://en.wikipedia.org';
+} elseif ( $project_involved == 'wmfwiki' ) {
+	$linkbase = 'https://wikimediafoundation.org';
 } else {
 	$linkbase = 'https://commons.wikimedia.org';
 }
