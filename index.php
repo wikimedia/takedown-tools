@@ -48,7 +48,8 @@
 					<img style="display:block; margin:auto;" width="500px" src="/images/Roryshieldlogo.png" />
 					<u> LCA Tools </u> <br />
 					<a href="standalone/globalsearch.php"> Global search (ALPHA) </a> <br />
-					<a href='/standalone/globalpagetext.php'>Global page text (ALPHA) </a> <br /> <br />
+					<a href='/standalone/globalpagetext.php'>Global page text (ALPHA) </a> <br />
+					<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a> <br /> <br />
 					<u> Reporting forms </u> <br />
 					<a href="takedown/legalTakedown.php">DMCA Takedown Form</a> <br />
 					<a href="childprotection/NCMECreporting.php"> Child Protection Takedown Form </a> <br />
@@ -56,7 +57,8 @@
 
 					<u> 'special' pages </u> <br />
 					<a href="centralLog.php"> Central submission Log </a> <br />
-					<a href="childprotection/NCMECretract.php"> NCMEC report retraction form </a> <br /> <br />
+					<a href="childprotection/NCMECretract.php"> NCMEC report retraction form </a> <br />
+					<a href='/2015 Strategy/Datapullprocess.php'> Populate 2015 comment database </a> <br /> <br />
 
 					<u> Mediawiki OAuth </u> <br />
 					<a href="mwoauth/beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a> <br />
