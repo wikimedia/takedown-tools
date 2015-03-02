@@ -198,8 +198,8 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 				<h1> 2015 Strategy Comments </h1>
 				<fieldset>
 					<legend>Options</legend>
-					<p> Only IPs have a country set, any filter that limits to country ( or the All (no logged in) setting) will eliminate logged in users. </p>
-					<p> Only logged in users have a home wiki set, any filter that limited to home wikis (or the All (no IPs) setting) will eliminate logged our users. </p>
+					<p><b> <u>Note:</u> Only IPs have a country set, any filter that limits to country ( or the All (no logged in) setting) will eliminate logged in users. </b></p>
+					<p> <b><u>Note:</u> Only logged in users have a home wiki set, any filter that limited to home wikis (or the All (no IPs) setting) will eliminate logged our users. </b></p>
 					<p> Any questions or weird data issues can be directed to jalexander@wikimedia.org </p>
 					<form method='GET'>
 						<table border='0'>
