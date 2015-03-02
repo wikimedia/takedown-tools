@@ -3,3 +3,4 @@ lcaToolsConfig.ini
 .htaccess
 configs/lcatoolskey.pem
 configs/lcatoolskey.pub
+.DS_Store
