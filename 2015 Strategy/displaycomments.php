@@ -338,7 +338,7 @@ while ( ( $row = $results->fetch_assoc() ) && ( $i < $limit ) ) {
 				</fieldset>
 			</div>
 		</div>
-			<?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
+			<?php include 'lcapage-strategy.php'; ?>
 		</div>
 	</body>
 </html>
