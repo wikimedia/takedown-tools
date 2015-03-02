@@ -337,7 +337,7 @@
                                 <td>
                                     <div id='uploadfilenames'>
                                     <div><img id='uploadmorefiles' src='/images/List-add.svg' width='20px' title='add a user field'/>File:<input id='file-name' name='file-names[]' value='' type='text' size='50' required /><input name='takedown-files[]' type='file' required/></div>
-                                </div>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
