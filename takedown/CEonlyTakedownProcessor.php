@@ -217,7 +217,7 @@ if ( !empty( $pagesarray ) ) {
 								print of json for CE
 							</td>
 							<td>
-								<textarea><?php echo json_encode( $CE_post_data, JSON_PRETTY_PRINT );?></textarea>
+								<textarea><?php echo json_encode( $CE_post_data, JSON_UNESCAPED_SLASHES );?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -241,11 +241,11 @@ if ( !empty( $pagesarray ) ) {
 
 				$tempfile = array();
 				$tempfile['kind'] = 'original';
-				$tempfile['file_name'] = $_FILES['takedown-files']['name'][$key];
 				$datatemp = file_get_contents( $_FILES['takedown-files']['tmp_name'][$key] );
 				$datatemp = base64_encode( $datatemp );
 				$uri = 'data:'.$_FILES['takedown-files']['type'][$key].';base64,'.$datatemp;
 				$tempfile['file'] = $uri;
+				$tempfile['file_name'] = $_FILES['takedown-files']['name'][$key];
 
 				$CE_post_files[] = $tempfile;
 				$filessent[] = $_FILES['takedown-files']['name'][$key];

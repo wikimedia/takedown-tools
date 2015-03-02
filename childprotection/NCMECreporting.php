@@ -214,7 +214,7 @@
                                         <option value='19'>19</option>
                                         <option value='20'>20</option>
                                         <option value='21'>21</option>
-                                        <option value='22'>24</option>
+                                        <option value='22'>22</option>
                                         <option value='23'>23</option>
                                     </select>
                                     <select id='access-time-min' name='access-time-min' required>
