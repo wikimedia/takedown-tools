@@ -153,7 +153,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 <html xmlns='http://www.w3.org/1999/xhtml' lang='en-US' xml:lang='en-US'>
 <head>
 	<link rel='shortcut icon' href='/images/favicon.ico'/>
-	<title>LCA Tools Central Log</title>
+	<title>LCA Tools - 2015 Strategy Comments</title>
 	<meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
 	<script src='/scripts/jquery-1.10.2.min.js'></script>
 	<script src='/scripts/lca.js'></script>
