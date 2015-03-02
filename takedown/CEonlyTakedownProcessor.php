@@ -110,6 +110,105 @@ if ( !empty( $pagesarray ) ) {
 	}
 }
 
+// Set up file uploads if they exist.
+		if ( is_uploaded_file( $_FILES['takedown-files']['tmp_name'][0] ) ) {
+
+			foreach ( $_FILES['takedown-files']['tmp_name'] as $key => $value ) {
+
+				$tempfile = array();
+				$tempfile['kind'] = 'original';
+				$tempfile['file_name'] = $_FILES['takedown-files']['name'][$key];
+				$datatemp = file_get_contents( $_FILES['takedown-files']['tmp_name'][$key] );
+				$datatemp = base64_encode( $datatemp );
+				$uri = 'data:'.$_FILES['takedown-files']['type'][$key].';base64,'.$datatemp;
+				$tempfile['file'] = $uri;
+
+				$CE_post_files[] = $tempfile;
+				$filessent[] = $_FILES['takedown-files']['name'][$key];
+			}
+
+		}
+
+		// Set up initial post data for Chilling Effects
+		$CE_post_data = array (
+			'authentication_token' => $config['CE_apikey'],
+			'notice' => array (
+				'title' => $takedown_title,
+				'type' => $_POST['ce-report-type'],
+				'subject' => $takedown_subject,
+				'date_sent' => $takedown_date,
+				'source' => $takedown_method,
+				'action_taken' => $action_taken,
+				'body' => $takedown_text,
+				'tag_list' => 'wikipedia, wikimedia',
+				'jurisdiction_list' => 'US, CA',
+			),
+		);
+
+		$CE_post_entities = array (
+			array (
+				'name' => 'recipient',
+				'entity_attributes' => $config['CE_recipient'],
+			),
+			array (
+				'name' => 'sender',
+				'entity_attributes' => array (
+					'name' => $sender_name,
+					'address_line_1' => $sender_address1,
+					'address_line_2' => $sender_address2,
+					'city' => $sender_city,
+					'state' => $sender_state,
+					'zip' => $sender_zip,
+					'country_code' => $sender_country,
+				),
+			),
+		);
+
+		$CE_post_data['notice']['entity_notice_roles_attributes'] = $CE_post_entities;
+
+		if ( !empty( $linksarray ) ) {
+
+			foreach ( $linksarray as $key => $value ) {
+				$urlarray[] = array ( 'url' => $value );
+			}
+			$CE_post_works[] = array (
+				'infringing_urls_attributes' => $urlarray,
+			);
+		}
+
+		$CE_post_data['notice']['works_attributes'] = $CE_post_works;
+
+		if ( !empty( $CE_post_files ) ) {
+			$CE_post_data['notice']['file_uploads_attributes'] = $CE_post_files;
+		}
+
+		$CE_post = json_encode( $CE_post_data, JSON_UNESCAPED_SLASHES );
+
+		$apiurl = $linkbase.'/w/api.php';
+		$usertable = getUserData( $user );
+		$mwsecret = $usertable['mwsecret'];
+		$mwtoken = $usertable['mwtoken'];
+
+		// Set up headers for Chilling Effects submission
+		$CE_post_headers = array (
+			'Accept: application/json',
+			'Content-Type: application/json',
+			'Content-Length: ' . strlen( $CE_post ),
+		);
+
+		// send to Chilling Effects
+		if ( $sendtoCE && $formsendtoCE ) {
+			$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
+
+			$headers = explode( "\n", $result );
+			foreach ( $headers as $header ) {
+				if ( stripos( $header, 'Location:' ) !== false ) {
+					$locationURL = substr( $header, 10 );
+					$locationURL = trim( $locationURL );
+				}
+			}
+		}
+
 
 
 ?>
@@ -217,7 +316,7 @@ if ( !empty( $pagesarray ) ) {
 								print of json for CE
 							</td>
 							<td>
-								<textarea><?php echo json_encode( $CE_post_data, JSON_PRETTY_PRINT );?></textarea>
+								<textarea><?php echo $CE_post; ?></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -225,7 +324,7 @@ if ( !empty( $pagesarray ) ) {
 								Print of response from CE
 							</td>
 							<td>
-								<textarea><?php echo print_r( $result );?></textarea>
+								<textarea><?php echo $result;?></textarea>
 					</table>
 				</fieldset>
 			</div>
@@ -234,104 +333,6 @@ if ( !empty( $pagesarray ) ) {
 		</div>
 		<?php
 
-		// Set up file uploads if they exist.
-		if ( is_uploaded_file( $_FILES['takedown-files']['tmp_name'][0] ) ) {
-
-			foreach ( $_FILES['takedown-files']['tmp_name'] as $key => $value ) {
-
-				$tempfile = array();
-				$tempfile['kind'] = 'original';
-				$tempfile['file_name'] = $_FILES['takedown-files']['name'][$key];
-				$datatemp = file_get_contents( $_FILES['takedown-files']['tmp_name'][$key] );
-				$datatemp = base64_encode( $datatemp );
-				$uri = 'data:'.$_FILES['takedown-files']['type'][$key].';base64,'.$datatemp;
-				$tempfile['file'] = $uri;
-
-				$CE_post_files[] = $tempfile;
-				$filessent[] = $_FILES['takedown-files']['name'][$key];
-			}
-
-		}
-
-		// Set up initial post data for Chilling Effects
-		$CE_post_data = array (
-			'authentication_token' => $config['CE_apikey'],
-			'notice' => array (
-				'title' => $takedown_title,
-				'type' => $_POST['ce-report-type'],
-				'subject' => $takedown_subject,
-				'date_sent' => $takedown_date,
-				'source' => $takedown_method,
-				'action_taken' => $action_taken,
-				'body' => $takedown_text,
-				'tag_list' => 'wikipedia, wikimedia',
-				'jurisdiction_list' => 'US, CA',
-			),
-		);
-
-		$CE_post_entities = array (
-			array (
-				'name' => 'recipient',
-				'entity_attributes' => $config['CE_recipient'],
-			),
-			array (
-				'name' => 'sender',
-				'entity_attributes' => array (
-					'name' => $sender_name,
-					'address_line_1' => $sender_address1,
-					'address_line_2' => $sender_address2,
-					'city' => $sender_city,
-					'state' => $sender_state,
-					'zip' => $sender_zip,
-					'country_code' => $sender_country,
-				),
-			),
-		);
-
-		$CE_post_data['notice']['entity_notice_roles_attributes'] = $CE_post_entities;
-
-		if ( !empty( $linksarray ) ) {
-
-			foreach ( $linksarray as $key => $value ) {
-				$urlarray[] = array ( 'url' => $value );
-			}
-			$CE_post_works[] = array (
-				'infringing_urls_attributes' => $urlarray,
-			);
-		}
-
-		$CE_post_data['notice']['works_attributes'] = $CE_post_works;
-
-		if ( !empty( $CE_post_files ) ) {
-			$CE_post_data['notice']['file_uploads_attributes'] = $CE_post_files;
-		}
-
-		$CE_post = json_encode( $CE_post_data );
-
-		$apiurl = $linkbase.'/w/api.php';
-		$usertable = getUserData( $user );
-		$mwsecret = $usertable['mwsecret'];
-		$mwtoken = $usertable['mwtoken'];
-
-		// Set up headers for Chilling Effects submission
-		$CE_post_headers = array (
-			'Accept: application/json',
-			'Content-Type: application/json',
-			'Content-Length: ' . strlen( $CE_post ),
-		);
-
-		// send to Chilling Effects
-		if ( $sendtoCE && $formsendtoCE ) {
-			$result = curlAPIpost( $config['CE_apiurl'], $CE_post, $CE_post_headers );
-
-			$headers = explode( "\n", $result );
-			foreach ( $headers as $header ) {
-				if ( stripos( $header, 'Location:' ) !== false ) {
-					$locationURL = substr( $header, 10 );
-					$locationURL = trim( $locationURL );
-				}
-			}
-		}
 
 
 
@@ -340,9 +341,13 @@ if ( !empty( $pagesarray ) ) {
 			if ( isset( $locationURL ) ) {
 				echo "<script> $('#celink').html('The DMCA Takedown was sent to Chilling Effects and you can find the submission at <a href=\'".$locationURL."\' target=\'_blank\'>".$locationURL."</a>');</script>".PHP_EOL;
 				echo "<script> $('#senttoce').attr('src', '/images/Dialog-accept.svg'); </script>".PHP_EOL;
-			} 
+			} else {
+				echo "<script> $('#celink').html('It does not appear that a report was sent to Chilling Effects but you tried to send one. <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE');</script>".PHP_EOL;
+				echo "<script> $('#senttoce').attr('src', '/images/Dialog-error-round.svg'); </script>".PHP_EOL;
+			}
+
 		} else {
-				echo "<script> $('#celink').html('It does not appear that a report was sent to Chilling Effects <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE');</script>".PHP_EOL;
+				echo "<script> $('#celink').html('It does not appear that a report was sent to Chilling Effects but that you didn't try too. <br /> If there is a problem please see James or look at the debug section at the button of the page for the response from CE');</script>".PHP_EOL;
 				echo "<script> $('#senttoce').attr('src', '/images/Dialog-error-round.svg'); </script>".PHP_EOL;
 			}
 

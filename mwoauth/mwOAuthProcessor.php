@@ -147,6 +147,32 @@ case 'appendtext':
 		break;
 	}
 
+case 'fullpageedit':
+	$pagetitle = $_POST['pagetitle'];
+	$text = $_POST['text'];
+	$mwtoken = $_POST['mwtoken'];
+	$mwsecret = $_POST['mwsecret'];
+	$apiurl = $_POST['apiurl'];
+	$editsummary = $_POST['editsummary'];
+
+	$edittoken = getEditToken( $mwtoken, $mwsecret, $apiurl );
+
+	if ( $edittoken ) {
+		$apiParams = array(
+			'action' => 'edit',
+			'format' => 'json',
+			'title' => $pagetitle,
+			'appendtext' => $text,
+			'summary' => $editsummary,
+			'recreate' => 'true',
+			'token' => $edittoken,
+		);
+
+		$result = mwOAuthpost( $mwtoken, $mwsecret, $apiurl, $apiParams );
+		echo $result;
+		break;
+	}
+
 default:
 	echo json_encode( 'you appear to have sent an unrecogized action option, please contact the developer or hit yourself if you are said developer' );
 	break;
