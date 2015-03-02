@@ -53,6 +53,12 @@ while ( $hrow = $homequery->fetch_assoc() ) {
 	$homewikis[] = $hrow['homewiki'];
 }
 
+$lastupdaterequest = 'SELECT timestamp FROM strategycomments ORDER BY timestamp DESC LIMIT 1';
+
+$lastupdatequery = $mysql->query( $lastupdaterequest );
+$lastupdatearray = $lastupdatequery->fetch_assoc();
+$lastupdate = $lastupdatearray['timestamp'];
+
 
 $sql = 'Select * FROM strategycomments'; // basic query
 
@@ -200,6 +206,7 @@ $backurl = $_SERVER['PHP_SELF'].'?'.$backquery;
 					<legend>Options</legend>
 					<p><b> <u>Note:</u> Only IPs have a country set, any filter that limits to country ( or the All (no logged in) setting) will eliminate logged in users. </b></p>
 					<p> <b><u>Note:</u> Only logged in users have a home wiki set, any filter that limited to home wikis (or the All (no IPs) setting) will eliminate logged our users. </b></p>
+					<p><b><u>Last update:</u></b> <? echo $lastupdate; ?> UTC (data does not include current UTC day)</p>
 					<p> Any questions or weird data issues can be directed to jalexander@wikimedia.org </p>
 					<form method='GET'>
 						<table border='0'>
