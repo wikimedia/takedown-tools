@@ -297,6 +297,16 @@ foreach ( $homewikis as $key => $value ) {
 							</tr>
 						</table>
 					</form>
+					<table>
+						<tr>
+							<td>
+								<u><b> Download options (not filtered)</b></u>:
+							</td>
+							<td>
+								<a href='downloaddata.php?data=metadata' target='_blank'>Meta data only </a> - <a href='downloaddata.php?data=comments' target='_blank'> Comments only </a> - <a href='downloaddata.php?data=all' target='_blank'>All data </a>
+							</td>
+						</tr>
+					</table>
 				</fieldset>
 				<fieldset>
 					<legend>Log data </legend>
