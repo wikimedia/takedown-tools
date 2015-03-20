@@ -151,6 +151,10 @@ $CE_post_data = array (
 
 $CE_post_entities = array (
 	array (
+		'name' => 'submitter',
+		'entity_attributes' => $config['CE_recipient'],
+	),
+	array (
 		'name' => 'recipient',
 		'entity_attributes' => $config['CE_recipient'],
 	),
