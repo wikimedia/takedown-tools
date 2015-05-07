@@ -49,6 +49,7 @@
 					<u> LCA Tools </u> <br />
 					<a href="standalone/globalsearch.php"> Global search (ALPHA) </a> <br />
 					<a href='/standalone/globalpagetext.php'>Global page text (ALPHA) </a> <br />
+					<a href="standalone/globallinks.php"> Global link search (ALPHA) </a> <br />
 					<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a> <br /> <br />
 					<u> Reporting forms </u> <br />
 					<a href="takedown/legalTakedown.php">DMCA Takedown Form</a> <br />

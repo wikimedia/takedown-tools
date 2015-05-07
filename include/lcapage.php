@@ -35,6 +35,9 @@
 							<li id='global-page-text'>
 								<a href='/standalone/globalpagetext.php'>Global page text </a>
 							</li>
+							<li id='global-link-search'>
+								<a href='/standalone/globallinks.php'>Global link search </a>
+							</li>
 							<li id='2015-strategy-view'>
 								<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a>
 							</li>
