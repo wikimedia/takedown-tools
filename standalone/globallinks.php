@@ -238,7 +238,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 					echo '<script> $("#'.$dbname.'").append("<tr><td>'.$namespacefound.'</td><td><a href=\''.$titleurl.'\' target=\'_blank\'>'.$title.'</a></td><td>'.$urlfound.'</td></tr>");</script>';
 					flush();
 				}
-				if ( array_key_exists('continue', $response ) && array_key_exists( 'action', $response['continue'] ) ) {
+				if ( array_key_exists('continue', $response ) && array_key_exists( 'euoffset', $response['continue'] ) ) {
 				$offset = $response['continue']['euoffset'];
 				$request['euoffset'] = $offset;
 				//FIXME DONT USE GOTO
