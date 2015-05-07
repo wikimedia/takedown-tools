@@ -87,7 +87,7 @@ function getEditToken( $mwtoken, $mwsecret, $apiurl, &$ch = null ) {
 if ( $action ) {
 switch ( $action ) {
 case 'none':
-	echo json_encode( 'you appear to not actually asked me to do anything ......' );
+	echo json_encode( 'you appear to have not actually asked me to do anything ......' );
 	break;
 
 case 'newsection':
