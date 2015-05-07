@@ -46,6 +46,8 @@ if ( isset( $_POST['searchfor'] ) ) {
 	$searchproto = null;
 }
 
+$t = 0;
+
 ?>
 
 
@@ -177,6 +179,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 	}
 
 	foreach ( $sites as $key => $sitearray ) {
+		$s = 0;
 		$apiurl = makehttps( $sitearray['url'] ).'/w/api.php';
 		$siteurl = makehttps( $sitearray['url'] );
 		$dbname = $sitearray['dbname'];
@@ -236,14 +239,19 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 					$namespacefound = $result['ns'];
 
 					echo '<script> $("#'.$dbname.'").append("<tr><td>'.$namespacefound.'</td><td><a href=\''.$titleurl.'\' target=\'_blank\'>'.$title.'</a></td><td>'.$urlfound.'</td></tr>");</script>';
+					$s++;
+					$t++;
 					flush();
 				}
+
 				if ( array_key_exists('continue', $response ) && array_key_exists( 'euoffset', $response['continue'] ) ) {
 				$offset = $response['continue']['euoffset'];
 				$request['euoffset'] = $offset;
 				//FIXME DONT USE GOTO
 				goto a;
 				}
+
+				echo '<script> $("#'.$dbname.'").append("<tr><th colspan=\'3\'> Total hits: '.$s.' </th></tr>");</script>';
 			} else {
 				echo '<script> $("#results").append("<tr><td colspan=\'3\'>No search results found</td></tr>");</script>';
 			}
@@ -252,7 +260,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['searchfor'] ) ) {
 		}
 
 	}
-	echo '<script> $("#results").append("<tr><th colspan=\'3\'>DONE!</th></tr>");</script>';
+	echo '<script> $("#results").append("<tr><th colspan=\'3\'>DONE! - Total hits: '.$t.' </th></tr>");</script>';
 
 } 
 ?>
