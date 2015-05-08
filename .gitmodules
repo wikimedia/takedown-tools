@@ -1,0 +1,3 @@
+[submodule "2015"]
+	path = 2015
+	url = git@github.com:jamesryanalexander/2015-Strategy.git
