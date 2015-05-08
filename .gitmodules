@@ -7,3 +7,6 @@
 [submodule "standalone"]
 	path = standalone
 	url = git@github.com:jamesryanalexander/tools-standalone.git
+[submodule "takedown"]
+	path = takedown
+	url = git@github.com:jamesryanalexander/tools-takedowns.git
