@@ -1,15 +1,12 @@
-[submodule "2015"]
-	path = 2015 Strategy/2015
-	url = git@github.com:jamesryanalexander/2015-Strategy.git
 [submodule "2015 Strategy"]
 	path = 2015 Strategy
-	url = git@github.com:jamesryanalexander/2015-Strategy.git
+	url = https://github.com/jamesryanalexander/2015-Strategy.git
 [submodule "standalone"]
 	path = standalone
-	url = git@github.com:jamesryanalexander/tools-standalone.git
+	url = https://github.com/jamesryanalexander/tools-standalone.git
 [submodule "takedown"]
 	path = takedown
-	url = git@github.com:jamesryanalexander/tools-takedowns.git
+	url = https://github.com/jamesryanalexander/tools-takedowns.git
 [submodule "childprotection"]
 	path = childprotection
-	url = git@github.com:jamesryanalexander/tools-childprotection.git
+	url = https://github.com/jamesryanalexander/tools-childprotection.git
