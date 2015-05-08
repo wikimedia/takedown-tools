@@ -10,3 +10,6 @@
 [submodule "takedown"]
 	path = takedown
 	url = git@github.com:jamesryanalexander/tools-takedowns.git
+[submodule "childprotection"]
+	path = childprotection
+	url = git@github.com:jamesryanalexander/tools-childprotection.git
