@@ -4,3 +4,6 @@
 [submodule "2015 Strategy"]
 	path = 2015 Strategy
 	url = git@github.com:jamesryanalexander/2015-Strategy.git
+[submodule "standalone"]
+	path = standalone
+	url = git@github.com:jamesryanalexander/tools-standalone.git
