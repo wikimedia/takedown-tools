@@ -12,8 +12,8 @@ SugarCRM oAuth processor for LCA Tools [to be used for ajax queries]
 
 ---------------------------------------------   */
 
-require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
-require_once dirname( __FILE__ ) . '/../include/sugar.class.php';
+require_once dirname( __FILE__ ) . '/../core-include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../core-include/sugar.class.php';
 date_default_timezone_set( 'UTC' );
 
 $config = parse_ini_file( dirname( __FILE__ ) . '/../lcaToolsConfig.ini' );

@@ -12,7 +12,7 @@ Show details of submitted entries (accessed by clicking on log title)
 
 ---------------------------------------------   */
 
-require_once 'include/multiuseFunctions.php';
+require_once 'core-include/multiuseFunctions.php';
 date_default_timezone_set( 'UTC' );
 
 $config = parse_ini_file( 'lcaToolsConfig.ini' );
@@ -218,17 +218,17 @@ if ( !$detailsavailable ) {
 					</ul>
 					<p> You can get back to the log by clicking <a href="centralLog.php">HERE</a>';
 } elseif ( $logType == 'Release' ) {
-	include 'include/releaseDetail.php';
+	include 'project-include/releaseDetail.php';
 } elseif ( $logType == 'Child Protection' ) {
-	include 'include/ncmecdetail.php';
+	include 'project-include/ncmecdetail.php';
 } elseif ( $logType == 'DMCA' ) {
-	include 'include/dmcadetails.php';
+	include 'project-include/dmcadetails.php';
 } else { echo var_dump( $logDetails ); }
 
 ?>
 				</div>
 			</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include 'project-include/page.php'; ?>
 		</div>
 	</body>
 </html>

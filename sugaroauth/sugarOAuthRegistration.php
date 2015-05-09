@@ -1,7 +1,7 @@
 <?php
 
-require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
-require_once dirname( __FILE__ ) . '/../include/sugar.class.php';
+require_once dirname( __FILE__ ) . '/../core-include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../core-include/sugar.class.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
@@ -85,7 +85,7 @@ if ( $usertable['sugartoken'] ) {
 					</form>
 			</div>
 	    </div>
-	        <?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
+	        <?php include dirname( __FILE__ ) . '/../project-include/page.php'; ?>
 	</div>
 </body>
 </html>

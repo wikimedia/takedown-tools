@@ -336,7 +336,7 @@ while ( ( $row = $results->fetch_assoc() ) && ( $i < $limit ) ) {
 				</fieldset>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include 'project-include/page.php'; ?>
 		</div>
 	</body>
 </html>

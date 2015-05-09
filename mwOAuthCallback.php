@@ -14,10 +14,10 @@ Huge help from example cli file by Chris Steipp https://www.mediawiki.org/wiki/O
 
 ---------------------------------------------   */
 session_start();
-require_once 'include/multiuseFunctions.php';
-require_once 'include/OAuth.php';
-require_once 'include/MWOAuthSignatureMethod.php';
-require_once 'include/JWT.php';
+require_once 'core-include/multiuseFunctions.php';
+require_once 'core-include/OAuth.php';
+require_once 'core-include/MWOAuthSignatureMethod.php';
+require_once 'core-include/JWT.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
@@ -133,7 +133,7 @@ $server = $config['mw_oauthserver'];
                 </fieldset>
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include 'project-include/page.php'; ?>
 	</div>
 	<?php
 

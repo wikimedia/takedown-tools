@@ -257,7 +257,7 @@ And this is a 3rd...............a bit longer then the 2nd';
 
                 </div>
         </div>
-            <?php include(dirname( __FILE__ ) . '/../include/lcapage.php'); ?>
+            <?php include(dirname( __FILE__ ) . '/../project-include/page.php'); ?>
         </div>
         <?php
         sleep(1);

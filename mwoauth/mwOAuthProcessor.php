@@ -12,10 +12,10 @@ Mediawiki oAuth functions for LCA Tools
 
 ---------------------------------------------   */
 
-require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
-require_once dirname( __FILE__ ) . '/../include/OAuth.php';
-require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
-require_once dirname( __FILE__ ) . '/../include/JWT.php';
+require_once dirname( __FILE__ ) . '/../core-include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../core-include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../core-include/MWOAuthSignatureMethod.php';
+require_once dirname( __FILE__ ) . '/../core-include/JWT.php';
 
 date_default_timezone_set( 'UTC' );
 

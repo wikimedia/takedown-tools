@@ -9,7 +9,7 @@
  * Class for interacting with SugarCRM
  *
  */
-require_once dirname( __FILE__ ) . '/../include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../core-include/OAuth.php';
 
 class sugar {
 

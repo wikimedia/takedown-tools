@@ -13,9 +13,9 @@ Mediawiki oAuth registration page. start of process.
 Huge help from example cli file by Chris Steipp https://www.mediawiki.org/wiki/OAuth/For_Developers#PHP_demo_cli_client_with_RSA_keys
 
 ---------------------------------------------   */
-require_once dirname( __FILE__ ) . '/../include/multiuseFunctions.php';
-require_once dirname( __FILE__ ) . '/../include/OAuth.php';
-require_once dirname( __FILE__ ) . '/../include/MWOAuthSignatureMethod.php';
+require_once dirname( __FILE__ ) . '/../core-include/multiuseFunctions.php';
+require_once dirname( __FILE__ ) . '/../core-include/OAuth.php';
+require_once dirname( __FILE__ ) . '/../core-include/MWOAuthSignatureMethod.php';
 date_default_timezone_set( 'UTC' );
 
 // cast config and log variables
@@ -94,7 +94,7 @@ if ( $usertable['mwtoken'] ) {
 					</form>
 			</div>
 	    </div>
-	        <?php include dirname( __FILE__ ) . '/../include/lcapage.php'; ?>
+	        <?php include dirname( __FILE__ ) . '/../project-include/page.php'; ?>
 	</div>
 </body>
 </html>

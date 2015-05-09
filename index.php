@@ -72,11 +72,11 @@
 
 			</div>
 		</div>
-			<?php include 'include/lcapage.php'; ?>
+			<?php include 'project-include/page.php'; ?>
 		</div>
 		<?php
 flush();
-require_once 'include/multiuseFunctions.php';
+require_once 'core-include/multiuseFunctions.php';
 $config = parse_ini_file( 'lcaToolsConfig.ini' );
 $NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
 $NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
