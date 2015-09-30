@@ -203,6 +203,14 @@ class ncmec {
 
 	/**
 	 *
+	 *
+	 * @var string $api_url_test
+	 * Url to use when connecting to the API test servers.
+	 */
+	private $api_url_test;
+
+	/**
+	 *
 	 * @var string $ncmecuser
 	 * username to use with NCMEC API
 	 *
@@ -211,11 +219,27 @@ class ncmec {
 
 	/**
 	 *
+	 * @var string $ncmecuser_test
+	 * username to use with NCMEC API
+	 *
+	 */
+	private $ncmecuser_test;
+
+	/**
+	 *
 	 * @var string $ncmecpass
 	 * password to use with NCMEC API
 	 *
 	 */
 	private $ncmecpass;
+
+	/**
+	 *
+	 * @var string $ncmecpass_test
+	 * password to use with NCMEC API test system where applicable
+	 *
+	 */
+	private $ncmecpass_test;
 
 	/**
 	 * Report object
@@ -231,13 +255,37 @@ class ncmec {
 	 *
 	 * Construction class requires, at the very least, a starting api_url. 
 	 *  optionally takes a cURL resource that already exists
-	 * @param string $url url for the NCMEC api
-	 * @param resource $ch (optional) already existing cURL resource to use instead of creating one fresh.
+	 * @param mixed $logininfo 	Either an array of strings or a string that says "skip" to use singlar login info.
+	 *							Array requires the following keys:
+	 *								NCMEC_user_prod (or NCMEC_user) NCMEC username for production server
+	 *								NCMEC_password_prod (or NCMEC_password) NCMEC password for production server
+	 *								NCMEC_URL_Production (or NCMEC_URL) NCMEC API URL
+	 *							Also accepts, for the test servers:
+	 *								NCMEC_user_test
+	 *								NCMEC_password_test
+	 *								NCMEC_URL_Test
+	 * @param resource $ch (optional)	Already existing cURL resource to use instead of creating one fresh.
 	 *
 	 */
-	function __construct( string $url, resource $ch = null ) {
-		$this->api_url = $url;
+	function __construct( $logininfo, resource $ch = null ) {
+
+		if ( is_array( $logininfo) ) {
+
+			$this->login( $logininfo );
+
+		} elseif ( $logininfo === 'skip' ) {
+
+			continue;
+
+		} else {
+			
+			return 'error, no login info given and skip order not passed';
+			exit();
+
+		}
+
 		$this->getcURL( $ch );
+
 	}
 
 	/**
@@ -269,14 +317,81 @@ class ncmec {
 	*/
 	private function getcURL( resoruce $resource = null ) {
 		if ( $resource ) {
+
 			$this->ch = $resource;
+
 		} elseif ( $this->ch ) {
+
 			return $this->ch;
+
 		} else {
+
 			$this->ch = curl_init();
 			return $this->ch;
+
 		}
 	}
+
+	/**
+	 * Get username for NCMEC API, defaults to production
+	 *
+	 * @param string $type (optional) accepts 'test' to return test server username. Otherwise returns production.
+	 *
+	 * @return string Returns the username for the requested server
+	 */
+	private function getUser( $type = null ) {
+
+		if ( $type === 'test' ) {
+
+			return $this->ncmecuser_test;
+
+		} else {
+
+			return $this->ncmecuser;
+
+		}
+	}
+
+	/**
+	 * Get password for NCMEC API, defaults to production
+	 *
+	 * @param string $type (optional) accepts 'test' to return test server password. Otherwise returns production.
+	 *
+	 * @return string Returns the password for the requested server
+	 */
+	private function getPass( $type = null ) {
+
+		if ( $type === 'test' ) {
+
+			return $this->ncmecpass_test;
+
+		} else {
+
+			return $this->ncmecpass;
+
+		}
+	}
+
+	/**
+	 * Get url for NCMEC API, defaults to production
+	 *
+	 * @param string $type (optional) accepts 'test' to return test server url. Otherwise returns production.
+	 *
+	 * @return string Returns the url for the requested server
+	 */
+	private function getapiurl( $type = null ) {
+
+		if ( $type === 'test' ) {
+
+			return $this->api_url_test;
+
+		} else {
+
+			return $this->api_url;
+
+		}
+	}
+
 
 	/*************************************************************************************
 
@@ -294,7 +409,7 @@ class ncmec {
 	 * @return $response the response from the call itself.
 	 *
 	 */
-	public function basicpost( array $data ) {
+	private function basicpost( array $data ) {
 
 	$ch = $this->getcURL;
 	curl_reset( $ch );
@@ -308,6 +423,140 @@ class ncmec {
 	$result = curl_exec( $ch );
 	return $result;
 }
+
+
+	/**
+	 * Process login info via config variable (set up assuming LCATOOLS or similarly structured key names) or exlicit login info
+	 *
+	 * @param mixed $logininfo 	Either an array of strings or a string that says "skip" to use singlar login info.
+	 *							Array requires the following keys:
+	 *								NCMEC_user_prod (or NCMEC_user) NCMEC username for production server
+	 *								NCMEC_password_prod (or NCMEC_password) NCMEC password for production server
+	 *								NCMEC_URL_Production (or NCMEC_URL) NCMEC API URL
+	 *							Also accepts, for the test servers:
+	 *								NCMEC_user_test
+	 *								NCMEC_password_test
+	 *								NCMEC_URL_Test
+	 * @param string $user 	(optional only processed if first variable says "skip") Username for NCMEC API
+	 * @param string $pass 	(optional only processed if first variable says "skip") Password for NCMEC API
+	 * @param string $url 	(optional only processed if first variable says "skip") API url for NCMEC API
+	 * @param string $type 	(optional only processed if first variable says "skip" and even then not needed, will assume production)
+	 *						Accepts 'test' to assign login data to test servers, anything else assigns to production/only servers
+	 * @return boolean true for success (only cares about production or if you explictly set test test) false for error.
+	 */
+	private function login( $logininfo, $user = null, $pass = null, $url = null, $type = null ) {
+
+		//init $result
+		$result = false;
+
+		if ( is_array( $logininfo ) ) {
+			//Begin processing of config variable
+			if ( array_key_exists( 'NCMEC_user_prod', $logininfo ) ) {
+
+				$this->ncmecuser = $logininfo['NCMEC_user_prod'];
+
+				if ( array_key_exists( 'NCMEC_password_prod', $logininfo ) ) {
+
+					$this->ncmecpass = $logininfo['NCMEC_password_prod'];
+					$result = true;
+
+					if ( array_key_exists( 'NCMEC_URL_Production', $logininfo ) ) {
+
+						$this->api_url = $logininfo['NCMEC_URL_Production'];
+						$result = true;
+					} elseif ( array_key_exists( 'NCMEC_URL', $logininfo ) ) {
+
+						$this->api_url = $logininfo['NCMEC_URL'];
+						$result = true;
+					} else {
+
+						$result = false;
+
+					}
+
+				} elseif ( array_key_exists( 'NCMEC_password', $logininfo ) ) {
+
+					$this->ncmecpass = $logininfo['NCMEC_password'];
+					$result = true;
+
+					if ( array_key_exists( 'NCMEC_URL_Production', $logininfo ) ) {
+
+						$this->api_url = $logininfo['NCMEC_URL_Production'];
+						$result = true;
+					} elseif ( array_key_exists( 'NCMEC_URL', $logininfo ) ) {
+
+						$this->api_url = $logininfo['NCMEC_URL'];
+						$result = true;
+					} else {
+
+						$result = false;
+						
+					}
+
+				} else {
+
+					$result = false;
+
+				}
+
+			} elseif ( array_key_exists( 'NCMEC_user', $logininfo ) ) {
+
+				$this->ncmecuser = $logininfo['NCMEC_user'];
+
+				if ( array_key_exists( 'NCMEC_password_prod', $logininfo ) ) {
+
+					$this->ncmecpass = $logininfo['NCMEC_password_prod'];
+					$result = true;
+
+				} elseif ( array_key_exists( 'NCMEC_password', $logininfo ) ) {
+
+					$this->ncmecpass = $logininfo['NCMEC_password'];
+					$result = true;
+
+				} else {
+
+					$result = false;
+
+				}
+			} else {
+
+				$result = false;
+
+			}
+		} elseif ( $logininfo === 'skip' && $user && $pass && $url ) {
+
+			if ( $type === 'test' ) {
+
+				$this->ncmecuser_test = $user;
+				$this->ncmecpass_test = $pass;
+				$this->api_url_test = $url;
+				$result = true;
+
+			} else {
+
+				$this->ncmecuser = $user;
+				$this->ncmecpass = $pass;
+				$this->api_url = $url;
+				$result = true;
+
+			}
+		} else {
+
+			//something broke
+			$result = false;
+
+		}
+
+		if ( array_key_exists( 'NCMEC_user_test', $logininfo) && array_key_exists( 'NCMEC_password_test', $logininfo ) && array_key_exists( 'NCMEC_URL_Test', $logininfo ) ) {
+
+			$this->ncmecuser_test = $logininfo['NCMEC_user_test'];
+			$this->ncmecpass_test = $logininfo['NCMEC_password_test'];
+			$this->api_url_test = $logininfo['NCMEC_URL_Test'];
+
+		}
+
+		return $result;
+	}
 
 
 	/**********************************************************************************************
@@ -352,17 +601,20 @@ class ncmec {
 	/**
 	 * Public function to get the status of the NCMEC server
 	 *
+	 * @param string $type 	(optional) accepts 'test' to get status of test server using test credentials
+	 *						Assumes production if nothing given (or if anyting other then 'test' is given)
+	 *
 	 * @return response code from server
 	 * Assumes only one response code, if not we have enough other issues for now.
 	 *
 	 */
-	public function serverstatus() {
+	public function serverstatus( $type = null ) {
 
 	$ch = $this->getcURL();
 	curl_reset( $ch );
-	curl_setopt( $ch, CURLOPT_URL, $this->api_url );
+	curl_setopt( $ch, CURLOPT_URL, $this->getapiurl( $type ).'status' );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_USERPWD, $this->ncmecuser.":".$this->ncmecpass );
+	curl_setopt( $ch, CURLOPT_USERPWD, $this->getUser().":".$this->getPass() );
 	curl_setopt( $ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 
 	$result = curl_exec( $ch );
@@ -407,7 +659,7 @@ class ncmec {
 			foreach ( $responseNodes as $r ) {
 				$responsecode = $r->nodeValue;
 
-				if ( $responsecode === '1016' {
+				if ( $responsecode === '1016' ) {
 					return 'Report Retracted';
 				} elseif ( $responsecode === '1019' ) {
 					return 'NCMEC says the user is incorrect, check the report ID';
