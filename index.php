@@ -81,12 +81,6 @@ require_once 'core-include/multiuseFunctions.php';
 require_once 'project-include/ncmec.class.php';
 
 $config = parse_ini_file( 'lcaToolsConfig.ini' );
-$NCMEC_URL_Production = $config['NCMEC_URL_Production'].'status';
-$NCMEC_URL_Test = $config['NCMEC_URL_Test'].'status';
-$produsername = $config['NCMEC_user_prod'];
-$prodpassword = $config['NCMEC_password_prod'];
-$testusername = $config['NCMEC_user_test'];
-$testpassword = $config['NCMEC_password_test'];
 
 $ncmec = new ncmec( $config );
 $prodresult = $ncmec->serverstatus();
