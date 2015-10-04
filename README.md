@@ -1,63 +1,58 @@
 lca-tools
 ============
 
-Repository for webapp used by Wikimedia Foundation LCA department to help with time intensive projects such as legal takedowns and confidential information releases.
-
-This is currently a placeholder and will be expanded as we go and I have time.
+Repository for webapp used by Wikimedia Foundation Trust & Safety to help with time intensive projects such as legal takedowns and confidential information releases.
 
 Basic Installation instructions:  
-1. Create database based on lcatools.sql [ generally you can do from the command line with 'mysql -u <username> -p < lcatools.sql' username being a user with create database privileges ]  
-2. cp lcaToolsConfig.sample.ini to lcaToolsConfig.ini [linux/mac machines 'cp lcaToolsConfig.sample.ini lcaToolsConfig.ini']   
-3. Fill out missing variables, especially API key for Chilling Effects (if using) and database credentials.  
+1. Create database based on lcatools.sql [ generally you can do from the command line with `mysql -u <username> -p < lcatools.sql` username being a user with create database privileges ]  
+2. copy lcaToolsConfig.sample.ini to lcaToolsConfig.ini [linux/mac machines `cp lcaToolsConfig.sample.ini lcaToolsConfig.ini`]   
+3. Fill out missing variables, especially credentials such as API key's and login/database credentials.
+4. In general the system expects a user to be logged in, this is generally done via some version of basic apache auth.  
 
-Root folder:
-index.php - Central start home page for all tools within the repository.
+### Root folder:
+* index.php - Central start home page for all tools within the repository including checks on server status for NCMEC API.  
+* centralLog.php - calls and displays log for submissions done on all lcatool forms.  
+* logDetails.php - displays details of logged events on demand (by clicking title on centraLog.php).  
+* mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
+** Takes verification script and token, verifies against session started on beginoauthregistration.php (in mwoauth folder).  
+** If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
+
+#### configs folder:  
+* Configuration files
+** lcatools.sql - installation script for database required for tools.  
+** In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
+
+#### mwoauth folder:  
+* beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
+** Begins blank request process then sends user to meta to finish authorization  
+* testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
+* mwOAuthProcessor.php - ajax ready php script for other parts of the program to use when doing edits or other post actions on demand.  
+
+#### release folder:  
+* Tool to log a asic release of confidential information.
+** basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
+** basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
+
+#### sugaroauth folder:  
+* Tools and scripts to use to register with the OAuth system of a SugarCRM installation and to interact with it.
+** sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
+*** Checks for active registration session  
+*** Takes verification code and requests permemnant credentials from sugarCRM  
+*** Verifies that credentials work and then registers them in the database along with sugarCRM username  
+** sugarOAuthRegistration.php - Initial registration/account connection script for connecting lcatools and sugarCRM accounts.  
+** testSugarOAuth.php - tests current users stored OAuth credentials for sugarCRM by doing multiple API calls.
+** sugarOAuthProcessor.php - Ajax ready php script for other parts of the program to use when creating cases or other sugar actions on demand.  
+
+#### childprotection folder:  
+* Seperate repository holding tools for reports to the National Center for Missing and Exploited Children. See repository for more information.
+
+#### standalone folder:  
+* Seperate repository holding standalone tools that could exist in either the LCATools system or a, yet to be created, public tools system.
+
+#### takedown folder:  
+* Seperate repository holding  tools to process DMCA Takedowns sent to the Wikimedia Foundation and report them to Chilling Effects.
 
 
-childprotection folder:  
-NCMECreporting.php - form to fill out when carrying out child protection takedowns gathering log info and the information needed for reporting to the National Center for Missing and Exploited Children.  
-NCMECprocessing.php - processor to take NCMECreporting.php information and files, package it up and send it to NCMEC as well as record information for central logging. Sends to either test or production NCEMC servers depending on setting on collection form.  
-NCMECprocessingOldDebug.php - older processor for NCMECreporting which is kept to allow on demand switching. Outputs significantly more debug info then production processor. Also sends to either test or production servers.  
-NCMECretract.php - form to allow retracting a report to NCMEC before the report has been closed. Reports auto close as part of the processor so only valuable if something errored out during the submission process.  
-
-configs folder:  
-lcatools.sql - installation script for database required for tools.  
-In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
-
-mwoauth folder:  
-beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
-	Begins blank request process then sends user to meta to finish authorization  
-testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
-mwOAuthProcessor.php - ajax ready php script for other parts of the program to use when doing edits or other post actions on demand.  
-
-release folder:  
-basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
-basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
-
-standalone folder:  
-globalsearch.php - ALPHA tool for searching for a phrase on all wikimedia wikis, currently requires and uses mediawiki OAuth.  
-
-sugaroauth folder:  
-sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
-	Checks for active registration session  
-	Takes verification code and requests permemnant credentials from sugarCRM  
-	Verifies that credentials work and then registers them in the database along with sugarCRM username  
-sugarOAuthRegistration.php - Initial registration/account connection script for connecting lcatools and sugarCRM accounts.  
-testSugarOAuth.php - tests current users stored OAuth credentials for sugarCRM by doing multiple API calls.  
-
-
-takedown folder:  
-legalTakedown.php - form to fill out for Wikimedia Commons DMCA take downs.  
-legalTakedownProcessor.php - file to process input from legalTakedown.php, takes data/logs/sends to Chilling Effects on demand/processes templates to post on wiki.  
-
-
-centralLog.php - calls and displays log for submissions done on all lcatool forms.  
-logDetails.php - displays details of logged events on demand (by clicking title on centraLog.php).  
-
-
-mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
-	Takes verification script and token, verifies against session started on beginoauthregistration.php.  
-	If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
  
 LICENSE.txt (MIT License for all files not otherwise marked)  
 README.md (this readme)  
@@ -142,5 +137,6 @@ lca.js - shared scripts for lcatools pages (currently logout script).
 jquery-1.10.2.min.js  - Jquery (MIT)  
 jquery.validate.min.js - jquery form validation plugin ( Jörn Zaefferer Licensed under the MIT license. )  
 moment.min.js  - date/time processing library (MIT)  
-pikaday.js (BSD and MIT)  
+pikaday.js (BSD and MIT)
 pikaday.jquery.js (BSD and MIT)
+
