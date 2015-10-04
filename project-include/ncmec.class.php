@@ -255,6 +255,7 @@ class ncmec {
 	 *
 	 * Construction class requires, at the very least, a starting api_url. 
 	 *  optionally takes a cURL resource that already exists
+	 *
 	 * @param mixed $logininfo 	Either an array of strings or a string that says "skip" to use singlar login info.
 	 *							Array requires the following keys:
 	 *								NCMEC_user_prod (or NCMEC_user) NCMEC username for production server
@@ -264,7 +265,7 @@ class ncmec {
 	 *								NCMEC_user_test
 	 *								NCMEC_password_test
 	 *								NCMEC_URL_Test
-	 * @param resource $ch (optional)	Already existing cURL resource to use instead of creating one fresh.
+	 * @param resource $ch 		(optional) Already existing cURL resource to use instead of creating one fresh.
 	 *
 	 */
 	function __construct( $logininfo, resource $ch = null ) {
@@ -335,9 +336,9 @@ class ncmec {
 	/**
 	 * Get username for NCMEC API, defaults to production
 	 *
-	 * @param string $type (optional) accepts 'test' to return test server username. Otherwise returns production.
+	 * @param string $type 	(optional) accepts 'test' to return test server username. Otherwise returns production.
 	 *
-	 * @return string Returns the username for the requested server
+	 * @return string 		Returns the username for the requested server
 	 */
 	private function getUser( $type = null ) {
 
@@ -355,9 +356,9 @@ class ncmec {
 	/**
 	 * Get password for NCMEC API, defaults to production
 	 *
-	 * @param string $type (optional) accepts 'test' to return test server password. Otherwise returns production.
+	 * @param string $type 	(optional) accepts 'test' to return test server password. Otherwise returns production.
 	 *
-	 * @return string Returns the password for the requested server
+	 * @return string 		Returns the password for the requested server
 	 */
 	private function getPass( $type = null ) {
 
@@ -375,9 +376,9 @@ class ncmec {
 	/**
 	 * Get url for NCMEC API, defaults to production
 	 *
-	 * @param string $type (optional) accepts 'test' to return test server url. Otherwise returns production.
+	 * @param string $type 		(optional) accepts 'test' to return test server url. Otherwise returns production.
 	 *
-	 * @return string Returns the url for the requested server
+	 * @return string Returns 	The url for the requested server
 	 */
 	private function getapiurl( $type = null ) {
 
@@ -404,20 +405,22 @@ class ncmec {
 	 *  This is a successor of the basic function in multiuseFunctions.php.
 	 *  NOT used for the more complicated report calls but used for things like opening the report or sending a retraction.
 	 *
-	 * @param array $data the post fields that need to be sent in the request.
+	 * @param array $data 	the post fields that need to be sent in the request.
+	 * @param string $type 	(optional) accepts 'test' to get status of test server using test credentials
+	 *						Assumes production if nothing given (or if anyting other then 'test' is given)
 	 *
-	 * @return $response the response from the call itself.
+	 * @return $response 	The response from the call itself.
 	 *
 	 */
-	private function basicpost( array $data ) {
+	private function basicpost( array $data, $type = null ) {
 
 	$ch = $this->getcURL;
 	curl_reset( $ch );
-	curl_setopt( $ch, CURLOPT_URL, $this->api_url );
+	curl_setopt( $ch, CURLOPT_URL, $this->getapiurl( $type ) );
 	curl_setopt( $ch, CURLOPT_POST, 1 );
 	curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_USERPWD, $this->ncmecuser.":".$this->ncmecpass );
+	curl_setopt( $ch, CURLOPT_USERPWD, $this->getUser().":".$this->getPass() );
 	curl_setopt( $ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 
 	$result = curl_exec( $ch );
@@ -437,12 +440,12 @@ class ncmec {
 	 *								NCMEC_user_test
 	 *								NCMEC_password_test
 	 *								NCMEC_URL_Test
-	 * @param string $user 	(optional only processed if first variable says "skip") Username for NCMEC API
-	 * @param string $pass 	(optional only processed if first variable says "skip") Password for NCMEC API
-	 * @param string $url 	(optional only processed if first variable says "skip") API url for NCMEC API
-	 * @param string $type 	(optional only processed if first variable says "skip" and even then not needed, will assume production)
-	 *						Accepts 'test' to assign login data to test servers, anything else assigns to production/only servers
-	 * @return boolean true for success (only cares about production or if you explictly set test test) false for error.
+	 * @param string $user 		(optional only processed if first variable says "skip") Username for NCMEC API
+	 * @param string $pass 		(optional only processed if first variable says "skip") Password for NCMEC API
+	 * @param string $url 		(optional only processed if first variable says "skip") API url for NCMEC API
+	 * @param string $type 		(optional only processed if first variable says "skip" and even then not needed, will assume production)
+	 *							Accepts 'test' to assign login data to test servers, anything else assigns to production/only servers
+	 * @return boolean $result	True for success (only cares about production or if you explictly set test test) false for error.
 	 */
 	private function login( $logininfo, $user = null, $pass = null, $url = null, $type = null ) {
 
@@ -601,11 +604,11 @@ class ncmec {
 	/**
 	 * Public function to get the status of the NCMEC server
 	 *
-	 * @param string $type 	(optional) accepts 'test' to get status of test server using test credentials
-	 *						Assumes production if nothing given (or if anyting other then 'test' is given)
+	 * @param string $type 				(optional) accepts 'test' to get status of test server using test credentials
+	 *									Assumes production if nothing given (or if anyting other then 'test' is given)
 	 *
-	 * @return response code from server
-	 * Assumes only one response code, if not we have enough other issues for now.
+	 * @return string $reesponsecode	Response code from server
+	 * 									Assumes only one response code, if not we have enough other issues for now.
 	 *
 	 */
 	public function serverstatus( $type = null ) {
@@ -614,7 +617,7 @@ class ncmec {
 	curl_reset( $ch );
 	curl_setopt( $ch, CURLOPT_URL, $this->getapiurl( $type ).'status' );
 	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-	curl_setopt( $ch, CURLOPT_USERPWD, $this->getUser().":".$this->getPass() );
+	curl_setopt( $ch, CURLOPT_USERPWD, $this->getUser( $type ).":".$this->getPass( $type ) );
 	curl_setopt( $ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
 
 	$result = curl_exec( $ch );
@@ -635,12 +638,14 @@ class ncmec {
 	/**
 	 * Public function to retract a previously submitted NCMEC report. Uses current report number if not given.
 	 *
-	 * @param int (optional) retract the number of the NCMEC report to retract
+	 * @param int $retract 		(optional) retract the number of the NCMEC report to retract
+	 * @param string $type 		(optional) accepts 'test' to get status of test server using test credentials
+	 *							Assumes production if nothing given (or if anyting other then 'test' is given)
 	 *
-	 * @return string $result message to display. Can display more then one in theory (but not expected)
+	 * @return string $result 	Message to display. Can display more then one in theory (but not expected)
 	 *
 	 */
-	function retractreport( int $retract = null ) {
+	function retractreport( int $retract = null, string $type = null ) {
 		if ( $retract ) {
 			$this->reportnum = $retract;
 		}
