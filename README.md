@@ -14,34 +14,34 @@ Basic Installation instructions:
 * centralLog.php - calls and displays log for submissions done on all lcatool forms.  
 * logDetails.php - displays details of logged events on demand (by clicking title on centraLog.php).  
 * mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
-** Takes verification script and token, verifies against session started on beginoauthregistration.php (in mwoauth folder).  
-** If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
+  * Takes verification script and token, verifies against session started on beginoauthregistration.php (in mwoauth folder).  
+  * If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
 
 #### configs folder:  
 * Configuration files
-** lcatools.sql - installation script for database required for tools.  
-** In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
+  * lcatools.sql - installation script for database required for tools.  
+  * In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
 
 #### mwoauth folder:  
 * beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
-** Begins blank request process then sends user to meta to finish authorization  
+  * Begins blank request process then sends user to meta to finish authorization  
 * testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
 * mwOAuthProcessor.php - ajax ready php script for other parts of the program to use when doing edits or other post actions on demand.  
 
 #### release folder:  
 * Tool to log a asic release of confidential information.
-** basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
-** basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
+  * basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
+  * basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
 
 #### sugaroauth folder:  
 * Tools and scripts to use to register with the OAuth system of a SugarCRM installation and to interact with it.
-** sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
-*** Checks for active registration session  
-*** Takes verification code and requests permemnant credentials from sugarCRM  
-*** Verifies that credentials work and then registers them in the database along with sugarCRM username  
-** sugarOAuthRegistration.php - Initial registration/account connection script for connecting lcatools and sugarCRM accounts.  
-** testSugarOAuth.php - tests current users stored OAuth credentials for sugarCRM by doing multiple API calls.
-** sugarOAuthProcessor.php - Ajax ready php script for other parts of the program to use when creating cases or other sugar actions on demand.  
+  * sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
+    * Checks for active registration session  
+    * Takes verification code and requests permemnant credentials from sugarCRM  
+    * Verifies that credentials work and then registers them in the database along with sugarCRM username  
+  * sugarOAuthRegistration.php - Initial registration/account connection script for connecting lcatools and sugarCRM accounts.  
+  * testSugarOAuth.php - tests current users stored OAuth credentials for sugarCRM by doing multiple API calls.
+  * sugarOAuthProcessor.php - Ajax ready php script for other parts of the program to use when creating cases or other sugar actions on demand.  
 
 #### childprotection folder:  
 * Seperate repository holding tools for reports to the National Center for Missing and Exploited Children. See repository for more information.
