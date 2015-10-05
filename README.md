@@ -28,20 +28,20 @@ Repository for webapp used by Wikimedia Foundation Trust & Safety to help with t
 * lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  You should create a copy and a real 'lcaToolsConfig.ini' during tool setup.  
 * .gitignore - ignore real config files which have private keys/passwords, key files and .htaccess file  
 
-#### configs folder:  
+#### configs:  
 * Configuration files
   * lcatools.sql - installation script for database required for tools.  
   * In this folder you should also place lcatools.pem and lcatools.pub the, created, private and public keys for your mwOauth tool if you are using one.  
 
-#### CSS folder:  
+#### css:  
 * main.css (mediawiki monobook styling Gabriel Wicke GPL)  
 * pikaday.css (BSD and MIT)  
 * lca.css - page specific /css/overrides  
 
-#### examples folder:  
+#### examples:  
 NCMECproofofconcept.php - proof of concept form with fake data to exhibit how the NCMEC form works without actual submission. Used for original testing purposes, kept for exhibit purposes.  
 
-#### images folder:  
+#### images:  
 * monobook-bullet.png (Public Domain)  
 * progressbar.gif (Public Domain)
 * roryshield.jpg (Ruby Wang CC-BY-SA-3.0 unported https://creativecommons.org/licenses/by-sa/3.0/deed.en)  
@@ -57,13 +57,13 @@ NCMECproofofconcept.php - proof of concept form with fake data to exhibit how th
   * List-add.svg  
   * Emblem-multiple.svg
 
-#### mwoauth folder:  
+#### mwoauth:  
 * beginmwoauthregistration.php - page to start the authorization process with mediawiki oauth  
   * Begins blank request process then sends user to meta to finish authorization  
 * testmwOAuth.php - tests current users stored OAuth credentials by doing an API user information check.  
 * mwOAuthProcessor.php - ajax ready php script for other parts of the program to use when doing edits or other post actions on demand.  
 
-#### project-include folder:
+#### project-include:
 * Folder containing shared files specifically meant for the LCATools project.
   * page.php - template for surrounding pieces of lcatools pages (toolbar/logo/login header etc)  
   * ncmecdetail.php - details to display when looking at a detailed log entry from a NCMEC submission.  
@@ -71,12 +71,12 @@ NCMECproofofconcept.php - proof of concept form with fake data to exhibit how th
   * releaseDetail.php - details to display when looking at a detailed log entry from a basic release of confidential information.  
   * ncmec.class.php - Class for interacting with the API of the National Center for Missing and Exploited Children
 
-#### release folder:  
+#### release:  
 * Tool to log a asic release of confidential information.
   * basicRelease.php - starting page with form to log a release of confidential informations released by the Wikimedia Foundation LCA team.  
   * basicReleaseProcessor.php - file to process input from basicRelease.php - takesData/processes/logs  
 
-#### scripts folder:  
+#### scripts:  
 * lca.js - shared scripts for lcatools pages (currently logout script).  
 * jquery-1.10.2.min.js  - Jquery (MIT)  
 * jquery.validate.min.js - jquery form validation plugin ( Jörn Zaefferer Licensed under the MIT license. )  
@@ -84,7 +84,7 @@ NCMECproofofconcept.php - proof of concept form with fake data to exhibit how th
 * pikaday.js (BSD and MIT)
 * pikaday.jquery.js (BSD and MIT)
 
-#### sugaroauth folder:  
+#### sugaroauth:  
 * Tools and scripts to use to register with the OAuth system of a SugarCRM installation and to interact with it.
   * sugarOAuthCallback.php - callback script for registering/connecting account with sugarCRM acccount. 
     * Checks for active registration session  
@@ -97,19 +97,19 @@ NCMECproofofconcept.php - proof of concept form with fake data to exhibit how th
 ### Included git submodules
 * Seperate git repositories included as submodules in the LCATools system. Seperated out into different repositories for organization purposes and to, in theory, make splitting private vs public easier down the road. All are included as folders in the tool root.
 
-#### 2015 Strategy folder:
+#### [2015 Strategy](https://github.com/jamesryanalexander/2015-Strategy):
 * Seperate repository holding tools used to process and view comments made durign the 2015 Strategy Consultation.
 
-#### childprotection folder:  
+#### [childprotection](https://github.com/jamesryanalexander/tools-childprotection):  
 * Seperate repository holding tools for reports to the National Center for Missing and Exploited Children. See repository for more information.
 
-#### core-include folder:
+#### [core-include](https://github.com/jamesryanalexander/tools-coreinclude):
 * Seperate repository that contains shared files that could be useful to both the private LCATools system and a, yet to be created, public tools repository.
 
-#### standalone folder:  
+#### [standalone](https://github.com/jamesryanalexander/tools-standalone):  
 * Seperate repository holding standalone tools that could exist in either the LCATools system or a, yet to be created, public tools system.
 
-#### takedown folder:  
+#### [takedown](https://github.com/jamesryanalexander/tools-takedowns):  
 * Seperate repository holding  tools to process DMCA Takedowns sent to the Wikimedia Foundation and report them to Chilling Effects.
 
 
