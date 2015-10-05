@@ -23,10 +23,10 @@ Repository for webapp used by Wikimedia Foundation Trust & Safety to help with t
 * mwOAuthCallback.php - callback script for after a user has authorized themselves for LCATools.  
   * Takes verification script and token, verifies against session started on beginoauthregistration.php (in mwoauth folder).  
   * If everything matches does verification api call and JWT request, verifies JWT and then stores information in LCA Tools user table.  
-  * LICENSE.txt (MIT License for all files not otherwise marked)  
-  * README.md (this readme)  
-  * lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  You should create a copy and a real 'lcaToolsConfig.ini' during tool setup.  
-  * .gitignore - ignore real config files which have private keys/passwords, key files and .htaccess file  
+* LICENSE.txt (MIT License for all files not otherwise marked)  
+* README.md (this readme)  
+* lcaToolsConfig.sample.ini - Sample configuration file for takedown processor  You should create a copy and a real 'lcaToolsConfig.ini' during tool setup.  
+* .gitignore - ignore real config files which have private keys/passwords, key files and .htaccess file  
 
 #### configs folder:  
 * Configuration files
