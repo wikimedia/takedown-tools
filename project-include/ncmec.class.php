@@ -172,7 +172,7 @@ class ncmec {
 	/**
 	* wrapper class for contacting and interacting with the API of the Natioal Center for Missing and Exploited Children
 	* 
-	* @class ncmeci
+	* @class ncmec
 	*
 	*/
 
