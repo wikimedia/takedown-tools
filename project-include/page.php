@@ -26,7 +26,7 @@
 					</div>
 				</div>
 				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
-					<h3> LCA Tools </h3>
+					<h3> Standalone LCA Tools </h3>
 					<div class='pBody'>
 						<ul>
 							<li id='global-search-form'>
@@ -40,6 +40,22 @@
 							</li>
 							<li id='2015-strategy-view'>
 								<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class='no-text-transform portlet' id='p-navigation' role='navigation'>
+					<h3> Strategy consultation tools </h3>
+					<div class='pBody'>
+						<ul>
+							<li id='2015-strategy-view'>
+								<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a>
+							</li>
+							<li id='2016-strategy-view' style='border-top:1px solid black;'>
+								<a href='/2016Strategy/displaycomments.php'> 2016 Strategy comments </a>
+							</li>
+							<li id='2016-strategy-populate'>
+								<a href='/2016Strategy/DataPullandProcess.php'> Populate 2016 comment database </a>
 							</li>
 						</ul>
 					</div>

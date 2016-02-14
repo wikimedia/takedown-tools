@@ -46,24 +46,28 @@
 						</tr>
 				</table>
 					<img style="display:block; margin:auto;" width="500px" src="/images/Roryshieldlogo.png" />
-					<u> LCA Tools </u> <br />
+					<u> <b>Standalone LCA Tools</b> </u> <br />
 					<a href="standalone/globalsearch.php"> Global search (ALPHA) </a> <br />
 					<a href='/standalone/globalpagetext.php'>Global page text (ALPHA) </a> <br />
-					<a href="standalone/globallinks.php"> Global link search (ALPHA) </a> <br />
-					<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a> <br /> <br />
-					<u> Reporting forms </u> <br />
+					<a href="standalone/globallinks.php"> Global link search (ALPHA) </a> <br /><br />
+					<u><b>Strategy consultation tools</b></u> <br />
+					<u> 2015 </u> <br />
+					<a href='/2015 Strategy/displaycomments.php'> 2015 Strategy comments </a> <br />
+					<u> 2016 </u> <br />
+					<a href='/2016Strategy/displaycomments.php'> 2016 Strategy comments </a> <br />
+					<a href='/2016Strategy/DataPullandProcess.php'> Populate 2016 comment database </a> <br /> <br />
+					<u><b>Reporting forms</b></u> <br />
 					<a href="takedown/legalTakedown.php">DMCA Takedown Form</a> <br />
 					<a href="childprotection/NCMECreporting.php"> Child Protection Takedown Form </a> <br />
 					<a href="release/basicRelease.php"> Basic Release of Confidential Information </a> <br /> <br />
 
-					<u> 'special' pages </u> <br />
+					<u><b> 'special' pages </b></u> <br />
 					<a href="centralLog.php"> Central submission Log </a> <br />
 					<a href="childprotection/NCMECretract.php"> NCMEC report retraction form </a> <br />
-					<a href='/2015 Strategy/Datapullprocess.php'> Populate 2015 comment database </a> <br /> <br />
 
 					<u> Mediawiki OAuth </u> <br />
 					<a href="mwoauth/beginmwoauthregistration.php"> Connect your Wikimedia wiki account </a> <br />
-					<a href="mwoauth/testmwOAuth.php"> Test your stored Wikimedia OAuth data </a> <br /> <br />
+					<a href="mwoauth/testmwOAuth.php"> Test your stored Wikimedia OAuth data </a> <br />
 
 					<u> SugarCRM OAuth </u> <br />
 					<a href="sugaroauth/sugarOAuthRegistration.php"> Connect your SugarCRM Account </a><br />
