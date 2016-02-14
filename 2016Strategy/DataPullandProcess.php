@@ -166,8 +166,11 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['page'] ) ) {
 
 		echo '<script> $("#results").append("<tr><td>'.$section.'</td><td>'.$userObject->username.'</td><td>'.$country.'</td><td>'.$homewiki.'</td><td>'.$homeregistration.'</td><td>'.$globaleditcount.'</td><td>'.$metaregistration.'</td><td>'.$metaeditcount.'</td><td>'.htmlspecialchars( json_encode( $rawwikitext)  ).'</td> </tr>");</script>';
 		flush();
-
 	}
+
+	echo '<script $("#results").append("<tr><td colspan=\'9\' align=\'center\' style=\'font-weight:bold;\'>Done!</td></tr>");</script>';
+	flush();
+
 }
 
 ?>
