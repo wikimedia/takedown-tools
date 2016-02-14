@@ -168,7 +168,7 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['page'] ) ) {
 		flush();
 	}
 
-	echo '<script $("#results").append("<tr><td colspan=\'9\' align=\'center\' style=\'font-weight:bold;\'>Done!</td></tr>");</script>';
+	echo '<script>$("#results").append("<tr><th colspan=\'9\'>Done!</th></tr>");</script>';
 	flush();
 
 }
