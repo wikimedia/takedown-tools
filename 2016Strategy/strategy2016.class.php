@@ -172,6 +172,14 @@ class strategyuser2016 {
 	/**
 	*
 	*
+	* @var resource $ch
+	* curl resource for api calls
+	*/
+	private $ch = null;
+
+	/**
+	*
+	*
 	* @var array $users
 	* array of strategy commentators/users
 	*/
