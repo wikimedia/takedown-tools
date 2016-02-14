@@ -323,7 +323,7 @@ class strategyuser2016 {
 
 		$response = Unirest\Request::get("https://telize-v1.p.mashape.com/geoip/".$ip,
   array(
-    "X-Mashape-Key" => "FiwdaSEtE3mshctCHTGmL03mG4zFp1QFZJ8jsn87ptWTxOpCM1",
+    "X-Mashape-Key" => $this->geolocatekey,
     "Accept" => "application/json"
   )
 );
@@ -407,6 +407,7 @@ class strategyuser2016 {
 
 			$userObject->markip();
 			$userObject->country = $this->geolocate( $username );
+			$userObject->homewiki = 'Unknown';
 
 			if ( $pushtousers ) {
 
@@ -415,6 +416,10 @@ class strategyuser2016 {
 			}
 
 			return $userObject;
+		} else {
+
+			$userObject->country = 'Logged In User';
+
 		}
 
 		// set up meta request
