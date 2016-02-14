@@ -312,7 +312,7 @@ foreach ( $homewikis as $key => $value ) {
 					<legend>Log data </legend>
 					<table border='1' id='mw-movepage-table'>
 						<tr>
-							<td colspan='8'>
+							<td colspan='11'>
 								<span style='float:left;'><?php if ( $offset==0 ) {
 	echo '<b> &#60;&#60; BACK </b>';
 } else {
