@@ -142,6 +142,8 @@ if ( isset( $usertable['mwtoken'] ) && isset( $_POST['page'] ) ) {
 	foreach ( $topull as $mainkey => $section ) {
 
 		$rawwikitext = $strategy->getSectionText( $page, $section );
+		//remove html comments
+		$rawwikitext = preg_replace('/<!--(.|\s)*?-->/', '', $rawwikitext);
 
 		$commentator = get_string_between( $rawwikitext, '<small> Response by [[Special:Contributions/', '|');
 
