@@ -32,8 +32,8 @@ if ( $gettype === 'metadata' ) {
 	$select = 'SELECT user,country,homewiki,homeregistration,globaledits,metaedits,metaregistration FROM strategycomments_2016';
 	$headers = array('user','country','homewiki', 'homeregistration','globaledits','metaedits','metaregistration');
 } elseif ( $gettype === 'comments' ) {
-	$select = 'SELECT commentsreach,commentscommunities,commentsknowledge FROM strategycomments_2016';
-	$headers = array('commentsreach','commentscommunities','commentsknowledge');
+	$select = 'SELECT user,commentsreach,commentscommunities,commentsknowledge FROM strategycomments_2016';
+	$headers = array('user','commentsreach','commentscommunities','commentsknowledge');
 } elseif ( $gettype === 'all' ) {
 	$select = 'SELECT user,country,homewiki,homeregistration,globaledits,metaedits,metaregistration,commentsreach,commentscommunities,commentsknowledge FROM strategycomments_2016';
 	$headers = array('user','country','homewiki','homeregistration','globaledits','metaedits','metaregistration','commentsreach','commentscommunities','commentsknowledge');
