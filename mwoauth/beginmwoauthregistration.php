@@ -87,7 +87,7 @@ if ( $usertable['mwtoken'] ) {
 							</tr>
 							<tr>
 								<td colspan='3'>
-									<a href='index.php'> Nope! I'm set take me away from this weird place </a>
+									<a href='/'> Nope! I'm set take me away from this weird place </a>
 								</td>
 							</tr>
 						</table>
