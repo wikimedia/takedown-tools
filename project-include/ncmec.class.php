@@ -31,7 +31,7 @@ class ncmecip {
 	 * Internet Protocol (IP) number of the event
 	 *
 	 */
-	private $ip;
+	public $ip;
 
 	/**
 	 *
@@ -40,7 +40,7 @@ class ncmecip {
 	 * Type of event described (Login, Registration, Purchase, Upload, Other, Unknown)
 	 *
 	 */
-	private $type;
+	public $type;
 
 	/**
 	 *
@@ -50,7 +50,7 @@ class ncmecip {
 	 *  for now timezone is handled seperatly.
 	 *
 	 */
-	private $timestamp = null;
+	public $timestamp = null;
 
 
 	/**
@@ -59,7 +59,7 @@ class ncmecip {
 	* Do we have reason to believe this is a proxy? Defaults to false.
 	*
 	*/
-	private $isproxy = 0;
+	public $isproxy = 0;
 
 	/**
 	 * Construction function called when the class is created
@@ -94,7 +94,7 @@ class ncmecip {
 
 	/**********************************************************************************************
 
-	Public functions to retrieve or set private variables with appropriate fallback or processing. 
+	Public functions to set variables with appropriate fallback or processing. 
 
 	*************************************************************************************************/
 
@@ -124,46 +124,6 @@ class ncmecip {
 	 */
 	public function setproxy() {
 		$this->isproxy = 1;
-	}
-
-	/**
-	 * Get IP which is identified in object
-	 * 
-	 * @return string
-	 *
-	 */
-	public function getIP() {
-		return $this->ip;
-	}
-
-	/**
-	 * Get type
-	 * 
-	 * @return string
-	 *
-	 */
-	public function getType() {
-		return $this->type;
-	}
-
-	/**
-	 * Get timestamp
-	 * 
-	 * @return string
-	 *
-	 */
-	public function gettime() {
-		return $this->timestamp;
-	}
-
-	/**
-	 * check if the IP is set as a proxy
-	 * 
-	 * @return boolean
-	 *
-	 */
-	public function isproxy() {
-		return $this->isproxy;
 	}
 
 }
