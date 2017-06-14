@@ -1,0 +1,14 @@
+index:
+   path: /
+   defaults:
+     _controller: 'App\Controller\AuthController::loginAction'
+
+token:
+   path: /token
+   defaults:
+     _controller: 'App\Controller\AuthController::tokenAction'
+
+# Depends on sensio/framework-extra-bundle:^3.0 and doctrine/annotations
+#controllers:
+#    resource: ../src/Controller/
+#    type: annotation

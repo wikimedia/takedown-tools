@@ -1,6 +1,6 @@
-#configfiles
-lcaToolsConfig.ini
-.htaccess
-configs/lcatoolskey.pem
-configs/lcatoolskey.pub
-.DS_Store
+###> symfony/framework-bundle ###
+.env
+/var/
+/vendor/
+/web/bundles/
+###< symfony/framework-bundle ###

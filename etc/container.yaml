@@ -1,0 +1,42 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+
+services:
+  app.cache:
+    class: Symfony\Component\Cache\Simple\FilesystemCache
+    arguments:
+      - 'app'
+      - 0
+      - '%kernel.cache_dir%'
+
+  app.encoder_token:
+    class: App\Encoder\TokenEncoder
+    arguments:
+      - '%env(OAUTH_CONSUMER_SECRET)%'
+
+  app.oauth_consumer:
+    class: MediaWiki\OAuthClient\Consumer
+    arguments:
+      - '%env(OAUTH_CONSUMER_KEY)%'
+      - '%env(OAUTH_CONSUMER_SECRET)%'
+
+  app.oauth_client_config:
+    class: MediaWiki\OAuthClient\ClientConfig
+    arguments:
+      - '%env(OAUTH_ENDPOINT)%'
+    calls:
+      - [setConsumer, ['@app.oauth_consumer']]
+
+  app.oauth_client:
+    class: MediaWiki\OAuthClient\Client
+    arguments:
+      - '@app.oauth_client_config'
+
+  App\Controller\AuthContoller:
+    class: App\Controller\AuthController
+    arguments:
+      - '@app.cache'
+      - '@app.oauth_client'
+      - '@app.oauth_client_config'
+      - '@security.token_storage'

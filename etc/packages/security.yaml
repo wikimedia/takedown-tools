@@ -1,0 +1,28 @@
+security:
+    # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        jwt:
+            lexik_jwt: ~
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        login:
+            pattern:  ^/$
+            anonymous: true
+
+        main:
+            pattern:   ^/
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+            # activate different ways to authenticate
+
+            # http_basic: null
+            # https://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: null
+            # https://symfony.com/doc/current/cookbook/security/form_login_setup.html
