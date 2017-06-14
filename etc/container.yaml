@@ -10,11 +10,6 @@ services:
       - 0
       - '%kernel.cache_dir%'
 
-  app.encoder_token:
-    class: App\Encoder\TokenEncoder
-    arguments:
-      - '%env(OAUTH_CONSUMER_SECRET)%'
-
   app.oauth_consumer:
     class: MediaWiki\OAuthClient\Consumer
     arguments:
@@ -38,5 +33,4 @@ services:
     arguments:
       - '@app.cache'
       - '@app.oauth_client'
-      - '@app.oauth_client_config'
       - '@security.token_storage'

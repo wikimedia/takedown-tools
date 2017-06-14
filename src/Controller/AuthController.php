@@ -36,7 +36,6 @@ class AuthController {
 	public function __construct(
 		CacheInterface $cache,
 		Client $client,
-		ClientConfig $clientConfig,
 		TokenStorage $tokenStorage
 	) {
 		$this->cache = $cache;
@@ -74,8 +73,12 @@ class AuthController {
 		// Clear the requestToken from the cache.
 		$this->cache->delete( 'requestToken.' . $key );
 
-		$identifyUrl = $this->clientConfig->endpointURL . '/identify';
-		$jwt = $this->client->makeOAuthCall( $accessToken, $identifyUrl );
+		// @TODO Issue a new JWT since the one that comes from MediaWiki
+		// is already expired. :(
+		$identiy = $this->client->identify();
+		dump( $identiy );
+
+		// @TODO Save the Token into the database.
 
 		// @TODO Redirect the user with JavaScript.
 		return new Response( '<script type=\"text/javascript\">'
@@ -99,7 +102,7 @@ class AuthController {
 	*
 	* @return object|null
 	*/
-  protected function getUser() {
+	protected function getUser() {
 		$token = $this->tokenStorage->getToken();
 
 		if ( $token === null ) {
@@ -113,6 +116,6 @@ class AuthController {
 		}
 
 		return $user;
-	 }
+	}
 
 }
