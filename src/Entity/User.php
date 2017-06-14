@@ -2,13 +2,21 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="users")
+ */
 class User implements UserInterface, JWTUserInterface {
 
 	/**
 	 * @var int
+	 *
+	 * @ORM\Column(name="user_id", type="integer")
+	 * @ORM\Id
 	 */
 	private $id;
 

@@ -9,6 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use MediaWiki\OAuthClient\Token;
 use MediaWiki\OAuthClient\Client;
 use Psr\SimpleCache\CacheInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +40,11 @@ class AuthController {
   protected $tokenStorage;
 
 	/**
+   * @var RegistryInterface
+   */
+  protected $doctrine;
+
+	/**
 	 * AuthController
 	 *
 	 * @param CacheInterface $cache PSR Cache Interface
@@ -46,19 +52,22 @@ class AuthController {
 	 * @param Client $oauthClient MediWiki OAuth Client.
 	 * @param TokenStorage $tokenStorage Symfony Token Storage.
 	 * @param JWTTokenManagerInterface $jwtManager JWT Manager
+	 * @param RegistryInterface $doctrine Doctrine
 	 */
 	public function __construct(
 		CacheInterface $cache,
 		ClientInterface $client,
 		Client $oauthClient,
 		TokenStorage $tokenStorage,
-		JWTTokenManagerInterface $jwtManager
+		JWTTokenManagerInterface $jwtManager,
+		RegistryInterface $doctrine
 	) {
 		$this->cache = $cache;
 		$this->client = $client;
 		$this->oauthClient = $oauthClient;
 		$this->tokenStorage = $tokenStorage;
 		$this->jwtManager = $jwtManager;
+		$this->doctrine = $doctrine;
 	}
 
 	/**
@@ -118,12 +127,26 @@ class AuthController {
 			$id = $userdata['query']['users'][0]['userid'];
 		}
 
+		$user = null;
+		$em = $this->doctrine->getEntityManager();
+		if ( $id ) {
+			$user = $em->find( User::class, $id );
+		}
+
 		// This should really be a denormalizer.
-		$user = new User( [
-			'id' => $id,
-			'username' => $identiy->username,
-			'roles' => $identiy->groups,
-		] );
+		if ( $user ) {
+			$user->setUsername( $identiy->username );
+			$user->setRoles( $identiy->groups );
+		} else {
+			$user = new User( [
+				'id' => $id,
+				'username' => $identiy->username,
+				'roles' => $identiy->groups,
+			] );
+
+			$em->persist( $user );
+			$em->flush();
+		}
 
 		// We cannot use the JWT's returned from MediaWiki becaused they are
 		// short-lived tokens.

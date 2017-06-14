@@ -50,3 +50,9 @@ services:
       - '@app.oauth_client'
       - '@security.token_storage'
       - '@lexik_jwt_authentication.jwt_manager'
+      - '@doctrine'
+
+  App\Controller\LegalTakedownContoller:
+    class: App\Controller\LegalTakedownContoller
+    arguments:
+      - '@serializer'
