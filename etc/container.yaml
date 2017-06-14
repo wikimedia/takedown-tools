@@ -28,9 +28,25 @@ services:
     arguments:
       - '@app.oauth_client_config'
 
+  app.mediawiki_client:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: '%env(MEDIAWIKI_API_URL)%'
+
+  app.event.jwt_created_listener:
+      class: App\EventListener\JWTCreatedEventListener
+      tags:
+          -
+            name: kernel.event_listener
+            event: lexik_jwt_authentication.on_jwt_created
+            method: onJWTCreated
+
   App\Controller\AuthContoller:
     class: App\Controller\AuthController
     arguments:
       - '@app.cache'
+      - '@app.mediawiki_client'
       - '@app.oauth_client'
       - '@security.token_storage'
+      - '@lexik_jwt_authentication.jwt_manager'

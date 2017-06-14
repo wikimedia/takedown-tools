@@ -2,7 +2,9 @@ security:
     # https://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         jwt:
-            lexik_jwt: ~
+            lexik_jwt:
+              class: App\Entity\User
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

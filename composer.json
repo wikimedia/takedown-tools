@@ -3,6 +3,7 @@
     "license": "proprietary",
     "require": {
         "php": "^7.1.3",
+        "guzzlehttp/guzzle": "^6.2",
         "lexik/jwt-authentication-bundle": "^2.4",
         "mediawiki/oauthclient": "^0.1.2",
         "nixilla/php-jwt": "^0.1.1",
