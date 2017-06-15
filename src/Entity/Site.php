@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\EntityUser;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Takedown;
 
-use App\EntityUser;
+use App\Entity\User;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -39,7 +40,35 @@ class Takedown {
 	private $site;
 
 	/**
-	 * User
+	 * @var Collection
+	 *
+	 * @ORM\ManyToMany(targetEntity="App\Entity\User")
+	 * @ORM\JoinTable(name="takedown_involved",
+	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(
+	 *        name="user_id",
+	 *        referencedColumnName="user_id"
+	 *      )}
+	 * )
+	 */
+	private $involved;
+
+	/**
+	 * @var Collection
+	 *
+	 * @ORM\ManyToMany(targetEntity="App\Entity\Metadata")
+	 * @ORM\JoinTable(name="takedown_metadata",
+	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(
+	 *        name="metadata_id",
+	 *        referencedColumnName="metadata_id"
+	 *      )}
+	 * )
+	 */
+	private $metadata;
+
+	/**
+	 * Takedown
 	 *
 	 * @param array $data Data to construct the object.
 	 */

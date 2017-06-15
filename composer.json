@@ -16,6 +16,7 @@
         "symfony/yaml": "^3.3"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^2.3",
         "mediawiki/mediawiki-codesniffer": "^0.8.0",
         "symfony/dotenv": "^3.3",
         "symfony/var-dumper": "^3.3"
@@ -56,7 +57,7 @@
     "extra": {
         "symfony": {
             "id": "01BJH7BVMYPGR0JP12TF8VT30J",
-            "allow-contrib": false
+            "allow-contrib": "true"
         }
     }
 }
