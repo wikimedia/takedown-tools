@@ -82,8 +82,6 @@ final class Kernel extends BaseKernel {
 		 * @return void
 		 */
 		protected function configureRoutes( RouteCollectionBuilder $routes ) : void {
-				$routes->setDefault( '_format', 'json' );
-
 				$confDir = dirname( __DIR__ ) . '/etc';
 				if ( is_dir( $confDir . '/routing/' ) ) {
 						$routes->import(

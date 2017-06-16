@@ -3,12 +3,13 @@
 namespace App\Entity\Takedown;
 
 use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown_dmca")
  *
- * @TODO add validation.
+ * @todo add validation.
  */
 class DigitalMillenniumCopyrightAct {
 

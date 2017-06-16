@@ -1,23 +1,4 @@
-index:
-   path: /
-   defaults:
-     _controller: 'app.controller_auth:loginAction'
-     _format: 'html'
-   methods: ['GET']
-
-token:
-   path: /token
-   defaults:
-     _controller: 'app.controller_auth:tokenAction'
-   methods: ['GET']
-
-takedown:
-   path: /takedown
-   defaults:
-     _controller: 'app.controller_takedown:createAction'
-   methods: ['POST']
-
 # Depends on sensio/framework-extra-bundle:^3.0 and doctrine/annotations
-#controllers:
-#    resource: ../src/Controller/
-#    type: annotation
+controllers:
+   resource: ../src/Controller/
+   type: annotation

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0b148d0b860f6a4c457e8e6f587e3bfd",
+    "content-hash": "db978e9593d2638b3940a0b2097a3687",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -807,6 +807,42 @@
             ],
             "description": "Utilities for Doctrine Entities",
             "time": "2017-06-16T17:33:57+00:00"
+        },
+        {
+            "name": "geosocio/serialize-response",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geosocio/serialize-response.git",
+                "reference": "5da9cf561255028e622a43ee8782b48957cd1185"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geosocio/serialize-response/zipball/5da9cf561255028e622a43ee8782b48957cd1185",
+                "reference": "5da9cf561255028e622a43ee8782b48957cd1185",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/http-foundation": "^3.3",
+                "symfony/http-kernel": "^3.3",
+                "symfony/security": "^3.3",
+                "symfony/serializer": "^3.3"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeoSocio\\SerializeResponse\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3"
+            ],
+            "description": "Serializes a Controller Response",
+            "time": "2017-06-16T21:05:54+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

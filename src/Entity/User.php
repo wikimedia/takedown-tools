@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
+use GeoSocio\SerializeResponse\Serializer\UserGroupsInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -11,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User implements UserInterface, JWTUserInterface {
+class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 
 	/**
 	 * @var int
@@ -85,6 +86,19 @@ class User implements UserInterface, JWTUserInterface {
 	 */
 	public function getRoles() {
 		return $this->roles;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @param array $data Data that is being Serialized.
+	 *
+	 * @return array
+	 */
+	public function getGroups( $data = null ) : array {
+		return array_map( function ( $role ) {
+			return strtolower( substr( $role, 5 ) );
+		}, $this->roles );
 	}
 
 	/**

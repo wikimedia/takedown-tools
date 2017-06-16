@@ -3,7 +3,9 @@
 namespace App\Entity\Takedown;
 
 use App;
+use App\Entity\Site;
 use App\Entity\User;
+use App\Entity\Project;
 use App\Entity\Metadata;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\Parameter;
 use GeoSocio\EntityUtils\CreatedTrait;
 use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -79,14 +82,14 @@ class Takedown {
 	/**
 	 * @var DigitalMillenniumCopyrightAct
 	 *
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\DigitalMillenniumCopyrightAct", mappedBy="takedown")
+	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\DigitalMillenniumCopyrightAct", mappedBy="id")
 	 */
 	private $dmca;
 
 	/**
 	 * @var ChildProtection
 	 *
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\ChildProtection", mappedBy="takedown")
+	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\ChildProtection", mappedBy="id")
 	 */
 	private $cp;
 
@@ -121,6 +124,8 @@ class Takedown {
 
 	/**
 	 * Get Id
+	 *
+	 * @Groups({"autoconfirmed"})
 	 *
 	 * @return int
 	 */

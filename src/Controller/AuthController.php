@@ -4,19 +4,22 @@ namespace App\Controller;
 
 use App\Entity\User;
 use GuzzleHttp\ClientInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use MediaWiki\OAuthClient\Token;
 use MediaWiki\OAuthClient\Client;
 use Psr\SimpleCache\CacheInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * @Route(service="app.controller_auth")
+ */
 class AuthController {
 
 	/**
@@ -50,7 +53,7 @@ class AuthController {
 	 * @param CacheInterface $cache PSR Cache Interface
 	 * @param ClientInterface $client MediWiki Client.
 	 * @param Client $oauthClient MediWiki OAuth Client.
-	 * @param TokenStorage $tokenStorage Symfony Token Storage.
+	 * @param TokenStorageInterface $tokenStorage Symfony Token Storage.
 	 * @param JWTTokenManagerInterface $jwtManager JWT Manager
 	 * @param RegistryInterface $doctrine Doctrine
 	 */
@@ -58,7 +61,7 @@ class AuthController {
 		CacheInterface $cache,
 		ClientInterface $client,
 		Client $oauthClient,
-		TokenStorage $tokenStorage,
+		TokenStorageInterface $tokenStorage,
 		JWTTokenManagerInterface $jwtManager,
 		RegistryInterface $doctrine
 	) {
@@ -72,6 +75,9 @@ class AuthController {
 
 	/**
 	 * Login Action.
+	 *
+	 * @Route("/", defaults={"_format" = "html"})
+	 * @Method({"GET"})
 	 *
 	 * @param Request $request Request object
 	 *
@@ -160,6 +166,9 @@ class AuthController {
 
 	/**
 	 * Refresh User Token.
+	 *
+	 * @Route("/token")
+	 * @Method({"GET"})
 	 *
 	 * @return Response
 	 */

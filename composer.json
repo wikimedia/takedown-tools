@@ -6,6 +6,7 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "geosocio/entity-utils": "^1.0.1",
+        "geosocio/serialize-response": "^1.0.2",
         "guzzlehttp/guzzle": "^6.2",
         "lexik/jwt-authentication-bundle": "^2.4",
         "mediawiki/oauthclient": "^0.1.2",

@@ -53,6 +53,15 @@ services:
       - '@doctrine'
 
   app.controller_takedown:
-    class: App\Controller\Takedown\Takedown
+    class: App\Controller\TakedownController
     arguments:
       - '@serializer'
+
+  app.return_listener:
+    class: GeoSocio\SerializeResponse\EventListener\KernelViewListener
+    arguments:
+        - '@serializer'
+        - '@serializer'
+        - '@security.token_storage'
+    tags:
+        - { name: kernel.event_listener, event: kernel.view }
