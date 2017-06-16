@@ -56,6 +56,7 @@ services:
     class: App\Controller\TakedownController
     arguments:
       - '@serializer'
+      - '@doctrine'
 
   app.return_listener:
     class: GeoSocio\SerializeResponse\EventListener\KernelViewListener

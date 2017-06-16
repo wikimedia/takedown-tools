@@ -156,6 +156,38 @@ class Takedown {
 	}
 
 	/**
+	 * Get Reporter
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @return int
+	 */
+	public function getReporterId() :? int {
+		if ( $this->reporter ) {
+			return $this->reporter->getId();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get Reporter Id
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @param int $reporterId Reporter Id.
+	 *
+	 * @return User
+	 */
+	public function setReporterId( int $reporterId ) : self {
+		$this->reporter = new User( [
+			'id' => $reporterId,
+		] );
+
+		return $this;
+	}
+
+	/**
 	 * Set Site.
 	 *
 	 * @param Site $site Site
@@ -175,6 +207,38 @@ class Takedown {
 	 */
 	public function getSite() :? Site {
 		return $this->site;
+	}
+
+	/**
+	 * Get Site Id
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @return string
+	 */
+	public function getSiteId() :? string {
+		if ( $this->site ) {
+			return $this->site->getId();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get Reporter
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @param int $siteId Site Id.
+	 *
+	 * @return User
+	 */
+	public function setSiteId( string $siteId ) : self {
+		$this->site = new Site( [
+			'id' => $siteId,
+		] );
+
+		return $this;
 	}
 
 	/**
@@ -208,6 +272,40 @@ class Takedown {
 	 */
 	public function removeInvolved( User $user ) : self {
 		$this->involved->remove( $user );
+
+		return $this;
+	}
+
+	/**
+	 * Involved Users Ids
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @return Collection
+	 */
+	public function getInvolvedIds() : array {
+		return $this->involved->map( function ( $user ) {
+			return $user->getId();
+		} )->toArray();
+	}
+
+	/**
+	 * Set Involved User Id
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @param array $userIds Involved User Ids
+	 *
+	 * @return self
+	 */
+	public function setInvolvedIds( array $userIds ) : self {
+		$users = array_map( function ( $id ) {
+			return new User( [
+				'id' => $id,
+			] );
+		}, $userIds );
+
+		$this->involved = new ArrayCollection( $users );
 
 		return $this;
 	}
@@ -248,6 +346,40 @@ class Takedown {
 	}
 
 	/**
+	 * Metadata Ids
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @return Collection
+	 */
+	public function getMetadataIds() : array {
+		return $this->metadata->map( function ( $metadata ) {
+			return $metadata->getId();
+		} )->toArray();
+	}
+
+	/**
+	 * Set Involved User Id
+	 *
+	 * @Groups({"autoconfirmed"})
+	 *
+	 * @param array $metadataIds Metadata Ids
+	 *
+	 * @return self
+	 */
+	public function setMetadataIds( array $metadataIds ) : self {
+		$metadata = array_map( function ( $id ) {
+			return new Metadata( [
+				'id' => $id,
+			] );
+		}, $metadataIds );
+
+		$this->metadata = new ArrayCollection( $metadata );
+
+		return $this;
+	}
+
+	/**
 	 * Set DMCA.
 	 *
 	 * @param DigitalMillenniumCopyrightAct $dmca DMCA
@@ -263,7 +395,7 @@ class Takedown {
 	/**
 	 * DMCA
 	 *
-	 * @return DMCA
+	 * @return DigitalMillenniumCopyrightAct
 	 */
 	public function getDmca() :? DigitalMillenniumCopyrightAct {
 		return $this->dmca;

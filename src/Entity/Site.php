@@ -37,18 +37,18 @@ class Site {
 	 */
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
-		$this->id = $params->getInt( 'id' );
+		$this->id = $params->getString( 'id' );
 		$this->project = $params->getInstance( 'project', Project::class );
 	}
 
 	/**
 	 * Set Id.
 	 *
-	 * @param int $id ID
+	 * @param string $id ID
 	 *
 	 * @return self
 	 */
-	public function setId( int $id ) {
+	public function setId( string $id ) {
 		$this->id = $id;
 
 		return $this;
@@ -57,9 +57,9 @@ class Site {
 	/**
 	 * Get Id
 	 *
-	 * @return int
+	 * @return string
 	 */
-	public function getId() :? int {
+	public function getId() :? string {
 		return $this->id;
 	}
 
