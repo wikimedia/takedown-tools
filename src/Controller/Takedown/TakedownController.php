@@ -3,6 +3,7 @@
 namespace App\Controller\Takedown;
 
 use App\Entity\LegalTakedown;
+use App\Entity\Takedown\Takedown;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -35,7 +36,7 @@ class TakedownController {
 	public function createAction( Request $request ) : Response {
 		$takedown = $this->serializer->deserialize(
 			$request->getContent(),
-			LegalTakedown::class,
+			Takedown::class,
 			$request->getRequestFormat()
 		);
 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityUtils\ParameterBag;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -36,14 +37,10 @@ class User implements UserInterface, JWTUserInterface {
 	 * @param array $data Data to construct the object.
 	 */
 	public function __construct( array $data = [] ) {
-		$id = $data['id'] ?? null;
-		$this->id = is_int( $id ) ? $id : null;
-
-		$username = $data['username'] ?? null;
-		$this->username = is_string( $username ) ? $username : null;
-
-		$roles = $data['roles'] ?? null;
-		$this->roles = is_array( $roles ) ? $roles : [];
+		$params = new ParameterBag( $data );
+		$this->id = $params->getInt( 'id' );
+		$this->username = $params->getString( 'username' );
+		$this->roles = $params->getArray( 'roles', [] );
 	}
 
 	/**

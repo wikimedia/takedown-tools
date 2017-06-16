@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity
@@ -35,17 +36,9 @@ class Site {
 	 * @param array $data Data to construct the object.
 	 */
 	public function __construct( array $data = [] ) {
-		$id = $data['id'] ?? null;
-		$this->id = is_string( $id ) ? $id : null;
-
-		$project = $data['project'] ?? null;
-		if ( $project instanceof User ) {
-			$this->project = $project;
-		} elseif ( is_array( $project ) ) {
-			$this->project = new Project( $project );
-		} else {
-			$this->project = null;
-		}
+		$params = new ParameterBag( $data );
+		$this->id = $params->getInt( 'id' );
+		$this->project = $params->getInstance( 'project', Project::class );
 	}
 
 	/**

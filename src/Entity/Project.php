@@ -27,8 +27,8 @@ class Project {
 	 * @param array $data Data to construct the object.
 	 */
 	public function __construct( array $data = [] ) {
-		$id = $data['id'] ?? null;
-		$this->id = is_string( $id ) ? $id : null;
+		$params = new ParameterBag( $data );
+		$this->id = $params->getInt( 'id' );
 	}
 
 	/**

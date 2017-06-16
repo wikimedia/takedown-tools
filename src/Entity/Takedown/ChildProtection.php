@@ -21,4 +21,14 @@ class ChildProtection {
 	 */
 	private $id;
 
+	/**
+	 * Takedown
+	 *
+	 * @param array $data Data to construct the object.
+	 */
+	public function __construct( array $data = [] ) {
+		$params = new ParameterBag( $data );
+		$this->id = $params->getInstance( 'id', Takedown::class, new Takedown() );
+	}
+
 }

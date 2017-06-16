@@ -31,11 +31,9 @@ class Metadata {
 	 * @param array $data Data to construct the object.
 	 */
 	public function __construct( array $data = [] ) {
-		$id = $data['id'] ?? null;
-		$this->id = is_string( $id ) ? $id : null;
-
-		$content = $data['content'] ?? null;
-		$this->content = is_string( $content ) ? $content : null;
+		$params = new ParameterBag( $data );
+		$this->id = $params->getString( 'id' );
+		$this->content = $params->getContent( 'content' );
 	}
 
 	/**
