@@ -16,12 +16,20 @@ security:
 
         main:
             pattern:   ^/
+            anonymous: false
             stateless: true
+            provider: jwt
             guard:
                 authenticators:
                     - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
-      # -
-      #   path: ^/admin
-      #   roles: admin
+      -
+        path: ^/$
+        roles:
+          - IS_AUTHENTICATED_ANONYMOUSLY
+      -
+        path: ^/
+        # @TODO Update to a more restricive role!
+        roles:
+          - ROLE_AUTOCONFIRMED

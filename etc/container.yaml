@@ -42,7 +42,7 @@ services:
             event: lexik_jwt_authentication.on_jwt_created
             method: onJWTCreated
 
-  App\Controller\AuthContoller:
+  app.controller_auth:
     class: App\Controller\AuthController
     arguments:
       - '@app.cache'
@@ -52,7 +52,7 @@ services:
       - '@lexik_jwt_authentication.jwt_manager'
       - '@doctrine'
 
-  App\Controller\LegalTakedownContoller:
-    class: App\Controller\LegalTakedownContoller
+  app.controller_takedown:
+    class: App\Controller\Takedown\Takedown
     arguments:
       - '@serializer'

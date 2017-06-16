@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Takedown;
 
 use App\Entity\LegalTakedown;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class LegalTakedownController {
+class TakedownController {
 
 	/**
 	 * @var SerializerInterface
@@ -39,6 +39,7 @@ class LegalTakedownController {
 			$request->getRequestFormat()
 		);
 
+		 $auth = new \Symfony\Component\Security\Core\Authorization\AuthorizationChecker  ()
 		// @TODO Do something with the data!
 
 		return new Response(

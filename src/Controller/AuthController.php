@@ -35,14 +35,14 @@ class AuthController {
 	protected $oauthClient;
 
 	/**
-   * @var TokenStorageInterface
-   */
-  protected $tokenStorage;
+	 * @var TokenStorageInterface
+	 */
+	protected $tokenStorage;
 
 	/**
-   * @var RegistryInterface
-   */
-  protected $doctrine;
+	 * @var RegistryInterface
+	 */
+	protected $doctrine;
 
 	/**
 	 * AuthController
@@ -136,12 +136,12 @@ class AuthController {
 		// This should really be a denormalizer.
 		if ( $user ) {
 			$user->setUsername( $identiy->username );
-			$user->setRoles( $identiy->groups );
+			$user->setRoles( $this->getRolesFromGroups( $identiy->groups ) );
 		} else {
 			$user = new User( [
 				'id' => $id,
 				'username' => $identiy->username,
-				'roles' => $identiy->groups,
+				'roles' => $this->getRolesFromGroups( $identiy->groups ),
 			] );
 
 			$em->persist( $user );
@@ -169,7 +169,26 @@ class AuthController {
 			] );
 	}
 
-	/**
+ /**
+	* Get roles from groups.
+	*
+	* @param array $groups Groups.
+	*
+	* @return array
+	*/
+	protected function getRolesFromGroups( array $groups ) : array {
+		$groups = array_filter( $groups, function( $group ) {
+			return $group !== "*";
+		} );
+
+		$roles = array_map( function( $group ) {
+			return 'ROLE_' . strtoupper( $group );
+		}, $groups );
+
+		return array_values( $roles );
+	}
+
+ /**
 	* Get a user from the Security Token Storage.
 	*
 	* @return User
