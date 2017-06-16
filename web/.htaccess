@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Serve files directly
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Send /login or /api to PHP
+RewriteRule ^(login|api) index.php [QSA, L]
+
+# Send all other routes to node.
+RewriteRule  ^(.*)$  http://localhost:8080/$1  [P, L]
