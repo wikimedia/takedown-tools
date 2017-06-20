@@ -2,5 +2,6 @@
 .env
 /var/
 /vendor/
+/node_modules/
 /web/bundles/
 ###< symfony/framework-bundle ###

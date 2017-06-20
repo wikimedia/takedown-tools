@@ -158,9 +158,9 @@ class AuthController {
 		// short-lived tokens.
 		$jwt = $this->jwtManager->create( $user );
 
-		// @TODO Redirect the user with JavaScript.
 		return new Response( '<script type="text/javascript">'
 												 . "localStorage.setItem('token', '$jwt');"
+												 . "window.location = '/'"
 												 . '</script>' );
 	}
 
