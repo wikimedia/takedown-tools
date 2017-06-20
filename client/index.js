@@ -1,42 +1,49 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import createHistory from 'history/createBrowserHistory';
+import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
+import App from './components/app';
+import reducer from './reducers/index';
+import { createEpicMiddleware } from 'redux-observable';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import epic from './epics';
 
-import { createStore, combineReducers, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
+function main() {
+	const token = window.localStorage.getItem( 'token' ),
+		// Create a history of your choosing (we're using a browser history in this case)
+		history = createHistory(),
+		// Build the middleware for intercepting and dispatching navigation actions
+		router = routerMiddleware( history ),
+		epicMiddleware = createEpicMiddleware( epic ),
+		// Add the reducer to your store on the `router` key
+		// Also apply our middleware for navigating
+		store = createStore(
+			reducer,
+			{
+				token: token
+			},
+			composeWithDevTools( applyMiddleware( router, epicMiddleware ) )
+		);
 
-import createHistory from 'history/createBrowserHistory'
-import { Route } from 'react-router'
+	// If no token is available, redirect to login.
+	if ( !token ) {
+		window.location = '/login';
+		return;
+	}
 
-import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux'
+	// Now you can dispatch navigation actions from anywhere!
+	// store.dispatch(push('/foo'))
+	ReactDOM.render(
+		<Provider store={store}>
+			<ConnectedRouter history={history}>
+				<App name="David" />
+			</ConnectedRouter>
+		</Provider>,
+		document.getElementById( 'root' )
+	);
+}
 
-// import reducers from './reducers' // Or wherever you keep your reducers
-const reducers = []
-
-// Create a history of your choosing (we're using a browser history in this case)
-const history = createHistory()
-
-// Build the middleware for intercepting and dispatching navigation actions
-const middleware = routerMiddleware(history)
-
-// Add the reducer to your store on the `router` key
-// Also apply our middleware for navigating
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(combineReducers({
-	...reducers,
-	router: routerReducer
-	}),
-	composeEnhancers(applyMiddleware(middleware))
-);
-
-// Now you can dispatch navigation actions from anywhere!
-// store.dispatch(push('/foo'))
-
-ReactDOM.render(
-  <Provider store={store}>
-    { /* ConnectedRouter will use the store from Provider automatically */ }
-		<ConnectedRouter history={history}>
-			<h1>Hello World!</h1>
-		</ConnectedRouter>
-  </Provider>,
-  document.getElementById('root')
-)
+// Engage!
+main();
