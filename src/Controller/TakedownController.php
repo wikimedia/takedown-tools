@@ -42,7 +42,7 @@ class TakedownController {
 	/**
 	 * Takedown Index
 	 *
-	 * @Route("/takedown", defaults={"_format" = "json"})
+	 * @Route("/api/takedown.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
 	 *
 	 * @param Request $request Request
@@ -65,7 +65,7 @@ class TakedownController {
 	/**
 	 * Takedown
 	 *
-	 * @Route("/takedown/{takedown}", defaults={"_format" = "json"})
+	 * @Route("/api/takedown/{takedown}.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
 	 *
 	 * @param Takedown $takedown Takedown
@@ -79,7 +79,7 @@ class TakedownController {
 	/**
 	 * Create Legal Takedown
 	 *
-	 * @Route("/takedown", defaults={"_format" = "json"})
+	 * @Route("/api/takedown", defaults={"_format" = "json"})
 	 * @Method({"POST"})
 	 *
 	 * @param Request $request Request

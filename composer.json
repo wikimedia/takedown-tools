@@ -13,6 +13,7 @@
         "nixilla/php-jwt": "^0.1.1",
         "sensio/framework-extra-bundle": "^3.0",
         "symfony/cache": "^3.3",
+        "symfony/expression-language": "^3.3",
         "symfony/flex": "^1.0",
         "symfony/framework-bundle": "^3.3",
         "symfony/serializer": "^3.3",

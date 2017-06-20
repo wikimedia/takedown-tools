@@ -27,6 +27,8 @@ services:
     class: MediaWiki\OAuthClient\Client
     arguments:
       - '@app.oauth_client_config'
+    calls:
+      - [setCallback, ["@=service('request_stack').getMasterRequest().getUriForPath('/login')"]]
 
   app.mediawiki_client:
     class: GuzzleHttp\Client

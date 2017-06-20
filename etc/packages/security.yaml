@@ -11,11 +11,11 @@ security:
             security: false
 
         login:
-            pattern:  ^/$
+            pattern:  ^/login
             anonymous: true
 
         main:
-            pattern:   ^/
+            pattern:   ^/api
             anonymous: false
             stateless: true
             provider: jwt
@@ -25,11 +25,11 @@ security:
 
     access_control:
       -
-        path: ^/$
+        path: ^/login
         roles:
           - IS_AUTHENTICATED_ANONYMOUSLY
       -
-        path: ^/
+        path: ^/api
         # @TODO Update to a more restricive role!
         roles:
           - ROLE_AUTOCONFIRMED

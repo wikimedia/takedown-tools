@@ -76,7 +76,7 @@ class AuthController {
 	/**
 	 * Login Action.
 	 *
-	 * @Route("/", defaults={"_format" = "html"})
+	 * @Route("/login", defaults={"_format" = "html"})
 	 * @Method({"GET"})
 	 *
 	 * @param Request $request Request object
@@ -167,15 +167,15 @@ class AuthController {
 	/**
 	 * Refresh User Token.
 	 *
-	 * @Route("/token")
+	 * @Route("/api/token.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
 	 *
 	 * @return Response
 	 */
 	public function tokenAction() : Response {
-			return new JsonResponse( [
-				'token' => $this->jwtManager->create( $this->getUser() ),
-			] );
+			return [
+				'token' => $this->jwtManager->create( $this->getUser() )
+			];
 	}
 
  /**
