@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchTakedown } from '../../actions/takedown';
+import * as TakedownActions from '../../actions/takedown';
 import { Takedown } from '../../entity';
 import { Loading } from '../loading';
 import { Error } from '../error';
@@ -36,7 +36,7 @@ export class TakedownShow extends React.Component {
 		return (
 			<div className="row">
 				<div className="col">
-					<h2>{this.props.takedown.id}</h2>
+					<h2>#{this.props.takedown.id}</h2>
 				</div>
 			</div>
 		);
@@ -63,7 +63,7 @@ export const TakedownShowContainer = connect(
 		const id = parseInt( ownProps.match.params.id );
 		return {
 			onComponentWillMount: () => {
-				dispatch( fetchTakedown( id ) );
+				dispatch( TakedownActions.fetch( id ) );
 			}
 		};
 	}

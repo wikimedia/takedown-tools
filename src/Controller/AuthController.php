@@ -119,9 +119,8 @@ class AuthController {
 			'query' => [
 				'action' => 'query',
 				'format' => 'json',
-				'list' => 'users',
-				'usprop' => 'blockinfo',
-				'ususers' => $identiy->username,
+				'meta' => 'globaluserinfo',
+				'guiuser' => $identiy->username,
 			],
 		] );
 
@@ -129,8 +128,8 @@ class AuthController {
 		$userdata = json_decode( $response->getBody(), true );
 
 		$id = null;
-		if ( ! empty( $userdata['query']['users'] ) ) {
-			$id = $userdata['query']['users'][0]['userid'];
+		if ( ! empty( $userdata['query']['globaluserinfo'] ) ) {
+			$id = $userdata['query']['globaluserinfo']['id'];
 		}
 
 		$user = null;

@@ -7,6 +7,7 @@ use GeoSocio\EntityUtils\ParameterBag;
 use GeoSocio\SerializeResponse\Serializer\UserGroupsInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -24,6 +25,8 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 
 	/**
 	 * @var string
+	 *
+	 * @ORM\Column(name="username", type="string", length=255, unique=true, nullable=true)
 	 */
 	private $username;
 
@@ -59,6 +62,8 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 
 	/**
 	 * Get Id
+	 *
+	 * @Groups({"autoconfirmed"})
 	 *
 	 * @return int
 	 */
@@ -134,6 +139,8 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 
 	/**
 	 * {@inheritdoc}
+	 *
+	 * @Groups({"autoconfirmed"})
 	 *
 	 * @return null
 	 */

@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { fetchTakedownList } from '../../actions/takedown';
-import { Takedown } from '../../entity';
+import * as TakedownActions from '../../actions/takedown';
+import { Takedown, User } from '../../entity';
 import { Loading } from '../loading';
 
 export class TakedownIndex extends React.Component {
@@ -16,9 +16,25 @@ export class TakedownIndex extends React.Component {
 
 	render() {
 		const takedowns = this.props.takedowns.map( ( takedown ) => {
+			const reporter = this.props.users.find( ( user ) => {
+				return takedown.reporterId === user.id;
+			} );
+			let reporterName,
+				created;
+
+			if ( reporter ) {
+				reporterName = reporter.username;
+			}
+
+			if ( takedown.created ) {
+				created = takedown.created.local().format('l LT');
+			}
+
 			return (
 				<tr key={takedown.id}>
 					<td><Link to={'/takedown/' + takedown.id}>{takedown.id}</Link></td>
+					<td>{reporterName}</td>
+					<td>{created}</td>
 				</tr>
 			);
 		} );
@@ -34,10 +50,12 @@ export class TakedownIndex extends React.Component {
 		return (
 			<div className="row">
 				<div className="col">
-					<table className="table table-responsive">
+					<table className="table table-bordered">
 						<thead>
 							<tr>
 								<th>#</th>
+								<th>Reporter</th>
+								<th>Created</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -54,7 +72,8 @@ export class TakedownIndex extends React.Component {
 TakedownIndex.propTypes = {
 	onComponentWillMount: PropTypes.func.isRequired,
 	status: PropTypes.string.isRequired,
-	takedowns: PropTypes.arrayOf( PropTypes.instanceOf( Takedown ) )
+	takedowns: PropTypes.arrayOf( PropTypes.instanceOf( Takedown ) ),
+	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) )
 };
 
 export const TakedownIndexContainer = connect(
@@ -63,13 +82,14 @@ export const TakedownIndexContainer = connect(
 			status: state.takedown.status,
 			takedowns: state.takedown.list.filter( ( takedown ) => {
 				return !takedown.error;
-			} )
+			} ),
+			users: state.user.list
 		};
 	},
 	( dispatch ) => {
 		return {
 			onComponentWillMount: () => {
-				dispatch( fetchTakedownList() );
+				dispatch( TakedownActions.fetchList() );
 			}
 		};
 	}

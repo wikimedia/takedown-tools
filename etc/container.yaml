@@ -57,7 +57,11 @@ services:
   app.controller_takedown:
     class: App\Controller\TakedownController
     arguments:
-      - '@serializer'
+      - '@doctrine'
+
+  app.controller_user:
+    class: App\Controller\UserController
+    arguments:
       - '@doctrine'
 
   app.return_listener:

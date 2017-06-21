@@ -39,7 +39,7 @@ class Takedown {
 	 * @var User
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
-   * @ORM\JoinColumn(name="reporter_id", referencedColumnName="user_id")
+	 * @ORM\JoinColumn(name="reporter_id", referencedColumnName="user_id")
 	 */
 	private $reporter;
 
@@ -47,7 +47,7 @@ class Takedown {
 	 * @var Site
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Site")
-   * @ORM\JoinColumn(name="site_id", referencedColumnName="site_id")
+	 * @ORM\JoinColumn(name="site_id", referencedColumnName="site_id")
 	 */
 	private $site;
 
@@ -422,5 +422,16 @@ class Takedown {
 	public function getCp() :? ChildProtection {
 		return $this->cp;
 	}
+
+	/**
+		 * Get created
+		 *
+		 * @Groups({"autoconfirmed"})
+		 *
+		 * @return \DateTime
+		 */
+		public function getCreated() :? \DateTimeInterface {
+				return $this->created;
+		}
 
 }

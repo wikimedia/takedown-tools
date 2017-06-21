@@ -1,13 +1,4 @@
-function sortById( a, b ) {
-	if ( a.id < b.id ) {
-		return -1;
-	}
-	if ( a.id > b.id ) {
-		return 1;
-	}
-
-	return 0;
-}
+import { sortById } from '../../utils';
 
 export default function list( state = [], action ) {
 	let takedowns = [],
@@ -32,21 +23,17 @@ export default function list( state = [], action ) {
 			return [
 				...takedowns,
 				action.takedown
-			].sort( sortById );
-
-		case 'TAKEDOWN_ADD_MULTIPLE':
-			takedowns = action.takedowns.filter( ( takedown ) => {
-				const found = state.find( ( element ) => {
-					return element.id === takedown.id;
-				} );
-
-				return !found;
+			].sort( ( a, b ) => {
+				return b.created.diff( a.created );
 			} );
 
-			return [
-				...state,
-				...takedowns
-			].sort( sortById );
+		case 'TAKEDOWN_ADD_MULTIPLE':
+			return action.takedowns.reduce( ( state, takedown ) => {
+				return list( state, {
+					type: 'TAKEDOWN_ADD',
+					takedown: takedown
+				} );
+			}, state );
 
 		default:
 			return state;

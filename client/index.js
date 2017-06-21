@@ -21,9 +21,6 @@ function main() {
 		// Also apply our middleware for navigating
 		store = createStore(
 			reducer,
-			{
-				token: token
-			},
 			composeWithDevTools( applyMiddleware( router, epicMiddleware ) )
 		);
 
@@ -33,12 +30,17 @@ function main() {
 		return;
 	}
 
-	// Now you can dispatch navigation actions from anywhere!
-	// store.dispatch(push('/foo'))
+	// Add the token to the store. If server rendering is enabled, this should
+	// move to after render.
+	store.dispatch( {
+		type: 'TOKEN_ADD',
+		token: token
+	} );
+
 	ReactDOM.render(
 		<Provider store={store}>
 			<ConnectedRouter history={history}>
-				<App name="David" />
+				<App />
 			</ConnectedRouter>
 		</Provider>,
 		document.getElementById( 'root' )

@@ -16,11 +16,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 class TakedownController {
 
 	/**
-	 * @var SerializerInterface
-	 */
-	protected $serializer;
-
-	/**
 	 * @var RegistryInterface
 	 */
 	protected $doctrine;
@@ -28,14 +23,11 @@ class TakedownController {
 	/**
 	 * Takedown Controller.
 	 *
-	 * @param SerializerInterface $serializer Serializer.
 	 * @param RegistryInterface $doctrine Doctrine.
 	 */
 	public function __construct(
-		SerializerInterface $serializer,
 		RegistryInterface $doctrine
 	) {
-		$this->serializer = $serializer;
 		$this->doctrine = $doctrine;
 	}
 

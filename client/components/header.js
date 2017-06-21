@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { tokenRemove } from '../actions/token';
+import { parseJwt } from '../utils';
 
 export class Header extends React.Component {
 	render() {
@@ -35,12 +36,6 @@ Header.propTypes = {
 	username: PropTypes.string.isRequired,
 	onLogoutClick: PropTypes.func.isRequired
 };
-
-function parseJwt( token ) {
-	const base64Url = token.split( '.' )[ 1 ],
-		base64 = base64Url.replace( '-', '+' ).replace( '_', '/' );
-	return JSON.parse( window.atob( base64 ) );
-}
 
 export const HeaderContainer = connect(
 	( state ) => {
