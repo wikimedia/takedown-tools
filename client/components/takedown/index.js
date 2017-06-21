@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom'
 
 export default class Takedown extends React.Component {
 
@@ -8,6 +9,14 @@ export default class Takedown extends React.Component {
 	}
 
 	render() {
+		const takedowns = this.props.takedowns.map( ( takedown ) => {
+			return (
+				<tr key={takedown.id}>
+					<td><Link to={'/takedown/' + takedown.id}>{takedown.id}</Link></td>
+				</tr>
+			);
+		} );
+
 		return (
 			<div className="row">
 				<div className="col">
@@ -17,6 +26,9 @@ export default class Takedown extends React.Component {
 								<th>#</th>
 							</tr>
 						</thead>
+						<tbody>
+							{takedowns}
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -25,5 +37,6 @@ export default class Takedown extends React.Component {
 }
 
 Takedown.propTypes = {
-	onComponentWillMount: PropTypes.func.isRequired
+	onComponentWillMount: PropTypes.func.isRequired,
+	takedowns: PropTypes.array
 };

@@ -5,7 +5,7 @@ import Takedown from './index';
 export default connect(
 	( state ) => {
 		return {
-			list: state.takedown.list
+			takedowns: state.takedown.list
 		};
 	},
 	( dispatch ) => {
