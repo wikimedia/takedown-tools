@@ -1,11 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import { fetchTakedownList } from '../../actions/takedown';
+import { Takedown } from '../../entity';
+import { Loading } from '../loading';
 
-export default class Takedown extends React.Component {
+export class TakedownIndex extends React.Component {
 
 	componentWillMount() {
-		this.props.onComponentWillMount();
+		if ( this.props.status !== 'done' ) {
+			this.props.onComponentWillMount();
+		}
 	}
 
 	render() {
@@ -16,6 +22,14 @@ export default class Takedown extends React.Component {
 				</tr>
 			);
 		} );
+
+		let loading;
+
+		if ( this.props.status === 'fetching' ) {
+			loading = (
+				<Loading />
+			);
+		}
 
 		return (
 			<div className="row">
@@ -30,13 +44,33 @@ export default class Takedown extends React.Component {
 							{takedowns}
 						</tbody>
 					</table>
+					{loading}
 				</div>
 			</div>
 		);
 	}
 }
 
-Takedown.propTypes = {
+TakedownIndex.propTypes = {
 	onComponentWillMount: PropTypes.func.isRequired,
-	takedowns: PropTypes.array
+	status: PropTypes.string.isRequired,
+	takedowns: PropTypes.arrayOf( PropTypes.instanceOf( Takedown ) )
 };
+
+export const TakedownIndexContainer = connect(
+	( state ) => {
+		return {
+			status: state.takedown.status,
+			takedowns: state.takedown.list.filter( ( takedown ) => {
+				return !takedown.error;
+			} )
+		};
+	},
+	( dispatch ) => {
+		return {
+			onComponentWillMount: () => {
+				dispatch( fetchTakedownList() );
+			}
+		};
+	}
+)( TakedownIndex );

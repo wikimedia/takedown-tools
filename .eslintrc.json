@@ -11,5 +11,13 @@
 	"env": {
 		"browser": true,
 		"node": true
-	}
+	},
+	"rules": {
+    "dot-notation": [
+			"error",
+			{
+				"allowPattern": "^catch$"
+			}
+		]
+  }
 }

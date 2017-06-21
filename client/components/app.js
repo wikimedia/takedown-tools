@@ -1,7 +1,7 @@
 import React from 'react';
-import HeaderContainer from './header/container';
-import TakedownContainer from './takedown/container';
-import TakedownViewContainer from './takedown/view/container';
+import { HeaderContainer } from './header';
+import { TakedownIndexContainer } from './takedown/index';
+import { TakedownShowContainer } from './takedown/show';
 import { Route } from 'react-router-dom';
 
 export default class App extends React.Component {
@@ -9,8 +9,8 @@ export default class App extends React.Component {
 		return (
 			<div className="container">
 				<HeaderContainer />
-				<Route exact path="/" component={TakedownContainer} />
-				<Route path="/takedown/:id" component={TakedownViewContainer} />
+				<Route exact path="/" component={TakedownIndexContainer} />
+				<Route path="/takedown/:id" component={TakedownShowContainer} />
 			</div>
 		);
 	}

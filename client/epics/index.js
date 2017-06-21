@@ -1,6 +1,7 @@
 import { combineEpics } from 'redux-observable';
-import { fetchTakedownList } from './takedown';
+import * as TakedownEpic from './takedown';
 
 export default combineEpics(
-	fetchTakedownList
+	TakedownEpic.fetchTakedownList,
+	TakedownEpic.fetchTakedown
 );

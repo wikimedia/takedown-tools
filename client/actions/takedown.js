@@ -4,3 +4,10 @@ export function fetchTakedownList( page = 1 ) {
 		page: page
 	};
 }
+
+export function fetchTakedown( id ) {
+	return {
+		type: 'TAKEDOWN_FETCH',
+		id: id
+	};
+}
