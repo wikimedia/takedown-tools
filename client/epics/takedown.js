@@ -50,10 +50,39 @@ export function fetchTakedown( action$, store ) {
 				.catch( ( ajaxError ) => {
 					const takedown = new Takedown( {
 						id: action.id,
-						error: ajaxError.status
+						error: ajaxError.status,
+						status: 'error'
 					} );
 
 					return Observable.of( TakedownActions.add( takedown ) );
+				} );
+		} );
+}
+
+export function takedownSave( action$, store ) {
+	return action$.ofType( 'TAKEDOWN_CREATE_SAVE' )
+		.switchMap( () => {
+			return Observable.ajax( {
+				url: '/api/takedown',
+				method: 'POST',
+				body: JSON.stringify( store.getState().takedown.create.set( 'status', undefined ).set( 'error', undefined ).toJS() ),
+				responseType: 'json',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + store.getState().token
+				}
+			} )
+				.map( ( ajaxResponse ) => {
+					const takedown = new Takedown( ajaxResponse.response );
+
+					// @TODO clear out the created takedown and redirect
+					//       the user.
+					return TakedownActions.add( takedown );
+				} )
+				.catch( ( ajaxError ) => {
+					// Set the takedown state.
+					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', ajaxError.status );
+					return Observable.of( TakedownActions.updateCreate( takedown ) );
 				} );
 		} );
 }

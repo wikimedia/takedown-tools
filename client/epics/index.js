@@ -5,5 +5,6 @@ import * as UserEpic from './user';
 export default combineEpics(
 	TakedownEpic.fetchTakedownList,
 	TakedownEpic.fetchTakedown,
+	TakedownEpic.takedownSave,
 	UserEpic.fetchUsers
 );

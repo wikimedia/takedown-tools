@@ -27,7 +27,7 @@ export class TakedownIndex extends React.Component {
 			}
 
 			if ( takedown.created ) {
-				created = takedown.created.local().format('l LT');
+				created = takedown.created.local().format( 'l LT' );
 			}
 
 			return (
@@ -48,21 +48,28 @@ export class TakedownIndex extends React.Component {
 		}
 
 		return (
-			<div className="row">
-				<div className="col">
-					<table className="table table-bordered">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Reporter</th>
-								<th>Created</th>
-							</tr>
-						</thead>
-						<tbody>
-							{takedowns}
-						</tbody>
-					</table>
-					{loading}
+			<div>
+				<div className="row mb-2 justify-content-end">
+					<div className="col-1 text-right">
+						<Link to="/takedown/create" className="btn btn-primary btn-sm">+ New</Link>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<table className="table table-bordered">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Reporter</th>
+									<th>Created</th>
+								</tr>
+							</thead>
+							<tbody>
+								{takedowns}
+							</tbody>
+						</table>
+						{loading}
+					</div>
 				</div>
 			</div>
 		);

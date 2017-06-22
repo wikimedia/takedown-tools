@@ -25,3 +25,16 @@ export function fetch( id ) {
 		id: id
 	};
 }
+
+export function updateCreate( takedown ) {
+	return {
+		type: 'TAKEDOWN_CREATE_UPDATE',
+		takedown: takedown
+	};
+}
+
+export function saveCreate() {
+	return {
+		type: 'TAKEDOWN_CREATE_SAVE'
+	};
+}

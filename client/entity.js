@@ -1,15 +1,16 @@
 import { Record } from 'immutable';
 
 export const Takedown = Record( {
-		id: null,
-		error: null,
-		reporterId: null,
+		id: undefined,
+		reporterId: undefined,
 		involvedIds: [],
-		created: null
+		created: undefined,
+		status: 'clean',
+		error: undefined
 	}, 'Takedown' ),
-
 	User = Record( {
-		id: null,
-		error: null,
-		username: null
+		id: undefined,
+		username: undefined,
+		status: 'clean',
+		error: undefined
 	}, 'User' );

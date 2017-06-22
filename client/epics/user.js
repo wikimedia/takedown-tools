@@ -10,7 +10,12 @@ import * as UserActions from '../actions/user';
 
 export function fetchUsers( action$, store ) {
 	return action$.filter( ( action ) => {
-		return action.type === 'TAKEDOWN_ADD_MULTIPLE' || action.type === 'TAKEDOWN_ADD';
+		const types = [
+			'TAKEDOWN_ADD_MULTIPLE',
+			'TAKEDOWN_ADD'
+		];
+
+		return types.includes( action.type );
 	} )
 		.switchMap( ( action ) => {
 			let ids = [],
@@ -33,6 +38,7 @@ export function fetchUsers( action$, store ) {
 			ids = takedowns.reduce( ( state, takedown ) => {
 				return [
 					...state,
+					...takedown.involvedIds,
 					takedown.reporterId
 				];
 			}, [] );
@@ -65,7 +71,8 @@ export function fetchUsers( action$, store ) {
 				.catch( ( ajaxError ) => {
 					const user = new User( {
 						id: id,
-						error: ajaxError.status
+						error: ajaxError.status,
+						status: 'error'
 					} );
 
 					return Observable.of( UserActions.add( user ) );
