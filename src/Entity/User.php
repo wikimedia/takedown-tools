@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
-use GeoSocio\SerializeResponse\Serializer\UserGroupsInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -13,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity
  * @ORM\Table(name="users")
  */
-class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
+class User implements UserInterface, JWTUserInterface {
 
 	/**
 	 * @var int
@@ -63,7 +62,7 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 	/**
 	 * Get Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return int
 	 */
@@ -96,19 +95,6 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param array $data Data that is being Serialized.
-	 *
-	 * @return array
-	 */
-	public function getGroups( $data = null ) : array {
-		return array_map( function ( $role ) {
-			return strtolower( substr( $role, 5 ) );
-		}, $this->roles );
-	}
-
-	/**
-	 * {@inheritdoc}
-	 *
 	 * @return null
 	 */
 	public function getPassword() {
@@ -127,6 +113,8 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 	/**
 	 * Set Username.
 	 *
+	 * @Groups({"api"})
+	 *
 	 * @param string $username Username
 	 *
 	 * @return self
@@ -140,7 +128,7 @@ class User implements UserInterface, JWTUserInterface, UserGroupsInterface {
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return null
 	 */

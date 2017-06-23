@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Client\MediaWikiClientInterface;
 use App\Entity\User;
 use GuzzleHttp\ClientInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -13,7 +14,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -28,7 +28,7 @@ class AuthController {
 	protected $cache;
 
 	/**
-	 * @var ClientInterface
+	 * @var MediaWikiClientInterface
 	 */
 	protected $client;
 
@@ -59,7 +59,7 @@ class AuthController {
 	 */
 	public function __construct(
 		CacheInterface $cache,
-		ClientInterface $client,
+		MediaWikiClientInterface $client,
 		Client $oauthClient,
 		TokenStorageInterface $tokenStorage,
 		JWTTokenManagerInterface $jwtManager,
@@ -113,42 +113,16 @@ class AuthController {
 		// Get the user's identiy.
 		$identiy = $this->oauthClient->identify( $accessToken );
 
-		// Get the userid and add it to the object.
-		// @TODO use the MediaWiki API Library
-		$response = $this->client->get( '', [
-			'query' => [
-				'action' => 'query',
-				'format' => 'json',
-				'meta' => 'globaluserinfo',
-				'guiuser' => $identiy->username,
-			],
-		] );
+		// Load the user from the API.
+		$user = $this->client->getUserByUsername( $identiy->username );
+		$user->setRoles( $this->getRolesFromGroups( $identiy->groups ) );
 
-		// This should really be a denormalizer.
-		$userdata = json_decode( $response->getBody(), true );
-
-		$id = null;
-		if ( ! empty( $userdata['query']['globaluserinfo'] ) ) {
-			$id = $userdata['query']['globaluserinfo']['id'];
-		}
-
-		$user = null;
+		// If the user is not already in the database, save it.
+		$existing = null;
 		$em = $this->doctrine->getEntityManager();
-		if ( $id ) {
-			$user = $em->find( User::class, $id );
-		}
+		$existing = $em->find( User::class, $user->getId() );
 
-		// This should really be a denormalizer.
-		if ( $user ) {
-			$user->setUsername( $identiy->username );
-			$user->setRoles( $this->getRolesFromGroups( $identiy->groups ) );
-		} else {
-			$user = new User( [
-				'id' => $id,
-				'username' => $identiy->username,
-				'roles' => $this->getRolesFromGroups( $identiy->groups ),
-			] );
-
+		if ( !$existing ) {
 			$em->persist( $user );
 			$em->flush();
 		}

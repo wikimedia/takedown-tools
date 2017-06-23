@@ -36,10 +36,11 @@ export function fetchUsers( action$, store ) {
 
 			// Get all of the referenced users.
 			ids = takedowns.reduce( ( state, takedown ) => {
+				const reporterIds = takedown.reporterId ? [ takedown.reporterId ] : [];
 				return [
 					...state,
 					...takedown.involvedIds,
-					takedown.reporterId
+					...reporterIds
 				];
 			}, [] );
 

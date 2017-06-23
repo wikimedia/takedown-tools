@@ -6,6 +6,8 @@ export default function create( state = new Takedown(), action ) {
 			return state.set( 'status', 'saving' );
 		case 'TAKEDOWN_CREATE_UPDATE':
 			return action.takedown;
+		case 'TAKEDOWN_CREATE_CLEAR':
+			return new Takedown();
 		default:
 			return state;
 	}

@@ -10,11 +10,15 @@ import * as UserActions from '../../actions/user';
 export class TakedownCreate extends React.Component {
 
 	componentWillMount() {
+		this.componentWillReceiveProps( this.props );
+	}
+
+	componentWillReceiveProps( nextProps ) {
 		let takedown;
 
-		if ( this.props.reporterId ) {
-			takedown = this.props.takedown.set( 'reporterId', this.props.reporterId );
-			this.props.updateTakedown( takedown );
+		if ( nextProps.reporterId && !nextProps.takedown.reporterId ) {
+			takedown = nextProps.takedown.set( 'reporterId', nextProps.reporterId );
+			nextProps.updateTakedown( takedown );
 		}
 	}
 

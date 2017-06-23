@@ -2,7 +2,6 @@
 
 namespace App\Entity\Takedown;
 
-use App;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Project;
@@ -10,7 +9,7 @@ use App\Entity\Metadata;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Query\Parameter;
+use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\CreatedTrait;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -20,7 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="takedown")
  * @ORM\HasLifecycleCallbacks
  *
- * @TODO add validation.
+ * @todo add validation.
  */
 class Takedown {
 
@@ -40,6 +39,7 @@ class Takedown {
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
 	 * @ORM\JoinColumn(name="reporter_id", referencedColumnName="user_id")
+	 * @Attach()
 	 */
 	private $reporter;
 
@@ -48,13 +48,14 @@ class Takedown {
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Site")
 	 * @ORM\JoinColumn(name="site_id", referencedColumnName="site_id")
+	 * @Attach()
 	 */
 	private $site;
 
 	/**
 	 * @var Collection
 	 *
-	 * @ORM\ManyToMany(targetEntity="App\Entity\User")
+	 * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"})
 	 * @ORM\JoinTable(name="takedown_involved",
 	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
 	 *      inverseJoinColumns={@ORM\JoinColumn(
@@ -62,6 +63,7 @@ class Takedown {
 	 *        referencedColumnName="user_id"
 	 *      )}
 	 * )
+	 * @Attach()
 	 */
 	private $involved;
 
@@ -76,6 +78,7 @@ class Takedown {
 	 *        referencedColumnName="metadata_id"
 	 *      )}
 	 * )
+	 * @Attach()
 	 */
 	private $metadata;
 
@@ -125,7 +128,7 @@ class Takedown {
 	/**
 	 * Get Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return int
 	 */
@@ -158,7 +161,7 @@ class Takedown {
 	/**
 	 * Get Reporter
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return int
 	 */
@@ -173,7 +176,7 @@ class Takedown {
 	/**
 	 * Get Reporter Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @param int $reporterId Reporter Id.
 	 *
@@ -212,7 +215,7 @@ class Takedown {
 	/**
 	 * Get Site Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return string
 	 */
@@ -227,7 +230,7 @@ class Takedown {
 	/**
 	 * Get Reporter
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @param int $siteId Site Id.
 	 *
@@ -264,6 +267,23 @@ class Takedown {
 	}
 
 	/**
+	 * Set Involved Users
+	 *
+	 * @param User[] $users Involved Users
+	 *
+	 * @return self
+	 */
+	public function setInvolved( iterable $users ) : self {
+		if ( $users instanceof Collection ) {
+			$this->involved = $users;
+		} else {
+			$this->involved = new ArrayCollection( $users );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Remove Involved User
 	 *
 	 * @param User $user Involved User
@@ -279,7 +299,7 @@ class Takedown {
 	/**
 	 * Involved Users Ids
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return Collection
 	 */
@@ -290,20 +310,31 @@ class Takedown {
 	}
 
 	/**
+	 * Involved Users Names
+	 *
+	 * @return Collection
+	 */
+	public function getInvolvedNames() : array {
+		return $this->involved->map( function ( $user ) {
+			return $user->getUsername();
+		} )->toArray();
+	}
+
+	/**
 	 * Set Involved User Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
-	 * @param array $userIds Involved User Ids
+	 * @param array $userNames Involved User Ids
 	 *
 	 * @return self
 	 */
-	public function setInvolvedIds( array $userIds ) : self {
-		$users = array_map( function ( $id ) {
+	public function setInvolvedNames( array $userNames ) : self {
+		$users = array_map( function ( $name ) {
 			return new User( [
-				'id' => $id,
+				'username' => $name,
 			] );
-		}, $userIds );
+		}, $userNames );
 
 		$this->involved = new ArrayCollection( $users );
 
@@ -348,7 +379,7 @@ class Takedown {
 	/**
 	 * Metadata Ids
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @return Collection
 	 */
@@ -361,7 +392,7 @@ class Takedown {
 	/**
 	 * Set Involved User Id
 	 *
-	 * @Groups({"autoconfirmed"})
+	 * @Groups({"api"})
 	 *
 	 * @param array $metadataIds Metadata Ids
 	 *
@@ -426,7 +457,7 @@ class Takedown {
 	/**
 		 * Get created
 		 *
-		 * @Groups({"autoconfirmed"})
+		 * @Groups({"api"})
 		 *
 		 * @return \DateTime
 		 */

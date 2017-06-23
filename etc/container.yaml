@@ -30,11 +30,17 @@ services:
     calls:
       - [setCallback, ["@=service('request_stack').getMasterRequest().getUriForPath('/login')"]]
 
-  app.mediawiki_client:
+  app.mediawiki_client_guzzle:
     class: GuzzleHttp\Client
     arguments:
       -
         base_uri: '%env(MEDIAWIKI_API_URL)%'
+
+  app.mediawiki_client:
+    class: App\Client\MediaWikiClient
+    arguments:
+      - '@app.mediawiki_client_guzzle'
+      - '@serializer'
 
   app.event.jwt_created_listener:
       class: App\EventListener\JWTCreatedEventListener
@@ -43,6 +49,12 @@ services:
             name: kernel.event_listener
             event: lexik_jwt_authentication.on_jwt_created
             method: onJWTCreated
+
+  app.entity_attacher:
+        class: GeoSocio\EntityAttacher\EntityAttacher
+        arguments:
+            - '@doctrine.orm.entity_manager'
+            - '@annotations.reader'
 
   app.controller_auth:
     class: App\Controller\AuthController
@@ -58,11 +70,16 @@ services:
     class: App\Controller\TakedownController
     arguments:
       - '@doctrine'
+      - '@serializer'
+      - '@app.mediawiki_client'
+      - '@app.entity_attacher'
 
   app.controller_user:
     class: App\Controller\UserController
     arguments:
       - '@doctrine'
+      - '@serializer'
+      - '@app.mediawiki_client'
 
   app.return_listener:
     class: GeoSocio\SerializeResponse\EventListener\KernelViewListener
@@ -70,5 +87,14 @@ services:
         - '@serializer'
         - '@serializer'
         - '@security.token_storage'
+        # Default Groups
+        -
+          - 'api'
     tags:
         - { name: kernel.event_listener, event: kernel.view }
+
+  app.serializer_global_user_info:
+      class: App\Serializer\GlobalUserInfoDenormalizer
+      public: false
+      tags:
+        - { name: serializer.normalizer }

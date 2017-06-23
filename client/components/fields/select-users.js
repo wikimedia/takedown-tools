@@ -60,6 +60,13 @@ export class SelectUsers extends React.Component {
 			} );
 	}
 
+	componentWillReceiveProps( nextProps ) {
+		this.setState( {
+			...this.state,
+			value: this.getOptionsFromUsers( nextProps.value )
+		} );
+	}
+
 	getOptionsFromUsers( users ) {
 		if ( !users ) {
 			return [];

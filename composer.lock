@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "18b61401ecce5f427756b33d3570ed3a",
+    "content-hash": "ae4293539499c8f323d8a49a74ddd2d4",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -776,17 +776,52 @@
             "time": "2016-12-18T15:42:34+00:00"
         },
         {
-            "name": "geosocio/entity-utils",
+            "name": "geosocio/entity-attacher",
             "version": "1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/geosocio/entity-utils.git",
-                "reference": "c70706ef02fe8ef6bfde5c92302309bd313e3077"
+                "url": "https://github.com/geosocio/entity-attacher.git",
+                "reference": "6c562cf0e8959133a16a4ccfe1bc712be6fe9355"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-utils/zipball/c70706ef02fe8ef6bfde5c92302309bd313e3077",
-                "reference": "c70706ef02fe8ef6bfde5c92302309bd313e3077",
+                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/6c562cf0e8959133a16a4ccfe1bc712be6fe9355",
+                "reference": "6c562cf0e8959133a16a4ccfe1bc712be6fe9355",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/annotations": "^1.0.0",
+                "doctrine/collections": "^1.0",
+                "doctrine/orm": "^2.5.0"
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GeoSocio\\EntityAttacher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3"
+            ],
+            "description": "Utility to Attach Doctrine Entities to existing instances",
+            "time": "2017-06-23T14:59:01+00:00"
+        },
+        {
+            "name": "geosocio/entity-utils",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geosocio/entity-utils.git",
+                "reference": "0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geosocio/entity-utils/zipball/0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4",
+                "reference": "0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4",
                 "shasum": ""
             },
             "require": {
@@ -806,7 +841,7 @@
                 "LGPL-3"
             ],
             "description": "Utilities for Doctrine Entities",
-            "time": "2017-06-16T17:33:57+00:00"
+            "time": "2017-06-22T19:47:02+00:00"
         },
         {
             "name": "geosocio/serialize-response",

@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import * as moment from 'moment';
 import * as TakedownActions from '../../actions/takedown';
 import { Takedown, User } from '../../entity';
 import { Loading } from '../loading';
@@ -27,7 +28,7 @@ export class TakedownIndex extends React.Component {
 			}
 
 			if ( takedown.created ) {
-				created = takedown.created.local().format( 'l LT' );
+				created = moment.utc( takedown.created ).local().format( 'l LT' );
 			}
 
 			return (

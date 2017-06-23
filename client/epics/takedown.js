@@ -1,11 +1,12 @@
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { Set } from 'immutable';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
+import { push } from 'react-router-redux'
 import { Takedown } from '../entity';
 import * as TakedownActions from '../actions/takedown';
-import * as moment from 'moment';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -18,10 +19,7 @@ export function fetchTakedownList( action$, store ) {
 				}
 			} ).map( ( ajaxResponse ) => {
 				const takedowns = ajaxResponse.response.map( ( item ) => {
-					return new Takedown( {
-						...item,
-						created: moment.utc( item.created )
-					} );
+					return new Takedown( item );
 				} );
 
 				return TakedownActions.addMultiple( takedowns );
@@ -62,22 +60,47 @@ export function fetchTakedown( action$, store ) {
 export function takedownSave( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_CREATE_SAVE' )
 		.switchMap( () => {
+			let takedown = store.getState().takedown.create,
+				involvedNames = [];
+
+			// Prepare takedown for saving.
+			takedown = takedown.set( 'status', undefined );
+			takedown = takedown.set( 'error', undefined );
+
+			// We must split out the user names because of T168571
+			involvedNames = takedown.involvedIds.map( ( id ) => {
+				return store.getState().user.list.find( ( user ) => {
+					return user.id === id;
+				} );
+			} ).filter( ( user ) => {
+				return !!user;
+			} ).map( ( user ) => {
+				return user.username;
+			} );
+
+			involvedNames = new Set( involvedNames );
+
+			takedown = takedown.set( 'involvedNames', involvedNames );
+			takedown = takedown.set( 'involvedIds', undefined );
+
 			return Observable.ajax( {
 				url: '/api/takedown',
 				method: 'POST',
-				body: JSON.stringify( store.getState().takedown.create.set( 'status', undefined ).set( 'error', undefined ).toJS() ),
+				body: JSON.stringify( takedown.toJS() ),
 				responseType: 'json',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + store.getState().token
 				}
 			} )
-				.map( ( ajaxResponse ) => {
+				.flatMap( ( ajaxResponse ) => {
 					const takedown = new Takedown( ajaxResponse.response );
 
-					// @TODO clear out the created takedown and redirect
-					//       the user.
-					return TakedownActions.add( takedown );
+					return Observable.concat(
+						Observable.of( TakedownActions.add( takedown ) ),
+						Observable.of( push( '/takedown/' + takedown.id ) ),
+						Observable.of( TakedownActions.clearCreate() )
+					);
 				} )
 				.catch( ( ajaxError ) => {
 					// Set the takedown state.

@@ -38,3 +38,9 @@ export function saveCreate() {
 		type: 'TAKEDOWN_CREATE_SAVE'
 	};
 }
+
+export function clearCreate() {
+	return {
+		type: 'TAKEDOWN_CREATE_CLEAR'
+	};
+}

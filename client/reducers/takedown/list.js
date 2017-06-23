@@ -1,4 +1,4 @@
-import { sortById } from '../../utils';
+import * as moment from 'moment';
 
 export default function list( state = [], action ) {
 	let takedowns = [],
@@ -24,7 +24,7 @@ export default function list( state = [], action ) {
 				...takedowns,
 				action.takedown
 			].sort( ( a, b ) => {
-				return b.created.diff( a.created );
+				return moment.utc( b.created ).diff( moment.utc( a.created ) );
 			} );
 
 		case 'TAKEDOWN_ADD_MULTIPLE':

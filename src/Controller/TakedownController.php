@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
+use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -21,14 +23,38 @@ class TakedownController {
 	protected $doctrine;
 
 	/**
+	 * @var SerializerInterface
+	 */
+	protected $serializer;
+
+	/**
+	 * @var MediaWikiClientInterface
+	 */
+	protected $client;
+
+	/**
+	 * @var EntityAttacherInterface
+	 */
+	protected $attacher;
+
+	/**
 	 * Takedown Controller.
 	 *
 	 * @param RegistryInterface $doctrine Doctrine.
+	 * @param SerializerInterface $serializer Serializer.
+	 * @param MediaWikiClientInterface $client MediaWiki Client.
+	 * @param EntityAttacherInterface $attacher Entity Attacher.
 	 */
 	public function __construct(
-		RegistryInterface $doctrine
+		RegistryInterface $doctrine,
+		SerializerInterface $serializer,
+		MediaWikiClientInterface $client,
+		EntityAttacherInterface $attacher
 	) {
 		$this->doctrine = $doctrine;
+		$this->serializer = $serializer;
+		$this->client = $client;
+		$this->attacher = $attacher;
 	}
 
 	/**
@@ -46,9 +72,7 @@ class TakedownController {
 
 		return $repository->findBy(
 			[],
-			[
-				'created' => 'DESC',
-			],
+			[ 'created' => 'DESC' ],
 			$this->getLimit( $request ),
 			$this->getOffset( $request )
 		);
@@ -78,8 +102,28 @@ class TakedownController {
 	 *
 	 * @return Response
 	 */
-	public function createAction( Request $request ) : Response {
-		// @TODO Implement Method.
+	public function createAction( Request $request ) : Takedown {
+		$em = $this->doctrine->getEntityManager();
+
+		$takedown = $this->serializer->deserialize(
+			$request->getContent(),
+			Takedown::class,
+			$request->getRequestFormat(),
+			[
+				'groups' => [ 'api' ]
+			]
+		);
+
+		// Get the user ids from the API.
+		$usernames = $takedown->getInvolvedNames();
+		$takedown->setInvolved( $this->client->getUsersByUsernames( $usernames ) );
+
+		$takedown = $this->attacher->attach( $takedown );
+
+		$em->persist( $takedown );
+		$em->flush();
+
+		return $this->showAction( $takedown );
 	}
 
 	/**
