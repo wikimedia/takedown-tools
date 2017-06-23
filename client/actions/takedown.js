@@ -44,3 +44,9 @@ export function clearCreate() {
 		type: 'TAKEDOWN_CREATE_CLEAR'
 	};
 }
+
+export function incrementPage() {
+	return {
+		type: 'TAKEDOWN_PAGE_INCREMENT'
+	};
+}

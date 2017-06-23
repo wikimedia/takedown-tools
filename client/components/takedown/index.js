@@ -1,4 +1,6 @@
 import React from 'react';
+import { Observable } from 'rxjs';
+import 'rxjs/add/observable/fromEvent';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -8,11 +10,38 @@ import { Takedown, User } from '../../entity';
 import { Loading } from '../loading';
 
 export class TakedownIndex extends React.Component {
-
-	componentWillMount() {
-		if ( this.props.status !== 'done' ) {
-			this.props.onComponentWillMount();
+	componentDidMount() {
+		if ( this.props.status !== 'done' && this.isBottomVisable( this.table ) ) {
+			this.props.fetchList();
 		}
+
+		this.scrollSubscription = Observable.fromEvent( window, 'scroll' )
+			.takeWhile( () => {
+				return this.props.status !== 'done';
+			} )
+			.debounceTime( 250 )
+			.filter( () => {
+				return this.isBottomVisable( this.table );
+			} )
+			.subscribe( () => {
+				this.props.fetchList();
+			} );
+	}
+
+	componentWillUnmount() {
+		this.scrollSubscription.unsubscribe();
+	}
+
+	componentDidUpdate( prevProps ) {
+		if ( this.props.status !== 'done' && prevProps.takedowns.length !== this.props.takedowns.length && this.isBottomVisable( this.table ) ) {
+			this.props.fetchList();
+		}
+	}
+
+	isBottomVisable( element ) {
+		const rect = element.getBoundingClientRect(),
+			offset = 100;
+		return ( rect.bottom - offset ) <= ( window.innerHeight || document.documentElement.clientHeight );
 	}
 
 	render() {
@@ -33,7 +62,7 @@ export class TakedownIndex extends React.Component {
 
 			return (
 				<tr key={takedown.id}>
-					<td><Link to={'/takedown/' + takedown.id}>{takedown.id}</Link></td>
+					<th scope="row"><Link to={'/takedown/' + takedown.id}>{takedown.id}</Link></th>
 					<td>{reporterName}</td>
 					<td>{created}</td>
 				</tr>
@@ -50,14 +79,17 @@ export class TakedownIndex extends React.Component {
 
 		return (
 			<div>
-				<div className="row mb-2 justify-content-end">
+				<div className="row mb-2">
+					<div className="col-11">
+						<h2>Takedowns</h2>
+					</div>
 					<div className="col-1 text-right">
 						<Link to="/takedown/create" className="btn btn-primary btn-sm">+ New</Link>
 					</div>
 				</div>
 				<div className="row">
 					<div className="col">
-						<table className="table table-bordered">
+						<table ref={( table ) => { this.table = table; }} className="table table-bordered">
 							<thead>
 								<tr>
 									<th>#</th>
@@ -78,7 +110,7 @@ export class TakedownIndex extends React.Component {
 }
 
 TakedownIndex.propTypes = {
-	onComponentWillMount: PropTypes.func.isRequired,
+	fetchList: PropTypes.func.isRequired,
 	status: PropTypes.string.isRequired,
 	takedowns: PropTypes.arrayOf( PropTypes.instanceOf( Takedown ) ),
 	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) )
@@ -96,7 +128,7 @@ export const TakedownIndexContainer = connect(
 	},
 	( dispatch ) => {
 		return {
-			onComponentWillMount: () => {
+			fetchList: () => {
 				dispatch( TakedownActions.fetchList() );
 			}
 		};

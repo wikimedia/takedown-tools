@@ -1,18 +1,17 @@
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Set } from 'immutable';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
-import { push } from 'react-router-redux'
+import { push } from 'react-router-redux';
 import { Takedown } from '../entity';
 import * as TakedownActions from '../actions/takedown';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
-		.switchMap( () => {
+		.flatMap( () => {
 			return Observable.ajax( {
-				url: '/api/takedown',
+				url: '/api/takedown?page=' + store.getState().takedown.page,
 				responseType: 'json',
 				headers: {
 					Authorization: 'Bearer ' + store.getState().token
