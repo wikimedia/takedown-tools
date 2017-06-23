@@ -1,6 +1,8 @@
 import { parseJwt } from '../../utils';
 import { User } from '../../entity';
 
+// @TODO Make the state an immutable collection so we can add our own methods
+//      to it?
 export default function list( state = [], action ) {
 	let users = [],
 		user,

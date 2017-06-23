@@ -16,4 +16,10 @@ export const Takedown = Record( {
 		username: undefined,
 		status: 'clean',
 		error: undefined
-	}, 'User' );
+	}, 'User' ),
+	Site = Record( {
+		id: undefined,
+		name: undefined,
+		domain: undefined,
+		projectId: undefined
+	}, 'Site' );

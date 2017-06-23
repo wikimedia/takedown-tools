@@ -6,10 +6,12 @@ import { Takedown, User } from '../../entity';
 import { parseJwt } from '../../utils';
 import * as TakedownActions from '../../actions/takedown';
 import * as UserActions from '../../actions/user';
+import * as SiteActions from '../../actions/site';
 
 export class TakedownCreate extends React.Component {
 
 	componentWillMount() {
+		this.props.fetchSites();
 		this.componentWillReceiveProps( this.props );
 	}
 
@@ -87,6 +89,7 @@ export class TakedownCreate extends React.Component {
 }
 
 TakedownCreate.propTypes = {
+	fetchSites: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
 	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
 	reporterId: PropTypes.number,
@@ -111,6 +114,9 @@ export const TakedownCreateContainer = connect(
 	},
 	( dispatch ) => {
 		return {
+			fetchSites: () => {
+				return dispatch( SiteActions.fetchAll() );
+			},
 			updateTakedown: ( takedown ) => {
 				return dispatch( TakedownActions.updateCreate( takedown ) );
 			},
