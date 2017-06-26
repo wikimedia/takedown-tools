@@ -1,39 +1,17 @@
+import { Set } from 'immutable';
 import * as moment from 'moment';
 
-export default function list( state = [], action ) {
-	let takedowns = [],
-		index;
-
+export default function list( state = new Set(), action ) {
 	switch ( action.type ) {
 		case 'TAKEDOWN_ADD':
-			takedowns = [
-				...state
-			];
-			index = takedowns.findIndex( ( element ) => {
-				return element.id === action.takedown.id;
-			} );
-
-			if ( index !== -1 ) {
-				takedowns = [
-					...state.slice( 0, index ),
-					...state.slice( index + 1 )
-				];
-			}
-
-			return [
-				...takedowns,
-				action.takedown
-			].sort( ( a, b ) => {
+			return state.add( action.takedown ).sort( ( a, b ) => {
 				return moment.utc( b.created ).diff( moment.utc( a.created ) );
 			} );
 
 		case 'TAKEDOWN_ADD_MULTIPLE':
-			return action.takedowns.reduce( ( state, takedown ) => {
-				return list( state, {
-					type: 'TAKEDOWN_ADD',
-					takedown: takedown
-				} );
-			}, state );
+			return state.union( action.takedowns ).sort( ( a, b ) => {
+				return moment.utc( b.created ).diff( moment.utc( a.created ) );
+			} );
 
 		default:
 			return state;

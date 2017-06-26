@@ -1,37 +1,12 @@
-export default function list( state = [], action ) {
-	let sites = [],
-		index;
+import { Set } from 'immutable';
 
+export default function list( state = new Set(), action ) {
 	switch ( action.type ) {
 		case 'SITE_ADD':
-			sites = [
-				...state
-			];
-			index = sites.findIndex( ( element ) => {
-				return element.id === action.site.id;
-			} );
-
-			if ( index !== -1 ) {
-				sites = [
-					...state.slice( 0, index ),
-					...state.slice( index + 1 )
-				];
-			}
-
-			return [
-				...sites,
-				action.site
-			].sort( ( a, b ) => {
-				return a.id - b.id;
-			} );
+			return state.add( action.site ).sortBy( site => site.id );
 
 		case 'SITE_ADD_MULTIPLE':
-			return action.sites.reduce( ( state, site ) => {
-				return list( state, {
-					type: 'SITE_ADD',
-					site: site
-				} );
-			}, state );
+			return state.union( action.sites ).sortBy( site => site.id );
 
 		default:
 			return state;

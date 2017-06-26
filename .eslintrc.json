@@ -19,6 +19,12 @@
 			{
 				"allowPattern": "^catch$"
 			}
+		],
+		"no-bitwise": [
+			"error",
+			{
+				"int32Hint": true
+			}
 		]
   }
 }

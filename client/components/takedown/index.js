@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
 import * as TakedownActions from '../../actions/takedown';
-import { Takedown, User } from '../../entity';
+import { Set } from 'immutable';
 import { Loading } from '../loading';
 
 export class TakedownIndex extends React.Component {
@@ -33,7 +33,7 @@ export class TakedownIndex extends React.Component {
 	}
 
 	componentDidUpdate( prevProps ) {
-		if ( this.props.status !== 'done' && prevProps.takedowns.length !== this.props.takedowns.length && this.isBottomVisable( this.table ) ) {
+		if ( this.props.status !== 'done' && prevProps.takedowns.size !== this.props.takedowns.size && this.isBottomVisable( this.table ) ) {
 			this.props.fetchList();
 		}
 	}
@@ -112,8 +112,8 @@ export class TakedownIndex extends React.Component {
 TakedownIndex.propTypes = {
 	fetchList: PropTypes.func.isRequired,
 	status: PropTypes.string.isRequired,
-	takedowns: PropTypes.arrayOf( PropTypes.instanceOf( Takedown ) ),
-	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) )
+	takedowns: PropTypes.instanceOf( Set ),
+	users: PropTypes.instanceOf( Set )
 };
 
 export const TakedownIndexContainer = connect(

@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Set } from 'immutable';
 import { SelectUsers } from '../fields/select-users';
-import { Takedown, User } from '../../entity';
 import { parseJwt } from '../../utils';
+import { Takedown } from '../../entity';
 import * as TakedownActions from '../../actions/takedown';
 import * as UserActions from '../../actions/user';
 import * as SiteActions from '../../actions/site';
@@ -73,7 +74,7 @@ export class TakedownCreate extends React.Component {
 						<div className="form-group row">
 							<div className="col">
 								<label htmlFor="involvedIds">Involved Users</label>
-								<SelectUsers disabled={disabled} name="involvedIds" value={involved} users={this.props.users} onChange={this.updateInvolved.bind( this )} />
+								<SelectUsers disabled={disabled} name="involvedIds" value={involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
 							</div>
 						</div>
 						<div className="form-group row">
@@ -91,7 +92,7 @@ export class TakedownCreate extends React.Component {
 TakedownCreate.propTypes = {
 	fetchSites: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
-	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
+	users: PropTypes.instanceOf( Set ).isRequired,
 	reporterId: PropTypes.number,
 	updateTakedown: PropTypes.func.isRequired,
 	saveTakedown: PropTypes.func.isRequired,

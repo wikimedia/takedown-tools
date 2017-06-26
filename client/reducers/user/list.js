@@ -1,50 +1,21 @@
+import { Set } from 'immutable';
 import { parseJwt } from '../../utils';
 import { User } from '../../entity';
 
 // @TODO Make the state an immutable collection so we can add our own methods
 //      to it?
-export default function list( state = [], action ) {
-	let users = [],
-		user,
-		index;
-
+export default function list( state = new Set(), action ) {
 	switch ( action.type ) {
 		case 'USER_ADD':
-			users = [
-				...state
-			];
-			index = users.findIndex( ( element ) => {
-				return element.id === action.user.id;
-			} );
-
-			if ( index !== -1 ) {
-				users = [
-					...state.slice( 0, index ),
-					...state.slice( index + 1 )
-				];
-			}
-
-			return [
-				...users,
-				action.user
-			].sort( ( a, b ) => {
-				return a.id - b.id;
-			} );
+			return state.add( action.user ).sortBy( user => user.id );
 
 		case 'USER_ADD_MULTIPLE':
-			return action.users.reduce( ( state, user ) => {
-				return list( state, {
-					type: 'USER_ADD',
-					user: user
-				} );
-			}, state );
+			return state.union( action.users ).sortBy( user => user.id );
 
 		case 'TOKEN_ADD':
-			user = new User( parseJwt( action.token ) );
-
 			return list( state, {
 				type: 'USER_ADD',
-				user: user
+				user: new User( parseJwt( action.token ) )
 			} );
 
 		default:

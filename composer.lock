@@ -777,24 +777,25 @@
         },
         {
             "name": "geosocio/entity-attacher",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/entity-attacher.git",
-                "reference": "6c562cf0e8959133a16a4ccfe1bc712be6fe9355"
+                "reference": "2682f3642345e5d2b6b96453154ac753eb971649"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/6c562cf0e8959133a16a4ccfe1bc712be6fe9355",
-                "reference": "6c562cf0e8959133a16a4ccfe1bc712be6fe9355",
+                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/2682f3642345e5d2b6b96453154ac753eb971649",
+                "reference": "2682f3642345e5d2b6b96453154ac753eb971649",
                 "shasum": ""
             },
             "require": {
-                "doctrine/annotations": "^1.0.0",
+                "doctrine/annotations": "^1.0",
                 "doctrine/collections": "^1.0",
-                "doctrine/orm": "^2.5.0"
+                "doctrine/orm": "^2.4.0"
             },
             "require-dev": {
+                "phpunit/phpunit": "^6.2",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -808,26 +809,26 @@
                 "LGPL-3"
             ],
             "description": "Utility to Attach Doctrine Entities to existing instances",
-            "time": "2017-06-23T14:59:01+00:00"
+            "time": "2017-06-25T16:56:28+00:00"
         },
         {
             "name": "geosocio/entity-utils",
-            "version": "1.0.3",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/entity-utils.git",
-                "reference": "0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4"
+                "reference": "10ca1f6561594ca649a1d27ced0424ae4d08b77d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-utils/zipball/0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4",
-                "reference": "0b40e57ea3445cf6efb6bba13e2c6f0e8cf48da4",
+                "url": "https://api.github.com/repos/geosocio/entity-utils/zipball/10ca1f6561594ca649a1d27ced0424ae4d08b77d",
+                "reference": "10ca1f6561594ca649a1d27ced0424ae4d08b77d",
                 "shasum": ""
             },
-            "require": {
-                "doctrine/collections": "^1.0"
-            },
             "require-dev": {
+                "doctrine/collections": "^1.0",
+                "doctrine/orm": "^2.0",
+                "phpunit/phpunit": "^6.2",
                 "squizlabs/php_codesniffer": "^3.0"
             },
             "type": "library",
@@ -841,27 +842,27 @@
                 "LGPL-3"
             ],
             "description": "Utilities for Doctrine Entities",
-            "time": "2017-06-22T19:47:02+00:00"
+            "time": "2017-06-25T01:48:34+00:00"
         },
         {
             "name": "geosocio/serialize-response",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/serialize-response.git",
-                "reference": "5da9cf561255028e622a43ee8782b48957cd1185"
+                "reference": "9e8ff86e36bcfae533028fac425ceabfbb482be8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/serialize-response/zipball/5da9cf561255028e622a43ee8782b48957cd1185",
-                "reference": "5da9cf561255028e622a43ee8782b48957cd1185",
+                "url": "https://api.github.com/repos/geosocio/serialize-response/zipball/9e8ff86e36bcfae533028fac425ceabfbb482be8",
+                "reference": "9e8ff86e36bcfae533028fac425ceabfbb482be8",
                 "shasum": ""
             },
             "require": {
-                "symfony/http-foundation": "^3.3",
-                "symfony/http-kernel": "^3.3",
-                "symfony/security": "^3.3",
-                "symfony/serializer": "^3.3"
+                "symfony/http-foundation": "^3.0",
+                "symfony/http-kernel": "^3.0",
+                "symfony/security": "^3.0",
+                "symfony/serializer": "^3.0"
             },
             "require-dev": {
                 "squizlabs/php_codesniffer": "^3.0"
@@ -877,20 +878,20 @@
                 "LGPL-3"
             ],
             "description": "Serializes a Controller Response",
-            "time": "2017-06-16T21:05:54+00:00"
+            "time": "2017-06-19T17:44:49+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.2.3",
+            "version": "6.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006"
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/8d6c6cc55186db87b7dc5009827429ba4e9dc006",
-                "reference": "8d6c6cc55186db87b7dc5009827429ba4e9dc006",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/f4db5a78a5ea468d4831de7f0bf9d9415e348699",
+                "reference": "f4db5a78a5ea468d4831de7f0bf9d9415e348699",
                 "shasum": ""
             },
             "require": {
@@ -900,8 +901,11 @@
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "^4.0",
+                "phpunit/phpunit": "^4.0 || ^5.0",
                 "psr/log": "^1.0"
+            },
+            "suggest": {
+                "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
@@ -939,7 +943,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2017-02-28T22:50:30+00:00"
+            "time": "2017-06-22T18:50:49+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2408,16 +2412,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.0.6",
+            "version": "v1.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "761787e98d087c4d93a86fef82ec8dd5c0612565"
+                "reference": "d4681b5a09b4b05b5b8ba0819aaf28739eaf8d9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/761787e98d087c4d93a86fef82ec8dd5c0612565",
-                "reference": "761787e98d087c4d93a86fef82ec8dd5c0612565",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/d4681b5a09b4b05b5b8ba0819aaf28739eaf8d9c",
+                "reference": "d4681b5a09b4b05b5b8ba0819aaf28739eaf8d9c",
                 "shasum": ""
             },
             "require": {
@@ -2450,7 +2454,7 @@
                     "email": "fabien.potencier@gmail.com"
                 }
             ],
-            "time": "2017-06-14T04:58:05+00:00"
+            "time": "2017-06-24T16:43:17+00:00"
         },
         {
             "name": "symfony/framework-bundle",
