@@ -4,10 +4,11 @@ import 'rxjs/add/observable/fromEvent';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import * as moment from 'moment';
-import * as TakedownActions from '../../actions/takedown';
+import * as TakedownSelectors from '../../../selectors/takedown';
+import * as TakedownActions from '../../../actions/takedown';
 import { Set } from 'immutable';
-import { Loading } from '../loading';
+import { TakedownIndexRowContainer } from './row';
+import { Loading } from '../../loading';
 
 export class TakedownIndex extends React.Component {
 	componentDidMount() {
@@ -46,26 +47,8 @@ export class TakedownIndex extends React.Component {
 
 	render() {
 		const takedowns = this.props.takedowns.map( ( takedown ) => {
-			const reporter = this.props.users.find( ( user ) => {
-				return takedown.reporterId === user.id;
-			} );
-			let reporterName,
-				created;
-
-			if ( reporter ) {
-				reporterName = reporter.username;
-			}
-
-			if ( takedown.created ) {
-				created = moment.utc( takedown.created ).local().format( 'l LT' );
-			}
-
 			return (
-				<tr key={takedown.id}>
-					<th scope="row"><Link to={'/takedown/' + takedown.id}>{takedown.id}</Link></th>
-					<td>{reporterName}</td>
-					<td>{created}</td>
-				</tr>
+				<TakedownIndexRowContainer key={takedown.id} takedown={takedown} />
 			);
 		} );
 
@@ -112,18 +95,17 @@ export class TakedownIndex extends React.Component {
 TakedownIndex.propTypes = {
 	fetchList: PropTypes.func.isRequired,
 	status: PropTypes.string.isRequired,
-	takedowns: PropTypes.instanceOf( Set ),
-	users: PropTypes.instanceOf( Set )
+	takedowns: PropTypes.instanceOf( Set )
 };
 
 export const TakedownIndexContainer = connect(
-	( state ) => {
-		return {
-			status: state.takedown.status,
-			takedowns: state.takedown.list.filter( ( takedown ) => {
-				return !takedown.error;
-			} ),
-			users: state.user.list
+	() => {
+		const getTakedownList = TakedownSelectors.makeGetTakedownList();
+		return ( state, props ) => {
+			return {
+				status: state.takedown.status,
+				takedowns: getTakedownList( state, props )
+			};
 		};
 	},
 	( dispatch ) => {

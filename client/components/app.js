@@ -1,6 +1,6 @@
 import React from 'react';
 import { HeaderContainer } from './header';
-import { TakedownIndexContainer } from './takedown/index';
+import { TakedownIndexContainer } from './takedown/index/index';
 import { TakedownShowContainer } from './takedown/show';
 import { TakedownCreateContainer } from './takedown/create';
 import { Switch, Route } from 'react-router-dom';

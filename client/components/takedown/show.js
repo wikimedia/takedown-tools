@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as TakedownSelectors from '../../selectors/takedown';
 import * as TakedownActions from '../../actions/takedown';
 import { Takedown, User } from '../../entity';
 import { Loading } from '../loading';
@@ -52,7 +53,7 @@ export class TakedownShow extends React.Component {
 							<strong>Reporter</strong>
 						</div>
 						<div className="col-10">
-							{this.props.reporterName}
+							{this.props.reporter.username}
 						</div>
 					</div>
 					<div className="row">
@@ -74,44 +75,28 @@ TakedownShow.propTypes = {
 	onComponentWillMount: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ),
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ),
-	reporterName: PropTypes.string
+	reporter: PropTypes.instanceOf( User )
 };
 
 export const TakedownShowContainer = connect(
-	( state, ownProps ) => {
-		const id = parseInt( ownProps.match.params.id ),
-			takedown = state.takedown.list.find( ( takedown ) => {
-				return id === takedown.id;
-			} );
-		let involved = [],
-			reporter,
-			reporterName;
+	() => {
+		const getTakedown = TakedownSelectors.makeGetTakedown(),
+			getInvolved = TakedownSelectors.makeGetInvolved(),
+			getReporter = TakedownSelectors.makeGetReporter();
+		return ( state, props ) => {
+			const takedown = getTakedown( state, props );
 
-		if ( takedown ) {
-			// Get invovled users.
-			involved = takedown.involvedIds.map( ( id ) => {
-				return state.user.list.find( ( user ) => {
-					return user.id === id;
-				} );
-			} ).filter( ( user ) => {
-				return typeof user !== 'undefined';
-			} );
+			props = {
+				...props,
+				takedown: takedown
+			};
 
-			// Get Reporter.
-			if ( takedown.reporterId ) {
-				reporter = state.user.list.find( ( user ) => {
-					return user.id === takedown.reporterId;
-				} );
-				if ( reporter ) {
-					reporterName = reporter.username;
-				}
-			}
-		}
-		return {
-			status: state.takedown.status,
-			takedown: takedown,
-			involved: involved,
-			reporterName: reporterName
+			return {
+				status: state.takedown.status,
+				takedown: takedown,
+				involved: getInvolved( state, props ),
+				reporter: getReporter( state, props )
+			};
 		};
 	},
 	( dispatch, ownProps ) => {
