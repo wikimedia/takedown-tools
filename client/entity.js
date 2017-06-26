@@ -1,5 +1,27 @@
 import { Record } from 'immutable';
 
+/**
+ * Gets a numeric hash from a string id.
+ *
+ * @link http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+ *
+ * @param {string} id
+ *
+ * @return {number}
+ */
+function numericHash( id ) {
+	let hash = 0, i, chr;
+	if ( id.length === 0 ) {
+		return hash;
+	}
+	for ( i = 0; i < id.length; i++ ) {
+		chr = id.charCodeAt( i );
+		hash = ( ( hash * 31 + chr ) - hash ) + chr;
+		hash = hash | 0; // Convert to 32bit integer
+	}
+	return hash;
+}
+
 export class Takedown extends Record( {
 	id: undefined,
 	reporterId: undefined,
@@ -86,17 +108,7 @@ export class Site extends Record( {
 			super.hashCode();
 		}
 
-		// @link http://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-		let hash = 0, i, chr;
-		if ( this.id.length === 0 ) {
-			return hash;
-		}
-		for ( i = 0; i < this.id.length; i++ ) {
-			chr = this.id.charCodeAt( i );
-			hash = ( ( hash * 31 + chr ) - hash ) + chr;
-			hash = hash | 0; // Convert to 32bit integer
-		}
-		return hash;
+		return numericHash( this.id );
 	}
 
 }
