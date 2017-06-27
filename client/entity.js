@@ -32,7 +32,8 @@ export class Takedown extends Record( {
 	created: undefined,
 	status: 'clean',
 	error: undefined,
-	siteId: undefined
+	siteId: undefined,
+	type: undefined
 }, 'Takedown' ) {
 
 	equals( other ) {

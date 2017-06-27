@@ -55,7 +55,9 @@ export class TakedownCreate extends React.Component {
 	render() {
 		let submitClass = 'btn btn-primary',
 			submitDisabled = false,
-			disabled = false;
+			disabled = false,
+			dmcaButtonClass = 'btn btn-secondary',
+			cpButtonClass = 'btn btn-secondary';
 
 		switch ( this.props.takedown.status ) {
 			case 'error':
@@ -67,6 +69,16 @@ export class TakedownCreate extends React.Component {
 				break;
 			case 'clean':
 				submitDisabled = true;
+				break;
+		}
+
+		switch ( this.props.takedown.type ) {
+			case 'dmca':
+				dmcaButtonClass = dmcaButtonClass + ' active';
+				break;
+
+			case 'cp':
+				cpButtonClass = cpButtonClass + ' active';
 				break;
 		}
 
@@ -85,6 +97,17 @@ export class TakedownCreate extends React.Component {
 							<div className="col">
 								<label htmlFor="involvedIds">Involved Users</label>
 								<SelectUsers disabled={disabled} name="involvedIds" value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
+							</div>
+						</div>
+						<div className="form-group row">
+							<div className="col">
+								<label>Type</label>
+								<div className="row">
+									<div className="col btn-group">
+										<button type="button" style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
+										<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Proection</button>
+									</div>
+								</div>
 							</div>
 						</div>
 						<div className="form-group row">
