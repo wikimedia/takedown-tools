@@ -52,27 +52,4 @@ class Site {
 	public function getId() :? string {
 		return $this->id;
 	}
-
-	/**
-	 * Set Project.
-	 *
-	 * @param Project $project Project
-	 *
-	 * @return self
-	 */
-	public function setProject( Project $project ) {
-		$this->project = $project;
-
-		return $this;
-	}
-
-	/**
-	 * Get Project
-	 *
-	 * @return Project
-	 */
-	public function getProject() :? Project {
-		return $this->project;
-	}
-
 }

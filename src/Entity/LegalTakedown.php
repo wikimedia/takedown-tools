@@ -107,28 +107,6 @@ class LegalTakedown {
 	}
 
 	/**
-	 * Set Project
-	 *
-	 * @param string $project Project
-	 *
-	 * @return self
-	 */
-	public function setProject( string $project ) : self {
-		$this->project = $project;
-
-		return $this;
-	}
-
-	/**
-	 * Project
-	 *
-	 * @return string
-	 */
-	public function getProject() :? string {
-		return $this->project;
-	}
-
-	/**
 	 * Set Content Type
 	 *
 	 * @param string $contentType contentType
