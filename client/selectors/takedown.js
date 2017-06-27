@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { User } from '../entity';
+import { User, Site } from '../entity';
 
 export function makeGetTakedown() {
 	return createSelector(
@@ -58,6 +58,28 @@ export function makeGetTakedownList() {
 			return takedowns.filter( ( takedown ) => {
 				return !takedown.error;
 			} );
+		}
+	);
+}
+
+export function makeGetSite() {
+	return createSelector(
+		state => state.site.list,
+		( _, props ) => props.takedown ? props.takedown.siteId : undefined,
+		( sites, siteId ) => {
+			if ( !siteId ) {
+				return new Site();
+			}
+
+			let site = sites.find( ( site ) => {
+				return site.id === siteId;
+			} );
+
+			if ( !site ) {
+				site = new Site();
+			}
+
+			return site;
 		}
 	);
 }

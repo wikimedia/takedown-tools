@@ -3,6 +3,7 @@
 namespace App\Client;
 
 use App\Entity\User;
+use App\Entity\Site;
 
 interface MediaWikiClientInterface {
 
@@ -23,4 +24,14 @@ interface MediaWikiClientInterface {
 	 * @return User
 	 */
 	public function getUserByUsername( string $username ) : User;
+
+	/**
+	 * Get Site by Id
+	 *
+	 * @param string $id Site to retrieve
+	 *
+	 * @return Site
+	 */
+	public function getSiteById( string $id ) : Site;
+
 }

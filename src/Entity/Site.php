@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
 
@@ -10,7 +9,7 @@ use GeoSocio\EntityUtils\ParameterBag;
  * @ORM\Entity
  * @ORM\Table(name="site")
  *
- * @TODO add validation.
+ * @todo add validation.
  */
 class Site {
 
@@ -23,14 +22,6 @@ class Site {
 	private $id;
 
 	/**
-	 * @var Project
-	 *
-	 * @ORM\ManyToOne(targetEntity="App\Entity\Project")
-   * @ORM\JoinColumn(name="project_id", referencedColumnName="project_id")
-	 */
-	private $project;
-
-	/**
 	 * Site
 	 *
 	 * @param array $data Data to construct the object.
@@ -38,7 +29,6 @@ class Site {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getString( 'id' );
-		$this->project = $params->getInstance( 'project', Project::class );
 	}
 
 	/**

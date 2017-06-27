@@ -46,7 +46,7 @@ class Takedown {
 	/**
 	 * @var Site
 	 *
-	 * @ORM\ManyToOne(targetEntity="App\Entity\Site")
+	 * @ORM\ManyToOne(targetEntity="App\Entity\Site", cascade={"persist"})
 	 * @ORM\JoinColumn(name="site_id", referencedColumnName="site_id")
 	 * @Attach()
 	 */

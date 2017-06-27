@@ -98,3 +98,10 @@ services:
       public: false
       tags:
         - { name: serializer.normalizer }
+
+
+  app.serializer_site_matrix:
+      class: App\Serializer\SiteMatrixDenormalizer
+      public: false
+      tags:
+        - { name: serializer.normalizer }

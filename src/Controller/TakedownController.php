@@ -118,6 +118,11 @@ class TakedownController {
 		$usernames = $takedown->getInvolvedNames();
 		$takedown->setInvolved( $this->client->getUsersByUsernames( $usernames ) );
 
+		$siteId = $takedown->getSite() ? $takedown->getSite()->getId() : null;
+		if ( $siteId ) {
+			$takedown->setSite( $this->client->getSiteById( $siteId ) );
+		}
+
 		$takedown = $this->attacher->attach( $takedown );
 
 		$em->persist( $takedown );

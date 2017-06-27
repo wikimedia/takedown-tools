@@ -2,12 +2,14 @@
 
 namespace App\Client;
 
+use App\Entity\Site;
 use App\Entity\User;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use function GuzzleHttp\Promise\settle;
 
 class MediaWikiClient implements MediaWikiClientInterface {
 
@@ -55,6 +57,28 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	}
 
 	/**
+	 * Get Site by Id
+	 *
+	 * @param string $id Site to retrieve
+	 *
+	 * @return Site
+	 */
+	public function getSiteById( string $id ) : Site {
+		return $this->getSitesAsync()->then( function ( $sites ) use ( $id ) {
+			$item = reset( $sites );
+			while ( $item !== false ) {
+					if ( $item->getId() === $id ) {
+							return $item;
+					};
+
+					$item = next( $sites );
+			}
+
+			return null;
+		} )->wait();
+	}
+
+	/**
 	 * Get Users by Usernames
 	 *
 	 * @param string $usernames Users to retrieve.
@@ -66,7 +90,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->getUserAsync( $username );
 		}, $usernames );
 
-		return \GuzzleHttp\Promise\settle( $promises )->then( function( $results ) {
+		return settle( $promises )->then( function( $results ) {
 			$results = array_filter( $results, function ( $result ) {
 				return $result['state'] === PromiseInterface::FULFILLED;
 			} );
@@ -96,6 +120,28 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
 		}, function ( RequestException $e ) {
 			return null;
+		} );
+	}
+
+	/**
+	 * Get All Sites.
+	 *
+	 * @return PromiseInterface
+	 */
+	protected function getSitesAsync() : PromiseInterface {
+		return $this->client->getAsync( '', [
+			'query' => [
+				'action' => 'sitematrix',
+				'format' => 'json',
+			],
+		] )->then( function( ResponseInterface $response ) {
+			return $this->serializer->deserialize(
+				(string)$response->getBody(),
+				Site::class . '[]',
+				'json'
+			);
+		}, function ( RequestException $e ) {
+			return [];
 		} );
 	}
 }
