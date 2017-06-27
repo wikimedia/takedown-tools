@@ -1,4 +1,4 @@
-import { Record } from 'immutable';
+import { Record, Set } from 'immutable';
 
 /**
  * Gets a numeric hash from a string id.
@@ -22,6 +22,81 @@ function numericHash( id ) {
 	return hash;
 }
 
+export class Metadata extends Record( {
+	id: undefined,
+	label: undefined,
+	type: undefined
+} ) {
+
+	equals( other ) {
+		if ( !( other instanceof Metadata ) ) {
+			return super.equals( other );
+		}
+
+		if ( typeof other.id === 'undefined' || typeof this.id === 'undefined' ) {
+			return super.equals( other );
+		}
+
+		return ( other.id === this.id );
+	}
+
+	hashCode() {
+		if ( typeof this.id === 'undefined' ) {
+			super.hashCode();
+		}
+
+		return this.id;
+	}
+}
+
+// Fixed set of Metadata.
+export const MetadataSet = new Set( [
+	new Metadata( {
+		id: 'checkuser',
+		label: 'Checkuser data was available and is being included below.',
+		type: 'cp'
+	} ),
+	new Metadata( {
+		id: 'email-request',
+		label: 'An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.',
+		type: 'cp'
+	} ),
+	new Metadata( {
+		id: 'taken-down-apparent',
+		label: 'The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent.',
+		type: 'dmca'
+	} ),
+	new Metadata( {
+		id: 'taken-down-dmca',
+		label: 'The content was taken down pursuant to a DMCA notice.',
+		type: 'dmca'
+	} ),
+	new Metadata( {
+		id: 'taken-down-infringing',
+		label: 'The content was taken down and we have actual knowledge that the content was infringing copyright ',
+		type: 'dmca'
+	} ),
+	new Metadata( {
+		id: 'taken-down-suppressed',
+		label: 'The content was taken down and suppressed.',
+		type: 'cp'
+	} ),
+	new Metadata( {
+		id: 'taken-down-user-warned',
+		label: 'The content was taken down and the user was clearly warned and discouraged from future violations.',
+		type: 'dmca'
+	} ),
+	new Metadata( {
+		id: 'user-locked',
+		label: 'The user who uploaded the content has been locked.',
+		type: 'cp'
+	} )
+] );
+
+export class Dmca extends Record {}
+
+export class Cp extends Record {}
+
 export class Takedown extends Record( {
 	id: undefined,
 	reporterId: undefined,
@@ -33,8 +108,19 @@ export class Takedown extends Record( {
 	status: 'clean',
 	error: undefined,
 	siteId: undefined,
-	type: undefined
+	type: undefined,
+	metadataIds: new Set(),
+	dmca: new Dmca(),
+	cp: new Cp()
 }, 'Takedown' ) {
+
+	constructor( data = {} ) {
+		data = {
+			...data,
+			metadataIds: new Set( data.metadataIds ? data.metadataIds : [] )
+		};
+		super( data );
+	}
 
 	equals( other ) {
 		if ( !( other instanceof Takedown ) ) {

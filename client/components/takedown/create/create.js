@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Set } from 'immutable';
 import Select from 'react-select';
-import { SelectUsers } from '../fields/select-users';
-import { Takedown, User } from '../../entity';
-import * as TakedownSelectors from '../../selectors/takedown';
-import * as TakedownActions from '../../actions/takedown';
-import * as UserSelectors from '../../selectors/user';
-import * as UserActions from '../../actions/user';
-import * as SiteActions from '../../actions/site';
-import * as SiteSelectors from '../../selectors/site';
+import { TakedownCreateDmcaContainer } from './dmca';
+import { SelectUsers } from '../../fields/select-users';
+import { MetadataField } from '../../fields/metadata';
+import { Takedown, User } from '../../../entity';
+import * as TakedownSelectors from '../../../selectors/takedown';
+import * as TakedownActions from '../../../actions/takedown';
+import * as UserSelectors from '../../../selectors/user';
+import * as UserActions from '../../../actions/user';
+import * as SiteActions from '../../../actions/site';
+import * as SiteSelectors from '../../../selectors/site';
 
 export class TakedownCreate extends React.Component {
 
@@ -57,7 +59,9 @@ export class TakedownCreate extends React.Component {
 			submitDisabled = false,
 			disabled = false,
 			dmcaButtonClass = 'btn btn-secondary',
-			cpButtonClass = 'btn btn-secondary';
+			cpButtonClass = 'btn btn-secondary',
+			takedownTypeForm,
+			metaDataField;
 
 		switch ( this.props.takedown.status ) {
 			case 'error':
@@ -75,11 +79,25 @@ export class TakedownCreate extends React.Component {
 		switch ( this.props.takedown.type ) {
 			case 'dmca':
 				dmcaButtonClass = dmcaButtonClass + ' active';
+				takedownTypeForm = (
+					<TakedownCreateDmcaContainer takedown={this.props.takedown} />
+				);
 				break;
 
 			case 'cp':
 				cpButtonClass = cpButtonClass + ' active';
 				break;
+		}
+
+		if ( this.props.takedown.type ) {
+			metaDataField = (
+				<div className="form-group row">
+					<div className="col">
+						<label htmlFor="metadataIds">Metadata</label> <small id="passwordHelpInline" className="text-muted">check all that are true</small>
+						<MetadataField type={this.props.takedown.type} value={this.props.takedown.metadataIds} onChange={( value ) => this.updateField( 'metadataIds', value )} />
+					</div>
+				</div>
+			);
 		}
 
 		return (
@@ -105,11 +123,13 @@ export class TakedownCreate extends React.Component {
 								<div className="row">
 									<div className="col btn-group">
 										<button type="button" style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
-										<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Proection</button>
+										<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Protection</button>
 									</div>
 								</div>
 							</div>
 						</div>
+						{metaDataField}
+						{takedownTypeForm}
 						<div className="form-group row">
 							<div className="col text-right">
 								<input type="submit" className={submitClass} disabled={submitDisabled} value="Save" />

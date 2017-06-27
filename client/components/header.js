@@ -20,9 +20,11 @@ export class Header extends React.Component {
 		}
 
 		return (
-			<header className="row">
-				<div className="col">
-					<h1><Link to="/">LCA Tools</Link></h1>
+			<header className="row pt-2 pb-1 justify-content-between">
+				<div className="col-2">
+					<Link to="/">
+						<img src="https://legalteam.wikimedia.org/static/images/project-logos/legalteamwiki.png" alt="Legal Team Logo" className="w-50" />
+					</Link>
 				</div>
 				<div className="col-3 text-right">
 					{menu}

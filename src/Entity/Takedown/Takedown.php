@@ -4,7 +4,6 @@ namespace App\Entity\Takedown;
 
 use App\Entity\Site;
 use App\Entity\User;
-use App\Entity\Project;
 use App\Entity\Metadata;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -24,6 +23,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class Takedown {
 
 	use CreatedTrait;
+
+	/**
+	 * @var string
+	 */
+	const TYPE_DMCA = 'dmca';
+
+	/**
+	 * @var string
+	 */
+	const TYPE_CP = 'cp';
 
 	/**
 	 * @var int
@@ -85,14 +94,18 @@ class Takedown {
 	/**
 	 * @var DigitalMillenniumCopyrightAct
 	 *
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\DigitalMillenniumCopyrightAct", mappedBy="id")
+	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\DigitalMillenniumCopyrightAct", mappedBy="id", cascade={"persist"})
 	 */
 	private $dmca;
 
 	/**
 	 * @var ChildProtection
 	 *
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\ChildProtection", mappedBy="id")
+	 * @ORM\OneToOne(
+	 *	targetEntity="App\Entity\Takedown\ChildProtection",
+	 *	mappedBy="id",
+	 *	cascade={"persist"}
+	 *)
 	 */
 	private $cp;
 
@@ -105,7 +118,6 @@ class Takedown {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getInt( 'id' );
 		$this->reporter = $params->getInstance( 'reporter', User::class );
-		$this->project = $params->getInstance( 'project', Project::class );
 		$this->involved = $params->getCollection( 'involved', User::class, new ArrayCollection() );
 		$this->metadata = $params->getCollection( 'involved', Metadata::class, new ArrayCollection() );
 		$this->dmca = $params->getInstance( 'dmca', DigitalMillenniumCopyrightAct::class );
@@ -421,6 +433,31 @@ class Takedown {
 		$this->dmca = $dmca;
 
 		return $this;
+	}
+
+	/**
+	 * Returns the type of takedown.
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getType() :? string {
+		if ( $this->dmca && $this->cp ) {
+			return null;
+		}
+
+		if ( !$this->dmca && !$this->cp ) {
+			return null;
+		}
+
+		if ( $this->dmca ) {
+			return self::TYPE_DMCA;
+		}
+
+		if ( $this->cp ) {
+			return self::TYPE_CP;
+		}
 	}
 
 	/**

@@ -4,7 +4,7 @@ import { Set } from 'immutable';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import { push } from 'react-router-redux';
-import { Takedown } from '../entity';
+import { Takedown, MetadataSet } from '../entity';
 import * as TakedownActions from '../actions/takedown';
 
 export function fetchTakedownList( action$, store ) {
@@ -60,11 +60,42 @@ export function takedownSave( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_CREATE_SAVE' )
 		.switchMap( () => {
 			let takedown = store.getState().takedown.create,
-				involvedNames = [];
+				involvedNames = [],
+				metadataIds,
+				removeType;
 
 			// Prepare takedown for saving.
 			takedown = takedown.set( 'status', undefined );
 			takedown = takedown.set( 'error', undefined );
+
+			// Remove whichever type this takedown is *not*
+			if ( takedown.type ) {
+				switch ( takedown.type ) {
+					case 'dmca':
+						removeType = 'cp';
+						break;
+					case 'cp':
+						removeType = 'dmca';
+						break;
+				}
+
+				takedown = takedown.remove( removeType );
+				metadataIds = takedown.metadataIds.filter( ( id ) => {
+					const meta = MetadataSet.find( ( metadata ) => {
+						return metadata.id === id;
+					} );
+
+					if ( !meta ) {
+						return false;
+					}
+
+					return meta.type === takedown.type;
+				} );
+				takedown = takedown.set( 'metadataIds', metadataIds );
+
+				// Remove the type.
+				takedown = takedown.remove( 'type' );
+			}
 
 			// We must split out the user names because of T168571
 			involvedNames = takedown.involvedIds.map( ( id ) => {

@@ -8,15 +8,28 @@ import { Takedown, User } from '../../../entity';
 
 export class TakedownIndexRow extends React.Component {
 	render() {
-		let created;
+		let created,
+			type;
 
 		if ( this.props.takedown.created ) {
 			created = moment.utc( this.props.takedown.created ).local().format( 'l LT' );
 		}
 
+		if ( this.props.takedown.type ) {
+			switch ( this.props.takedown.type ) {
+				case 'dmca':
+					type = 'DMCA';
+					break;
+				case 'cp':
+					type = 'Child Protection';
+					break;
+			}
+		}
+
 		return (
 			<tr>
 				<th scope="row"><Link to={'/takedown/' + this.props.takedown.id}>{this.props.takedown.id}</Link></th>
+				<td>{type}</td>
 				<td>{this.props.reporter.username}</td>
 				<td>{created}</td>
 			</tr>

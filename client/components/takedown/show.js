@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Set } from 'immutable';
 import * as TakedownSelectors from '../../selectors/takedown';
 import * as TakedownActions from '../../actions/takedown';
 import { Takedown, User, Site } from '../../entity';
@@ -40,7 +41,9 @@ export class TakedownShow extends React.Component {
 			);
 		} );
 
-		let site;
+		let site,
+			type,
+			metadata;
 
 		if ( this.props.site.id ) {
 			site = (
@@ -50,12 +53,41 @@ export class TakedownShow extends React.Component {
 			);
 		}
 
+		if ( this.props.takedown.type ) {
+			switch ( this.props.takedown.type ) {
+				case 'dmca':
+					type = 'DMCA';
+					break;
+				case 'cp':
+					type = 'Child Protection';
+					break;
+			}
+		}
+
+		if ( this.props.metadata.size > 0 ) {
+			metadata = this.props.metadata.map( ( metadata ) => {
+				return (
+					<div key={metadata.id}>
+						{metadata.label}
+					</div>
+				);
+			} ).toArray();
+		}
+
 		return (
 			<div className="row">
 				<div className="col">
 					<div className="row">
 						<div className="col">
 							<h2>Takedown #{this.props.takedown.id}</h2>
+						</div>
+					</div>
+					<div className="row pb-2">
+						<div className="col-2">
+							<strong>Type</strong>
+						</div>
+						<div className="col-10">
+							{type}
 						</div>
 					</div>
 					<div className="row pb-2">
@@ -82,6 +114,14 @@ export class TakedownShow extends React.Component {
 							{involved}
 						</div>
 					</div>
+					<div className="row pb-2">
+						<div className="col-2">
+							<strong>Metadata</strong>
+						</div>
+						<div className="col-10">
+							{metadata}
+						</div>
+					</div>
 				</div>
 			</div>
 		);
@@ -92,6 +132,7 @@ TakedownShow.propTypes = {
 	status: PropTypes.string.isRequired,
 	onComponentWillMount: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ),
+	metadata: PropTypes.instanceOf( Set ),
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ),
 	reporter: PropTypes.instanceOf( User ),
 	site: PropTypes.instanceOf( Site )
@@ -102,7 +143,8 @@ export const TakedownShowContainer = connect(
 		const getTakedown = TakedownSelectors.makeGetTakedown(),
 			getInvolved = TakedownSelectors.makeGetInvolved(),
 			getReporter = TakedownSelectors.makeGetReporter(),
-			getSite = TakedownSelectors.makeGetSite();
+			getSite = TakedownSelectors.makeGetSite(),
+			getMetadata = TakedownSelectors.makeGetMetadata();
 		return ( state, props ) => {
 			const takedown = getTakedown( state, props );
 
@@ -116,6 +158,7 @@ export const TakedownShowContainer = connect(
 				takedown: takedown,
 				involved: getInvolved( state, props ),
 				reporter: getReporter( state, props ),
+				metadata: getMetadata( state, props ),
 				site: getSite( state, props )
 			};
 		};

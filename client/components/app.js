@@ -2,7 +2,7 @@ import React from 'react';
 import { HeaderContainer } from './header';
 import { TakedownIndexContainer } from './takedown/index/index';
 import { TakedownShowContainer } from './takedown/show';
-import { TakedownCreateContainer } from './takedown/create';
+import { TakedownCreateContainer } from './takedown/create/create';
 import { Switch, Route } from 'react-router-dom';
 
 export default class App extends React.Component {

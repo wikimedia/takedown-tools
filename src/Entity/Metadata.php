@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity
@@ -19,13 +20,6 @@ class Metadata {
 	private $id;
 
 	/**
-	 * @var string
-	 *
-	 * @ORM\Column(name="content", type="string", length=255)
-	 */
-	private $content;
-
-	/**
 	 * Metadata
 	 *
 	 * @param array $data Data to construct the object.
@@ -33,7 +27,6 @@ class Metadata {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getString( 'id' );
-		$this->content = $params->getContent( 'content' );
 	}
 
 	/**
@@ -56,27 +49,5 @@ class Metadata {
 	 */
 	public function getId() :? string {
 		return $this->id;
-	}
-
-	/**
-	 * Set Content
-	 *
-	 * @param string $content Content
-	 *
-	 * @return self
-	 */
-	public function setContent( string $content ) : self {
-		$this->content = $content;
-
-		return $this;
-	}
-
-	/**
-	 * Content
-	 *
-	 * @return string
-	 */
-	public function getContent() :? string {
-		return $this->content;
 	}
 }

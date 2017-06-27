@@ -16,7 +16,20 @@ export class TakedownIndex extends React.Component {
 			this.props.fetchList();
 		}
 
+		// Create the infinite scroll.
 		this.scrollSubscription = Observable.fromEvent( window, 'scroll' )
+			.takeWhile( () => {
+				return this.props.status !== 'done';
+			} )
+			.debounceTime( 250 )
+			.filter( () => {
+				return this.isBottomVisable( this.table );
+			} )
+			.subscribe( () => {
+				this.props.fetchList();
+			} );
+
+		this.resizeSubscription = Observable.fromEvent( window, 'resize' )
 			.takeWhile( () => {
 				return this.props.status !== 'done';
 			} )
@@ -31,6 +44,7 @@ export class TakedownIndex extends React.Component {
 
 	componentWillUnmount() {
 		this.scrollSubscription.unsubscribe();
+		this.resizeSubscription.unsubscribe();
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -76,6 +90,7 @@ export class TakedownIndex extends React.Component {
 							<thead>
 								<tr>
 									<th>#</th>
+									<th>Type</th>
 									<th>Reporter</th>
 									<th>Created</th>
 								</tr>

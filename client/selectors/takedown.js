@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect';
-import { User, Site } from '../entity';
+import { Set } from 'immutable';
+import { User, Site, MetadataSet } from '../entity';
 
 export function makeGetTakedown() {
 	return createSelector(
@@ -24,6 +25,21 @@ export function makeGetInvolved() {
 				} );
 			} ).filter( ( user ) => {
 				return typeof user !== 'undefined';
+			} );
+		}
+	);
+}
+
+export function makeGetMetadata() {
+	return createSelector(
+		( _, props ) => props.takedown ? props.takedown.metadataIds : new Set(),
+		( metadataIds ) => {
+			return metadataIds.map( ( id ) => {
+				return MetadataSet.find( ( metadata ) => {
+					return metadata.id === id;
+				} );
+			} ).filter( ( metadata ) => {
+				return !!metadata;
 			} );
 		}
 	);
