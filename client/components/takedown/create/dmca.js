@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Takedown } from '../../../entity';
+import { Takedown, ContentTypeSet } from '../../../entity';
+import { Checkboxes } from '../../fields/checkboxes';
 import * as TakedownActions from '../../../actions/takedown';
 
 export class TakedownCreateDmca extends React.Component {
@@ -17,8 +18,27 @@ export class TakedownCreateDmca extends React.Component {
 	}
 
 	render() {
+		const sendCe = !!this.props.takedown.dmca.sendCe;
+
 		return (
-			<h1>DMCA</h1>
+			<div>
+				<div className="form-group row">
+					<div className="col">
+						<label>Chilling Effects</label>
+						<div className="form-check">
+							<label className="form-check-label">
+								<input className="form-check-input" type="checkbox" name="sendCe" value="sendCe" checked={sendCe} onChange={ ( event ) => this.updateField( 'sendCe', event.target.checked ) } /> Send to Chilling Effects
+							</label>
+						</div>
+					</div>
+				</div>
+				<div className="form-group row">
+					<div className="col">
+						<label>Content Types</label>
+						<Checkboxes name="contentTypeIds" options={ContentTypeSet} value={this.props.takedown.dmca.contentTypeIds} onChange={ ( value ) => this.updateField( 'contentTypeIds', value ) } />
+					</div>
+				</div>
+			</div>
 		);
 	}
 }
@@ -29,6 +49,7 @@ TakedownCreateDmca.propTypes = {
 };
 
 export const TakedownCreateDmcaContainer = connect(
+	undefined,
 	( dispatch ) => {
 		return {
 			updateTakedown: ( takedown ) => {

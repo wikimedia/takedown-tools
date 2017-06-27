@@ -125,7 +125,27 @@ class TakedownController {
 
 		$takedown = $this->attacher->attach( $takedown );
 
+		// Remove the related entities.
+		// @link https://github.com/doctrine/doctrine2/issues/6531
+		$dmca = $takedown->getDmca();
+		$takedown->setDmca();
+		$cp = $takedown->getCp();
+		$takedown->setCp();
+
 		$em->persist( $takedown );
+		$em->flush();
+
+		// Add the related entities back and persist them.
+		// @link https://github.com/doctrine/doctrine2/issues/6531
+		$takedown->setDmca( $dmca );
+		$takedown->setCp( $cp );
+
+		if ( $takedown->getDmca() ) {
+			$em->persist( $takedown->getDmca() );
+		}
+		if ( $takedown->getCP() ) {
+			$em->persist( $takedown->getCp() );
+		}
 		$em->flush();
 
 		return $this->showAction( $takedown );

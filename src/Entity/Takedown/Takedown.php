@@ -92,9 +92,15 @@ class Takedown {
 	private $metadata;
 
 	/**
-	 * @var DigitalMillenniumCopyrightAct
+	 * @var Dmca
 	 *
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\DigitalMillenniumCopyrightAct", mappedBy="id", cascade={"persist"})
+	 * @ORM\OneToOne(
+	 *	targetEntity="App\Entity\Takedown\Dmca",
+	 *	mappedBy="takedown",
+	 *	orphanRemoval=true,
+	 *	cascade={"persist"}
+	 *)
+	 * @Attach()
 	 */
 	private $dmca;
 
@@ -103,9 +109,10 @@ class Takedown {
 	 *
 	 * @ORM\OneToOne(
 	 *	targetEntity="App\Entity\Takedown\ChildProtection",
-	 *	mappedBy="id",
-	 *	cascade={"persist"}
+	 *	mappedBy="takedown",
+	 *	orphanRemoval=true
 	 *)
+	 * @Attach()
 	 */
 	private $cp;
 
@@ -120,7 +127,7 @@ class Takedown {
 		$this->reporter = $params->getInstance( 'reporter', User::class );
 		$this->involved = $params->getCollection( 'involved', User::class, new ArrayCollection() );
 		$this->metadata = $params->getCollection( 'involved', Metadata::class, new ArrayCollection() );
-		$this->dmca = $params->getInstance( 'dmca', DigitalMillenniumCopyrightAct::class );
+		$this->dmca = $params->getInstance( 'dmca', Dmca::class );
 		$this->cp = $params->getInstance( 'cp', ChildProtection::class );
 	}
 
@@ -425,12 +432,17 @@ class Takedown {
 	/**
 	 * Set DMCA.
 	 *
-	 * @param DigitalMillenniumCopyrightAct $dmca DMCA
+	 * @Groups({"api"})
+	 *
+	 * @param Dmca $dmca DMCA
 	 *
 	 * @return self
 	 */
-	public function setDmca( DigitalMillenniumCopyrightAct $dmca ) : self {
+	public function setDmca( Dmca $dmca = null ) : self {
 		$this->dmca = $dmca;
+		if ( $this->dmca ) {
+			$this->dmca->setTakedown( $this );
+		}
 
 		return $this;
 	}
@@ -463,27 +475,48 @@ class Takedown {
 	/**
 	 * DMCA
 	 *
-	 * @return DigitalMillenniumCopyrightAct
+	 * @Groups({"api"})
+	 *
+	 * @return Dmca
 	 */
-	public function getDmca() :? DigitalMillenniumCopyrightAct {
+	public function getDmca() :? Dmca {
 		return $this->dmca;
 	}
 
 	/**
 	 * Set Child Protection.
 	 *
+	 * @Groups({"api"})
+	 *
 	 * @param ChildProtection $cp Child Protection
 	 *
 	 * @return self
 	 */
-	public function setCp( ChildProtection $cp ) : self {
+	public function setCp( $cp = null ) : self {
+		if ( $cp === null ) {
+			$this->cp = null;
+
+			return $this;
+		}
+
+		if ( !$cp instanceof ChildProtection && !is_array( $cp ) ) {
+			throw new \InvalidArgumentException( 'Cannot set CP' );
+		}
+
+		if ( is_array( $cp ) ) {
+			$cp = new ChildProtection( $cp );
+		}
+
 		$this->cp = $cp;
+		$this->cp->setTakedown( $this );
 
 		return $this;
 	}
 
 	/**
 	 * Child Protection
+	 *
+	 * @Groups({"api"})
 	 *
 	 * @return ChildProtection
 	 */
@@ -492,14 +525,30 @@ class Takedown {
 	}
 
 	/**
-		 * Get created
-		 *
-		 * @Groups({"api"})
-		 *
-		 * @return \DateTime
-		 */
-		public function getCreated() :? \DateTimeInterface {
-				return $this->created;
+	 * Get created
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return \DateTime
+	 */
+	public function getCreated() :? \DateTimeInterface {
+			return $this->created;
+	}
+
+	/**
+	 * Clone
+	 *
+	 * @return Takedown
+	 */
+	public function __clone() {
+		if ( $this->dmca ) {
+			$this->dmca = clone $this->dmca;
+			$this->dmca->setTakedown( $this );
 		}
 
+		if ( $this->cp ) {
+			$this->cp = clone $this->cp;
+			$this->cp->setTakedown( $this );
+		}
+	}
 }

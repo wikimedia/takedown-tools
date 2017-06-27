@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae4293539499c8f323d8a49a74ddd2d4",
+    "content-hash": "88ba8cbb3ce9c247c7c3e94cc0b53b54",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -777,16 +777,16 @@
         },
         {
             "name": "geosocio/entity-attacher",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/entity-attacher.git",
-                "reference": "2682f3642345e5d2b6b96453154ac753eb971649"
+                "reference": "c4338d86760576d1ddbe2ae42c3645ea8ab7eff0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/2682f3642345e5d2b6b96453154ac753eb971649",
-                "reference": "2682f3642345e5d2b6b96453154ac753eb971649",
+                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/c4338d86760576d1ddbe2ae42c3645ea8ab7eff0",
+                "reference": "c4338d86760576d1ddbe2ae42c3645ea8ab7eff0",
                 "shasum": ""
             },
             "require": {
@@ -809,7 +809,7 @@
                 "LGPL-3"
             ],
             "description": "Utility to Attach Doctrine Entities to existing instances",
-            "time": "2017-06-25T16:56:28+00:00"
+            "time": "2017-06-27T20:36:58+00:00"
         },
         {
             "name": "geosocio/entity-utils",
@@ -3059,6 +3059,82 @@
                 "reflection"
             ],
             "time": "2017-06-02T09:51:43+00:00"
+        },
+        {
+            "name": "symfony/property-info",
+            "version": "v3.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/property-info.git",
+                "reference": "15ddbee5ca52a5a8f92b14d6a8da085dbb8fc819"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/property-info/zipball/15ddbee5ca52a5a8f92b14d6a8da085dbb8fc819",
+                "reference": "15ddbee5ca52a5a8f92b14d6a8da085dbb8fc819",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/inflector": "~3.1"
+            },
+            "conflict": {
+                "phpdocumentor/reflection-docblock": "<3.0",
+                "phpdocumentor/type-resolver": "<0.2.0",
+                "symfony/dependency-injection": "<3.3"
+            },
+            "require-dev": {
+                "doctrine/annotations": "~1.0",
+                "phpdocumentor/reflection-docblock": "^3.0",
+                "symfony/cache": "~3.1",
+                "symfony/dependency-injection": "~3.3",
+                "symfony/serializer": "~2.8|~3.0"
+            },
+            "suggest": {
+                "phpdocumentor/reflection-docblock": "To use the PHPDoc",
+                "psr/cache-implementation": "To cache results",
+                "symfony/doctrine-bridge": "To use Doctrine metadata",
+                "symfony/serializer": "To use Serializer metadata"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\PropertyInfo\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kévin Dunglas",
+                    "email": "dunglas@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Property Info Component",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "doctrine",
+                "phpdoc",
+                "property",
+                "symfony",
+                "type",
+                "validator"
+            ],
+            "time": "2017-04-19T20:25:39+00:00"
         },
         {
             "name": "symfony/routing",

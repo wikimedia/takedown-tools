@@ -22,6 +22,32 @@ function numericHash( id ) {
 	return hash;
 }
 
+export class ContentType extends Record( {
+	id: undefined,
+	label: undefined
+} ) {
+
+	equals( other ) {
+		if ( !( other instanceof ContentType ) ) {
+			return super.equals( other );
+		}
+
+		if ( typeof other.id === 'undefined' || typeof this.id === 'undefined' ) {
+			return super.equals( other );
+		}
+
+		return ( other.id === this.id );
+	}
+
+	hashCode() {
+		if ( typeof this.id === 'undefined' ) {
+			super.hashCode();
+		}
+
+		return this.id;
+	}
+}
+
 export class Metadata extends Record( {
 	id: undefined,
 	label: undefined,
@@ -49,51 +75,73 @@ export class Metadata extends Record( {
 	}
 }
 
-// Fixed set of Metadata.
-export const MetadataSet = new Set( [
-	new Metadata( {
-		id: 'checkuser',
-		label: 'Checkuser data was available and is being included below.',
-		type: 'cp'
-	} ),
-	new Metadata( {
-		id: 'email-request',
-		label: 'An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.',
-		type: 'cp'
-	} ),
-	new Metadata( {
-		id: 'taken-down-apparent',
-		label: 'The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent.',
-		type: 'dmca'
-	} ),
-	new Metadata( {
-		id: 'taken-down-dmca',
-		label: 'The content was taken down pursuant to a DMCA notice.',
-		type: 'dmca'
-	} ),
-	new Metadata( {
-		id: 'taken-down-infringing',
-		label: 'The content was taken down and we have actual knowledge that the content was infringing copyright ',
-		type: 'dmca'
-	} ),
-	new Metadata( {
-		id: 'taken-down-suppressed',
-		label: 'The content was taken down and suppressed.',
-		type: 'cp'
-	} ),
-	new Metadata( {
-		id: 'taken-down-user-warned',
-		label: 'The content was taken down and the user was clearly warned and discouraged from future violations.',
-		type: 'dmca'
-	} ),
-	new Metadata( {
-		id: 'user-locked',
-		label: 'The user who uploaded the content has been locked.',
-		type: 'cp'
-	} )
-] );
+// Fixed Sets of Data.
+export const ContentTypeSet = new Set( [
+		new ContentType( {
+			id: 'file',
+			label: 'File/Image'
+		} ),
+		new ContentType( {
+			id: 'text',
+			label: 'Text'
+		} )
+	] ),
+	MetadataSet = new Set( [
+		new Metadata( {
+			id: 'checkuser',
+			label: 'Checkuser data was available and is being included below.',
+			type: 'cp'
+		} ),
+		new Metadata( {
+			id: 'email-request',
+			label: 'An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.',
+			type: 'cp'
+		} ),
+		new Metadata( {
+			id: 'taken-down-apparent',
+			label: 'The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent.',
+			type: 'dmca'
+		} ),
+		new Metadata( {
+			id: 'taken-down-dmca',
+			label: 'The content was taken down pursuant to a DMCA notice.',
+			type: 'dmca'
+		} ),
+		new Metadata( {
+			id: 'taken-down-infringing',
+			label: 'The content was taken down and we have actual knowledge that the content was infringing copyright ',
+			type: 'dmca'
+		} ),
+		new Metadata( {
+			id: 'taken-down-suppressed',
+			label: 'The content was taken down and suppressed.',
+			type: 'cp'
+		} ),
+		new Metadata( {
+			id: 'taken-down-user-warned',
+			label: 'The content was taken down and the user was clearly warned and discouraged from future violations.',
+			type: 'dmca'
+		} ),
+		new Metadata( {
+			id: 'user-locked',
+			label: 'The user who uploaded the content has been locked.',
+			type: 'cp'
+		} )
+	] );
 
-export class Dmca extends Record {}
+export class Dmca extends Record( {
+	sendCe: undefined,
+	contentTypeIds: new Set()
+} ) {
+	constructor( data = {} ) {
+		data = {
+			...data,
+			contentTypeIds: new Set( data.contentTypeIds ? data.contentTypeIds : [] )
+		};
+		super( data );
+	}
+
+}
 
 export class Cp extends Record {}
 

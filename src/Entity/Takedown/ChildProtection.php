@@ -3,12 +3,13 @@
 namespace App\Entity\Takedown;
 
 use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown_cp")
  *
- * @TODO add validation.
+ * @@todo add validation.
  */
 class ChildProtection {
 
@@ -16,10 +17,10 @@ class ChildProtection {
 	 * @var Takedown
 	 *
 	 * @ORM\Id
-	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\Takedown")
+	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\Takedown", inversedBy="cp")
    * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
 	 */
-	private $id;
+	private $takedown;
 
 	/**
 	 * Takedown
@@ -28,7 +29,28 @@ class ChildProtection {
 	 */
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
-		$this->id = $params->getInstance( 'id', Takedown::class, new Takedown() );
+		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 	}
 
+	/**
+	 * Set Takedown
+	 *
+	 * @param Takedown $takedown Takedown
+	 *
+	 * @return self
+	 */
+	public function setTakedown( Takedown $takedown ) : self {
+		$this->takedown = $takedown;
+
+		return $this;
+	}
+
+	/**
+	 * Get Takedown
+	 *
+	 * @return Takedown
+	 */
+	public function getTakedown() :? Takedown {
+		return $this->takedown;
+	}
 }
