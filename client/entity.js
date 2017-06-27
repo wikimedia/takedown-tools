@@ -165,7 +165,9 @@ export class Takedown extends Record( {
 	constructor( data = {} ) {
 		data = {
 			...data,
-			metadataIds: new Set( data.metadataIds ? data.metadataIds : [] )
+			metadataIds: new Set( data.metadataIds ? data.metadataIds : [] ),
+			dmca: new Dmca( data.dmca ? data.dmca : {} ),
+			cp: new Cp( data.cp ? data.cp : {} )
 		};
 		super( data );
 	}

@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Set } from 'immutable';
-import * as TakedownSelectors from '../../selectors/takedown';
-import * as TakedownActions from '../../actions/takedown';
-import { Takedown, User, Site } from '../../entity';
-import { Loading } from '../loading';
-import { Error } from '../error';
+import * as TakedownSelectors from '../../../selectors/takedown';
+import * as TakedownActions from '../../../actions/takedown';
+import { Takedown, User, Site } from '../../../entity';
+import { Loading } from '../../loading';
+import { Error } from '../../error';
+import { TakedownShowDmca } from './dmca';
 
 export class TakedownShow extends React.Component {
 	componentWillMount() {
@@ -43,7 +44,8 @@ export class TakedownShow extends React.Component {
 
 		let site,
 			type,
-			metadata;
+			metadata,
+			typeShow;
 
 		if ( this.props.site.id ) {
 			site = (
@@ -57,6 +59,9 @@ export class TakedownShow extends React.Component {
 			switch ( this.props.takedown.type ) {
 				case 'dmca':
 					type = 'DMCA';
+					typeShow = (
+						<TakedownShowDmca takedown={this.props.takedown} />
+					);
 					break;
 				case 'cp':
 					type = 'Child Protection';
@@ -83,45 +88,46 @@ export class TakedownShow extends React.Component {
 						</div>
 					</div>
 					<div className="row pb-2">
-						<div className="col-2">
+						<div className="col-3">
 							<strong>Type</strong>
 						</div>
-						<div className="col-10">
+						<div className="col-9">
 							{type}
 						</div>
 					</div>
 					<div className="row pb-2">
-						<div className="col-2">
+						<div className="col-3">
 							<strong>Reporter</strong>
 						</div>
-						<div className="col-10">
+						<div className="col-9">
 							{this.props.reporter.username}
 						</div>
 					</div>
 					<div className="row pb-2">
-						<div className="col-2">
+						<div className="col-3">
 							<strong>Site</strong>
 						</div>
-						<div className="col-10">
+						<div className="col-9">
 							{site}
 						</div>
 					</div>
 					<div className="row pb-2">
-						<div className="col-2">
+						<div className="col-3">
 							<strong>Involved Users</strong>
 						</div>
-						<div className="col-10">
+						<div className="col-9">
 							{involved}
 						</div>
 					</div>
 					<div className="row pb-2">
-						<div className="col-2">
+						<div className="col-3">
 							<strong>Metadata</strong>
 						</div>
-						<div className="col-10">
+						<div className="col-9">
 							{metadata}
 						</div>
 					</div>
+					{typeShow}
 				</div>
 			</div>
 		);
