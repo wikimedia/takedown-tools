@@ -105,26 +105,20 @@ export class TakedownCreate extends React.Component {
 				<div className="col">
 					<h2>Create Takedown</h2>
 					<form onSubmit={this.onSubmit.bind( this )}>
-						<div className="form-group row">
-							<div className="col">
-								<label htmlFor="siteId">Site</label>
-								<Select name="siteId" options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data.value )} />
-							</div>
+						<div className="form-group">
+							<label htmlFor="siteId">Site</label>
+							<Select name="siteId" options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data ? data.value : undefined )} />
 						</div>
-						<div className="form-group row">
-							<div className="col">
-								<label htmlFor="involvedIds">Involved Users</label>
-								<SelectUsers disabled={disabled} name="involvedIds" value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
-							</div>
+						<div className="form-group">
+							<label htmlFor="involvedIds">Involved Users</label>
+							<SelectUsers disabled={disabled} name="involvedIds" value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
 						</div>
-						<div className="form-group row">
-							<div className="col">
-								<label>Type</label>
-								<div className="row">
-									<div className="col btn-group">
-										<button type="button" style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
-										<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Protection</button>
-									</div>
+						<div className="form-group">
+							<label>Type</label>
+							<div className="row">
+								<div className="col btn-group">
+									<button type="button" style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
+									<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Protection</button>
 								</div>
 							</div>
 						</div>

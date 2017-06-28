@@ -1,4 +1,4 @@
-import { Record, Set } from 'immutable';
+import { Record, Set, List } from 'immutable';
 
 /**
  * Gets a numeric hash from a string id.
@@ -40,7 +40,7 @@ export class ContentType extends Record( {
 	}
 
 	hashCode() {
-		if ( typeof this.id === 'undefined' ) {
+		if ( this.id === 'undefined' ) {
 			super.hashCode();
 		}
 
@@ -72,6 +72,24 @@ export class Metadata extends Record( {
 		}
 
 		return this.id;
+	}
+}
+
+export class Country extends Record( {
+	id: undefined,
+	name: undefined
+} ) {
+
+	equals( other ) {
+		if ( !( other instanceof Country ) ) {
+			return super.equals( other );
+		}
+
+		if ( !other.id || !this.id ) {
+			return super.equals( other );
+		}
+
+		return ( other.id === this.id );
 	}
 }
 
@@ -127,16 +145,32 @@ export const ContentTypeSet = new Set( [
 			label: 'The user who uploaded the content has been locked.',
 			type: 'cp'
 		} )
-	] );
+	] ),
+	countries = require( '../data/countries' ).map( ( data ) => {
+		return new Country( {
+			id: data[ 'alpha-2' ],
+			name: data.name
+		} );
+	} ),
+	CountrySet = new Set( countries );
 
 export class Dmca extends Record( {
 	sendCe: undefined,
-	contentTypeIds: new Set()
+	contentTypeIds: new Set(),
+	senderName: undefined,
+	senderPerson: undefined,
+	senderFirm: undefined,
+	senderAddress: new List(),
+	senderCity: undefined,
+	senderState: undefined,
+	senderZip: undefined,
+	senderCountryCode: undefined
 } ) {
 	constructor( data = {} ) {
 		data = {
 			...data,
-			contentTypeIds: new Set( data.contentTypeIds ? data.contentTypeIds : [] )
+			contentTypeIds: new Set( data.contentTypeIds ? data.contentTypeIds : [] ),
+			senderAddress: new List( data.senderAddress ? data.senderAddress : [] )
 		};
 		super( data );
 	}
@@ -186,7 +220,7 @@ export class Takedown extends Record( {
 
 	hashCode() {
 		if ( typeof this.id === 'undefined' ) {
-			super.hashCode();
+			return super.hashCode();
 		}
 
 		return this.id;
@@ -214,7 +248,7 @@ export class User extends Record( {
 
 	hashCode() {
 		if ( typeof this.id === 'undefined' ) {
-			super.hashCode();
+			return super.hashCode();
 		}
 
 		return this.id;
@@ -243,7 +277,7 @@ export class Site extends Record( {
 
 	hashCode() {
 		if ( typeof this.id === 'undefined' ) {
-			super.hashCode();
+			return super.hashCode();
 		}
 
 		return numericHash( this.id );
