@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Set } from 'immutable';
+import moment from 'moment';
 import * as TakedownSelectors from '../../../selectors/takedown';
 import * as TakedownActions from '../../../actions/takedown';
 import { Takedown, User, Site } from '../../../entity';
@@ -45,7 +46,8 @@ export class TakedownShow extends React.Component {
 		let site,
 			type,
 			metadata,
-			typeShow;
+			typeShow,
+			created;
 
 		if ( this.props.site.id ) {
 			site = (
@@ -53,6 +55,10 @@ export class TakedownShow extends React.Component {
 					{this.props.site.name} ({this.props.site.domain})
 				</span>
 			);
+		}
+
+		if ( this.props.takedown.created ) {
+			created = moment.utc( this.props.takedown.created ).local().format( 'l LT' );
 		}
 
 		if ( this.props.takedown.type ) {
@@ -80,54 +86,44 @@ export class TakedownShow extends React.Component {
 		}
 
 		return (
-			<div className="row">
-				<div className="col">
-					<div className="row">
-						<div className="col">
-							<h2>Takedown #{this.props.takedown.id}</h2>
-						</div>
+			<div>
+				<div className="row">
+					<div className="col">
+						<h2>Takedown #{this.props.takedown.id}</h2>
 					</div>
-					<div className="row pb-2">
-						<div className="col-3">
-							<strong>Type</strong>
-						</div>
-						<div className="col-9">
-							{type}
-						</div>
+				</div>
+				<div className="row">
+					<div className="col">
+						<table className="table table-bordered table-responsive">
+							<tbody>
+								<tr>
+									<td>Type</td>
+									<td>{type}</td>
+								</tr>
+								<tr>
+									<td>Reporter</td>
+									<td>{this.props.reporter.username}</td>
+								</tr>
+								<tr>
+									<td>Created</td>
+									<td>{created}</td>
+								</tr>
+								<tr>
+									<td>Site</td>
+									<td>{site}</td>
+								</tr>
+								<tr>
+									<td>Involved Users</td>
+									<td>{involved}</td>
+								</tr>
+								<tr>
+									<td>Metadata</td>
+									<td>{metadata}</td>
+								</tr>
+							</tbody>
+							{typeShow}
+						</table>
 					</div>
-					<div className="row pb-2">
-						<div className="col-3">
-							<strong>Reporter</strong>
-						</div>
-						<div className="col-9">
-							{this.props.reporter.username}
-						</div>
-					</div>
-					<div className="row pb-2">
-						<div className="col-3">
-							<strong>Site</strong>
-						</div>
-						<div className="col-9">
-							{site}
-						</div>
-					</div>
-					<div className="row pb-2">
-						<div className="col-3">
-							<strong>Involved Users</strong>
-						</div>
-						<div className="col-9">
-							{involved}
-						</div>
-					</div>
-					<div className="row pb-2">
-						<div className="col-3">
-							<strong>Metadata</strong>
-						</div>
-						<div className="col-9">
-							{metadata}
-						</div>
-					</div>
-					{typeShow}
 				</div>
 			</div>
 		);

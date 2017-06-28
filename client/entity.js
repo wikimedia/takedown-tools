@@ -164,7 +164,9 @@ export class Dmca extends Record( {
 	senderCity: undefined,
 	senderState: undefined,
 	senderZip: undefined,
-	senderCountryCode: undefined
+	senderCountryCode: undefined,
+	sent: undefined,
+	actionTakenId: undefined
 } ) {
 	constructor( data = {} ) {
 		data = {

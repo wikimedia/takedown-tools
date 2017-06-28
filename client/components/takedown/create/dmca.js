@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Select from 'react-select';
 import { Takedown, ContentTypeSet, CountrySet } from '../../../entity';
 import { Checkboxes } from '../../fields/checkboxes';
+import { DatePicker } from '../../fields/date-picker';
 import * as TakedownActions from '../../../actions/takedown';
 
 export class TakedownCreateDmca extends React.Component {
@@ -60,18 +61,30 @@ export class TakedownCreateDmca extends React.Component {
 					<label>Content Types</label>
 					<Checkboxes name="contentTypeIds" options={ContentTypeSet} value={this.props.takedown.dmca.contentTypeIds} onChange={ ( value ) => this.updateField( 'contentTypeIds', value ) } />
 				</div>
+				<div className="form-group">
+					<label>Sent</label> <small className="text-muted">date the takedown was sent</small>
+					<DatePicker value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
+				</div>
+				<div className="form-group">
+					<label htmlFor="actionTakenId">Action Taken</label>
+					<select className="form-control" name="actionTakenId" value={this.props.takedown.dmca.actionTakenId ? this.props.takedown.dmca.actionTakenId : 'no'} onChange={this.handleChange.bind( this )}>
+						<option value="yes">Yes</option>
+						<option value="no">No</option>
+						<option value="partial">Partial</option>
+					</select>
+				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
 					<div className="form-group">
-						<label>Name</label> <small id="passwordHelpInline" className="text-muted">person or organization</small>
+						<label>Name</label> <small className="text-muted">person or organization</small>
 						<input type="text" className="form-control" name="senderName" value={this.props.takedown.dmca.senderName} onChange={this.handleChange.bind( this )} />
 					</div>
 					<div className="form-group">
-						<label>Name</label> <small id="passwordHelpInline" className="text-muted">attorney or individual signing</small>
+						<label>Name</label> <small className="text-muted">attorney or individual signing</small>
 						<input type="text" className="form-control" name="senderPerson" value={this.props.takedown.dmca.senderPerson} onChange={this.handleChange.bind( this )} />
 					</div>
 					<div className="form-group">
-						<label>Law Firm or Agent</label> <small id="passwordHelpInline" className="text-muted">if any</small>
+						<label>Law Firm or Agent</label> <small className="text-muted">if any</small>
 						<input type="text" className="form-control" name="senderFirm" value={this.props.takedown.dmca.senderFirm} onChange={this.handleChange.bind( this )} />
 					</div>
 					<div className="form-group">

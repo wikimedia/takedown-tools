@@ -2,6 +2,7 @@
 
 namespace App\Entity\Takedown;
 
+use App\Entity\Action;
 use App\Entity\Country;
 use App\Entity\ContentType;
 use Doctrine\Common\Collections\Collection;
@@ -27,7 +28,7 @@ class Dmca {
 	 *	targetEntity="App\Entity\Takedown\Takedown",
 	 *	inversedBy="dmca"
 	 *)
-   * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
+	 * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
 	 */
 	private $takedown;
 
@@ -61,38 +62,38 @@ class Dmca {
 	 private $senderName;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
+		*/
 	 private $senderPerson;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
+		*/
 	 private $senderFirm;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
+		*/
 	 private $senderAddress1;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
+		*/
 	 private $senderAddress2;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
+		*/
 	 private $senderCity;
 
 	/**
@@ -110,13 +111,29 @@ class Dmca {
 	private $senderZip;
 
 	 /**
-	  * @var Country
-	  *
-	  * @ORM\ManyToOne(targetEntity="App\Entity\Country")
-	  * @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
-	  * @Attach()
-	  */
+		* @var Country
+		*
+		* @ORM\ManyToOne(targetEntity="App\Entity\Country")
+		* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
+		* @Attach()
+		*/
 		private $senderCountry;
+
+		/**
+		 * @var \DateTimeInterface
+		 *
+		 * @ORM\Column(name="sent", type="date", nullable=true)
+		 */
+		private $sent;
+
+		/**
+		* @var Action
+		*
+		* @ORM\ManyToOne(targetEntity="App\Entity\Action")
+		* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
+		* @Attach()
+		*/
+		private $actionTaken;
 
 	/**
 	 * Takedown
@@ -139,6 +156,7 @@ class Dmca {
 		$this->senderAddress2 = $params->getString( 'address2' );
 		$this->senderCity = $params->getString( 'city' );
 		$this->senderCountry = $params->getInstance( 'country', Country::class );
+		$this->date = $params->getInstance( 'sent', \DateTime::class );
 	}
 
 	/**
@@ -506,5 +524,86 @@ class Dmca {
 		}
 
 		return $this->senderCountry->getId();
+	}
+
+	/**
+	 * Set sent
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param \DateTimeInterface $sent The Sent Date.
+	 *
+	 * @return self
+	 */
+	public function setSent( \DateTimeInterface $sent ) : self {
+			$this->sent = $sent;
+
+			return $this;
+	}
+
+	/**
+	 * Sent
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return \DateTime
+	 */
+	public function getSent() :? \DateTimeInterface {
+			return $this->sent;
+	}
+
+	/**
+	 * Set Action Taken
+	 *
+	 * @param Action $actionTaken Action Taken.
+	 *
+	 * @return self
+	 */
+	public function setActionTaken( Action $actionTaken ) : self {
+			$this->actionTaken = $actionTaken;
+
+			return $this;
+	}
+
+	/**
+	 * Action Taken
+	 *
+	 *
+	 * @return \DateTime
+	 */
+	public function getActionTaken() :? Action {
+			return $this->actionTaken;
+	}
+
+	/**
+	 * Set Action Taken Id.
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $id Action Taken Id.
+	 *
+	 * @return self
+	 */
+	public function setActionTakenId( string $id ) : self {
+		$this->actionTaken = new Action( [
+			'id' => $id,
+		] );
+
+		return $this;
+	}
+
+	/**
+	 * Action Taken Id.
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return Country
+	 */
+	public function getActionTakenId() :? string {
+		if ( !$this->actionTaken ) {
+			return null;
+		}
+
+		return $this->actionTaken->getId();
 	}
 }

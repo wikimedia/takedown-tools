@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Takedown, ContentTypeSet } from '../../../entity';
+import * as moment from 'moment';
+import { Takedown, ContentTypeSet, CountrySet } from '../../../entity';
 
 export class TakedownShowDmca extends React.Component {
 	render() {
-		let contentTypes;
+		let contentTypes,
+			senderCountry,
+			sent,
+			actionTaken;
 
 		if ( this.props.takedown.dmca.contentTypeIds.size > 0 ) {
 			contentTypes = this.props.takedown.dmca.contentTypeIds.map( ( id ) => {
@@ -20,25 +24,83 @@ export class TakedownShowDmca extends React.Component {
 					);
 				} ).toArray();
 		}
+
+		if ( this.props.takedown.dmca.senderCountryCode ) {
+			senderCountry = CountrySet.find( ( country ) => {
+				return this.props.takedown.dmca.senderCountryCode === country.id;
+			} );
+		}
+
+		if ( this.props.takedown.dmca.sent ) {
+			sent = moment.utc( this.props.takedown.dmca.sent ).format( 'l' );
+		}
+
+		if ( this.props.takedown.dmca.actionTakenId ) {
+			actionTaken = this.props.takedown.dmca.actionTakenId.charAt( 0 ).toUpperCase() + this.props.takedown.dmca.actionTakenId.slice( 1 );
+		}
+
 		return (
-			<div>
-				<div className="row pb-2">
-					<div className="col-3">
-						<strong>Sent to Chilling Effects</strong>
-					</div>
-					<div className="col-9">
-						{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}
-					</div>
-				</div>
-				<div className="row pb-2">
-					<div className="col-3">
-						<strong>Content Types</strong>
-					</div>
-					<div className="col-9">
-						{contentTypes}
-					</div>
-				</div>
-			</div>
+			<tbody className="border-top-0">
+				<tr>
+					<td>Sent to Chilling Effects</td>
+					<td>{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}</td>
+				</tr>
+				<tr>
+					<td>Content Types</td>
+					<td>{contentTypes}</td>
+				</tr>
+				<tr>
+					<td>Sent</td>
+					<td>{sent}</td>
+				</tr>
+				<tr>
+					<td>Action Taken</td>
+					<td>{actionTaken}</td>
+				</tr>
+				<tr>
+					<th colSpan="2">Sender</th>
+				</tr>
+				<tr>
+					<td>Name</td>
+					<td>{this.props.takedown.dmca.senderName}</td>
+				</tr>
+				<tr>
+					<td>Person</td>
+					<td>{this.props.takedown.dmca.senderPerson}</td>
+				</tr>
+				<tr>
+					<td>Law Firm or Agent</td>
+					<td>{this.props.takedown.dmca.senderFirm}</td>
+				</tr>
+				<tr>
+					<td>Address</td>
+					<td>
+						{this.props.takedown.dmca.senderAddress.map( ( line, index ) => {
+							return (
+								<div key={index}>
+									{line}
+								</div>
+							);
+						} ) }
+					</td>
+				</tr>
+				<tr>
+					<td>City</td>
+					<td>{this.props.takedown.dmca.senderCity}</td>
+				</tr>
+				<tr>
+					<td>State / Providence</td>
+					<td>{this.props.takedown.dmca.senderState}</td>
+				</tr>
+				<tr>
+					<td>Zip / Postal Code</td>
+					<td>{this.props.takedown.dmca.senderZip}</td>
+				</tr>
+				<tr>
+					<td>Country</td>
+					<td>{senderCountry ? senderCountry.name : undefined}</td>
+				</tr>
+			</tbody>
 		);
 	}
 }
