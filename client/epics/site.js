@@ -5,7 +5,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
-import { Site } from '../entity';
+import { Site } from '../entities/site';
 import * as SiteActions from '../actions/site';
 
 export function fetchAll( action$ ) {

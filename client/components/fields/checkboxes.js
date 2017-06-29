@@ -37,7 +37,7 @@ export class Checkboxes extends React.Component {
 
 Checkboxes.propTypes = {
 	name: PropTypes.string,
-	disabled: PropTypes.boolean,
+	disabled: PropTypes.bool,
 	onChange: PropTypes.func.isRequired,
 	value: PropTypes.instanceOf( Set ).isRequired,
 	options: PropTypes.instanceOf( Set ).isRequired

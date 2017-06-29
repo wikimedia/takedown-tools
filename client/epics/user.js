@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
 import { Set } from 'immutable';
-import { User } from '../entity';
+import { User } from '../entities/user';
 import * as UserActions from '../actions/user';
 
 export function fetchUsers( action$, store ) {

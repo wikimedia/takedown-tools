@@ -5,7 +5,8 @@ import Select from 'react-select';
 import { TakedownCreateDmcaContainer } from './dmca.container';
 import { SelectUsers } from '../../fields/select-users';
 import { MetadataField } from '../../fields/metadata';
-import { Takedown, User } from '../../../entity';
+import { Takedown } from '../../../entities/takedown/takedown';
+import { User } from '../../../entities/user';
 
 export class TakedownCreate extends React.Component {
 

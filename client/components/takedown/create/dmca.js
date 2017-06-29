@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
-import { Takedown, ContentTypeSet, CountrySet } from '../../../entity';
+import { Takedown } from '../../../entities/takedown/takedown';
+import { ContentTypeSet } from '../../../entities/content-type.set';
+import { CountrySet } from '../../../entities/country.set';
 import { Checkboxes } from '../../fields/checkboxes';
 import { DatePicker } from '../../fields/date-picker';
 
@@ -115,5 +117,5 @@ export class TakedownCreateDmca extends React.Component {
 TakedownCreateDmca.propTypes = {
 	updateTakedown: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
-	disabled: PropTypes.boolean
+	disabled: PropTypes.bool
 };

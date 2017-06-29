@@ -4,7 +4,8 @@ import { Set } from 'immutable';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import { push } from 'react-router-redux';
-import { Takedown, MetadataSet } from '../entity';
+import { Takedown } from '../entities/takedown/takedown';
+import { MetadataSet } from '../entities/metadata.set';
 import * as TakedownActions from '../actions/takedown';
 
 export function fetchTakedownList( action$, store ) {

@@ -1,6 +1,6 @@
 import { Set } from 'immutable';
 import { parseJwt } from '../../utils';
-import { User } from '../../entity';
+import { User } from '../../entities/user';
 
 // @TODO Make the state an immutable collection so we can add our own methods
 //      to it?

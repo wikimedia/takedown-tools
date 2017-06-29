@@ -5,7 +5,7 @@ import { Subject, Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
-import { User } from '../../entity';
+import { User } from '../../entities/user';
 
 export class SelectUsers extends React.Component {
 

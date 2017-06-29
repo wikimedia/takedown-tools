@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { getUserFromJwt } from '../utils';
-import { User } from '../entity';
+import { User } from '../entities/user';
 
 export const getAuthUser = createSelector(
 	state => state.token,

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import * as moment from 'moment';
-import { Takedown, User } from '../../../entity';
+import { User } from '../../../entities/user';
+import { Takedown } from '../../../entities/takedown/takedown';
 
 export class TakedownIndexRow extends React.Component {
 	render() {

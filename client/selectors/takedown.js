@@ -1,6 +1,8 @@
 import { createSelector } from 'reselect';
 import { Set } from 'immutable';
-import { User, Site, MetadataSet } from '../entity';
+import { User } from '../entities/user';
+import { Site } from '../entities/site';
+import { MetadataSet } from '../entities/metadata.set';
 
 export function makeGetTakedown() {
 	return createSelector(

@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
-import { Takedown, ContentTypeSet, CountrySet } from '../../../entity';
+import { Takedown } from '../../../entities/takedown/takedown';
+import { ContentTypeSet } from '../../../entities/content-type.set';
+import { CountrySet } from '../../../entities/country.set';
 
 export class TakedownShowDmca extends React.Component {
 	render() {
