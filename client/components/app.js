@@ -1,8 +1,8 @@
 import React from 'react';
-import { HeaderContainer } from './header';
-import { TakedownIndexContainer } from './takedown/index/index';
-import { TakedownShowContainer } from './takedown/show/show';
-import { TakedownCreateContainer } from './takedown/create/create';
+import { HeaderContainer } from './header.container';
+import { TakedownIndexContainer } from './takedown/index/index.container';
+import { TakedownShowContainer } from './takedown/show/show.container';
+import { TakedownCreateContainer } from './takedown/create/create.container';
 import { Switch, Route } from 'react-router-dom';
 
 export default class App extends React.Component {

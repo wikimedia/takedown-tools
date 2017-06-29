@@ -1,18 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Set } from 'immutable';
 import Select from 'react-select';
-import { TakedownCreateDmcaContainer } from './dmca';
+import { TakedownCreateDmcaContainer } from './dmca.container';
 import { SelectUsers } from '../../fields/select-users';
 import { MetadataField } from '../../fields/metadata';
 import { Takedown, User } from '../../../entity';
-import * as TakedownSelectors from '../../../selectors/takedown';
-import * as TakedownActions from '../../../actions/takedown';
-import * as UserSelectors from '../../../selectors/user';
-import * as UserActions from '../../../actions/user';
-import * as SiteActions from '../../../actions/site';
-import * as SiteSelectors from '../../../selectors/site';
 
 export class TakedownCreate extends React.Component {
 
@@ -80,7 +73,7 @@ export class TakedownCreate extends React.Component {
 			case 'dmca':
 				dmcaButtonClass = dmcaButtonClass + ' active';
 				takedownTypeForm = (
-					<TakedownCreateDmcaContainer takedown={this.props.takedown} />
+					<TakedownCreateDmcaContainer takedown={this.props.takedown} disabled={disabled} />
 				);
 				break;
 
@@ -107,7 +100,7 @@ export class TakedownCreate extends React.Component {
 					<form onSubmit={this.onSubmit.bind( this )}>
 						<div className="form-group">
 							<label htmlFor="siteId">Site</label>
-							<Select name="siteId" options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data ? data.value : undefined )} />
+							<Select name="siteId" disabled={disabled} options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data ? data.value : undefined )} />
 						</div>
 						<div className="form-group">
 							<label htmlFor="involvedIds">Involved Users</label>
@@ -117,8 +110,8 @@ export class TakedownCreate extends React.Component {
 							<label>Type</label>
 							<div className="row">
 								<div className="col btn-group">
-									<button type="button" style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
-									<button type="button" style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Protection</button>
+									<button type="button" disabled={disabled} style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
+									<button type="button" disabled={disabled} style={ { zIndex: 0 } } className={cpButtonClass} onClick={() => this.updateField( 'type', 'cp' )}>Child Protection</button>
 								</div>
 							</div>
 						</div>
@@ -150,39 +143,3 @@ TakedownCreate.propTypes = {
 	saveTakedown: PropTypes.func.isRequired,
 	addUsers: PropTypes.func.isRequired
 };
-
-export const TakedownCreateContainer = connect(
-	() => {
-		const getInvovled = TakedownSelectors.makeGetInvolved();
-		return ( state, props ) => {
-			props = {
-				...props,
-				takedown: state.takedown.create
-			};
-
-			return {
-				reporter: UserSelectors.getAuthUser( state ),
-				involved: getInvovled( state, props ),
-				takedown: state.takedown.create,
-				users: state.user.list,
-				siteOptions: SiteSelectors.getSiteOptions( state )
-			};
-		};
-	},
-	( dispatch ) => {
-		return {
-			fetchSites: () => {
-				return dispatch( SiteActions.fetchAll() );
-			},
-			updateTakedown: ( takedown ) => {
-				return dispatch( TakedownActions.updateCreate( takedown ) );
-			},
-			saveTakedown: () => {
-				return dispatch( TakedownActions.saveCreate() );
-			},
-			addUsers: ( users ) => {
-				return dispatch( UserActions.addMultiple( users ) );
-			}
-		};
-	}
-)( TakedownCreate );

@@ -23,7 +23,7 @@ export class Checkboxes extends React.Component {
 				return (
 					<div key={option.id} className="form-check">
 						<label className="form-check-label">
-							<input className="form-check-input" type="checkbox" name={name} value={option.id} checked={checked} onChange={this.handleInputChange.bind( this )} /> {option.label}
+							<input disabled={this.props.disabled} className="form-check-input" type="checkbox" name={name} value={option.id} checked={checked} onChange={this.handleInputChange.bind( this )} /> {option.label}
 						</label>
 					</div>
 				);
@@ -37,6 +37,7 @@ export class Checkboxes extends React.Component {
 
 Checkboxes.propTypes = {
 	name: PropTypes.string,
+	disabled: PropTypes.boolean,
 	onChange: PropTypes.func.isRequired,
 	value: PropTypes.instanceOf( Set ).isRequired,
 	options: PropTypes.instanceOf( Set ).isRequired

@@ -152,7 +152,7 @@ export const ContentTypeSet = new Set( [
 			name: data.name
 		} );
 	} ),
-	CountrySet = new Set( countries );
+	CountrySet = new Set( countries ).sortBy( country => country.name );
 
 export class Dmca extends Record( {
 	sendCe: undefined,

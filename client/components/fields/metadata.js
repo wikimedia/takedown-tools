@@ -16,7 +16,7 @@ export class MetadataField extends React.Component {
 		} );
 
 		return (
-			<Checkboxes name={this.props.name} value={this.props.value} options={options} onChange={this.props.onChange} />
+			<Checkboxes disabled={this.props.disabled} name={this.props.name} value={this.props.value} options={options} onChange={this.props.onChange} />
 		);
 	}
 }
@@ -24,6 +24,7 @@ export class MetadataField extends React.Component {
 MetadataField.propTypes = {
 	type: PropTypes.string,
 	name: PropTypes.string,
+	disabled: PropTypes.boolean,
 	onChange: PropTypes.func.isRequired,
 	value: PropTypes.instanceOf( Set ).isRequired
 };

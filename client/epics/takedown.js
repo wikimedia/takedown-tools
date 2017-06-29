@@ -79,7 +79,7 @@ export function takedownSave( action$, store ) {
 						break;
 				}
 
-				takedown = takedown.remove( removeType );
+				takedown = takedown.set( removeType, undefined );
 				metadataIds = takedown.metadataIds.filter( ( id ) => {
 					const meta = MetadataSet.find( ( metadata ) => {
 						return metadata.id === id;

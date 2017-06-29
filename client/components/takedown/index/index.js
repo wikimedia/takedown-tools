@@ -1,13 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/fromEvent';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import * as TakedownSelectors from '../../../selectors/takedown';
-import * as TakedownActions from '../../../actions/takedown';
 import { Set } from 'immutable';
-import { TakedownIndexRowContainer } from './row';
+import { TakedownIndexRowContainer } from './row.container';
 import { Loading } from '../../loading';
 
 export class TakedownIndex extends React.Component {
@@ -112,22 +109,3 @@ TakedownIndex.propTypes = {
 	status: PropTypes.string.isRequired,
 	takedowns: PropTypes.instanceOf( Set )
 };
-
-export const TakedownIndexContainer = connect(
-	() => {
-		const getTakedownList = TakedownSelectors.makeGetTakedownList();
-		return ( state, props ) => {
-			return {
-				status: state.takedown.status,
-				takedowns: getTakedownList( state, props )
-			};
-		};
-	},
-	( dispatch ) => {
-		return {
-			fetchList: () => {
-				dispatch( TakedownActions.fetchList() );
-			}
-		};
-	}
-)( TakedownIndex );

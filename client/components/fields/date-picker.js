@@ -56,6 +56,7 @@ export class DatePicker extends React.Component {
 						onFocusChange={this.onFocusChange.bind( this )}
 						isOutsideRange={this.isOutsideRange.bind( this )}
 						initialVisibleMonth={this.initialVisibleMonth.bind( this )}
+						disabled={this.props.disabled}
 						showClearDate
 						showDefaultInputIcon
 						hideKeyboardShortcutsPanel
@@ -68,5 +69,6 @@ export class DatePicker extends React.Component {
 
 DatePicker.propTypes = {
 	value: PropTypes.string,
+	disabled: PropTypes.boolean,
 	onChange: PropTypes.func.isRequired
 };
