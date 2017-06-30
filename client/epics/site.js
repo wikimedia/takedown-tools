@@ -3,7 +3,9 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinct';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/publishReplay';
 import 'rxjs/add/operator/delayWhen';
+import 'rxjs/add/operator/bufferWhen';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
 import { Site } from '../entities/site';
@@ -63,6 +65,8 @@ export function fetchAll( action$ ) {
 }
 
 export function fetchSiteInfo( action$, store ) {
+	// const siteAddMultipleAction = action$.ofType( 'SITE_ADD_MULTIPLE' ).publishReplay( 1 );
+
 	return action$
 		.filter( ( action ) => {
 			const types = [
@@ -86,8 +90,7 @@ export function fetchSiteInfo( action$, store ) {
 		.filter( ( takedown ) => !!takedown.siteId )
 		// Only do this once per siteId
 		.distinct( ( takedown ) => takedown.siteId )
-		// Delay the emmissions until the sites are added.
-		.combineLatest( action$.ofType( 'SITE_ADD_MULTIPLE' ), ( takedown ) => takedown )
+		// @TODO Delay the emmissions until the sites are added.
 		.map( ( takedown ) => {
 			return store.getState().site.list.find( ( site ) => {
 				return site.id === takedown.siteId;
