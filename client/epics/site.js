@@ -68,16 +68,25 @@ export function fetchSiteInfo( action$, store ) {
 	// const siteAddMultipleAction = action$.ofType( 'SITE_ADD_MULTIPLE' ).publishReplay( 1 );
 
 	return action$
+		// Skip until the site info is fetched.
+		.skipUntil( action$.ofType( 'SITE_ADD_MULTIPLE' ) )
 		.filter( ( action ) => {
 			const types = [
 				'TAKEDOWN_ADD_MULTIPLE',
 				'TAKEDOWN_ADD',
-				'TAKEDOWN_CREATE_UPDATE'
+				'TAKEDOWN_CREATE_UPDATE',
+				'SITE_ADD_MULTIPLE'
 			];
 
 			return types.includes( action.type );
 		} )
 		.flatMap( ( action ) => {
+			if ( action.type === 'SITE_ADD_MULTIPLE' ) {
+				return [
+					...store.getState().takedown.list.toArray(),
+					store.getState().takedown.create
+				];
+			}
 			if ( action.type === 'TAKEDOWN_ADD_MULTIPLE' ) {
 				return [
 					...action.takedowns
@@ -90,7 +99,6 @@ export function fetchSiteInfo( action$, store ) {
 		.filter( ( takedown ) => !!takedown.siteId )
 		// Only do this once per siteId
 		.distinct( ( takedown ) => takedown.siteId )
-		// @TODO Delay the emmissions until the sites are added.
 		.map( ( takedown ) => {
 			return store.getState().site.list.find( ( site ) => {
 				return site.id === takedown.siteId;
