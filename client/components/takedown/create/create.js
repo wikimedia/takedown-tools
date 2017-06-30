@@ -74,7 +74,7 @@ export class TakedownCreate extends React.Component {
 			case 'dmca':
 				dmcaButtonClass = dmcaButtonClass + ' active';
 				takedownTypeForm = (
-					<TakedownCreateDmcaContainer takedown={this.props.takedown} disabled={disabled} />
+					<TakedownCreateDmcaContainer disabled={disabled} />
 				);
 				break;
 

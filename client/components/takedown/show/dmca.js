@@ -1,31 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
+import { Title } from 'mediawiki-title';
 import { Takedown } from '../../../entities/takedown/takedown';
-import { ContentTypeSet } from '../../../entities/content-type.set';
+import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
 
 export class TakedownShowDmca extends React.Component {
 	render() {
-		let contentTypes,
-			senderCountry,
+		let senderCountry,
 			sent,
-			actionTaken;
-
-		if ( this.props.takedown.dmca.contentTypeIds.size > 0 ) {
-			contentTypes = this.props.takedown.dmca.contentTypeIds.map( ( id ) => {
-				return ContentTypeSet.find( ( contentType ) => {
-					return id === contentType.id;
-				} );
-			} ).filter( ( contentType ) => !!contentType )
-				.map( ( contentType ) => {
-					return (
-						<div key={contentType.id}>
-							{contentType.label}
-						</div>
-					);
-				} ).toArray();
-		}
+			actionTaken,
+			pages;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -41,15 +27,32 @@ export class TakedownShowDmca extends React.Component {
 			actionTaken = this.props.takedown.dmca.actionTakenId.charAt( 0 ).toUpperCase() + this.props.takedown.dmca.actionTakenId.slice( 1 );
 		}
 
+		if ( this.props.takedown.siteId && this.props.takedown.dmca.pageIds && this.props.site.info ) {
+			pages = this.props.takedown.dmca.pageIds.map( ( id ) => {
+				const url = 'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath ),
+					title = Title.newFromText( id, this.props.site.info );
+
+				let content;
+
+				if ( title.getNamespace().isMain() ) {
+					content = title.getKey().replace( '_', ' ' );
+				} else {
+					content = `${title.getKey().replace( '_', ' ' )} (${title.getNamespace().getNormalizedText()})`;
+				}
+
+				return (
+					<div key={id}>
+						<a href={url}>{content}</a>
+					</div>
+				);
+			} );
+		}
+
 		return (
 			<tbody className="border-top-0">
 				<tr>
 					<td>Sent to Chilling Effects</td>
 					<td>{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}</td>
-				</tr>
-				<tr>
-					<td>Content Types</td>
-					<td>{contentTypes}</td>
 				</tr>
 				<tr>
 					<td>Sent</td>
@@ -58,6 +61,10 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Action Taken</td>
 					<td>{actionTaken}</td>
+				</tr>
+				<tr>
+					<td>Pages </td>
+					<td>{pages}</td>
 				</tr>
 				<tr>
 					<th colSpan="2">Sender</th>
@@ -108,5 +115,6 @@ export class TakedownShowDmca extends React.Component {
 }
 
 TakedownShowDmca.propTypes = {
-	takedown: PropTypes.instanceOf( Takedown )
+	takedown: PropTypes.instanceOf( Takedown ),
+	site: PropTypes.instanceOf( Site )
 };

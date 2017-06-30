@@ -2,9 +2,10 @@
 
 namespace App\Entity\Takedown;
 
+use App\Entity\Site;
+use App\Entity\Page;
 use App\Entity\Action;
 use App\Entity\Country;
-use App\Entity\ContentType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -42,17 +43,21 @@ class Dmca {
 	/**
 	 * @var Collection
 	 *
-	 * @ORM\ManyToMany(targetEntity="App\Entity\ContentType")
-	 * @ORM\JoinTable(name="takedown_dmca_content_type",
+	 * @ORM\ManyToMany(targetEntity="App\Entity\Page", cascade={"persist"})
+	 * @ORM\JoinTable(name="takedown_dmca_page",
 	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
 	 *      inverseJoinColumns={@ORM\JoinColumn(
-	 *        name="content_type_id",
-	 *        referencedColumnName="content_type_id"
+	 *        name="page_site",
+	 *        referencedColumnName="site"
+	 *      ),
+	 *      @ORM\JoinColumn(
+	 *        name="page_key",
+	 *        referencedColumnName="key"
 	 *      )}
 	 * )
 	 * @Attach()
 	 */
-	private $contentTypes;
+	private $pages;
 
 	/**
 	 * @var string
@@ -110,30 +115,30 @@ class Dmca {
 	 */
 	private $senderZip;
 
-	 /**
-		* @var Country
-		*
-		* @ORM\ManyToOne(targetEntity="App\Entity\Country")
-		* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
-		* @Attach()
-		*/
-		private $senderCountry;
+ /**
+	* @var Country
+	*
+	* @ORM\ManyToOne(targetEntity="App\Entity\Country")
+	* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
+	* @Attach()
+	*/
+	private $senderCountry;
 
-		/**
-		 * @var \DateTimeInterface
-		 *
-		 * @ORM\Column(name="sent", type="date", nullable=true)
-		 */
-		private $sent;
+	/**
+	 * @var \DateTimeInterface
+	 *
+	 * @ORM\Column(name="sent", type="date", nullable=true)
+	 */
+	private $sent;
 
-		/**
-		* @var Action
-		*
-		* @ORM\ManyToOne(targetEntity="App\Entity\Action")
-		* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
-		* @Attach()
-		*/
-		private $actionTaken;
+	/**
+	* @var Action
+	*
+	* @ORM\ManyToOne(targetEntity="App\Entity\Action")
+	* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
+	* @Attach()
+	*/
+	private $actionTaken;
 
 	/**
 	 * Takedown
@@ -144,9 +149,9 @@ class Dmca {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->sendCe = $params->getBoolean( 'sendCe', false );
-		$this->contentTypes = $params->getCollection(
-			'contentTypes',
-			ContentType::class,
+		$this->pages = $params->getCollection(
+			'pages',
+			Page::class,
 			new ArrayCollection()
 		);
 		$this->senderName = $params->getString( 'name' );
@@ -208,70 +213,69 @@ class Dmca {
 	}
 
 	/**
-	 * Metadata
+	 * Pages
 	 *
 	 * @return Collection
 	 */
-	public function getContentTypes() : Collection {
-		return $this->contentTypes;
+	public function getPages() : Collection {
+		return $this->pages;
 	}
 
 	/**
-	 * Add Content Type
+	 * Add Page
 	 *
-	 * @param ContentType $contentType Content Type
+	 * @param Page $page Page
 	 *
 	 * @return self
 	 */
-	public function addContentType( ContentType $contentType ) : self {
-		$this->contentTypes->add( $contentType );
+	public function addPage( Page $page ) : self {
+		$this->pages->add( $page );
 
 		return $this;
 	}
 
 	/**
-	 * Remove Content Type
+	 * Remove Page
 	 *
-	 * @param ContentType $contentType Content Type
+	 * @param Page $page Page
 	 *
 	 * @return self
 	 */
-	public function removeContentType( ContentType $contentType ) : self {
-		$this->contentTypes->remove( $metadata );
+	public function removePage( Page $page ) : self {
+		$this->pages->remove( $page );
 
 		return $this;
 	}
 
 	/**
-	 * Content Type Ids
+	 * Pages
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @return Collection
+	 * @return array
 	 */
-	public function getContentTypeIds() : array {
-		return $this->contentTypes->map( function ( $contentType ) {
-			return $contentType->getId();
+	public function getPageIds() : array {
+		return $this->pages->map( function ( $page ) {
+			return $page->getKey();
 		} )->toArray();
 	}
 
 	/**
-	 * Set Content Type Ids
+	 * Pages
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param array $contentTypeIds Content Type Ids
+	 * @param array $pageIds Page ids in the form of ['key' => '', 'site' => '']
 	 *
-	 * @return self
+	 * @return Collection
 	 */
-	public function setContentTypeIds( array $contentTypeIds ) : self {
-		$contentTypes = array_map( function ( $id ) {
-			return new ContentType( [
-				'id' => $id,
+	public function setPageIds( array $pageIds ) : self {
+		$this->pages = new ArrayCollection( array_map( function ( $id ) {
+			return new Page( [
+				'key' => $id,
+				'site' => $this->takedown ? $this->takedown->getSite() : null,
 			] );
-		}, $contentTypeIds );
-
-		$this->contentTypes = new ArrayCollection( $contentTypes );
+		}, $pageIds ) );
 
 		return $this;
 	}
@@ -605,5 +609,20 @@ class Dmca {
 		}
 
 		return $this->actionTaken->getId();
+	}
+
+	/**
+	 * Clone
+	 *
+	 * @return Takedown
+	 */
+	public function __clone() {
+		$this->pages = $this->pages->map( function( $page ) {
+			if ( $this->takedown && $this->takedown->getSite() ) {
+				$page->setSite( $this->takedown->getSite() );
+			}
+
+			return $page;
+		} );
 	}
 }

@@ -2,7 +2,6 @@ import { Record, Set, List } from 'immutable';
 
 export class Dmca extends Record( {
 	sendCe: undefined,
-	contentTypeIds: new Set(),
 	senderName: undefined,
 	senderPerson: undefined,
 	senderFirm: undefined,
@@ -12,13 +11,14 @@ export class Dmca extends Record( {
 	senderZip: undefined,
 	senderCountryCode: undefined,
 	sent: undefined,
-	actionTakenId: undefined
+	actionTakenId: undefined,
+	pageIds: new Set()
 } ) {
 	constructor( data = {} ) {
 		data = {
 			...data,
-			contentTypeIds: new Set( data.contentTypeIds ? data.contentTypeIds : [] ),
-			senderAddress: new List( data.senderAddress ? data.senderAddress : [] )
+			senderAddress: new List( data.senderAddress ? data.senderAddress : [] ),
+			pageIds: new Set( data.pageIds ? data.pageIds : [] )
 		};
 		super( data );
 	}

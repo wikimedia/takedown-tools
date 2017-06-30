@@ -5,6 +5,7 @@ import * as SiteEpic from './site';
 
 export default combineEpics(
 	SiteEpic.fetchAll,
+	SiteEpic.fetchSiteInfo,
 	TakedownEpic.fetchTakedownList,
 	TakedownEpic.fetchTakedown,
 	TakedownEpic.takedownSave,

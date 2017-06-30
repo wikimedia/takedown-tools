@@ -17,3 +17,10 @@ export function add( site ) {
 		site: site
 	};
 }
+
+export function update( site ) {
+	return {
+		type: 'SITE_UPDATE',
+		site: site
+	};
+}

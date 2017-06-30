@@ -65,7 +65,7 @@ export class TakedownShow extends React.Component {
 				case 'dmca':
 					type = 'DMCA';
 					typeShow = (
-						<TakedownShowDmca takedown={this.props.takedown} />
+						<TakedownShowDmca takedown={this.props.takedown} site={this.props.site} />
 					);
 					break;
 				case 'cp':

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { SelectPages } from '../../fields/select-pages';
 import { Takedown } from '../../../entities/takedown/takedown';
-import { ContentTypeSet } from '../../../entities/content-type.set';
+import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
-import { Checkboxes } from '../../fields/checkboxes';
 import { DatePicker } from '../../fields/date-picker';
 
 export class TakedownCreateDmca extends React.Component {
@@ -58,10 +58,6 @@ export class TakedownCreateDmca extends React.Component {
 					</div>
 				</div>
 				<div className="form-group">
-					<label>Content Types</label>
-					<Checkboxes disabled={this.props.disabled} name="contentTypeIds" options={ContentTypeSet} value={this.props.takedown.dmca.contentTypeIds} onChange={ ( value ) => this.updateField( 'contentTypeIds', value ) } />
-				</div>
-				<div className="form-group">
 					<label>Sent</label> <small className="text-muted">date the takedown was sent</small>
 					<DatePicker disabled={this.props.disabled} value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
 				</div>
@@ -72,6 +68,10 @@ export class TakedownCreateDmca extends React.Component {
 						<option value="no">No</option>
 						<option value="partial">Partial</option>
 					</select>
+				</div>
+				<div className="form-group">
+					<label htmlFor="pageIds">Affected Pages</label>
+					<SelectPages disabled={this.props.disabled} site={this.props.site} name="pageIds" value={this.props.takedown.dmca.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
 				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
@@ -117,5 +117,6 @@ export class TakedownCreateDmca extends React.Component {
 TakedownCreateDmca.propTypes = {
 	updateTakedown: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
+	site: PropTypes.instanceOf( Site ),
 	disabled: PropTypes.bool
 };

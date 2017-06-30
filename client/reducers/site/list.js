@@ -8,6 +8,9 @@ export default function list( state = new Set(), action ) {
 		case 'SITE_ADD_MULTIPLE':
 			return state.union( action.sites ).sortBy( site => site.id );
 
+		case 'SITE_UPDATE':
+			return state.delete( action.site ).add( action.site ).sortBy( site => site.id );
+
 		default:
 			return state;
 	}

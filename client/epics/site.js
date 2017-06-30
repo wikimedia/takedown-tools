@@ -1,8 +1,9 @@
 import { Observable } from 'rxjs';
-import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinct';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/delayWhen';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
 import { Site } from '../entities/site';
@@ -59,4 +60,51 @@ export function fetchAll( action$ ) {
 					return Observable.of( SiteActions.addMultiple( [] ) );
 				} );
 		} );
+}
+
+export function fetchSiteInfo( action$, store ) {
+	return action$
+		.filter( ( action ) => {
+			const types = [
+				'TAKEDOWN_ADD_MULTIPLE',
+				'TAKEDOWN_ADD',
+				'TAKEDOWN_CREATE_UPDATE'
+			];
+
+			return types.includes( action.type );
+		} )
+		.flatMap( ( action ) => {
+			if ( action.type === 'TAKEDOWN_ADD_MULTIPLE' ) {
+				return [
+					...action.takedowns
+				];
+			}
+
+			return [ action.takedown ];
+		} )
+		// Continue if takedown has a site id.
+		.filter( ( takedown ) => !!takedown.siteId )
+		// Only do this once per siteId
+		.distinct( ( takedown ) => takedown.siteId )
+		// Delay the emmissions until the sites are added.
+		.combineLatest( action$.ofType( 'SITE_ADD_MULTIPLE' ), ( takedown ) => takedown )
+		.map( ( takedown ) => {
+			return store.getState().site.list.find( ( site ) => {
+				return site.id === takedown.siteId;
+			} );
+		} )
+		.flatMap( ( site ) => {
+			return Observable.ajax( {
+				url: 'https://' + site.domain + '/w/api.php?action=query&format=json&meta=siteinfo&siprop=general%7Cnamespaces%7Cnamespacealiases%7Cspecialpagealiases&origin=*',
+				crossDomain: true,
+				responseType: 'json'
+			} )
+				.map( ( ajaxResponse ) => {
+					return SiteActions.update( site.set( 'info', ajaxResponse.response.query ) );
+				} )
+				.catch( ( ajaxError ) => {
+					return Observable.of( SiteActions.update( site.set( 'error', ajaxError.status ) ) );
+				} );
+		} );
+
 }

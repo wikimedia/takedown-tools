@@ -5,7 +5,9 @@ export class Site extends Record( {
 	id: undefined,
 	name: undefined,
 	domain: undefined,
-	projectId: undefined
+	projectId: undefined,
+	error: undefined,
+	info: undefined
 }, 'Site' ) {
 
 	equals( other ) {
