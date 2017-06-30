@@ -63,7 +63,7 @@ export class TakedownShowDmca extends React.Component {
 					<td>{actionTaken}</td>
 				</tr>
 				<tr>
-					<td>Pages </td>
+					<td>Pages Affected</td>
 					<td>{pages}</td>
 				</tr>
 				<tr>
