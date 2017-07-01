@@ -50,12 +50,6 @@ services:
             event: lexik_jwt_authentication.on_jwt_created
             method: onJWTCreated
 
-  app.entity_attacher:
-        class: GeoSocio\EntityAttacher\EntityAttacher
-        arguments:
-            - '@doctrine.orm.entity_manager'
-            - '@annotations.reader'
-
   app.controller_auth:
     class: App\Controller\AuthController
     arguments:
@@ -72,7 +66,7 @@ services:
       - '@doctrine'
       - '@serializer'
       - '@app.mediawiki_client'
-      - '@app.entity_attacher'
+      - '@entity_attacher'
 
   app.controller_user:
     class: App\Controller\UserController

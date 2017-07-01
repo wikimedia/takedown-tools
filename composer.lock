@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "88ba8cbb3ce9c247c7c3e94cc0b53b54",
+    "content-hash": "6582997336648c0460a84758bdfc5b5c",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -777,16 +777,16 @@
         },
         {
             "name": "geosocio/entity-attacher",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/entity-attacher.git",
-                "reference": "c4338d86760576d1ddbe2ae42c3645ea8ab7eff0"
+                "reference": "bdcb45dcff21eb683f0edb89a07d8ca8bfa5bde5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/c4338d86760576d1ddbe2ae42c3645ea8ab7eff0",
-                "reference": "c4338d86760576d1ddbe2ae42c3645ea8ab7eff0",
+                "url": "https://api.github.com/repos/geosocio/entity-attacher/zipball/bdcb45dcff21eb683f0edb89a07d8ca8bfa5bde5",
+                "reference": "bdcb45dcff21eb683f0edb89a07d8ca8bfa5bde5",
                 "shasum": ""
             },
             "require": {
@@ -809,40 +809,43 @@
                 "LGPL-3"
             ],
             "description": "Utility to Attach Doctrine Entities to existing instances",
-            "time": "2017-06-27T20:36:58+00:00"
+            "time": "2017-07-01T16:14:10+00:00"
         },
         {
-            "name": "geosocio/entity-utils",
-            "version": "1.0.5",
+            "name": "geosocio/entity-attacher-bundle",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/geosocio/entity-utils.git",
-                "reference": "10ca1f6561594ca649a1d27ced0424ae4d08b77d"
+                "url": "https://github.com/geosocio/entity-attacher-bundle.git",
+                "reference": "a13afebab9b0672aa6af8c7ca8b65579e9bc9d2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/entity-utils/zipball/10ca1f6561594ca649a1d27ced0424ae4d08b77d",
-                "reference": "10ca1f6561594ca649a1d27ced0424ae4d08b77d",
+                "url": "https://api.github.com/repos/geosocio/entity-attacher-bundle/zipball/a13afebab9b0672aa6af8c7ca8b65579e9bc9d2b",
+                "reference": "a13afebab9b0672aa6af8c7ca8b65579e9bc9d2b",
                 "shasum": ""
             },
+            "require": {
+                "geosocio/entity-attacher": "^1.0.4",
+                "symfony/dependency-injection": "^3.0",
+                "symfony/http-kernel": "^3.0"
+            },
             "require-dev": {
-                "doctrine/collections": "^1.0",
-                "doctrine/orm": "^2.0",
                 "phpunit/phpunit": "^6.2",
                 "squizlabs/php_codesniffer": "^3.0"
             },
-            "type": "library",
+            "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
-                    "GeoSocio\\EntityUtils\\": "src/"
+                    "GeoSocio\\EntityAttacherBundle\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPL-3"
+                "LGPA-3"
             ],
-            "description": "Utilities for Doctrine Entities",
-            "time": "2017-06-25T01:48:34+00:00"
+            "description": "Symfony Bundle for Attaching Entities",
+            "time": "2017-07-01T21:31:39+00:00"
         },
         {
             "name": "geosocio/serialize-response",
@@ -1113,16 +1116,16 @@
         },
         {
             "name": "lexik/jwt-authentication-bundle",
-            "version": "v2.4.0",
+            "version": "v2.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lexik/LexikJWTAuthenticationBundle.git",
-                "reference": "b0d64729f57a76fd0bce2100a487af2e0aa99936"
+                "reference": "7f213110d12315514879d44d8b90134ec99c24be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/b0d64729f57a76fd0bce2100a487af2e0aa99936",
-                "reference": "b0d64729f57a76fd0bce2100a487af2e0aa99936",
+                "url": "https://api.github.com/repos/lexik/LexikJWTAuthenticationBundle/zipball/7f213110d12315514879d44d8b90134ec99c24be",
+                "reference": "7f213110d12315514879d44d8b90134ec99c24be",
                 "shasum": ""
             },
             "require": {
@@ -1206,7 +1209,7 @@
                 "rest",
                 "symfony"
             ],
-            "time": "2017-05-08T10:16:54+00:00"
+            "time": "2017-06-29T13:44:14+00:00"
         },
         {
             "name": "mediawiki/oauthclient",

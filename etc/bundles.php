@@ -8,4 +8,5 @@ return [
     'Doctrine\Bundle\DoctrineBundle\DoctrineBundle' => ['all' => true],
     'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle' => ['dev' => true, 'test' => true],
     'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => ['all' => true],
+    'GeoSocio\EntityAttacherBundle\GeoSocioEntityAttacherBundle' => ['all' => true],
 ];
