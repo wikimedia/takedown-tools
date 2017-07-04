@@ -9,6 +9,8 @@ export class DatePicker extends React.Component {
 	constructor( props ) {
 		super( props );
 
+		this.eod = moment().endOf( 'day' );
+
 		// UI state can be maintained within the component.
 		this.state = {
 			focused: false
@@ -32,7 +34,7 @@ export class DatePicker extends React.Component {
 	}
 
 	isOutsideRange( date ) {
-		return date.diff( moment() ) > 0;
+		return date.diff( this.eod ) > 0;
 	}
 
 	initialVisibleMonth() {
