@@ -36,9 +36,16 @@ class Dmca {
 	/**
 	 * @var bool
 	 *
-	 * @ORM\Column(name="send_ce", type="boolean", options={"default"=false})
+	 * @ORM\Column(name="ce_send", type="boolean", options={"default"=false})
 	 */
-	private $sendCe;
+	private $ceSend;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="ce_title", type="string", length=255, nullable=true)
+	 */
+	 private $ceTitle;
 
 	/**
 	 * @var Collection
@@ -151,7 +158,8 @@ class Dmca {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
-		$this->sendCe = $params->getBoolean( 'sendCe', false );
+		$this->ceSend = $params->getBoolean( 'ceSend', false );
+		$this->ceTitle = $params->getString( 'ceTitle' );
 		$this->pages = $params->getCollection(
 			'pages',
 			Page::class,
@@ -195,29 +203,55 @@ class Dmca {
 	}
 
 	/**
-	 * Set Send CE
+	 * Set Send to Chilling Effects
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param bool $sendCe Send CE?
+	 * @param bool $ceSend Send CE?
 	 *
 	 * @return self
 	 */
-	public function setSendCe( bool $sendCe ) : self {
-		$this->sendCe = $sendCe;
+	public function setCeSend( bool $ceSend ) : self {
+		$this->ceSend = $ceSend;
 
 		return $this;
 	}
 
 	/**
-	 * Send CE
+	 * Send to Chilling Effects
 	 *
 	 * @Groups({"api"})
 	 *
 	 * @return bool
 	 */
-	public function getSendCe() :? bool {
-		return $this->sendCe;
+	public function getCeSend() :? bool {
+		return $this->ceSend;
+	}
+
+	/**
+	 * Set Chilling Effects Title
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $ceTitle Chilling Effects Title
+	 *
+	 * @return self
+	 */
+	public function setCeTitle( string $ceTitle ) : self {
+		$this->ceTitle = $ceTitle;
+
+		return $this;
+	}
+
+	/**
+	 * Chilling Effects Title
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getCeTitle() :? string {
+		return $this->ceTitle;
 	}
 
 	/**

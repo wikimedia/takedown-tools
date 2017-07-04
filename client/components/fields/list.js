@@ -46,7 +46,14 @@ export class ListField extends React.Component {
 
 			return (
 				<div className="input-group mb-2" key={key}>
-					<input className="form-control" type={this.props.type} name={name} disabled={this.props.disabled} onChange={( event ) => this.updateItem( key, event.target.value )} />
+					<input
+						className="form-control"
+						type={this.props.type}
+						name={name}
+						disabled={this.props.disabled}
+						required={this.props.required}
+						onChange={( event ) => this.updateItem( key, event.target.value )}
+					/>
 					<span className="input-group-btn">
 						<button className="btn btn-secondary" type="button" onClick={() => this.removeItem( key )}>×</button>
 					</span>
@@ -69,6 +76,7 @@ ListField.propTypes = {
 	value: PropTypes.instanceOf( OrderedMap ).isRequired,
 	type: PropTypes.string,
 	name: PropTypes.string,
+	required: PropTypes.bool,
 	disabled: PropTypes.bool,
 	onChange: PropTypes.func
 };

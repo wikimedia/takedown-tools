@@ -62,10 +62,6 @@ export class TakedownShowDmca extends React.Component {
 		return (
 			<tbody className="border-top-0">
 				<tr>
-					<td>Sent to Chilling Effects</td>
-					<td>{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}</td>
-				</tr>
-				<tr>
 					<td>Sent</td>
 					<td>{sent}</td>
 				</tr>
@@ -123,6 +119,17 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Country</td>
 					<td>{senderCountry ? senderCountry.name : undefined}</td>
+				</tr>
+				<tr>
+					<th colSpan="2">Chilling Effects</th>
+				</tr>
+				<tr>
+					<td>Sent to Chilling Effects</td>
+					<td>{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}</td>
+				</tr>
+				<tr>
+					<td>Title</td>
+					<td>{this.props.takedown.dmca.ceTitle}</td>
 				</tr>
 			</tbody>
 		);
