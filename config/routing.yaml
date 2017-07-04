@@ -1,0 +1,4 @@
+# Depends on sensio/framework-extra-bundle:^3.0 and doctrine/annotations
+controllers:
+   resource: ../src/Controller/
+   type: annotation

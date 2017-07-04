@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Prevent strping of the Authorization header.
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+
+# Serve files directly
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Send /login or /api to PHP
+RewriteRule ^(api|login) index.php [END,QSA]
+
+# Serve files directly
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Send all other routes to JavaScript.
+RewriteRule ^(.*)$ index.html [L,QSA]

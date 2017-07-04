@@ -2,7 +2,6 @@
 
 namespace App\Entity\Takedown;
 
-use App\Entity\Site;
 use App\Entity\Page;
 use App\Entity\Action;
 use App\Entity\Country;
