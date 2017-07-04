@@ -48,7 +48,7 @@ class Takedown {
 	 * @var User
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
-	 * @ORM\JoinColumn(name="reporter_id", referencedColumnName="user_id")
+	 * @ORM\JoinColumn(name="reporter", referencedColumnName="user_id")
 	 * @Attach()
 	 */
 	private $reporter;
@@ -57,7 +57,7 @@ class Takedown {
 	 * @var Site
 	 *
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Site", cascade={"persist"})
-	 * @ORM\JoinColumn(name="site_id", referencedColumnName="site_id")
+	 * @ORM\JoinColumn(name="site", referencedColumnName="site_id")
 	 * @Attach()
 	 */
 	private $site;

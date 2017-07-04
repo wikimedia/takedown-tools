@@ -8,6 +8,7 @@ import { Site } from '../../../entities/site';
 import { Loading } from '../../loading';
 import { Error } from '../../error';
 import { TakedownShowDmca } from './dmca';
+import { TakedownShowCp } from './cp';
 
 export class TakedownShow extends React.Component {
 	componentWillMount() {
@@ -70,6 +71,9 @@ export class TakedownShow extends React.Component {
 					break;
 				case 'cp':
 					type = 'Child Protection';
+					typeShow = (
+						<TakedownShowCp takedown={this.props.takedown} />
+					);
 					break;
 			}
 		}

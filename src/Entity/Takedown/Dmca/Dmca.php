@@ -77,38 +77,38 @@ class Dmca {
 	 private $senderName;
 
 	 /**
-		* @var string
-		*
-		* @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
-		*/
+	* @var string
+	*
+	* @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
+	*/
 	 private $senderPerson;
 
 	 /**
-		* @var string
-		*
-		* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
-		*/
+	* @var string
+	*
+	* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
+	*/
 	 private $senderFirm;
 
 	 /**
-		* @var string
-		*
-		* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
-		*/
+	* @var string
+	*
+	* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
+	*/
 	 private $senderAddress1;
 
 	 /**
-		* @var string
-		*
-		* @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
-		*/
+	* @var string
+	*
+	* @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
+	*/
 	 private $senderAddress2;
 
 	 /**
-		* @var string
-		*
-		* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
-		*/
+	* @var string
+	*
+	* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
+	*/
 	 private $senderCity;
 
 	/**
@@ -151,6 +151,27 @@ class Dmca {
 	private $actionTaken;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="method", type="string", length=127, nullable=true)
+	 */
+	 private $method;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="subject", type="string", length=255, nullable=true)
+	 */
+	 private $subject;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="body", type="text", nullable=true)
+	 */
+	 private $body;
+
+	/**
 	 * Takedown
 	 *
 	 * @param array $data Data to construct the object.
@@ -161,14 +182,14 @@ class Dmca {
 		$this->ceSend = $params->getBoolean( 'ceSend', false );
 		$this->ceTitle = $params->getString( 'ceTitle' );
 		$this->pages = $params->getCollection(
-			'pages',
-			Page::class,
-			new ArrayCollection()
+		'pages',
+		Page::class,
+		new ArrayCollection()
 		);
 		$this->originals = $params->getCollection(
-			'originals',
-			Original::class,
-			new ArrayCollection()
+		'originals',
+		Original::class,
+		new ArrayCollection()
 		);
 		$this->senderName = $params->getString( 'name' );
 		$this->senderPerson = $params->getString( 'person' );
@@ -178,6 +199,9 @@ class Dmca {
 		$this->senderCity = $params->getString( 'city' );
 		$this->senderCountry = $params->getInstance( 'country', Country::class );
 		$this->date = $params->getInstance( 'sent', \DateTime::class );
+		$this->method = $params->getString( 'method' );
+		$this->subject = $params->getString( 'subject' );
+		$this->body = $params->getString( 'body' );
 	}
 
 	/**
@@ -650,9 +674,9 @@ class Dmca {
 	 * @return self
 	 */
 	public function setSent( \DateTimeInterface $sent ) : self {
-			$this->sent = $sent;
+		$this->sent = $sent;
 
-			return $this;
+		return $this;
 	}
 
 	/**
@@ -663,7 +687,7 @@ class Dmca {
 	 * @return \DateTime
 	 */
 	public function getSent() :? \DateTimeInterface {
-			return $this->sent;
+		return $this->sent;
 	}
 
 	/**
@@ -674,9 +698,9 @@ class Dmca {
 	 * @return self
 	 */
 	public function setActionTaken( Action $actionTaken ) : self {
-			$this->actionTaken = $actionTaken;
+		$this->actionTaken = $actionTaken;
 
-			return $this;
+		return $this;
 	}
 
 	/**
@@ -686,7 +710,7 @@ class Dmca {
 	 * @return \DateTime
 	 */
 	public function getActionTaken() :? Action {
-			return $this->actionTaken;
+		return $this->actionTaken;
 	}
 
 	/**
@@ -722,6 +746,84 @@ class Dmca {
 	}
 
 	/**
+	 * Set Method
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $method Method
+	 *
+	 * @return self
+	 */
+	public function setMethod( string $method ) : self {
+		$this->method = $method;
+
+		return $this;
+	}
+
+	/**
+	 * Method
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getMethod() :? string {
+		return $this->method;
+	}
+
+	/**
+	 * Set Subject
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $subject Subject
+	 *
+	 * @return self
+	 */
+	public function setSubject( string $subject ) : self {
+		$this->subject = $subject;
+
+		return $this;
+	}
+
+	/**
+	 * Subject
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getSubject() :? string {
+		return $this->subject;
+	}
+
+	/**
+	 * Set Body
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $body Body
+	 *
+	 * @return self
+	 */
+	public function setBody( string $body ) : self {
+		$this->body = $body;
+
+		return $this;
+	}
+
+	/**
+	 * Body
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getBody() :? string {
+		return $this->body;
+	}
+
+	/**
 	 * Clone
 	 *
 	 * @return void
@@ -729,15 +831,15 @@ class Dmca {
 	public function __clone() {
 		$this->pages = $this->pages->map( function( $page ) {
 			return new Page( [
-					'key' => $page->getKey(),
-					'dmca' => $this,
+				'key' => $page->getKey(),
+				'dmca' => $this,
 			] );
 		} );
 
 		$this->originals = $this->originals->map( function( $original ) {
 			return new Original( [
-					'url' => $original->getUrl(),
-					'dmca' => $this,
+				'url' => $original->getUrl(),
+				'dmca' => $this,
 			] );
 		} );
 	}

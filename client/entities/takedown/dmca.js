@@ -14,7 +14,10 @@ export class Dmca extends Record( {
 	sent: undefined,
 	actionTakenId: undefined,
 	pageIds: new Set(),
-	originalUrls: new List()
+	originalUrls: new List(),
+	method: undefined,
+	subject: undefined,
+	body: undefined
 } ) {
 	constructor( data = {} ) {
 		data = {

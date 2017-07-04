@@ -78,6 +78,18 @@ export class TakedownShowDmca extends React.Component {
 					<td>{originalUrls}</td>
 				</tr>
 				<tr>
+					<td>Method</td>
+					<td>{this.props.takedown.dmca.method}</td>
+				</tr>
+				<tr>
+					<td>Subject</td>
+					<td>{this.props.takedown.dmca.subject}</td>
+				</tr>
+				<tr>
+					<td>Body</td>
+					<td>{this.props.takedown.dmca.body}</td>
+				</tr>
+				<tr>
 					<th colSpan="2">Sender</th>
 				</tr>
 				<tr>

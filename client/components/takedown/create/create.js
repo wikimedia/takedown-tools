@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import Select from 'react-select';
 import { TakedownCreateDmcaContainer } from './dmca.container';
+import { TakedownCreateCpContainer } from './cp.container';
 import { SelectUsers } from '../../fields/select-users';
 import { MetadataField } from '../../fields/metadata';
 import { Takedown } from '../../../entities/takedown/takedown';
@@ -80,6 +81,9 @@ export class TakedownCreate extends React.Component {
 
 			case 'cp':
 				cpButtonClass = cpButtonClass + ' active';
+				takedownTypeForm = (
+					<TakedownCreateCpContainer disabled={disabled} />
+				);
 				break;
 		}
 

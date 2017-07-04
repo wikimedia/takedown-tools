@@ -84,6 +84,18 @@ export class TakedownCreateDmca extends React.Component {
 					<label htmlFor="originalUrls">Original URLs</label> <small className="text-muted">location of original work</small>
 					<ListField disabled={this.props.disabled} required={true} type="url" name="originalUrls" value={this.props.takedown.dmca.originalUrls} onChange={ ( originalUrls ) => this.updateField( 'originalUrls', originalUrls ) } />
 				</div>
+				<div className="form-group">
+					<label htmlFor="method">Method</label> <small className="text-muted">how was the C&D sent? (e.g. email, postal mail, fax ...)</small>
+					<input type="text" className="form-control" disabled={this.props.disabled} name="method" value={this.props.takedown.dmca.method || ''} onChange={this.handleChange.bind( this )} />
+				</div>
+				<div className="form-group">
+					<label htmlFor="subject">Subject</label> <small className="text-muted">of the email or fax received</small>
+					<input type="text" className="form-control" disabled={this.props.disabled} name="subject" value={this.props.takedown.dmca.subject || ''} onChange={this.handleChange.bind( this )} />
+				</div>
+				<div className="form-group">
+					<label htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
+					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
+				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
 					<div className="form-group">

@@ -118,11 +118,13 @@ class TakedownController {
 		$usernames = $takedown->getInvolvedNames();
 		$takedown->setInvolved( $this->client->getUsersByUsernames( $usernames ) );
 
-		$siteId = $takedown->getSite() ? $takedown->getSite()->getId() : null;
-		if ( $siteId ) {
-			$takedown->setSite( $this->client->getSiteById( $siteId ) );
+		// Get the user ids from the API.
+		if ( $takedown->getCp() && $takedown->getCp()->getApprover() ) {
+			$username = $takedown->getCp()->getApprover()->getUsername();
+			$takedown->getCp()->setApprover( $this->client->getUserByUsername( $username ) );
 		}
 
+		// Attach the takedown to existing entities.
 		$takedown = $this->attacher->attach( $takedown );
 
 		// Remove the related entities.
