@@ -145,7 +145,7 @@ class AuthController {
 	 *
 	 * @return Response
 	 */
-	public function tokenAction() : Response {
+	public function tokenAction() : array {
 			return [
 				'token' => $this->jwtManager->create( $this->getUser() )
 			];

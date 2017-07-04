@@ -11,8 +11,8 @@ import { TakedownShowDmca } from './dmca';
 
 export class TakedownShow extends React.Component {
 	componentWillMount() {
-		if ( this.props.status !== 'done' ) {
-			this.props.onComponentWillMount();
+		if ( !this.props.takedown && this.props.status !== 'done' ) {
+			this.props.fetchTakedown();
 		}
 	}
 	render() {
@@ -131,7 +131,7 @@ export class TakedownShow extends React.Component {
 
 TakedownShow.propTypes = {
 	status: PropTypes.string.isRequired,
-	onComponentWillMount: PropTypes.func.isRequired,
+	fetchTakedown: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ),
 	metadata: PropTypes.instanceOf( Set ),
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ),

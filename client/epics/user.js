@@ -7,6 +7,7 @@ import 'rxjs/add/observable/from';
 import { Set } from 'immutable';
 import { User } from '../entities/user';
 import * as UserActions from '../actions/user';
+import * as TokenActions from '../actions/token';
 
 export function fetchUsers( action$, store ) {
 	return action$.filter( ( action ) => {
@@ -70,6 +71,10 @@ export function fetchUsers( action$, store ) {
 					return UserActions.add( new User( ajaxResponse.response ) );
 				} )
 				.catch( ( ajaxError ) => {
+					if ( ajaxError.status === 401 ) {
+						return Observable.of( TokenActions.tokenRemove() );
+					}
+
 					const user = new User( {
 						id: id,
 						error: ajaxError.status,

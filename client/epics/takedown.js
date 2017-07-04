@@ -7,6 +7,7 @@ import { push } from 'react-router-redux';
 import { Takedown } from '../entities/takedown/takedown';
 import { MetadataSet } from '../entities/metadata.set';
 import * as TakedownActions from '../actions/takedown';
+import * as TokenActions from '../actions/token';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -24,7 +25,11 @@ export function fetchTakedownList( action$, store ) {
 
 				return TakedownActions.addMultiple( takedowns );
 			} )
-				.catch( () => {
+				.catch( ( ajaxError ) => {
+					if ( ajaxError.status === 401 ) {
+						return Observable.of( TokenActions.tokenRemove() );
+					}
+
 					return Observable.of( TakedownActions.addMultiple( [] ) );
 				} );
 		} );
@@ -46,6 +51,10 @@ export function fetchTakedown( action$, store ) {
 					return TakedownActions.add( takedown );
 				} )
 				.catch( ( ajaxError ) => {
+					if ( ajaxError.status === 401 ) {
+						return Observable.of( TokenActions.tokenRemove() );
+					}
+
 					const takedown = new Takedown( {
 						id: action.id,
 						error: ajaxError.status,
@@ -134,6 +143,10 @@ export function takedownSave( action$, store ) {
 					);
 				} )
 				.catch( ( ajaxError ) => {
+					if ( ajaxError.status === 401 ) {
+						return Observable.of( TokenActions.tokenRemove() );
+					}
+
 					// Set the takedown state.
 					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', ajaxError.status );
 					return Observable.of( TakedownActions.updateCreate( takedown ) );

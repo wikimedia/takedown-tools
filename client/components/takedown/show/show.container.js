@@ -31,7 +31,7 @@ export const TakedownShowContainer = connect(
 	( dispatch, ownProps ) => {
 		const id = parseInt( ownProps.match.params.id );
 		return {
-			onComponentWillMount: () => {
+			fetchTakedown: () => {
 				dispatch( TakedownActions.fetch( id ) );
 			}
 		};
