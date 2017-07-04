@@ -16,9 +16,7 @@ export function refreshToken( action$, store ) {
 			];
 			return !types.includes( action.type );
 		} )
-		.filter( () => {
-			return !!store.getState().token;
-		} )
+		.filter( () => !!store.getState().token )
 		.debounceTime( 5 * 60 * 60 ) // 5 minutes.
 		.flatMap( () => {
 			return Observable.ajax( {

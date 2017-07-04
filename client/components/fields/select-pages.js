@@ -73,7 +73,7 @@ export class SelectPages extends React.Component {
 		const title = Title.newFromText( text, this.props.site.info );
 
 		return {
-			label: title.getNamespace().isMain() ? title.getKey().replace( '_', ' ' ) : `${title.getKey().replace( '_', ' ' )} (${title.getNamespace().getNormalizedText()})`,
+			label: title.getNamespace().isMain() ? title.getKey().replace( /_/g, ' ' ) : `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`,
 			value: title.getPrefixedDBKey()
 		};
 	}

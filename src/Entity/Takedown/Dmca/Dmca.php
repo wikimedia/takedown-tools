@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Entity\Takedown;
+namespace App\Entity\Takedown\Dmca;
 
-use App\Entity\Page;
 use App\Entity\Action;
 use App\Entity\Country;
+use App\Entity\Takedown\Takedown;
+use App\Entity\Takedown\Dmca\Page;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -42,19 +43,11 @@ class Dmca {
 	/**
 	 * @var Collection
 	 *
-	 * @ORM\ManyToMany(targetEntity="App\Entity\Page", cascade={"persist"})
-	 * @ORM\JoinTable(name="takedown_dmca_page",
-	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(
-	 *        name="page_site",
-	 *        referencedColumnName="site"
-	 *      ),
-	 *      @ORM\JoinColumn(
-	 *        name="page_key",
-	 *        referencedColumnName="key"
-	 *      )}
-	 * )
-	 * @Attach()
+	 * @ORM\OneToMany(
+	 * 	targetEntity="App\Entity\Takedown\Dmca\Page",
+	 * 	mappedBy="dmca",
+	 * 	cascade={"persist"}
+	 *)
 	 */
 	private $pages;
 
@@ -272,7 +265,7 @@ class Dmca {
 		$this->pages = new ArrayCollection( array_map( function ( $id ) {
 			return new Page( [
 				'key' => $id,
-				'site' => $this->takedown ? $this->takedown->getSite() : null,
+				'dmca' => $this,
 			] );
 		}, $pageIds ) );
 
@@ -613,15 +606,14 @@ class Dmca {
 	/**
 	 * Clone
 	 *
-	 * @return Takedown
+	 * @return void
 	 */
 	public function __clone() {
 		$this->pages = $this->pages->map( function( $page ) {
-			if ( $this->takedown && $this->takedown->getSite() ) {
-				$page->setSite( $this->takedown->getSite() );
-			}
-
-			return $page;
+			return new Page( [
+					'key' => $page->getKey(),
+					'dmca' => $this,
+			] );
 		} );
 	}
 }

@@ -35,9 +35,9 @@ export class TakedownShowDmca extends React.Component {
 				let content;
 
 				if ( title.getNamespace().isMain() ) {
-					content = title.getKey().replace( '_', ' ' );
+					content = title.getKey().replace( /_/g, ' ' );
 				} else {
-					content = `${title.getKey().replace( '_', ' ' )} (${title.getNamespace().getNormalizedText()})`;
+					content = `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`;
 				}
 
 				return (

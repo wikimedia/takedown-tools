@@ -5,6 +5,7 @@ namespace App\Entity\Takedown;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Metadata;
+use App\Entity\Takedown\Dmca\Dmca;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -95,7 +96,7 @@ class Takedown {
 	 * @var Dmca
 	 *
 	 * @ORM\OneToOne(
-	 *	targetEntity="App\Entity\Takedown\Dmca",
+	 *	targetEntity="App\Entity\Takedown\Dmca\Dmca",
 	 *	mappedBy="takedown",
 	 *	orphanRemoval=true,
 	 *	cascade={"persist"}
