@@ -5,7 +5,7 @@ module.exports = {
 	entry: './client/index.js',
 	output: {
 		filename: 'bundle.js',
-		path: path.resolve( __dirname, 'web/bundles' )
+		path: path.resolve( __dirname, 'public/bundles' )
 	},
 	devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
 	module: {
