@@ -9,11 +9,11 @@ use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="takedown_dmca_page")
+ * @ORM\Table(name="takedown_dmca_original")
  *
  * @todo add validation.
  */
-class Page {
+class Original {
 
 	/**
 	 * @var Dmca
@@ -21,7 +21,7 @@ class Page {
 	 * @ORM\Id
 	 * @ORM\ManyToOne(
 	 *	targetEntity="App\Entity\Takedown\Dmca\Dmca",
-	 *	inversedBy="pages"
+	 *	inversedBy="originals"
 	 *)
 	 * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
 	 * @Attach()
@@ -34,9 +34,9 @@ class Page {
 	 * The Prefixed DB Key.
 	 *
 	 * @ORM\Id
-	 * @ORM\Column(name="`key`", type="string", length=255)
+	 * @ORM\Column(name="url", type="string", length=511)
 	 */
-	private $key;
+	private $url;
 
 	/**
 	 * Takedown
@@ -46,7 +46,7 @@ class Page {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->dmca = $params->getInstance( 'dmca', Dmca::class, new Dmca() );
-		$this->key = $params->getString( 'key' );
+		$this->url = $params->getString( 'url' );
 	}
 
 	/**
@@ -72,24 +72,24 @@ class Page {
 	}
 
 	/**
-	 * Set Key.
+	 * Set Url.
 	 *
-	 * @param string $key Prefixed DB Key.
+	 * @param string $url Url
 	 *
 	 * @return self
 	 */
-	public function setKey( string $key ) {
-		$this->key = $key;
+	public function setUrl( string $url ) {
+		$this->url = $url;
 
 		return $this;
 	}
 
 	/**
-	 * Get Key
+	 * Get Url
 	 *
 	 * @return string
 	 */
-	public function getKey() :? string {
-		return $this->key;
+	public function getUrl() :? string {
+		return $this->url;
 	}
 }

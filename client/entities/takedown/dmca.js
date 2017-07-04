@@ -1,4 +1,4 @@
-import { Record, Set, List } from 'immutable';
+import { Record, Set, List, fromJS } from 'immutable';
 
 export class Dmca extends Record( {
 	sendCe: undefined,
@@ -12,13 +12,15 @@ export class Dmca extends Record( {
 	senderCountryCode: undefined,
 	sent: undefined,
 	actionTakenId: undefined,
-	pageIds: new Set()
+	pageIds: new Set(),
+	originalUrls: new List()
 } ) {
 	constructor( data = {} ) {
 		data = {
 			...data,
 			senderAddress: new List( data.senderAddress ? data.senderAddress : [] ),
-			pageIds: new Set( data.pageIds ? data.pageIds : [] )
+			pageIds: new Set( data.pageIds ? data.pageIds : [] ),
+			originalUrls: fromJS( data.originalUrls ? data.originalUrls : [] ).toOrderedMap()
 		};
 		super( data );
 	}

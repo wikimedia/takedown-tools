@@ -52,6 +52,17 @@ class Dmca {
 	private $pages;
 
 	/**
+	 * @var Collection
+	 *
+	 * @ORM\OneToMany(
+	 * 	targetEntity="App\Entity\Takedown\Dmca\Original",
+	 * 	mappedBy="dmca",
+	 * 	cascade={"persist"}
+	 *)
+	 */
+	private $originals;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_name", type="string", length=63, nullable=true)
@@ -144,6 +155,11 @@ class Dmca {
 		$this->pages = $params->getCollection(
 			'pages',
 			Page::class,
+			new ArrayCollection()
+		);
+		$this->originals = $params->getCollection(
+			'originals',
+			Original::class,
 			new ArrayCollection()
 		);
 		$this->senderName = $params->getString( 'name' );
@@ -257,7 +273,7 @@ class Dmca {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param array $pageIds Page ids in the form of ['key' => '', 'site' => '']
+	 * @param string[] $pageIds Page ids
 	 *
 	 * @return Collection
 	 */
@@ -268,6 +284,74 @@ class Dmca {
 				'dmca' => $this,
 			] );
 		}, $pageIds ) );
+
+		return $this;
+	}
+
+	/**
+	 * Originals
+	 *
+	 * @return Collection
+	 */
+	public function getOriginals() : Collection {
+		return $this->originals;
+	}
+
+	/**
+	 * Add Original
+	 *
+	 * @param Original $original Original
+	 *
+	 * @return self
+	 */
+	public function addOriginal( Original $original ) : self {
+		$this->originals->add( $original );
+
+		return $this;
+	}
+
+	/**
+	 * Remove Original
+	 *
+	 * @param Original $original Original
+	 *
+	 * @return self
+	 */
+	public function removeOriginal( Original $original ) : self {
+		$this->originals->remove( $original );
+
+		return $this;
+	}
+
+	/**
+	 * Originals
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return array
+	 */
+	public function getOriginalUrls() : array {
+		return $this->originals->map( function ( $original ) {
+			return $original->getUrl();
+		} )->toArray();
+	}
+
+	/**
+	 * Originals
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string[] $originalUrls Original urls.
+	 *
+	 * @return Collection
+	 */
+	public function setOriginalUrls( array $originalUrls ) : self {
+		$this->originals = new ArrayCollection( array_map( function ( $url ) {
+			return new Original( [
+				'url' => $url,
+				'dmca' => $this,
+			] );
+		}, $originalUrls ) );
 
 		return $this;
 	}
@@ -612,6 +696,13 @@ class Dmca {
 		$this->pages = $this->pages->map( function( $page ) {
 			return new Page( [
 					'key' => $page->getKey(),
+					'dmca' => $this,
+			] );
+		} );
+
+		$this->originals = $this->originals->map( function( $original ) {
+			return new Original( [
+					'url' => $original->getUrl(),
 					'dmca' => $this,
 			] );
 		} );

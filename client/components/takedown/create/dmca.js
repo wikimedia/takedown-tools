@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { SelectPages } from '../../fields/select-pages';
+import { ListField } from '../../fields/list';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
@@ -72,6 +73,10 @@ export class TakedownCreateDmca extends React.Component {
 				<div className="form-group">
 					<label htmlFor="pageIds">Affected Pages</label>
 					<SelectPages disabled={this.props.disabled} site={this.props.site} name="pageIds" value={this.props.takedown.dmca.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
+				</div>
+				<div className="form-group">
+					<label htmlFor="originalUrls">Original URLs</label> <small className="text-muted">location of original work</small>
+					<ListField disabled={this.props.disabled} type="url" name="originalUrls" value={this.props.takedown.dmca.originalUrls} onChange={ ( originalUrls ) => this.updateField( 'originalUrls', originalUrls ) } />
 				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
