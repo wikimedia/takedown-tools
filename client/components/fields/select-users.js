@@ -15,7 +15,7 @@ export class SelectUsers extends React.Component {
 
 		// This components state should be self contained.
 		this.state = {
-			value: this.getOptionsFromUsers( props.value ),
+			value: this.props.multi ? this.getOptionsFromUsers( props.value ) : this.getOptionFromUser( props.value ),
 			options: this.getOptionsFromUsers( props.users ),
 			loading: false
 		};
@@ -63,7 +63,7 @@ export class SelectUsers extends React.Component {
 	componentWillReceiveProps( nextProps ) {
 		this.setState( {
 			...this.state,
-			value: this.getOptionsFromUsers( nextProps.value )
+			value: nextProps.multi ? this.getOptionsFromUsers( nextProps.value ) : this.getOptionFromUser( nextProps.value )
 		} );
 	}
 
@@ -80,6 +80,16 @@ export class SelectUsers extends React.Component {
 		} );
 	}
 
+	getOptionFromUser( user ) {
+		if ( !user ) {
+			return {};
+		}
+
+		const options = this.getOptionsFromUsers( [ user ] );
+
+		return options[ 0 ];
+	}
+
 	getUsersFromOptions( options ) {
 		if ( !options ) {
 			return [];
@@ -91,6 +101,16 @@ export class SelectUsers extends React.Component {
 				username: option.label
 			} );
 		} );
+	}
+
+	getUserFromOption( option ) {
+		if ( !option ) {
+			return undefined;
+		}
+
+		const users = this.getUsersFromOptions( [ option ] );
+
+		return users[ 0 ];
 	}
 
 	onInputChange( input ) {
@@ -107,7 +127,7 @@ export class SelectUsers extends React.Component {
 
 		// Send the value upstream.
 		if ( this.props.onChange ) {
-			this.props.onChange( this.getUsersFromOptions( value ) );
+			this.props.onChange( this.props.multi ? this.getUsersFromOptions( value ) : this.getUserFromOption( value ) );
 		}
 	}
 
@@ -117,7 +137,7 @@ export class SelectUsers extends React.Component {
 				name={this.props.name}
 				disabled={this.props.disabled}
 				value={this.state.value}
-				multi={true}
+				multi={this.props.multi}
 				isLoading={this.state.loading}
 				options={this.state.options}
 				onInputChange={this.onInputChange.bind( this )}
@@ -131,6 +151,10 @@ SelectUsers.propTypes = {
 	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func,
 	disabled: PropTypes.bool,
-	value: PropTypes.arrayOf( PropTypes.instanceOf( User ) ),
+	multi: PropTypes.bool,
+	value: PropTypes.oneOfType( [
+		PropTypes.arrayOf( PropTypes.instanceOf( User ) ),
+		PropTypes.instanceOf( User )
+	] ),
 	users: PropTypes.arrayOf( PropTypes.instanceOf( User ) )
 };

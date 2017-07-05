@@ -32,6 +32,22 @@ export function makeGetInvolved() {
 	);
 }
 
+export function makeGetApprover() {
+	return createSelector(
+		state => state.user.list,
+		( _, props ) => props.takedown && props.takedown.cp && props.takedown.cp.approverId ? props.takedown.cp.approverId : undefined,
+		( users, id ) => {
+			if ( !id ) {
+				return undefined;
+			}
+
+			return users.find( ( user ) => {
+				return user.id === id;
+			} );
+		}
+	);
+}
+
 export function makeGetMetadata() {
 	return createSelector(
 		( _, props ) => props.takedown ? props.takedown.metadataIds : new Set(),

@@ -21,7 +21,7 @@ class ChildProtection {
 	 *
 	 * @ORM\Id
 	 * @ORM\OneToOne(targetEntity="App\Entity\Takedown\Takedown", inversedBy="cp")
-   * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
+	 * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
 	 */
 	private $takedown;
 
@@ -40,6 +40,20 @@ class ChildProtection {
 	 * @Attach()
 	 */
 	private $approver;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="denied_approval_reason", type="string", length=255, nullable=true)
+	 */
+	 private $deniedApprovalReason;
+
+	 /**
+	 * @var \DateTimeInterface
+	 *
+	 * @ORM\Column(name="sent", type="datetime", nullable=true)
+	 */
+	private $accessed;
 
 	/**
 	 * Takedown
@@ -107,7 +121,7 @@ class ChildProtection {
 	 * @return User
 	 */
 	public function getApprover() :? User {
-		return $this->takedown;
+		return $this->approver;
 	}
 
 	/**
@@ -121,6 +135,21 @@ class ChildProtection {
 		$this->approver = $approver;
 
 		return $this;
+	}
+
+	/**
+	 * Approver Ids
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return User
+	 */
+	public function getApproverId() :? int {
+		if ( $this->approver ) {
+			return $this->approver->getId();
+		}
+
+		return null;
 	}
 
 	/**
@@ -153,5 +182,57 @@ class ChildProtection {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Set Denied Approval Reason
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $deniedApprovalReason Denied Approval Reason
+	 *
+	 * @return self
+	 */
+	public function setDeniedApprovalReason( string $deniedApprovalReason ) : self {
+		$this->deniedApprovalReason = $deniedApprovalReason;
+
+		return $this;
+	}
+
+	/**
+	 * Denied Approval Reason
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getDeniedApprovalReason() :? string {
+		return $this->deniedApprovalReason;
+	}
+
+	/**
+	 * Set sent
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param \DateTimeInterface $accessed The Accssesed DateTime.
+	 *
+	 * @return self
+	 */
+	public function setAccessed( \DateTimeInterface $accessed ) : self {
+		$this->accessed = $accessed;
+
+		return $this;
+	}
+
+	/**
+	 * Sent
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return \DateTime
+	 */
+	public function getAccessed() :? \DateTimeInterface {
+		return $this->accessed;
 	}
 }

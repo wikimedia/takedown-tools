@@ -86,6 +86,7 @@ export function takedownSave( action$, store ) {
 						break;
 					case 'cp':
 						removeType = 'dmca';
+						takedown = takedown.setIn( [ 'cp', 'approverId' ], undefined );
 						break;
 				}
 

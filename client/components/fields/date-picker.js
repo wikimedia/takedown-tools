@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import TimePicker from 'rc-time-picker';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import 'rc-time-picker/assets/index.css';
 
 export class DatePicker extends React.Component {
 
@@ -30,7 +32,14 @@ export class DatePicker extends React.Component {
 			return;
 		}
 
-		this.props.onChange( date.utc().toISOString() );
+		const value = this.props.value ? moment.utc( this.props.value ) : moment.utc();
+		value.set( {
+			year: date.utc().year(),
+			month: date.utc().month(),
+			day: date.utc().day()
+		} );
+
+		this.props.onChange( value.utc().toISOString() );
 	}
 
 	isOutsideRange( date ) {
@@ -41,28 +50,62 @@ export class DatePicker extends React.Component {
 		return moment().subtract( 1, 'month' );
 	}
 
+	onTimeChange( time ) {
+		if ( !time ) {
+			this.props.onChange();
+			return;
+		}
+
+		const value = this.props.value ? moment.utc( this.props.value ) : moment.utc();
+		value.set( {
+			hours: time.utc().hours(),
+			minutes: time.utc().minutes()
+		} );
+
+		this.props.onChange( value.utc().toISOString() );
+	}
+
 	render() {
-		let value;
+		let value,
+			timePicker;
 
 		if ( this.props.value ) {
 			value = moment.utc( this.props.value );
 		}
 
-		return (
-			<div className="row">
-				<div className="col">
-					<SingleDatePicker
-						date={value}
-						onDateChange={this.onDateChange.bind( this )}
-						focused={this.state.focused}
-						onFocusChange={this.onFocusChange.bind( this )}
-						isOutsideRange={this.isOutsideRange.bind( this )}
-						initialVisibleMonth={this.initialVisibleMonth.bind( this )}
+		if ( this.props.time ) {
+			timePicker = (
+				<div className="col-3 h-100">
+					<TimePicker
 						disabled={this.props.disabled}
-						showClearDate
-						showDefaultInputIcon
-						hideKeyboardShortcutsPanel
+						value={value ? value.local() : undefined}
+						onChange={this.onTimeChange.bind( this )}
+						showSecond={false}
+						use12Hours
+						placeholder="Time"
 					/>
+				</div>
+			);
+		}
+
+		return (
+			<div>
+				<div className="row align-items-center">
+					<div className="col-3">
+						<SingleDatePicker
+							date={value}
+							onDateChange={this.onDateChange.bind( this )}
+							focused={this.state.focused}
+							onFocusChange={this.onFocusChange.bind( this )}
+							isOutsideRange={this.isOutsideRange.bind( this )}
+							initialVisibleMonth={this.initialVisibleMonth.bind( this )}
+							disabled={this.props.disabled}
+							showClearDate
+							showDefaultInputIcon
+							hideKeyboardShortcutsPanel
+						/>
+					</div>
+					{timePicker}
 				</div>
 			</div>
 		);
@@ -72,5 +115,6 @@ export class DatePicker extends React.Component {
 DatePicker.propTypes = {
 	value: PropTypes.string,
 	disabled: PropTypes.bool,
+	time: PropTypes.bool,
 	onChange: PropTypes.func.isRequired
 };

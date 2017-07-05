@@ -109,7 +109,7 @@ export class TakedownCreate extends React.Component {
 						</div>
 						<div className="form-group">
 							<label htmlFor="involvedIds">Involved Users</label>
-							<SelectUsers disabled={disabled} name="involvedIds" value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
+							<SelectUsers disabled={disabled} name="involvedIds" multi={true} value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
 						</div>
 						<div className="form-group">
 							<label>Type</label>
