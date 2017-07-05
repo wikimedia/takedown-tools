@@ -1,2 +1,8 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~spinkit/scss/spinners/11-folding-cube";
+
+.rc-time-picker-input {
+	padding: 1.5em 1em;
+	font-size: 100%;
+	border-radius: 0;
+}
