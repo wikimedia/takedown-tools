@@ -45,7 +45,7 @@ export class TakedownCreateDmca extends React.Component {
 		} ).toArray();
 
 		let country,
-			ceTitleField;
+			lumenTitleField;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			country = countries.find( ( data ) => {
@@ -53,11 +53,11 @@ export class TakedownCreateDmca extends React.Component {
 			} );
 		}
 
-		if ( this.props.takedown.dmca.ceSend ) {
-			ceTitleField = (
+		if ( this.props.takedown.dmca.lumenSend ) {
+			lumenTitleField = (
 				<div className="form-group">
-					<label htmlFor="ceTitle">Title</label>
-					<input type="text" className="form-control" name="ceTitle" value={this.props.takedown.dmca.ceTitle || ''} onChange={this.handleChange.bind( this )} />
+					<label htmlFor="lumenTitle">Title</label>
+					<input type="text" className="form-control" name="lumenTitle" value={this.props.takedown.dmca.lumenTitle || ''} onChange={this.handleChange.bind( this )} />
 				</div>
 			);
 		}
@@ -133,7 +133,7 @@ export class TakedownCreateDmca extends React.Component {
 					</div>
 				</fieldset>
 				<fieldset className="form-group">
-					<legend>Chilling Effects</legend>
+					<legend>Lumen</legend>
 					<div className="form-group">
 						<div className="form-check">
 							<label className="form-check-label">
@@ -141,24 +141,24 @@ export class TakedownCreateDmca extends React.Component {
 									disabled={this.props.disabled}
 									className="form-check-input"
 									type="checkbox"
-									name="ceSend"
-									value="ceSend"
-									checked={!!this.props.takedown.dmca.ceSend}
+									name="lumenSend"
+									value="lumenSend"
+									checked={!!this.props.takedown.dmca.lumenSend}
 									onChange={ ( event ) => {
 										if ( !event.target.checked ) {
 											this.mergeFields( {
-												ceSend: event.target.checked,
-												ceTitle: undefined
+												lumenSend: event.target.checked,
+												lumenTitle: undefined
 											} );
 										} else {
-											this.updateField( 'ceSend', event.target.checked );
+											this.updateField( 'lumenSend', event.target.checked );
 										}
 									} }
-								/> Send to Chilling Effects
+								/> Send to Lumen
 							</label>
 						</div>
 					</div>
-					{ceTitleField}
+					{lumenTitleField}
 				</fieldset>
 			</div>
 		);

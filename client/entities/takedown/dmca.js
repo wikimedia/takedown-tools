@@ -1,8 +1,8 @@
 import { Record, Set, List, fromJS } from 'immutable';
 
 export class Dmca extends Record( {
-	ceSend: undefined,
-	ceTitle: undefined,
+	lumenSend: undefined,
+	lumenTitle: undefined,
 	senderName: undefined,
 	senderPerson: undefined,
 	senderFirm: undefined,

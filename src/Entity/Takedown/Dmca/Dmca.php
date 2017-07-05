@@ -36,16 +36,16 @@ class Dmca {
 	/**
 	 * @var bool
 	 *
-	 * @ORM\Column(name="ce_send", type="boolean", options={"default"=false})
+	 * @ORM\Column(name="lumen_send", type="boolean", options={"default"=false})
 	 */
-	private $ceSend;
+	private $lumenSend;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ce_title", type="string", length=255, nullable=true)
+	 * @ORM\Column(name="lumen_title", type="string", length=255, nullable=true)
 	 */
-	 private $ceTitle;
+	 private $lumenTitle;
 
 	/**
 	 * @var Collection
@@ -179,8 +179,8 @@ class Dmca {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
-		$this->ceSend = $params->getBoolean( 'ceSend', false );
-		$this->ceTitle = $params->getString( 'ceTitle' );
+		$this->lumenSend = $params->getBoolean( 'lumenSend', false );
+		$this->lumenTitle = $params->getString( 'lumenTitle' );
 		$this->pages = $params->getCollection(
 		'pages',
 		Page::class,
@@ -227,55 +227,55 @@ class Dmca {
 	}
 
 	/**
-	 * Set Send to Chilling Effects
+	 * Set Send to Lumen
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param bool $ceSend Send CE?
+	 * @param bool $lumenSend Send CE?
 	 *
 	 * @return self
 	 */
-	public function setCeSend( bool $ceSend ) : self {
-		$this->ceSend = $ceSend;
+	public function setlumenSend( bool $lumenSend ) : self {
+		$this->lumenSend = $lumenSend;
 
 		return $this;
 	}
 
 	/**
-	 * Send to Chilling Effects
+	 * Send to Lumen
 	 *
 	 * @Groups({"api"})
 	 *
 	 * @return bool
 	 */
-	public function getCeSend() :? bool {
-		return $this->ceSend;
+	public function getlumenSend() :? bool {
+		return $this->lumenSend;
 	}
 
 	/**
-	 * Set Chilling Effects Title
+	 * Set Lumen Title
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param string $ceTitle Chilling Effects Title
+	 * @param string $lumenTitle Lumen Title
 	 *
 	 * @return self
 	 */
-	public function setCeTitle( string $ceTitle ) : self {
-		$this->ceTitle = $ceTitle;
+	public function setlumenTitle( string $lumenTitle ) : self {
+		$this->lumenTitle = $lumenTitle;
 
 		return $this;
 	}
 
 	/**
-	 * Chilling Effects Title
+	 * Lumen Title
 	 *
 	 * @Groups({"api"})
 	 *
 	 * @return string
 	 */
-	public function getCeTitle() :? string {
-		return $this->ceTitle;
+	public function getlumenTitle() :? string {
+		return $this->lumenTitle;
 	}
 
 	/**

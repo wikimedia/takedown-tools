@@ -144,15 +144,15 @@ export class TakedownShowDmca extends React.Component {
 					<td>{senderCountry ? senderCountry.name : undefined}</td>
 				</tr>
 				<tr>
-					<th colSpan="2">Chilling Effects</th>
+					<th colSpan="2">Lumen</th>
 				</tr>
 				<tr>
-					<td>Sent to Chilling Effects</td>
-					<td>{this.props.takedown.dmca.ceSend ? 'Yes' : 'No'}</td>
+					<td>Sent to Lumen</td>
+					<td>{this.props.takedown.dmca.lumenSend ? 'Yes' : 'No'}</td>
 				</tr>
 				<tr>
 					<td>Title</td>
-					<td>{this.props.takedown.dmca.ceTitle}</td>
+					<td>{this.props.takedown.dmca.lumenTitle}</td>
 				</tr>
 			</tbody>
 		);
