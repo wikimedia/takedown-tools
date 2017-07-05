@@ -5,10 +5,21 @@ import { Takedown } from '../../../entities/takedown/takedown';
 
 export class TakedownShowCp extends React.Component {
 	render() {
-		let accessed;
+		let accessed,
+			comments;
 
 		if ( this.props.takedown.cp.accessed ) {
 			accessed = moment.utc( this.props.takedown.cp.accessed ).local().format( 'l LT' );
+		}
+
+		if ( this.props.takedown.cp.comments ) {
+			comments = this.props.takedown.cp.comments.split( '\n' ).map( ( item, key ) => {
+				return (
+					<span key={key}>
+						{item}<br />
+					</span>
+				);
+			} );
 		}
 
 		return (
@@ -28,6 +39,10 @@ export class TakedownShowCp extends React.Component {
 				<tr>
 					<td>Accessed</td>
 					<td>{accessed}</td>
+				</tr>
+				<tr>
+					<td>Additional Information</td>
+					<td>{comments}</td>
 				</tr>
 			</tbody>
 		);

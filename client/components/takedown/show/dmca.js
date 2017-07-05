@@ -12,7 +12,8 @@ export class TakedownShowDmca extends React.Component {
 			sent,
 			actionTaken,
 			pages,
-			originalUrls;
+			originalUrls,
+			body;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -59,6 +60,16 @@ export class TakedownShowDmca extends React.Component {
 			} ).toArray();
 		}
 
+		if ( this.props.takedown.dmca.body ) {
+			body = this.props.takedown.dmca.body.split( '\n' ).map( ( item, key ) => {
+				return (
+					<span key={key}>
+						{item}<br />
+					</span>
+				);
+			} );
+		}
+
 		return (
 			<tbody className="border-top-0">
 				<tr>
@@ -87,7 +98,7 @@ export class TakedownShowDmca extends React.Component {
 				</tr>
 				<tr>
 					<td>Body</td>
-					<td>{this.props.takedown.dmca.body}</td>
+					<td>{body}</td>
 				</tr>
 				<tr>
 					<th colSpan="2">Sender</th>

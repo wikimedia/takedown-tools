@@ -5,5 +5,6 @@ export class Cp extends Record( {
 	approverName: undefined,
 	approverId: undefined,
 	deniedApprovalReason: undefined,
-	accessed: undefined
+	accessed: undefined,
+	comments: undefined
 } ) {}

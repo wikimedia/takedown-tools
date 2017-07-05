@@ -98,6 +98,10 @@ export class TakedownCreateCp extends React.Component {
 					<label>Accessed</label> <small className="text-muted">when did you you access the content?</small>
 					<DatePicker time={true} disabled={this.props.disabled} value={this.props.takedown.cp.accessed} onChange={( value ) => this.updateField( 'accessed', value )} />
 				</div>
+				<div className="form-group">
+					<label htmlFor="comments">Additional Information</label> <small className="text-muted">cu data, other info we may have etc</small>
+					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="comments" value={this.props.takedown.cp.comments || ''} onChange={this.handleChange.bind( this )} />
+				</div>
 			</div>
 		);
 	}

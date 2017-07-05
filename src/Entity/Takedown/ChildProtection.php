@@ -56,6 +56,13 @@ class ChildProtection {
 	private $accessed;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="comments", type="text", nullable=true)
+	 */
+	 private $comments;
+
+	/**
 	 * Takedown
 	 *
 	 * @param array $data Data to construct the object.
@@ -234,5 +241,31 @@ class ChildProtection {
 	 */
 	public function getAccessed() :? \DateTimeInterface {
 		return $this->accessed;
+	}
+
+	/**
+	 * Set Comments
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $comments Comments
+	 *
+	 * @return self
+	 */
+	public function setComments( string $comments ) : self {
+		$this->comments = $comments;
+
+		return $this;
+	}
+
+	/**
+	 * Body
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getComments() :? string {
+		return $this->comments;
 	}
 }
