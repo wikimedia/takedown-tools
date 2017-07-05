@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import { Subject, Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/operator/distinctUntilChanged';

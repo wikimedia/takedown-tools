@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import 'react-select/dist/react-select.css';
 import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
 import { Subject, Observable } from 'rxjs';

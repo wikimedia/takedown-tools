@@ -9,6 +9,7 @@ import reducer from './reducers/index';
 import { createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import epic from './epics';
+import './styles/styles.scss';
 
 function main() {
 	const token = window.localStorage.getItem( 'token' ),
