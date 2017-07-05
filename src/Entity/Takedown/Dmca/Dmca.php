@@ -53,7 +53,7 @@ class Dmca {
 	 * @ORM\OneToMany(
 	 * 	targetEntity="App\Entity\Takedown\Dmca\Page",
 	 * 	mappedBy="dmca",
-	 * 	cascade={"persist"}
+	 * 	cascade={"persist", "remove"}
 	 *)
 	 */
 	private $pages;
@@ -64,7 +64,7 @@ class Dmca {
 	 * @ORM\OneToMany(
 	 * 	targetEntity="App\Entity\Takedown\Dmca\Original",
 	 * 	mappedBy="dmca",
-	 * 	cascade={"persist"}
+	 * 	cascade={"persist", "remove"}
 	 *)
 	 */
 	private $originals;

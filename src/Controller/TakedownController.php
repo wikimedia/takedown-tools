@@ -154,6 +154,25 @@ class TakedownController {
 	}
 
 	/**
+	 * Takedown
+	 *
+	 * @Route("/api/takedown/{takedown}.{_format}", defaults={"_format" = "json"})
+	 * @Method({"DELETE"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 *
+	 * @return Response
+	 */
+	public function deletection( Takedown $takedown ) : string {
+		$em = $this->doctrine->getEntityManager();
+
+		$em->remove( $takedown );
+		$em->flush();
+
+		return '';
+	}
+
+	/**
 	 * Gets the offset from the Request.
 	 *
 	 * @param Request $request Request

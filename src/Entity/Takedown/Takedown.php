@@ -99,7 +99,7 @@ class Takedown {
 	 *	targetEntity="App\Entity\Takedown\Dmca\Dmca",
 	 *	mappedBy="takedown",
 	 *	orphanRemoval=true,
-	 *	cascade={"persist"}
+	 *	cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
 	 */
@@ -111,7 +111,8 @@ class Takedown {
 	 * @ORM\OneToOne(
 	 *	targetEntity="App\Entity\Takedown\ChildProtection",
 	 *	mappedBy="takedown",
-	 *	orphanRemoval=true
+	 *	orphanRemoval=true,
+	 *  cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
 	 */
