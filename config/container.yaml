@@ -75,6 +75,18 @@ services:
       - '@serializer'
       - '@app.mediawiki_client'
 
+  app.extension_guesser:
+    class: Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser
+    factory: ['Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser', getInstance]
+
+  app.controller_file:
+    class: App\Controller\FileController
+    arguments:
+      - '@filesystem'
+      - '@app.extension_guesser'
+      - '@doctrine'
+      - '%kernel.project_dir%'
+
   app.return_listener:
     class: GeoSocio\SerializeResponse\EventListener\KernelViewListener
     arguments:
