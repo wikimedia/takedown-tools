@@ -86,14 +86,15 @@ class FileController {
 	/**
 	 * Create File
 	 *
-	 * @Route("/api/file")
+	 * @Route("/api/file/{name}")
 	 * @Method({"POST"})
 	 *
 	 * @param Request $request Request
+	 * @param string $name Name
 	 *
 	 * @return User
 	 */
-	public function createAction( Request $request ) : File {
+	public function createAction( Request $request, string $name = null ) : File {
 		$ext = $this->extensionGuesser->guess( $request->headers->get( 'Content-Type' ) );
 
 		if ( !$ext ) {
@@ -108,8 +109,8 @@ class FileController {
 		$this->filesystem->mkdir( $this->dir . '/' . $fileDir );
 
 		// Create the file.
-		$name = md5( uniqid() );
-		$filePath = $fileDir . '/' . $name . '.' . $ext;
+		$fileName = md5( uniqid() );
+		$filePath = $fileDir . '/' . $fileName . '.' . $ext;
 		$path =  $this->dir .  '/' . $filePath;
 		$this->filesystem->touch( $path );
 
@@ -123,6 +124,7 @@ class FileController {
 
 		$file = new File( [
 				'path' => $filePath,
+				'name' => $name,
 		] );
 
 		$em->persist( $file );

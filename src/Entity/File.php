@@ -33,6 +33,13 @@ class File {
 	private $path;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="name", type="string", length=255, nullable=true)
+	 */
+	private $name;
+
+	/**
 	 * Site
 	 *
 	 * @param array $data Data to construct the object.
@@ -41,6 +48,7 @@ class File {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getInt( 'id' );
 		$this->path = $params->getString( 'path' );
+		$this->name = $params->getString( 'name' );
 	}
 
 	/**
@@ -65,6 +73,30 @@ class File {
 	 */
 	public function getId() :? int {
 		return $this->id;
+	}
+
+	/**
+	 * Set Name.
+	 *
+	 * @param string $name Name
+	 *
+	 * @return self
+	 */
+	public function setName( string $name ) {
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Get Name
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getName() :? string {
+		return $this->name;
 	}
 
 	/**
