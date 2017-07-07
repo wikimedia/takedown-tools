@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { Set } from 'immutable';
 import { SelectPages } from '../../fields/select-pages';
 import { ListField } from '../../fields/list';
-import { FileField } from '../../fields/file';
+import { FileUploadField } from '../../fields/file-upload';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
@@ -149,7 +149,7 @@ export class TakedownCreateDmca extends React.Component {
 				</div>
 				<div className="form-group">
 					<label>Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
-					<FileField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
+					<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
 				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
