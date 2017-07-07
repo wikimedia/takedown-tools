@@ -6,6 +6,8 @@ import * as TakedownActions from '../actions/takedown';
 import * as FileActions from '../actions/file';
 import { File } from '../entities/file';
 
+// @TODO support for deleting files.
+
 export function upload( action$, store ) {
 	return action$
 		.filter( ( action ) => {
