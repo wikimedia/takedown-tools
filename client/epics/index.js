@@ -9,6 +9,7 @@ export default combineEpics(
 	FileEpic.upload,
 	FileEpic.deleteFile,
 	FileEpic.fetchFiles,
+	FileEpic.readExif,
 	TokenEpic.refreshToken,
 	SiteEpic.fetchAll,
 	SiteEpic.fetchSiteInfo,

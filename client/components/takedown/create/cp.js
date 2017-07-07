@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
+import { FileField } from '../../fields/file';
 import { SelectUsers } from '../../fields/select-users';
 import { DatePicker } from '../../fields/date-picker';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { User } from '../../../entities/user';
+import 'fileicon.css/fileicon.css';
 
 export class TakedownCreateCp extends React.Component {
 
@@ -36,8 +38,18 @@ export class TakedownCreateCp extends React.Component {
 		this.props.updateTakedown( takedown );
 	}
 
+	addFiles( files ) {
+		files = this.props.takedown.cp.files.unshift( ...files );
+
+		const takedown = this.props.takedown.setIn( [ 'cp', 'files' ], files )
+			.set( 'status', 'dirty' );
+
+		this.props.updateTakedown( takedown );
+	}
+
 	render() {
-		let approverReasonField;
+		let approverReasonField,
+			files;
 
 		if ( this.props.takedown.cp.approved ) {
 			approverReasonField = (
@@ -60,6 +72,45 @@ export class TakedownCreateCp extends React.Component {
 					<input className="form-control" type="text" name="deniedApprovalReason" value={this.props.takedown.cp.deniedApprovalReason || ''} onChange={this.handleChange.bind( this )} />
 				</div>
 			);
+		}
+
+		if ( this.props.takedown.cp.files.size > 0 ) {
+			files = this.props.takedown.cp.files.map( ( file ) => {
+				const ext = file.name.split( '.' ).pop();
+
+				let exif;
+
+				if ( file.exif ) {
+					exif = (
+						<div className="form-group">
+							<label>Exif Data</label>
+							<div className="form-control-static text-muted">
+								<pre className="small bg-faded pt-2 pb-2 pl-2 pr-2">
+									<code>
+										{JSON.stringify( file.exif, undefined, 2 )}
+									</code>
+								</pre>
+							</div>
+						</div>
+					);
+				}
+
+				return (
+					<div className="form-control mb-2" key={file.id}>
+						<div className="row">
+							<div className="col-1">
+								<div className="file-icon file-icon-lg" data-type={ext}></div>
+							</div>
+							<div className="col-10">
+								<div className="form-group">
+									<div className="form-control-static">{file.name}</div>
+								</div>
+								{exif}
+							</div>
+						</div>
+					</div>
+				);
+			} ).toArray();
 		}
 
 		return (
@@ -101,6 +152,11 @@ export class TakedownCreateCp extends React.Component {
 				<div className="form-group">
 					<label htmlFor="comments">Additional Information</label> <small className="text-muted">cu data, other info we may have etc</small>
 					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="comments" value={this.props.takedown.cp.comments || ''} onChange={this.handleChange.bind( this )} />
+				</div>
+				<div className="form-group">
+					<label>Files</label>
+					<FileField onAddFiles={this.addFiles.bind( this )} />
+					{files}
 				</div>
 			</div>
 		);

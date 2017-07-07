@@ -4,7 +4,6 @@ import Dropzone from 'react-dropzone';
 import { Set } from 'immutable';
 import * as shortid from 'shortid';
 import { File } from '../../entities/file';
-import 'fileicon.css/fileicon.css';
 
 export class FileField extends React.Component {
 

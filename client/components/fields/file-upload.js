@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import { FileField } from './file';
+import 'fileicon.css/fileicon.css';
 
 export class FileUploadField extends React.Component {
 	render() {

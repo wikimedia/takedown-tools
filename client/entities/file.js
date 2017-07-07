@@ -6,7 +6,8 @@ export class File extends Record( {
 	status: 'ready',
 	error: undefined,
 	progress: undefined,
-	file: undefined
+	file: undefined,
+	exif: undefined
 } ) {
 
 	equals( other ) {
