@@ -16,9 +16,17 @@ use GeoSocio\EntityUtils\ParameterBag;
 class Original {
 
 	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="original_id", type="integer")
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 */
+	private $id;
+
+	/**
 	 * @var Dmca
 	 *
-	 * @ORM\Id
 	 * @ORM\ManyToOne(
 	 *	targetEntity="App\Entity\Takedown\Dmca\Dmca",
 	 *	inversedBy="originals"
@@ -33,8 +41,7 @@ class Original {
 	 *
 	 * The Prefixed DB Key.
 	 *
-	 * @ORM\Id
-	 * @ORM\Column(name="url", type="string", length=511)
+	 * @ORM\Column(name="url", type="string", length=2047)
 	 */
 	private $url;
 
@@ -45,8 +52,31 @@ class Original {
 	 */
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
+		$this->id = $params->getInt( 'id' );
 		$this->dmca = $params->getInstance( 'dmca', Dmca::class, new Dmca() );
 		$this->url = $params->getString( 'url' );
+	}
+
+	/**
+	 * Set Id.
+	 *
+	 * @param string $id ID
+	 *
+	 * @return self
+	 */
+	public function setId( int $id ) {
+		$this->id = $id;
+
+		return $this;
+	}
+
+	/**
+	 * Get Id
+	 *
+	 * @return int
+	 */
+	public function getId() :? int {
+		return $this->id;
 	}
 
 	/**

@@ -204,14 +204,14 @@ class Dmca {
 		$this->lumenSend = $params->getBoolean( 'lumenSend', false );
 		$this->lumenTitle = $params->getString( 'lumenTitle' );
 		$this->pages = $params->getCollection(
-		'pages',
-		Page::class,
-		new ArrayCollection()
+			'pages',
+			Page::class,
+			new ArrayCollection()
 		);
 		$this->originals = $params->getCollection(
-		'originals',
-		Original::class,
-		new ArrayCollection()
+			'originals',
+			Original::class,
+			new ArrayCollection()
 		);
 		$this->senderName = $params->getString( 'name' );
 		$this->senderPerson = $params->getString( 'person' );
@@ -224,6 +224,11 @@ class Dmca {
 		$this->method = $params->getString( 'method' );
 		$this->subject = $params->getString( 'subject' );
 		$this->body = $params->getString( 'body' );
+		$this->pages = $params->getCollection(
+			'files',
+			File::class,
+			new ArrayCollection()
+		);
 	}
 
 	/**
