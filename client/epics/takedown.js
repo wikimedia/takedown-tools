@@ -87,6 +87,9 @@ export function takedownSave( action$, store ) {
 					case 'cp':
 						removeType = 'dmca';
 						takedown = takedown.setIn( [ 'cp', 'approverId' ], undefined );
+						takedown = takedown.setIn( [ 'cp', 'files' ], takedown.cp.files.map( ( file ) => {
+							return file.set( 'id', undefined );
+						} ) );
 						break;
 				}
 

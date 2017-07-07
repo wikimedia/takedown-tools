@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Entity\Takedown;
+namespace App\Entity\Takedown\ChildProtection;
 
+use App\Entity\Takedown\Takedown;
 use App\Entity\User;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
@@ -62,6 +65,17 @@ class ChildProtection {
 	 */
 	 private $comments;
 
+	 /**
+	 * @var Collection
+	 *
+	 * @ORM\OneToMany(
+	 * 	targetEntity="App\Entity\Takedown\ChildProtection\File",
+	 * 	mappedBy="cp",
+	 * 	cascade={"persist", "remove"}
+	 *)
+	 */
+	private $files;
+
 	/**
 	 * Takedown
 	 *
@@ -72,6 +86,10 @@ class ChildProtection {
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->approved = $params->getBoolean( 'approved', false );
 		$this->approver = $params->getInstance( 'approver', User::class );
+		$this->deniedApprovalReason = $params->getString( 'deniedApprovalReason' );
+		$this->accessed = $params->getInstance( 'accessed', \DateTime::class );
+		$this->comments = $params->getString( 'comments' );
+		$this->files = $params->getCollection( 'files', File::class, new ArrayCollection() );
 	}
 
 	/**
@@ -267,5 +285,72 @@ class ChildProtection {
 	 */
 	public function getComments() :? string {
 		return $this->comments;
+	}
+
+	/**
+	 * Files
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param Collection $files Files
+	 *
+	 * @return Collection
+	 */
+	public function setFiles( Collection $files ) : self {
+		$this->files = $files->map( function( $file ) {
+			return $file->setCp( $this );
+		} );
+
+		return $this;
+	}
+
+	/**
+	 * Files
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return Collection
+	 */
+	public function getFiles() : Collection {
+		return $this->files;
+	}
+
+	/**
+	 * Add File
+	 *
+	 * @param File $file File
+	 *
+	 * @return self
+	 */
+	public function addFile( File $file ) : self {
+		$this->files->add( $file->setCp( $this ) );
+
+		return $this;
+	}
+
+	/**
+	 * Remove File
+	 *
+	 * @param File $file File
+	 *
+	 * @return self
+	 */
+	public function removeFile( File $file ) : self {
+		$this->files->remove( $file );
+
+		return $this;
+	}
+
+	/**
+	 * Clone
+	 *
+	 * @return void
+	 */
+	public function __clone() {
+		$this->files = $this->files->map( function( $file ) {
+			$file = clone $file;
+			$file->setCp( $this );
+			return $file;
+		} );
 	}
 }

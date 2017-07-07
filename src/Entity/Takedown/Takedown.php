@@ -2,10 +2,12 @@
 
 namespace App\Entity\Takedown;
 
+use App;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Metadata;
 use App\Entity\Takedown\Dmca\Dmca;
+use App\Entity\Takedown\ChildProtection\ChildProtection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -109,7 +111,7 @@ class Takedown {
 	 * @var ChildProtection
 	 *
 	 * @ORM\OneToOne(
-	 *	targetEntity="App\Entity\Takedown\ChildProtection",
+	 *	targetEntity="App\Entity\Takedown\ChildProtection\ChildProtection",
 	 *	mappedBy="takedown",
 	 *	orphanRemoval=true,
 	 *  cascade={"persist", "remove"}
