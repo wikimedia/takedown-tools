@@ -176,7 +176,7 @@ class Dmca {
 	 * @var Collection
 	 *
 	 * @ORM\ManyToMany(targetEntity="App\Entity\File", cascade={"remove"})
-	 * @ORM\JoinTable(name="takedown_dmca_files",
+	 * @ORM\JoinTable(name="takedown_dmca_file",
 	 *      joinColumns={
 	 *				@ORM\JoinColumn(
 	 *					name="takedown_id",
