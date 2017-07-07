@@ -7,8 +7,6 @@ import * as TakedownActions from '../actions/takedown';
 import * as FileActions from '../actions/file';
 import { File } from '../entities/file';
 
-// @TODO support for deleting files.
-
 export function upload( action$, store ) {
 	return action$
 		.filter( ( action ) => {
@@ -105,6 +103,67 @@ export function deleteFile( action$, store ) {
 						type: 'FILE_DELETE_ERROR',
 						error: ajaxError
 					} );
+				} );
+		} );
+}
+
+export function fetchFiles( action$, store ) {
+	return action$.filter( ( action ) => {
+		const types = [
+			'TAKEDOWN_ADD_MULTIPLE',
+			'TAKEDOWN_ADD'
+		];
+
+		return types.includes( action.type );
+	} )
+		.flatMap( ( action ) => {
+			let takedowns = [];
+
+			// Get the takedowns that are being added.
+			switch ( action.type ) {
+				case 'TAKEDOWN_ADD':
+					takedowns = [ action.takedown ];
+					break;
+
+				case 'TAKEDOWN_ADD_MULTIPLE':
+					takedowns = [
+						...action.takedowns
+					];
+					break;
+			}
+
+			return Observable.from( takedowns );
+		} )
+		.filter( ( takedown ) => !!takedown.dmca )
+		.filter( ( takedown ) => takedown.dmca.fileIds.size > 0 )
+		.flatMap( ( takedown ) => {
+			return Observable.from( takedown.dmca.fileIds.reduce( ( fileIds, id ) => {
+				return [
+					...fileIds,
+					id
+				];
+			}, [] ) );
+		} )
+		.distinct()
+		.flatMap( ( id ) => {
+			return Observable.ajax( {
+				url: '/api/file/' + id + '?metadata',
+				method: 'GET',
+				responseType: 'json',
+				headers: {
+					Authorization: 'Bearer ' + store.getState().token
+				}
+			} )
+				.map( ( ajaxResponse ) => {
+					return FileActions.add( new File( ajaxResponse.response ) );
+				} )
+				.catch( ( ajaxError ) => {
+					const file = new File( {
+						id: id,
+						status: 'error',
+						error: ajaxError.status
+					} );
+					return Observable.of( FileActions.add( file ) );
 				} );
 		} );
 }

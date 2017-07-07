@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
+import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
@@ -13,7 +14,8 @@ export class TakedownShowDmca extends React.Component {
 			actionTaken,
 			pages,
 			originalUrls,
-			body;
+			body,
+			files;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -49,6 +51,19 @@ export class TakedownShowDmca extends React.Component {
 				);
 			} );
 		}
+
+		files = this.props.files.map( ( file ) => {
+			return (
+				<div key={file.id}>
+					<a
+						href={'/api/file/' + file.id + '?token=' + encodeURIComponent( this.props.token )}
+						download={file.name}
+					>
+						{file.name}
+					</a>
+				</div>
+			);
+		} );
 
 		if ( this.props.takedown.dmca.originalUrls ) {
 			originalUrls = this.props.takedown.dmca.originalUrls.map( ( url, key ) => {
@@ -99,6 +114,10 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Body</td>
 					<td>{body}</td>
+				</tr>
+				<tr>
+					<td>Supporting Files</td>
+					<td>{files}</td>
 				</tr>
 				<tr>
 					<th colSpan="2">Sender</th>
@@ -161,5 +180,7 @@ export class TakedownShowDmca extends React.Component {
 
 TakedownShowDmca.propTypes = {
 	takedown: PropTypes.instanceOf( Takedown ),
-	site: PropTypes.instanceOf( Site )
+	site: PropTypes.instanceOf( Site ),
+	files: PropTypes.instanceOf( Set ),
+	token: PropTypes.string
 };

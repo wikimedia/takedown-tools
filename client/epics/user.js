@@ -18,7 +18,7 @@ export function fetchUsers( action$, store ) {
 
 		return types.includes( action.type );
 	} )
-		.switchMap( ( action ) => {
+		.flatMap( ( action ) => {
 			let ids = [],
 				takedowns = [];
 

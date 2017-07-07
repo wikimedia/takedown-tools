@@ -7,7 +7,7 @@ import { User } from '../../../entities/user';
 import { Site } from '../../../entities/site';
 import { Loading } from '../../loading';
 import { Error } from '../../error';
-import { TakedownShowDmca } from './dmca';
+import { TakedownShowDmcaContainer } from './dmca.container';
 import { TakedownShowCp } from './cp';
 
 export class TakedownShow extends React.Component {
@@ -66,7 +66,7 @@ export class TakedownShow extends React.Component {
 				case 'dmca':
 					type = 'DMCA';
 					typeShow = (
-						<TakedownShowDmca takedown={this.props.takedown} site={this.props.site} />
+						<TakedownShowDmcaContainer takedown={this.props.takedown} site={this.props.site} />
 					);
 					break;
 				case 'cp':

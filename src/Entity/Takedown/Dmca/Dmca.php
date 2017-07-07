@@ -2,6 +2,7 @@
 
 namespace App\Entity\Takedown\Dmca;
 
+use App\Entity\File;
 use App\Entity\Action;
 use App\Entity\Country;
 use App\Entity\Takedown\Takedown;
@@ -170,6 +171,21 @@ class Dmca {
 	 * @ORM\Column(name="body", type="text", nullable=true)
 	 */
 	 private $body;
+
+	/**
+	 * @var Collection
+	 *
+	 * @ORM\ManyToMany(targetEntity="App\Entity\File", cascade={"remove"})
+	 * @ORM\JoinTable(name="takedown_dmca_files",
+	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(
+	 *        name="file_id",
+	 *        referencedColumnName="file_id"
+	 *      )}
+	 * )
+	 * @Attach()
+	 */
+	private $files;
 
 	/**
 	 * Takedown
@@ -821,6 +837,86 @@ class Dmca {
 	 */
 	public function getBody() :? string {
 		return $this->body;
+	}
+
+	/**
+	 * Files
+	 *
+	 * @return Collection
+	 */
+	public function getFiles() : Collection {
+		return $this->files;
+	}
+
+	/**
+	 * Add File
+	 *
+	 * @param File $file File
+	 *
+	 * @return self
+	 */
+	public function addFile( File $file ) : self {
+		$this->files->add( $file );
+
+		return $this;
+	}
+
+	/**
+	 * Set Files
+	 *
+	 * @param Collection $files Files
+	 *
+	 * @return self
+	 */
+	public function setFiles( Collection $files ) : self {
+		$this->files = $files;
+
+		return $this;
+	}
+
+	/**
+	 * Remove File
+	 *
+	 * @param File $file File
+	 *
+	 * @return self
+	 */
+	public function removeFile( File $file ) : self {
+		$this->files->remove( $file );
+
+		return $this;
+	}
+
+	/**
+	 * Set File Ids
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param int[] $fileIds File  Ids
+	 *
+	 * @return Collection
+	 */
+	public function setFileIds( array $fileIds ) : self {
+		$this->files = new ArrayCollection( array_map( function ( $id ) {
+			return new File( [
+				'id' => $id,
+			] );
+		}, $fileIds ) );
+
+		return $this;
+	}
+
+	/**
+	 * File Ids
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return Collection
+	 */
+	public function getFileIds() : array {
+		return $this->files->map( function ( $file ) {
+			return $file->getId();
+		} )->toArray();
 	}
 
 	/**

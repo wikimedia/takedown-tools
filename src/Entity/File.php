@@ -115,8 +115,6 @@ class File {
 	/**
 	 * Get Path
 	 *
-	 * @Groups({"api"})
-	 *
 	 * @return string
 	 */
 	public function getPath() :? string {
