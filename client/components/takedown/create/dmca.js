@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
+import { Set } from 'immutable';
 import { SelectPages } from '../../fields/select-pages';
 import { ListField } from '../../fields/list';
+import { FileField } from '../../fields/file';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
@@ -34,6 +36,29 @@ export class TakedownCreateDmca extends React.Component {
 			value = this.props.takedown.dmca.get( fieldName ).set( pos, event.target.value );
 
 		this.updateField( fieldName, value );
+	}
+
+	addFiles( files ) {
+		const fileIds = this.props.takedown.dmca.fileIds.unshift( ...files.map( ( file ) => {
+				return file.id;
+			} ).toArray() ),
+			takedown = this.props.takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
+				.set( 'status', 'dirty' );
+
+		this.props.addFiles( files );
+		this.props.updateTakedown( takedown );
+	}
+
+	removeFile( file ) {
+		let takedown = this.props.takedown,
+			fileIds = takedown.dmca.fileIds;
+
+		fileIds = fileIds.remove( fileIds.keyOf( file.id ) );
+		takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
+			.set( 'status', 'dirty' );
+
+		this.props.updateTakedown( takedown );
+		this.props.deleteFile( file );
 	}
 
 	render() {
@@ -95,6 +120,10 @@ export class TakedownCreateDmca extends React.Component {
 				<div className="form-group">
 					<label htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
 					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
+				</div>
+				<div className="form-group">
+					<label>Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
+					<FileField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
 				</div>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
@@ -167,7 +196,10 @@ export class TakedownCreateDmca extends React.Component {
 
 TakedownCreateDmca.propTypes = {
 	updateTakedown: PropTypes.func.isRequired,
+	addFiles: PropTypes.func.isRequired,
+	deleteFile: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
 	site: PropTypes.instanceOf( Site ),
+	files: PropTypes.instanceOf( Set ).isRequired,
 	disabled: PropTypes.bool
 };

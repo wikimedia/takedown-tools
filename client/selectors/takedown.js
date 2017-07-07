@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { Set } from 'immutable';
+import { Set, List } from 'immutable';
 import { User } from '../entities/user';
 import { Site } from '../entities/site';
 import { MetadataSet } from '../entities/metadata.set';
@@ -44,6 +44,22 @@ export function makeGetApprover() {
 			return users.find( ( user ) => {
 				return user.id === id;
 			} );
+		}
+	);
+}
+
+export function makeGetFiles() {
+	return createSelector(
+		state => state.file.list,
+		( _, props ) => props.takedown && props.takedown.dmca && props.takedown.dmca.fileIds ? props.takedown.dmca.fileIds : new List(),
+		( files, fileIds ) => {
+			return fileIds.map( ( id ) => {
+				return files.find( ( file ) => {
+					return file.id === id;
+				} );
+			} ).filter( ( file ) => {
+				return typeof file !== 'undefined';
+			} ).toSet();
 		}
 	);
 }

@@ -17,14 +17,16 @@ export class Dmca extends Record( {
 	originalUrls: new List(),
 	method: undefined,
 	subject: undefined,
-	body: undefined
+	body: undefined,
+	fileIds: new List()
 } ) {
 	constructor( data = {} ) {
 		data = {
 			...data,
 			senderAddress: new List( data.senderAddress ? data.senderAddress : [] ),
 			pageIds: new Set( data.pageIds ? data.pageIds : [] ),
-			originalUrls: fromJS( data.originalUrls ? data.originalUrls : [] ).toOrderedMap()
+			originalUrls: fromJS( data.originalUrls ? data.originalUrls : [] ).toOrderedMap(),
+			fileIds: fromJS( data.fileIds ? data.fileIds : [] ).toList()
 		};
 		super( data );
 	}

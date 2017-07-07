@@ -1,3 +1,7 @@
+$blue: #006699;
+$spinkit-spinner-color: #339966;
+
+@import "~bootstrap/scss/_variables";
 @import "~bootstrap/scss/bootstrap";
 @import "~spinkit/scss/spinners/11-folding-cube";
 
@@ -5,4 +9,42 @@
 	padding: 1.5em 1em;
 	font-size: 100%;
 	border-radius: 0;
+}
+
+.dropzone {
+	@extend .form-control;
+	@extend .form-control-lg;
+	@extend .mb-2;
+	border-style: dashed;
+	text-align: center;
+
+	.material-icons {
+		color: $text-muted;
+		font-size: 2rem;
+	}
+
+	&.active {
+		border-color: $blue;
+		background-color: rgba($blue, .15);
+		.material-icons {
+			color: $blue;
+		}
+	}
+}
+
+.form-control {
+	position:relative;
+	background-color: transparent;
+}
+
+.progress {
+	border-radius: 0;
+	position: absolute;
+	background-color: rgba($blue, .15);
+	height: 100%;
+	width: 0;
+	-webkit-transition: width 1s ease-in-out;
+  -moz-transition: width 1s ease-in-out;
+  -o-transition: width 1s ease-in-out;
+  transition: width 1s ease-in-out;
 }

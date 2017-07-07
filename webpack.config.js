@@ -20,7 +20,7 @@ module.exports = {
 				loader: 'babel-loader'
 			},
 			{
-				test: /\.scss$/,
+				test: /\.scss$|\.css$/,
 				use: extractSass.extract( {
 					use: [
 						{
@@ -32,12 +32,6 @@ module.exports = {
 					],
 					// use style-loader in development
 					fallback: 'style-loader'
-				} )
-			},
-			{
-				test: /\.css$/,
-				use: extractSass.extract( {
-					use: 'css-loader'
 				} )
 			}
 		]
