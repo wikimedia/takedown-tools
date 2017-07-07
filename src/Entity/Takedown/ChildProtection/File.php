@@ -46,6 +46,13 @@ class File {
 	/**
 	 * @var string
 	 *
+	 * @ORM\Column(name="ip", type="string", length=15, nullable=true)
+	 */
+	private $ip;
+
+	/**
+	 * @var string
+	 *
 	 * @ORM\Column(name="exif", type="json_array", nullable=true)
 	 */
 	private $exif;
@@ -60,6 +67,7 @@ class File {
 		$this->id = $params->getInt( 'id' );
 		$this->dmca = $params->getInstance( 'cp', ChildProtection::class, new ChildProtection() );
 		$this->name = $params->getString( 'name' );
+		$this->ip = $params->getString( 'ip' );
 		$this->exif = $params->getArray( 'exif' );
 	}
 
@@ -133,6 +141,32 @@ class File {
 	 */
 	public function getName() :? string {
 		return $this->name;
+	}
+
+	/**
+	 * Set Ip.
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $ip IP Address
+	 *
+	 * @return self
+	 */
+	public function setIp( string $ip ) {
+		$this->ip = $ip;
+
+		return $this;
+	}
+
+	/**
+	 * Get IP Address
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getIp() :? string {
+		return $this->ip;
 	}
 
 	/**

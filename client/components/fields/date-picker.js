@@ -75,7 +75,7 @@ export class DatePicker extends React.Component {
 
 		if ( this.props.time ) {
 			timePicker = (
-				<div className="col-3">
+				<div>
 					<TimePicker
 						disabled={this.props.disabled}
 						value={value ? value.local() : undefined}
@@ -90,8 +90,8 @@ export class DatePicker extends React.Component {
 
 		return (
 			<div>
-				<div className="row align-items-center">
-					<div className="col-5">
+				<div className="d-flex align-items-center">
+					<div>
 						<SingleDatePicker
 							date={value}
 							onDateChange={this.onDateChange.bind( this )}
