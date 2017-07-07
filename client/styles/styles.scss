@@ -47,4 +47,12 @@ $spinkit-spinner-color: #339966;
   -moz-transition: width 1s ease-in-out;
   -o-transition: width 1s ease-in-out;
   transition: width 1s ease-in-out;
+	&.error {
+		width: 100%;
+		background-color: rgba($red, .15);
+	}
+	&.done {
+		width: 100%;
+		background-color: rgba($green, .15);
+	}
 }

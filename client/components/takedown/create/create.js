@@ -67,6 +67,9 @@ export class TakedownCreate extends React.Component {
 				disabled = true;
 				submitDisabled = true;
 				break;
+			case 'pending':
+				submitDisabled = true;
+				break;
 			case 'clean':
 				submitDisabled = true;
 				break;

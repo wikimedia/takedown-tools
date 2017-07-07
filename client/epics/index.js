@@ -7,6 +7,7 @@ import * as TokenEpic from './token';
 
 export default combineEpics(
 	FileEpic.upload,
+	FileEpic.deleteFile,
 	TokenEpic.refreshToken,
 	SiteEpic.fetchAll,
 	SiteEpic.fetchSiteInfo,

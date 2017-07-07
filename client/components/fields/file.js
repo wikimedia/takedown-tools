@@ -64,7 +64,8 @@ export class FileField extends React.Component {
 			files = this.props.value.map( ( file ) => {
 				const ext = file.name.split( '.' ).pop();
 
-				let progressStyle;
+				let progressStyle,
+					progressClasses = [ 'progress' ];
 
 				switch ( file.status ) {
 					case 'uploading':
@@ -74,15 +75,22 @@ export class FileField extends React.Component {
 						break;
 
 					case 'ready':
-						progressStyle = {
-							width: '100%'
-						};
+						progressClasses = [
+							...progressClasses,
+							'done'
+						];
+						break;
+					case 'error':
+						progressClasses = [
+							...progressClasses,
+							'error'
+						];
 						break;
 				}
 
 				return (
 					<div className="input-group mb-2" key={file.id}>
-						<span className="progress" style={progressStyle}></span>
+						<span className={progressClasses.join( ' ' )} style={progressStyle}></span>
 						<span className="form-control flex-row justify-content-start align-items-center">
 							<span className="file-icon mr-2" data-type={ext}></span>
 							<span>{file.name}</span>

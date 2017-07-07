@@ -2,6 +2,7 @@ import { Observable, Subject } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
+import 'rxjs/add/operator/catch';
 import * as TakedownActions from '../actions/takedown';
 import * as FileActions from '../actions/file';
 import { File } from '../entities/file';
@@ -61,15 +62,12 @@ export function upload( action$, store ) {
 						if ( typeof key !== 'undefined' ) {
 							takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds.set( key, response.id ) );
 							return Observable.concat(
-								Observable.of( TakedownActions.updateCreate( takedown ) ),
-								Observable.of( FileActions.swap( file, response ) )
+								Observable.of( FileActions.swap( file, response ) ),
+								Observable.of( TakedownActions.updateCreate( takedown ) )
 							);
 						}
 
 						return Observable.of( FileActions.swap( file, response ) );
-					} )
-					.catch( ( ajaxError ) => {
-						return Observable.of( FileActions.update( file.set( 'status', 'error' ).set( 'error', ajaxError.status ) ) );
 					} )
 					.takeUntil( action$.ofType( 'FILE_DELETE' ).filter( ( action ) => action.file.id === file.id ) );
 
@@ -78,6 +76,35 @@ export function upload( action$, store ) {
 				Observable.of( FileActions.update( file ) ),
 				progress,
 				request
-			);
+			).catch( ( ajaxError ) => {
+				file = file.set( 'status', 'error' ).set( 'error', ajaxError.status );
+				return Observable.of( FileActions.update( file ) );
+			} );
+		} );
+}
+
+export function deleteFile( action$, store ) {
+	return action$.ofType( 'FILE_DELETE' )
+		.filter( ( action ) => !isNaN( parseInt( action.file.id ) ) )
+		.flatMap( ( action ) => {
+			return Observable.ajax( {
+				url: '/api/file/' + action.file.id,
+				method: 'DELETE',
+				headers: {
+					Authorization: 'Bearer ' + store.getState().token
+				}
+			} )
+				.map( () => {
+					return {
+						type: 'FILE_DELETE_COMPLETE',
+						file: action.file
+					};
+				} )
+				.catch( ( ajaxError ) => {
+					return Observable.of( {
+						type: 'FILE_DELETE_ERROR',
+						error: ajaxError
+					} );
+				} );
 		} );
 }

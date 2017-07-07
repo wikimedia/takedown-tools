@@ -12,6 +12,32 @@ import { DatePicker } from '../../fields/date-picker';
 
 export class TakedownCreateDmca extends React.Component {
 
+	componentWillReceiveProps( nextProps ) {
+		let notReady;
+
+		switch ( nextProps.takedown.status ) {
+			case 'dirty':
+				notReady = nextProps.files.filter( ( file ) => {
+					return file.status !== 'ready';
+				} );
+
+				if ( notReady.size > 0 ) {
+					this.props.updateTakedown( nextProps.takedown.set( 'status', 'pending' ) );
+				}
+				break;
+
+			case 'pending':
+				notReady = nextProps.files.filter( ( file ) => {
+					return file.status !== 'ready';
+				} );
+
+				if ( notReady.size === 0 ) {
+					this.props.updateTakedown( nextProps.takedown.set( 'status', 'dirty' ) );
+				}
+				break;
+		}
+	}
+
 	updateField( fieldName, value ) {
 		const takedown = this.props.takedown.setIn( [ 'dmca', fieldName ], value )
 			.set( 'status', 'dirty' );
