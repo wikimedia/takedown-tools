@@ -1,4 +1,5 @@
-import { Record, List, fromJS } from 'immutable';
+import { Record, List } from 'immutable';
+import { File } from '../file';
 
 export class Cp extends Record( {
 	approved: false,
@@ -12,7 +13,9 @@ export class Cp extends Record( {
 	constructor( data = {} ) {
 		data = {
 			...data,
-			files: fromJS( data.files ? data.files : [] ).toList()
+			files: new List( data.files ? data.files : [] ).map( ( file ) => {
+				return new File( file );
+			} )
 		};
 		super( data );
 	}

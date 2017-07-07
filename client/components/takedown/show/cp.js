@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
 import { Takedown } from '../../../entities/takedown/takedown';
+import 'fileicon.css/fileicon.css';
 
 export class TakedownShowCp extends React.Component {
 	render() {
 		let accessed,
-			comments;
+			comments,
+			files;
 
 		if ( this.props.takedown.cp.accessed ) {
 			accessed = moment.utc( this.props.takedown.cp.accessed ).local().format( 'l LT' );
@@ -20,6 +22,35 @@ export class TakedownShowCp extends React.Component {
 					</span>
 				);
 			} );
+		}
+
+		if ( this.props.takedown.cp.files.size > 0 ) {
+			files = this.props.takedown.cp.files.map( ( file ) => {
+				const ext = file.name.split( '.' ).pop();
+
+				return (
+					<table className="mb-2" key={file.id}>
+						<tr>
+							<td colSpan="2">
+								<div className="d-flex mb-2 flex-row justify-content-start align-items-center">
+									<span className="file-icon file-icon mr-2" data-type={ext}></span>
+									<span>{file.name}</span>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>Exif</td>
+							<td>
+								<pre className="small bg-faded">
+									<code>
+										{JSON.stringify( file.exif, undefined, 2 )}
+									</code>
+								</pre>
+							</td>
+						</tr>
+					</table>
+				);
+			} ).toArray();
 		}
 
 		return (
@@ -43,6 +74,10 @@ export class TakedownShowCp extends React.Component {
 				<tr>
 					<td>Additional Information</td>
 					<td>{comments}</td>
+				</tr>
+				<tr>
+					<td>Files</td>
+					<td>{files}</td>
 				</tr>
 			</tbody>
 		);

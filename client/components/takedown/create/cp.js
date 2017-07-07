@@ -84,7 +84,7 @@ export class TakedownCreateCp extends React.Component {
 					exif = (
 						<div className="form-group">
 							<label>Exif Data</label>
-							<div className="form-control-static text-muted">
+							<div className="form-control-static">
 								<pre className="small bg-faded pt-2 pb-2 pl-2 pr-2">
 									<code>
 										{JSON.stringify( file.exif, undefined, 2 )}
@@ -99,7 +99,7 @@ export class TakedownCreateCp extends React.Component {
 					<div className="form-control mb-2" key={file.id}>
 						<div className="row">
 							<div className="col-1">
-								<div className="file-icon file-icon-lg" data-type={ext}></div>
+								<div className="file-icon file-icon-lg ml-3 mt-2" data-type={ext}></div>
 							</div>
 							<div className="col-10">
 								<div className="form-group">
