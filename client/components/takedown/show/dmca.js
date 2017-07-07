@@ -6,6 +6,7 @@ import { Title } from 'mediawiki-title';
 import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
+import 'fileicon.css/fileicon.css';
 
 export class TakedownShowDmca extends React.Component {
 	render() {
@@ -53,15 +54,18 @@ export class TakedownShowDmca extends React.Component {
 		}
 
 		files = this.props.files.map( ( file ) => {
+			const ext = file.name.split( '.' ).pop();
+
 			return (
-				<div key={file.id}>
-					<a
-						href={'/api/file/' + file.id + '?token=' + encodeURIComponent( this.props.token )}
-						download={file.name}
-					>
-						{file.name}
-					</a>
-				</div>
+				<a
+					key={file.id}
+					href={'/api/file/' + file.id + '?token=' + encodeURIComponent( this.props.token )}
+					className="d-flex mb-2 flex-row justify-content-start align-items-center"
+					download={file.name}
+				>
+					<span className="file-icon mr-2" data-type={ext}></span>
+					<span>{file.name}</span>
+				</a>
 			);
 		} );
 
