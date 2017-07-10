@@ -16,7 +16,8 @@ export class TakedownShowDmca extends React.Component {
 			pages,
 			originalUrls,
 			body,
-			files;
+			files,
+			wmfTitle;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -89,6 +90,12 @@ export class TakedownShowDmca extends React.Component {
 			} );
 		}
 
+		if ( this.props.takedown.dmca.wmfTitle ) {
+			wmfTitle = (
+				<a href={'https://wikimediafoundation.org/wiki/' + this.props.takedown.dmca.wmfTitle}>{this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a>
+			);
+		}
+
 		return (
 			<tbody className="border-top-0">
 				<tr>
@@ -122,6 +129,14 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Supporting Files</td>
 					<td>{files}</td>
+				</tr>
+				<tr>
+					<td>
+						<a href="https://wikimediafoundation.org">Wikimedia Foundation</a> Announcement
+					</td>
+					<td>
+						{wmfTitle}
+					</td>
 				</tr>
 				<tr>
 					<th colSpan="2">Sender</th>

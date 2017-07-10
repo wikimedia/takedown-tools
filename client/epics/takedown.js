@@ -82,6 +82,9 @@ export function takedownSave( action$, store ) {
 			if ( takedown.type ) {
 				switch ( takedown.type ) {
 					case 'dmca':
+						if ( takedown.dmca.wmfTitle ) {
+							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
+						}
 						removeType = 'cp';
 						break;
 					case 'cp':

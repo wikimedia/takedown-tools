@@ -122,7 +122,13 @@ class AuthController {
 		$em = $this->doctrine->getEntityManager();
 		$existing = $em->find( User::class, $user->getId() );
 
-		if ( !$existing ) {
+		if ( $existing ) {
+			$existing->setToken( $accessToken->key );
+			$existing->setSecret( $accessToken->secret );
+			$em->flush();
+		} else {
+			$user->setToken( $accessToken->key );
+			$user->setSecret( $accessToken->secret );
 			$em->persist( $user );
 			$em->flush();
 		}

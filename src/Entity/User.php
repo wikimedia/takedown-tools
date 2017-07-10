@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
+use MediaWiki\OAuthClient\Token;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -30,9 +31,28 @@ class User implements UserInterface, JWTUserInterface {
 	private $username;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="token", type="string", length=255, nullable=true)
+	 */
+	private $token;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="secret", type="string", length=255, nullable=true)
+	 */
+	private $secret;
+
+	/**
 	 * @var array
 	 */
 	private $roles;
+
+	/**
+	 * @var Token
+	 */
+	private $oauthToken;
 
 	/**
 	 * User
@@ -134,6 +154,65 @@ class User implements UserInterface, JWTUserInterface {
 	 */
 	public function getUsername() {
 		return $this->username;
+	}
+
+	/**
+	 * Set Token.
+	 *
+	 * @param string $token Token
+	 *
+	 * @return self
+	 */
+	public function setToken( string $token ) {
+		$this->token = $token;
+		$this->oauthToken = null;
+
+		return $this;
+	}
+
+	/**
+	 * Token
+	 *
+	 * @return null
+	 */
+	public function getToken() :? string {
+		return $this->token;
+	}
+
+	/**
+	 * Set Secret.
+	 *
+	 * @param string $secret Secret
+	 *
+	 * @return self
+	 */
+	public function setSecret( string $secret ) {
+		$this->secret = $secret;
+		$this->oauthToken = null;
+
+		return $this;
+	}
+
+	/**
+	 * Secret
+	 *
+	 * @return null
+	 */
+	public function getSecret() :? string {
+		return $this->secret;
+	}
+
+	/**
+	 * OAuth Token
+	 *
+	 * @return Token
+	 */
+	public function getOauthToken() : Token {
+		if ( !$this->oauthToken ) {
+			$this->oauthToken = new Token( $this->token, $this->secret );
+		}
+
+		return $this->oauthToken;
 	}
 
 	/**

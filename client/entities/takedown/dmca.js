@@ -18,7 +18,8 @@ export class Dmca extends Record( {
 	method: undefined,
 	subject: undefined,
 	body: undefined,
-	fileIds: new List()
+	fileIds: new List(),
+	wmfTitle: undefined
 } ) {
 	constructor( data = {} ) {
 		data = {

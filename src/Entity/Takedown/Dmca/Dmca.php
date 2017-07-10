@@ -172,6 +172,13 @@ class Dmca {
 	 */
 	 private $body;
 
+	 /**
+	  * @var string
+		*
+		* @ORM\Column(name="wmf_title", type="string", length=255, nullable=true)
+		*/
+	 private $wmfTitle;
+
 	/**
 	 * @var Collection
 	 *
@@ -181,7 +188,7 @@ class Dmca {
 	 *				@ORM\JoinColumn(
 	 *					name="takedown_id",
 	 *					referencedColumnName="takedown_id",
-   *				)
+	 *				)
 	 *			},
 	 *      inverseJoinColumns={@ORM\JoinColumn(
 	 *        name="file_id",
@@ -224,6 +231,7 @@ class Dmca {
 		$this->method = $params->getString( 'method' );
 		$this->subject = $params->getString( 'subject' );
 		$this->body = $params->getString( 'body' );
+		$this->wmfTitle = $params->getString( 'wmfTitle' );
 		$this->pages = $params->getCollection(
 			'files',
 			File::class,
@@ -848,6 +856,32 @@ class Dmca {
 	 */
 	public function getBody() :? string {
 		return $this->body;
+	}
+
+	/**
+	 * Set WMF Title
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $wmfTitle WMF Title
+	 *
+	 * @return self
+	 */
+	public function setWmfTitle( string $wmfTitle ) : self {
+		$this->wmfTitle = $wmfTitle;
+
+		return $this;
+	}
+
+	/**
+	 * WMF Title
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return string
+	 */
+	public function getWmfTitle() :? string {
+		return $this->wmfTitle;
 	}
 
 	/**

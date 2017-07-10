@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
+import moment from 'moment';
 import { SelectPages } from '../../fields/select-pages';
 import { ListField } from '../../fields/list';
 import { FileUploadField } from '../../fields/file-upload';
@@ -96,7 +97,8 @@ export class TakedownCreateDmca extends React.Component {
 		} ).toArray();
 
 		let country,
-			lumenTitleField;
+			lumenTitleField,
+			wmfAnnouncement;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			country = countries.find( ( data ) => {
@@ -109,6 +111,19 @@ export class TakedownCreateDmca extends React.Component {
 				<div className="form-group">
 					<label htmlFor="lumenTitle">Title</label>
 					<input type="text" className="form-control" name="lumenTitle" value={this.props.takedown.dmca.lumenTitle || ''} onChange={this.handleChange.bind( this )} />
+				</div>
+			);
+		}
+
+		if ( this.props.takedown.dmca.wmfTitle && this.props.takedown.dmca.body ) {
+			wmfAnnouncement = (
+				<div className="form-group">
+					<label>Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
+					<textarea className="form-control" readOnly rows="5" value={
+						'<div class="mw-code" style="white-space: pre; word-wrap: break-word;"><nowiki>\n' +
+						this.props.takedown.dmca.body +
+						`\n</nowiki></div>\n[[Category:DMCA ${moment().format( 'Y' )}]]`
+					}></textarea>
 				</div>
 			);
 		}
@@ -151,6 +166,14 @@ export class TakedownCreateDmca extends React.Component {
 					<label>Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
 					<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
 				</div>
+				<div className="form-group">
+					<label><a href="https://wikimediafoundation.org" target="_blank" rel="noopener noreferrer">Wikimedia Foundation</a> Announcment Title</label>
+					<div className="input-group">
+						<span className="input-group-addon">DMCA</span>
+						<input type="text" disabled={this.props.disabled} className="form-control" name="wmfTitle" value={this.props.takedown.dmca.wmfTitle || ''} onChange={this.handleChange.bind( this )} />
+					</div>
+				</div>
+				{wmfAnnouncement}
 				<fieldset className="form-group">
 					<legend>Sender</legend>
 					<div className="form-group">
