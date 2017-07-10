@@ -86,7 +86,7 @@ class FileController {
 	/**
 	 * Create File
 	 *
-	 * @Route("/api/file/{name}")
+	 * @Route("/api/file/{name}", defaults={"_format" = "json"})
 	 * @Method({"POST"})
 	 *
 	 * @param Request $request Request
