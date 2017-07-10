@@ -28,26 +28,42 @@ export class TakedownShowCp extends React.Component {
 			files = this.props.takedown.cp.files.map( ( file ) => {
 				const ext = file.name.split( '.' ).pop();
 
+				let uploaded;
+
+				if ( file.uploaded ) {
+					uploaded = moment.utc( file.uploaded ).local().format( 'l LT' );
+				}
+
 				return (
 					<table className="mb-2" key={file.id}>
-						<tr>
-							<td colSpan="2">
-								<div className="d-flex mb-2 flex-row justify-content-start align-items-center">
-									<span className="file-icon file-icon mr-2" data-type={ext}></span>
-									<span>{file.name}</span>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>Exif</td>
-							<td>
-								<pre className="small bg-faded">
-									<code>
-										{JSON.stringify( file.exif, undefined, 2 )}
-									</code>
-								</pre>
-							</td>
-						</tr>
+						<tbody>
+							<tr>
+								<td colSpan="2">
+									<div className="d-flex mb-2 flex-row justify-content-start align-items-center">
+										<span className="file-icon file-icon mr-2" data-type={ext}></span>
+										<span>{file.name}</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td>Uploaded</td>
+								<td>{uploaded}</td>
+							</tr>
+							<tr>
+								<td>IP Address</td>
+								<td>{file.ip}</td>
+							</tr>
+							<tr>
+								<td>Exif</td>
+								<td>
+									<pre className="small bg-faded pt-2 pb-2 pl-2 pr-2 mb-0">
+										<code>
+											{JSON.stringify( file.exif, undefined, 2 )}
+										</code>
+									</pre>
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				);
 			} ).toArray();

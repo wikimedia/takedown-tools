@@ -7,6 +7,8 @@ export class File extends Record( {
 	error: undefined,
 	progress: undefined,
 	file: undefined,
+	uploaded: undefined,
+	ip: undefined,
 	exif: undefined
 } ) {
 

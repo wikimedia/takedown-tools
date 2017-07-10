@@ -51,6 +51,13 @@ class File {
 	private $ip;
 
 	/**
+	 * @var \DateTimeInterface
+	 *
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $uploaded;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="exif", type="json_array", nullable=true)
@@ -68,6 +75,7 @@ class File {
 		$this->dmca = $params->getInstance( 'cp', ChildProtection::class, new ChildProtection() );
 		$this->name = $params->getString( 'name' );
 		$this->ip = $params->getString( 'ip' );
+		$this->uploaded = $params->getInstance( 'uploaded', \DateTime::class );
 		$this->exif = $params->getArray( 'exif' );
 	}
 
@@ -167,6 +175,32 @@ class File {
 	 */
 	public function getIp() :? string {
 		return $this->ip;
+	}
+
+	/**
+	 * Set uploaded
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param \DateTimeInterface $uploaded Uploaded
+	 *
+	 * @return self
+	 */
+	public function setUploaded( \DateTimeInterface $uploaded ) : self {
+			$this->uploaded = $uploaded;
+
+			return $this;
+	}
+
+	/**
+	 * Get created
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return \DateTime
+	 */
+	public function getUploaded() :? \DateTimeInterface {
+			return $this->uploaded;
 	}
 
 	/**
