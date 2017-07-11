@@ -139,6 +139,22 @@ export class TakedownShowDmca extends React.Component {
 					</td>
 				</tr>
 				<tr>
+					<td>
+						Posted to <a href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices">Commons</a>
+					</td>
+					<td>
+						{this.props.takedown.dmca.commonsSend ? 'Yes' : 'No'}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						Posted to <a href="https://commons.wikimedia.org/wiki/Commons:Village_pump">Commons Village Pump</a>
+					</td>
+					<td>
+						{this.props.takedown.dmca.commonsVillagePumpSend ? 'Yes' : 'No'}
+					</td>
+				</tr>
+				<tr>
 					<th colSpan="2">Sender</th>
 				</tr>
 				<tr>

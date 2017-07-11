@@ -173,11 +173,45 @@ class Dmca {
 	 private $body;
 
 	 /**
-	  * @var string
+		* @var string
 		*
 		* @ORM\Column(name="wmf_title", type="string", length=255, nullable=true)
 		*/
 	 private $wmfTitle;
+
+	 /**
+		* @var bool
+		*
+		* @ORM\Column(name="commons_send", type="boolean", options={"default"=false})
+		*/
+	private $commonsSend;
+
+	/**
+	 * @var string
+	 */
+	private $commonsTitle;
+
+	/**
+	* @var string
+	*/
+	private $commonsText;
+
+	/**
+	 * @var bool
+	 *
+	 * @ORM\Column(name="commons_vp_send", type="boolean", options={"default"=false})
+	 */
+ private $commonsVillagePumpSend;
+
+	/**
+	* @var string
+	*/
+	private $commonsVillagePumpTitle;
+
+	/**
+	* @var string
+	*/
+	private $commonsVillagePumpText;
 
 	/**
 	 * @var Collection
@@ -232,6 +266,12 @@ class Dmca {
 		$this->subject = $params->getString( 'subject' );
 		$this->body = $params->getString( 'body' );
 		$this->wmfTitle = $params->getString( 'wmfTitle' );
+		$this->commonsSend = $params->getBoolean( 'commonsSend', false );
+		$this->commonsTitle = $params->getString( 'commonsTitle' );
+		$this->commonsText = $params->getString( 'commonsText' );
+		$this->commonsVillagePumpSend = $params->getBoolean( 'commonsSend', false );
+		$this->commonsVillagePumpTitle = $params->getString( 'commonsVillagePumpTitle' );
+		$this->commonsVillagePumpText = $params->getString( 'commonsVillagePumpText' );
 		$this->pages = $params->getCollection(
 			'files',
 			File::class,
@@ -270,7 +310,7 @@ class Dmca {
 	 *
 	 * @return self
 	 */
-	public function setlumenSend( bool $lumenSend ) : self {
+	public function setLumenSend( bool $lumenSend ) : self {
 		$this->lumenSend = $lumenSend;
 
 		return $this;
@@ -283,7 +323,7 @@ class Dmca {
 	 *
 	 * @return bool
 	 */
-	public function getlumenSend() :? bool {
+	public function getLumenSend() :? bool {
 		return $this->lumenSend;
 	}
 
@@ -882,6 +922,130 @@ class Dmca {
 	 */
 	public function getWmfTitle() :? string {
 		return $this->wmfTitle;
+	}
+
+	/**
+	 * Set Send to Commons
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param bool $commonsSend Send to Commons
+	 *
+	 * @return self
+	 */
+	public function setCommonsSend( bool $commonsSend ) : self {
+		$this->commonsSend = $commonsSend;
+
+		return $this;
+	}
+
+	/**
+	 * Send to Commons
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return bool
+	 */
+	public function getCommonsSend() :? bool {
+		return $this->commonsSend;
+	}
+
+	/**
+	 * Set Commons Title
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $commonsTitle Commons Title
+	 *
+	 * @return self
+	 */
+	public function setCommonsTitle( string $commonsTitle ) : self {
+		$this->commonsTitle = $commonsTitle;
+
+		return $this;
+	}
+
+	/**
+	 * Commons Title
+	 *
+	 * @return string
+	 */
+	public function getCommonsTitle() :? string {
+		return $this->commonsTitle;
+	}
+
+	/**
+	 * Set Commons Text
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $commonsText Commons Text
+	 *
+	 * @return self
+	 */
+	public function setCommonsText( string $commonsText ) : self {
+		$this->commonsText = $commonsText;
+
+		return $this;
+	}
+
+	/**
+	 * Commons Text
+	 *
+	 * @return string
+	 */
+	public function getCommonsText() :? string {
+		return $this->commonsText;
+	}
+
+	/**
+	 * Set Send to Commons Village Pump
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param bool $commonsVillagePumpSend Send to Commons
+	 *
+	 * @return self
+	 */
+	public function setCommonsVillagePumpSend( bool $commonsVillagePumpSend ) : self {
+		$this->commonsVillagePumpSend = $commonsVillagePumpSend;
+
+		return $this;
+	}
+
+	/**
+	 * Send to Commons
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return bool
+	 */
+	public function getCommonsVillagePumpSend() :? bool {
+		return $this->commonsVillagePumpSend;
+	}
+
+	/**
+	 * Set Commons Text
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $commonsVillagePumpText Commons Village Pump Text
+	 *
+	 * @return self
+	 */
+	public function setCommonsVillagePumpText( string $commonsVillagePumpText ) : self {
+		$this->commonsVillagePumpText = $commonsVillagePumpText;
+
+		return $this;
+	}
+
+	/**
+	 * Commons Village Pump Text
+	 *
+	 * @return string
+	 */
+	public function getCommonsVillagePumpText() :? string {
+		return $this->commonsVillagePumpText;
 	}
 
 	/**

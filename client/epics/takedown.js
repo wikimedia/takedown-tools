@@ -8,6 +8,7 @@ import { Takedown } from '../entities/takedown/takedown';
 import { MetadataSet } from '../entities/metadata.set';
 import * as TakedownActions from '../actions/takedown';
 import * as TokenActions from '../actions/token';
+import { defaultCommonsText, defaultCommonsVillagePumpText } from '../utils';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -70,9 +71,20 @@ export function takedownSave( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_CREATE_SAVE' )
 		.switchMap( () => {
 			let takedown = store.getState().takedown.create,
+				invovled,
 				involvedNames = [],
 				metadataIds,
 				removeType;
+
+			invovled = takedown.involvedIds.map( ( id ) => {
+				return store.getState().user.list.find( ( user ) => {
+					return user.id === id;
+				} );
+			} ).filter( ( user ) => {
+				return !!user;
+			} );
+
+			invovled = new Set( invovled );
 
 			// Prepare takedown for saving.
 			takedown = takedown.set( 'status', undefined );
@@ -82,6 +94,13 @@ export function takedownSave( action$, store ) {
 			if ( takedown.type ) {
 				switch ( takedown.type ) {
 					case 'dmca':
+						if ( takedown.dmca.commonsSend ) {
+							takedown = takedown.setIn( [ 'dmca', 'commonsTitle' ], takedown.dmca.commonsTitle || takedown.dmca.wmfTitle );
+							takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, invovled ) );
+						}
+						if ( takedown.dmca.commonsVillagePumpSend ) {
+							takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, invovled ) );
+						}
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
 						}
@@ -115,17 +134,9 @@ export function takedownSave( action$, store ) {
 			}
 
 			// We must split out the user names because of T168571
-			involvedNames = takedown.involvedIds.map( ( id ) => {
-				return store.getState().user.list.find( ( user ) => {
-					return user.id === id;
-				} );
-			} ).filter( ( user ) => {
-				return !!user;
-			} ).map( ( user ) => {
+			involvedNames = invovled.map( ( user ) => {
 				return user.username;
 			} );
-
-			involvedNames = new Set( involvedNames );
 
 			takedown = takedown.set( 'involvedNames', involvedNames );
 			takedown = takedown.set( 'involvedIds', undefined );
