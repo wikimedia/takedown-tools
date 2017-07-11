@@ -10,6 +10,7 @@ import { Takedown } from '../../../entities/takedown/takedown';
 import { Site } from '../../../entities/site';
 import { CountrySet } from '../../../entities/country.set';
 import { DatePicker } from '../../fields/date-picker';
+import { defaultCommonsText, defaultCommonsVillagePumpText } from '../../../utils';
 
 export class TakedownCreateDmca extends React.Component {
 
@@ -88,6 +89,30 @@ export class TakedownCreateDmca extends React.Component {
 		this.props.deleteFile( file );
 	}
 
+	getCommonsTitle() {
+		return this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle || '';
+	}
+
+	isCommonsTitleReadOnly() {
+		return typeof this.props.takedown.dmca.commonsTitle === 'undefined' && this.props.takedown.dmca.wmfTitle;
+	}
+
+	getCommonsText() {
+		if ( typeof this.props.takedown.dmca.commonsText !== 'undefined' ) {
+			return this.props.takedown.dmca.commonsText;
+		}
+
+		return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+	}
+
+	getCommonsVillagePumpText() {
+		if ( typeof this.props.takedown.dmca.commonsVillagePumpText !== 'undefined' ) {
+			return this.props.takedown.dmca.commonsVillagePumpText;
+		}
+
+		return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+	}
+
 	render() {
 		const countries = CountrySet.map( ( country ) => {
 			return {
@@ -98,7 +123,15 @@ export class TakedownCreateDmca extends React.Component {
 
 		let country,
 			lumenTitleField,
-			wmfAnnouncement;
+			wmfText,
+			wmfAnnouncement,
+			commonsNotice,
+			commonsForm,
+			commonsNoticeTitleEdit,
+			commonsNoticeTextEdit,
+			commonsVillagePumpSend,
+			commonsVillagePumpTextEdit,
+			commonsVillagePumpForm;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			country = countries.find( ( data ) => {
@@ -116,15 +149,189 @@ export class TakedownCreateDmca extends React.Component {
 		}
 
 		if ( this.props.takedown.dmca.wmfTitle && this.props.takedown.dmca.body ) {
-			wmfAnnouncement = (
+			wmfText = (
 				<div className="form-group">
 					<label>Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
 					<textarea className="form-control" readOnly rows="5" value={
 						'<div class="mw-code" style="white-space: pre; word-wrap: break-word;"><nowiki>\n' +
 						this.props.takedown.dmca.body +
 						`\n</nowiki></div>\n[[Category:DMCA ${moment().format( 'Y' )}]]`
-					}></textarea>
+					} />
 				</div>
+			);
+		}
+
+		if ( this.props.takedown.dmca.wmfSend ) {
+			wmfAnnouncement = (
+				<div>
+					<div className="form-group">
+						<label>Title</label>
+						<div className="input-group">
+							<span className="input-group-addon">DMCA</span>
+							<input type="text" disabled={this.props.disabled} className="form-control" name="wmfTitle" value={this.props.takedown.dmca.wmfTitle || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					</div>
+					{wmfText}
+				</div>
+			);
+		}
+
+		if ( this.props.site.projectId === 'commons' ) {
+
+			if ( this.props.takedown.dmca.commonsSend ) {
+
+				if ( this.isCommonsTitleReadOnly() ) {
+					commonsNoticeTitleEdit = (
+						<span className="input-group-btn">
+							<button className="btn btn-secondary" type="button" onClick={() => {
+								this.updateField( 'commonsTitle', this.props.takedown.dmca.wmfTitle || '' );
+								this.commonsTitleInput.focus();
+							}}><i className="material-icons">edit</i></button>
+						</span>
+					);
+				}
+
+				if ( typeof this.props.takedown.dmca.commonsText === 'undefined' ) {
+					commonsNoticeTextEdit = (
+						<span className="input-group-btn">
+							<button className="btn btn-secondary" type="button" onClick={() => {
+								this.updateField( 'commonsText', defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds ) );
+								this.commonsTitleInput.focus();
+							}}><i className="material-icons">edit</i></button>
+						</span>
+					);
+				}
+
+				if ( this.props.takedown.dmca.commonsVillagePumpSend ) {
+
+					if ( typeof this.props.takedown.dmca.commonsVillagePumpText === 'undefined' ) {
+						commonsVillagePumpTextEdit = (
+							<span className="input-group-btn">
+								<button className="btn btn-secondary" type="button" onClick={() => {
+									this.updateField( 'commonsVillagePumpText', defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds ) );
+									this.commonsVilagePumpTextInput.focus();
+								}}><i className="material-icons">edit</i></button>
+							</span>
+						);
+					}
+
+					commonsVillagePumpForm = (
+						<div className="form-group">
+							<label>Text</label>
+							<div className="input-group">
+								<textarea
+									className="form-control"
+									name="commonsVillagePumpText"
+									rows="5"
+									ref={( element ) => { this.commonsVillagePumpTextInput = element; }}
+									value={this.getCommonsVillagePumpText()}
+									readOnly={typeof this.props.takedown.dmca.commonsVillagePumpText === 'undefined'}
+									onChange={this.handleChange.bind( this )} />
+								{commonsVillagePumpTextEdit}
+							</div>
+						</div>
+					);
+				}
+
+				if ( this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle ) {
+					commonsVillagePumpSend = (
+						<div>
+							<div className="form-group">
+								<div className="form-check">
+									<label className="form-check-label">
+										<input
+											disabled={this.props.disabled}
+											className="form-check-input"
+											type="checkbox"
+											name="commonsVillagePumpSend"
+											value="commonsVillagePumpSend"
+											checked={!!this.props.takedown.dmca.commonsVillagePumpSend}
+											onChange={ ( event ) => {
+												if ( !event.target.checked ) {
+													this.mergeFields( {
+														commonsVillagePumpSend: event.target.checked,
+														commonsVillagePumpText: undefined
+													} );
+												} else {
+													this.updateField( 'commonsVillagePumpSend', event.target.checked );
+												}
+											} }
+										/> Post to Commons Village Pump
+									</label>
+								</div>
+							</div>
+							{commonsVillagePumpForm}
+						</div>
+					);
+				}
+
+				commonsForm = (
+					<div>
+						<div className="form-group">
+							<label>Title</label>
+							<div className="input-group">
+								<input
+									type="text"
+									className="form-control"
+									name="commonsTitle"
+									ref={( element ) => { this.commonsTitleInput = element; }}
+									value={this.getCommonsTitle()}
+									readOnly={this.isCommonsTitleReadOnly()}
+									onChange={this.handleChange.bind( this )} />
+								{commonsNoticeTitleEdit}
+							</div>
+						</div>
+						<div className="form-group">
+							<label>Text</label>
+							<div className="input-group">
+								<textarea
+									className="form-control"
+									name="commonsText"
+									rows="5"
+									ref={( element ) => { this.commonsTextInput = element; }}
+									value={this.getCommonsText()}
+									readOnly={typeof this.props.takedown.dmca.commonsText === 'undefined'}
+									onChange={this.handleChange.bind( this )} />
+								{commonsNoticeTextEdit}
+							</div>
+						</div>
+						{commonsVillagePumpSend}
+					</div>
+				);
+			}
+
+			commonsNotice = (
+				<fieldset className="form-gorup">
+					<legend>Commons</legend>
+					<div className="form-group">
+						<div className="form-check">
+							<label className="form-check-label">
+								<input
+									disabled={this.props.disabled}
+									className="form-check-input"
+									type="checkbox"
+									name="commonsSend"
+									value="commonsSend"
+									checked={!!this.props.takedown.dmca.commonsSend}
+									onChange={ ( event ) => {
+										if ( !event.target.checked ) {
+											this.mergeFields( {
+												commonsSend: event.target.checked,
+												commonsTitle: undefined,
+												commonsText: undefined,
+												commonsVillagePumpSend: undefined,
+												commonsVillagePumpText: undefined
+											} );
+										} else {
+											this.updateField( 'commonsSend', event.target.checked );
+										}
+									} }
+								/> Post to Commons
+							</label>
+						</div>
+					</div>
+					{commonsForm}
+				</fieldset>
 			);
 		}
 
@@ -166,14 +373,6 @@ export class TakedownCreateDmca extends React.Component {
 					<label>Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
 					<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
 				</div>
-				<div className="form-group">
-					<label><a href="https://wikimediafoundation.org" target="_blank" rel="noopener noreferrer">Wikimedia Foundation</a> Announcment Title</label>
-					<div className="input-group">
-						<span className="input-group-addon">DMCA</span>
-						<input type="text" disabled={this.props.disabled} className="form-control" name="wmfTitle" value={this.props.takedown.dmca.wmfTitle || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-				</div>
-				{wmfAnnouncement}
 				<fieldset className="form-group">
 					<legend>Sender</legend>
 					<div className="form-group">
@@ -238,6 +437,35 @@ export class TakedownCreateDmca extends React.Component {
 					</div>
 					{lumenTitleField}
 				</fieldset>
+				<fieldset className="form-gorup">
+					<legend>Wikimedia Foundation</legend>
+					<div className="form-group">
+						<div className="form-check">
+							<label className="form-check-label">
+								<input
+									disabled={this.props.disabled}
+									className="form-check-input"
+									type="checkbox"
+									name="wmfSend"
+									value="wmfSend"
+									checked={!!this.props.takedown.dmca.wmfSend}
+									onChange={ ( event ) => {
+										if ( !event.target.checked ) {
+											this.mergeFields( {
+												wmfSend: event.target.checked,
+												wmfTitle: undefined
+											} );
+										} else {
+											this.updateField( 'wmfSend', event.target.checked );
+										}
+									} }
+								/> Post to Wikimedia Foundation
+							</label>
+						</div>
+					</div>
+					{wmfAnnouncement}
+				</fieldset>
+				{commonsNotice}
 			</div>
 		);
 	}

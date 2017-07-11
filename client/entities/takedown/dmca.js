@@ -19,7 +19,13 @@ export class Dmca extends Record( {
 	subject: undefined,
 	body: undefined,
 	fileIds: new List(),
-	wmfTitle: undefined
+	wmfSend: undefined,
+	wmfTitle: undefined,
+	commonsSend: undefined,
+	commonsTitle: undefined,
+	commonsText: undefined,
+	commonsVillagePumpSend: undefined,
+	commonsVillagePumpText: undefined
 } ) {
 	constructor( data = {} ) {
 		data = {
