@@ -3,6 +3,8 @@ matrix:
     -
       language: php
       php: 7.1
+      before_install:
+          - cp .env.dist .env
       install:
           - composer install
       script:
