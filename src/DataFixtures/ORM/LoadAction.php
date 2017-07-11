@@ -6,7 +6,7 @@ use App\Entity\Action;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class LoadMetadata implements FixtureInterface {
+class LoadAction implements FixtureInterface {
 
 	const ACTION = [
 		'yes',

@@ -4,5 +4,7 @@
 	<file>.</file>
 	<arg name="extensions" value="php,php5,inc"/>
 	<arg name="encoding" value="utf8"/>
+	<exclude-pattern>node_modules/</exclude-pattern>
+	<exclude-pattern>var/</exclude-pattern>
 	<exclude-pattern>vendor/</exclude-pattern>
 </ruleset>

@@ -1,0 +1,15 @@
+language: php
+php: 7.1
+addons:
+  apt:
+    packages:
+        - node
+install:
+    - npm install
+    - composer install
+script:
+    - composer test
+    - npm test
+branches:
+    only:
+        - master

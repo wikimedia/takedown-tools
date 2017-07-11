@@ -54,7 +54,14 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ]
+        ],
+				"lint": [
+					"phpcs --colors ."
+				],
+				"test": [
+					"@lint",
+					"phpunit -v"
+				],
     },
     "conflict": {
         "symfony/symfony": "*",

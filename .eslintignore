@@ -1,1 +1,4 @@
-/web/bundles
+/bin
+/config
+/src
+/public/bundles
