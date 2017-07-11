@@ -1,15 +1,15 @@
-language: php
-php: 7.1
-addons:
-  apt:
-    packages:
-        - nodejs
-install:
-    - npm install
-    - composer install
-script:
-    - composer test
-    - npm test
+matrix:
+  include:
+    -
+      language: php
+      php: 7.1
+      install:
+          - composer install
+      script:
+          - composer test
+    -
+      language: node_js
+      node_js: 8
 branches:
     only:
         - master

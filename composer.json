@@ -59,9 +59,8 @@
 					"phpcs --colors ."
 				],
 				"test": [
-					"@lint",
-					"phpunit -v"
-				],
+					"@lint"
+				]
     },
     "conflict": {
         "symfony/symfony": "*",
