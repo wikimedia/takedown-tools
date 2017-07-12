@@ -98,7 +98,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return array
 	 */
-	public function postCommons( string $text ) :? array {
+	public function postCommonsAsync( string $text ) : PromiseInterface {
 		$url = 'https://test2.wikipedia.org/w/api.php';
 		$title = 'Office_actions/DMCA_notices';
 
@@ -109,7 +109,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 
 		$request = new Request( 'POST', $url );
 
-		$response = $this->client->send( $request, [
+		return $this->client->sendAsync( $request, [
 			'query' => [
 				'action' => 'edit',
 				'format' => 'json',
@@ -124,15 +124,15 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'token' => $this->getToken( $url ),
 			],
 			'auth' => 'oauth',
-		] );
+		] )->then( function( $response ) {
+			$data = json_decode( $response->getBody(), true );
 
-		$data = json_decode( $response->getBody(), true );
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response );
+			}
 
-		if ( array_key_exists( 'error', $data ) ) {
-			throw new BadResponseException( $data['error']['info'], $request, $response );
-		}
-
-		return json_decode( $response->getBody(), true );
+			return json_decode( $response->getBody(), true );
+		} );
 	}
 
 	/**
@@ -142,7 +142,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return array
 	 */
-	public function postCommonsVillagePump( string $text ) :? array {
+	public function postCommonsVillagePumpAsync( string $text ) : PromiseInterface {
 		$url = 'https://test2.wikipedia.org/w/api.php';
 		$title = 'Wikipedia:Simple_talk';
 
@@ -153,7 +153,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 
 		$request = new Request( 'POST', $url );
 
-		$response = $this->client->send( $request, [
+		return $this->client->sendAsync( $request, [
 			'query' => [
 				'action' => 'edit',
 				'format' => 'json',
@@ -168,15 +168,15 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'token' => $this->getToken( $url ),
 			],
 			'auth' => 'oauth',
-		] );
+		] )->then( function( $response ) {
+			$data = json_decode( $response->getBody(), true );
 
-		$data = json_decode( $response->getBody(), true );
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response );
+			}
 
-		if ( array_key_exists( 'error', $data ) ) {
-			throw new BadResponseException( $data['error']['info'], $request, $response );
-		}
-
-		return json_decode( $response->getBody(), true );
+			return json_decode( $response->getBody(), true );
+		} );
 	}
 
 	/**
@@ -207,7 +207,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	protected function getUsersAsync( array $usernames ) : PromiseInterface {
+	public function getUsersAsync( array $usernames ) : PromiseInterface {
 		$promises = array_map( function( $username ) {
 			return $this->getUserAsync( $username );
 		}, $usernames );
@@ -230,7 +230,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	protected function getUserAsync( string $username ) : PromiseInterface {
+	public function getUserAsync( string $username ) : PromiseInterface {
 		return $this->client->getAsync( '', [
 			'query' => [
 				'action' => 'query',

@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use function GuzzleHttp\Promise\settle;
 
 /**
  * @Route(service="app.controller_takedown")
@@ -104,6 +105,7 @@ class TakedownController {
 	 */
 	public function createAction( Request $request ) : Takedown {
 		$em = $this->doctrine->getEntityManager();
+		$promises = [];
 
 		$takedown = $this->serializer->deserialize(
 			$request->getContent(),
@@ -116,22 +118,39 @@ class TakedownController {
 
 		// Get the user ids from the API.
 		$usernames = $takedown->getInvolvedNames();
-		$takedown->setInvolved( $this->client->getUsersByUsernames( $usernames ) );
+
+		if ( $usernames ) {
+			$promises[] = $this->client->getUsersAsync( $usernames )
+				->then( function( $users ) use ( $takedown ) {
+					$takedown->setInvolved( $users );
+				} );
+		}
 
 		// Get the user ids from the API.
 		if ( $takedown->getCp() && $takedown->getCp()->getApprover() ) {
 			$username = $takedown->getCp()->getApprover()->getUsername();
-			$takedown->getCp()->setApprover( $this->client->getUserByUsername( $username ) );
+			$promises[] = $this->client->getUserAsync( $username )
+				->then( function( $user ) use ( $takedown ) {
+					$takedown->getCp()->setApprover( $user );
+				} );
 		}
 
+		$promises = [];
 		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
 			if ( $takedown->getDmca()->getCommonsSend() ) {
-				$this->client->postCommons( $takedown->getDmca()->getCommonsText() );
+				$promises[] = $this->client->postCommonsAsync( $takedown->getDmca()->getCommonsText() );
 			}
 			if ( $takedown->getDmca()->getCommonsVillagePumpSend() ) {
-				$this->client->postCommonsVillagePump( $takedown->getDmca()->getCommonsVillagePumpText() );
+				$promises[] = $this->client->postCommonsVillagePumpAsync(
+					$takedown->getDmca()->getCommonsVillagePumpText()
+				);
 			}
 		}
+
+		// Settle the promises.
+		// The requests are not executed unless we explicitly wait since we are not
+		// in an event loop.
+		settle( $promises )->wait();
 
 		// Attach the takedown to existing entities.
 		$takedown = $this->attacher->attach( $takedown );

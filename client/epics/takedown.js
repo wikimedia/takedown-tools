@@ -96,10 +96,10 @@ export function takedownSave( action$, store ) {
 					case 'dmca':
 						if ( takedown.dmca.commonsSend ) {
 							takedown = takedown.setIn( [ 'dmca', 'commonsTitle' ], takedown.dmca.commonsTitle || takedown.dmca.wmfTitle );
-							takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, invovled ) );
+							takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
 						}
 						if ( takedown.dmca.commonsVillagePumpSend ) {
-							takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, invovled ) );
+							takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
 						}
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
