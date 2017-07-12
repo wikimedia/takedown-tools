@@ -3,7 +3,7 @@
 namespace App\Client;
 
 use App\Entity\User;
-use App\Entity\Site;
+use GuzzleHttp\Promise\PromiseInterface;
 
 interface MediaWikiClientInterface {
 
@@ -14,7 +14,7 @@ interface MediaWikiClientInterface {
 	 *
 	 * @return User[]
 	 */
-	public function getUsersByUsernames( array $usernames ) : array;
+	public function getUsers( array $usernames ) : PromiseInterface;
 
 	/**
 	 * Get User by Username
@@ -23,15 +23,5 @@ interface MediaWikiClientInterface {
 	 *
 	 * @return User
 	 */
-	public function getUserByUsername( string $username ) : User;
-
-	/**
-	 * Get Site by Id
-	 *
-	 * @param string $id Site to retrieve
-	 *
-	 * @return Site
-	 */
-	public function getSiteById( string $id ) : Site;
-
+	public function getUser( string $username ) : PromiseInterface;
 }

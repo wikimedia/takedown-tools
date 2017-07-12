@@ -48,57 +48,13 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	}
 
 	/**
-	 * Get User by Username
-	 *
-	 * @param string[] $usernames Users to retrieve.
-	 *
-	 * @return User[]
-	 */
-	public function getUsersByUsernames( array $usernames ) : array {
-		 return $this->getUsersAsync( $usernames )->wait();
-	}
-
-	/**
-	 * Get User by Username
-	 *
-	 * @param string $username Users to retrieve.
-	 *
-	 * @return User
-	 */
-	public function getUserByUsername( string $username ) : User {
-		 return $this->getUserAsync( $username )->wait();
-	}
-
-	/**
-	 * Get Site by Id
-	 *
-	 * @param string $id Site to retrieve
-	 *
-	 * @return Site
-	 */
-	public function getSiteById( string $id ) : Site {
-		return $this->getSitesAsync()->then( function ( $sites ) use ( $id ) {
-			$item = reset( $sites );
-			while ( $item !== false ) {
-					if ( $item->getId() === $id ) {
-							return $item;
-					};
-
-					$item = next( $sites );
-			}
-
-			return null;
-		} )->wait();
-	}
-
-	/**
 	 * Post notice to Commons.
 	 *
 	 * @param string $text Text to Post.
 	 *
 	 * @return array
 	 */
-	public function postCommonsAsync( string $text ) : PromiseInterface {
+	public function postCommons( string $text ) : PromiseInterface {
 		$url = 'https://test2.wikipedia.org/w/api.php';
 		$title = 'Office_actions/DMCA_notices';
 
@@ -107,24 +63,27 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			$title = 'Commons:Office_actions/DMCA_notices';
 		}
 
-		$request = new Request( 'POST', $url );
+		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $text ) {
+			$request = new Request( 'POST', $url );
 
-		return $this->client->sendAsync( $request, [
-			'query' => [
-				'action' => 'edit',
-				'format' => 'json',
-			],
-			'form_params' => [
-				'title' => $title,
-				'summary' => 'new takedown',
-				'appendtext' => $text,
-				'recreate' => true,
-				// Tokens are required.
-				// @link https://phabricator.wikimedia.org/T126257
-				'token' => $this->getToken( $url ),
-			],
-			'auth' => 'oauth',
-		] )->then( function( $response ) {
+			return $this->client->sendAsync( $request, [
+				'query' => [
+					'action' => 'edit',
+					'format' => 'json',
+				],
+				'form_params' => [
+					'title' => $title,
+					'summary' => 'new takedown',
+					'appendtext' => $text,
+					'recreate' => true,
+					// Tokens are required.
+					// @link https://phabricator.wikimedia.org/T126257
+					'token' => $oken,
+				],
+				'auth' => 'oauth',
+			] );
+		} )
+		->then( function( $response ) {
 			$data = json_decode( $response->getBody(), true );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -142,7 +101,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return array
 	 */
-	public function postCommonsVillagePumpAsync( string $text ) : PromiseInterface {
+	public function postCommonsVillagePump( string $text ) : PromiseInterface {
 		$url = 'https://test2.wikipedia.org/w/api.php';
 		$title = 'Wikipedia:Simple_talk';
 
@@ -151,24 +110,27 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			$title = 'Commons:Village_pump';
 		}
 
-		$request = new Request( 'POST', $url );
+		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $text ) {
+			$request = new Request( 'POST', $url );
 
-		return $this->client->sendAsync( $request, [
-			'query' => [
-				'action' => 'edit',
-				'format' => 'json',
-			],
-			'form_params' => [
-				'title' => $title,
-				'summary' => 'new DMCA takedown notifcation',
-				'appendtext' => $text,
-				'recreate' => true,
-				// Tokens are required.
-				// @link https://phabricator.wikimedia.org/T126257
-				'token' => $this->getToken( $url ),
-			],
-			'auth' => 'oauth',
-		] )->then( function( $response ) {
+			return $this->client->sendAsync( $request, [
+				'query' => [
+					'action' => 'edit',
+					'format' => 'json',
+				],
+				'form_params' => [
+					'title' => $title,
+					'summary' => 'new DMCA takedown notifcation',
+					'appendtext' => $text,
+					'recreate' => true,
+					// Tokens are required.
+					// @link https://phabricator.wikimedia.org/T126257
+					'token' => $token,
+				],
+				'auth' => 'oauth',
+			] );
+		} )
+		->then( function( $response ) {
 			$data = json_decode( $response->getBody(), true );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -186,18 +148,22 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return string
 	 */
-	protected function getToken( $uri = '' ) :? string {
-		$response = $this->client->get( $uri, [
+	protected function getToken( $uri = '' ) : PromiseInterface {
+		return $this->client->getAsync( $uri, [
 			'query' => [
 				'action' => 'tokens',
 				'format' => 'json',
 			],
 			'auth' => 'oauth',
-		] );
+		] )->then( function( $response ) {
+			$data = json_decode( $response->getBody(), true );
 
-		$data = json_decode( $response->getBody(), true );
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response );
+			}
 
-		return !empty( $data['tokens']['edittoken'] ) ? $data['tokens']['edittoken'] : null;
+			return !empty( $data['tokens']['edittoken'] ) ? $data['tokens']['edittoken'] : null;
+		} );
 	}
 
 	/**
@@ -207,9 +173,9 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	public function getUsersAsync( array $usernames ) : PromiseInterface {
+	public function getUsers( array $usernames ) : PromiseInterface {
 		$promises = array_map( function( $username ) {
-			return $this->getUserAsync( $username );
+			return $this->getUser( $username );
 		}, $usernames );
 
 		return settle( $promises )->then( function( $results ) {
@@ -230,7 +196,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	public function getUserAsync( string $username ) : PromiseInterface {
+	public function getUser( string $username ) : PromiseInterface {
 		return $this->client->getAsync( '', [
 			'query' => [
 				'action' => 'query',
@@ -250,7 +216,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	protected function getSitesAsync() : PromiseInterface {
+	public function getSites() : PromiseInterface {
 		return $this->client->getAsync( '', [
 			'query' => [
 				'action' => 'sitematrix',

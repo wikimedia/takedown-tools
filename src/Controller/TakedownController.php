@@ -120,7 +120,7 @@ class TakedownController {
 		$usernames = $takedown->getInvolvedNames();
 
 		if ( $usernames ) {
-			$promises[] = $this->client->getUsersAsync( $usernames )
+			$promises[] = $this->client->getUsers( $usernames )
 				->then( function( $users ) use ( $takedown ) {
 					$takedown->setInvolved( $users );
 				} );
@@ -129,7 +129,7 @@ class TakedownController {
 		// Get the user ids from the API.
 		if ( $takedown->getCp() && $takedown->getCp()->getApprover() ) {
 			$username = $takedown->getCp()->getApprover()->getUsername();
-			$promises[] = $this->client->getUserAsync( $username )
+			$promises[] = $this->client->getUser( $username )
 				->then( function( $user ) use ( $takedown ) {
 					$takedown->getCp()->setApprover( $user );
 				} );
@@ -137,10 +137,10 @@ class TakedownController {
 
 		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
 			if ( $takedown->getDmca()->getCommonsSend() ) {
-				$promises[] = $this->client->postCommonsAsync( $takedown->getDmca()->getCommonsText() );
+				$promises[] = $this->client->postCommons( $takedown->getDmca()->getCommonsText() );
 			}
 			if ( $takedown->getDmca()->getCommonsVillagePumpSend() ) {
-				$promises[] = $this->client->postCommonsVillagePumpAsync(
+				$promises[] = $this->client->postCommonsVillagePump(
 					$takedown->getDmca()->getCommonsVillagePumpText()
 				);
 			}
