@@ -119,6 +119,52 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'summary' => 'new takedown',
 				'appendtext' => $text,
 				'recreate' => true,
+				// Tokens are required.
+				// @link https://phabricator.wikimedia.org/T126257
+				'token' => $this->getToken( $url ),
+			],
+			'auth' => 'oauth',
+		] );
+
+		$data = json_decode( $response->getBody(), true );
+
+		if ( array_key_exists( 'error', $data ) ) {
+			throw new BadResponseException( $data['error']['info'], $request, $response );
+		}
+
+		return json_decode( $response->getBody(), true );
+	}
+
+	/**
+	 * Post notice to Commons Village Pump.
+	 *
+	 * @param string $text Text to Post.
+	 *
+	 * @return array
+	 */
+	public function postCommonsVillagePump( string $text ) :? array {
+		$url = 'https://test2.wikipedia.org/w/api.php';
+		$title = 'Wikipedia:Simple_talk';
+
+		if ( $this->environment === 'prod' ) {
+			$url = 'https://commons.wikimedia.org/w/api.php';
+			$title = 'Commons:Village_pump';
+		}
+
+		$request = new Request( 'POST', $url );
+
+		$response = $this->client->send( $request, [
+			'query' => [
+				'action' => 'edit',
+				'format' => 'json',
+			],
+			'form_params' => [
+				'title' => $title,
+				'summary' => 'new DMCA takedown notifcation',
+				'appendtext' => $text,
+				'recreate' => true,
+				// Tokens are required.
+				// @link https://phabricator.wikimedia.org/T126257
 				'token' => $this->getToken( $url ),
 			],
 			'auth' => 'oauth',

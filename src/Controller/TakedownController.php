@@ -125,7 +125,12 @@ class TakedownController {
 		}
 
 		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
-			$this->client->postCommons( $takedown->getDmca()->getCommonsText() );
+			if ( $takedown->getDmca()->getCommonsSend() ) {
+				$this->client->postCommons( $takedown->getDmca()->getCommonsText() );
+			}
+			if ( $takedown->getDmca()->getCommonsVillagePumpSend() ) {
+				$this->client->postCommonsVillagePump( $takedown->getDmca()->getCommonsVillagePumpText() );
+			}
 		}
 
 		// Attach the takedown to existing entities.
