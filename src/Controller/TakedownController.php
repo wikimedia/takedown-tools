@@ -135,7 +135,6 @@ class TakedownController {
 				} );
 		}
 
-		$promises = [];
 		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
 			if ( $takedown->getDmca()->getCommonsSend() ) {
 				$promises[] = $this->client->postCommonsAsync( $takedown->getDmca()->getCommonsText() );
