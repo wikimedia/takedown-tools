@@ -124,6 +124,10 @@ class TakedownController {
 			$takedown->getCp()->setApprover( $this->client->getUserByUsername( $username ) );
 		}
 
+		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
+			$this->client->postCommons( $takedown->getDmca()->getCommonsText() );
+		}
+
 		// Attach the takedown to existing entities.
 		$takedown = $this->attacher->attach( $takedown );
 

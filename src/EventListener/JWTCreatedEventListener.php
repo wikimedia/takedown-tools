@@ -2,10 +2,24 @@
 
 namespace App\EventListener;
 
-use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class JWTCreatedEventListener {
+
+	/**
+	 * @var NormalizerInterface
+	 */
+	protected $normalizer;
+
+	/**
+	 * JWTCreatedEventListener
+	 *
+	 * @param NormalizerInterface $normalizer Normalizer
+	 */
+	public function __construct( NormalizerInterface $normalizer ) {
+		$this->normalizer = $normalizer;
+	}
 
 	/**
 	 * On JWT Created Event.
@@ -17,8 +31,10 @@ class JWTCreatedEventListener {
 	public function onJWTCreated( JWTCreatedEvent $event ) {
 		$user = $event->getUser();
 
-		$payload = $event->getData();
-		$payload['username'] = $user->getUsername();
+		$data = $this->normalizer->normalize( $user, null, [
+			'groups' => [ 'token' ]
+		] );
+		$payload = array_merge( $event->getData(), $data );
 
 		$event->setData( $payload );
 	}

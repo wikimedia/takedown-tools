@@ -122,16 +122,13 @@ class AuthController {
 		$em = $this->doctrine->getEntityManager();
 		$existing = $em->find( User::class, $user->getId() );
 
-		if ( $existing ) {
-			$existing->setToken( $accessToken->key );
-			$existing->setSecret( $accessToken->secret );
-			$em->flush();
-		} else {
-			$user->setToken( $accessToken->key );
-			$user->setSecret( $accessToken->secret );
+		if ( !$existing ) {
 			$em->persist( $user );
 			$em->flush();
 		}
+
+		$user->setToken( $accessToken->key );
+		$user->setSecret( $accessToken->secret );
 
 		// We cannot use the JWT's returned from MediaWiki becaused they are
 		// short-lived tokens.

@@ -4,6 +4,8 @@ namespace App\Client;
 
 use App\Entity\Site;
 use App\Entity\User;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -24,14 +26,25 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	protected $serializer;
 
 	/**
+	 * @var string
+	 */
+	protected $environment;
+
+	/**
 	 * MediaWiki
 	 *
 	 * @param ClientInterface $client Configured Guzzle Client.
 	 * @param SerializerInterface $serializer Syfmony Serializer.
+	 * @param string $environment Kernel Environment.
 	 */
-	public function __construct( ClientInterface $client, SerializerInterface $serializer ) {
+	public function __construct(
+		ClientInterface $client,
+		SerializerInterface $serializer,
+		string $environment
+	) {
 		$this->client = $client;
 		$this->serializer = $serializer;
+		$this->environment = $environment;
 	}
 
 	/**
@@ -76,6 +89,69 @@ class MediaWikiClient implements MediaWikiClientInterface {
 
 			return null;
 		} )->wait();
+	}
+
+	/**
+	 * Post notice to Commons.
+	 *
+	 * @param string $text Text to Post.
+	 *
+	 * @return array
+	 */
+	public function postCommons( string $text ) :? array {
+		$url = 'https://test2.wikipedia.org/w/api.php';
+		$title = 'Office_actions/DMCA_notices';
+
+		if ( $this->environment === 'prod' ) {
+			$url = 'https://commons.wikimedia.org/w/api.php';
+			$title = 'Commons:Office_actions/DMCA_notices';
+		}
+
+		$request = new Request( 'POST', $url );
+
+		$response = $this->client->send( $request, [
+			'query' => [
+				'action' => 'edit',
+				'format' => 'json',
+			],
+			'form_params' => [
+				'title' => $title,
+				'summary' => 'new takedown',
+				'appendtext' => $text,
+				'recreate' => true,
+				'token' => $this->getToken( $url ),
+			],
+			'auth' => 'oauth',
+		] );
+
+		$data = json_decode( $response->getBody(), true );
+
+		if ( array_key_exists( 'error', $data ) ) {
+			throw new BadResponseException( $data['error']['info'], $request, $response );
+		}
+
+		return json_decode( $response->getBody(), true );
+	}
+
+	/**
+	 * Get Token.
+	 *
+	 * @param string $uri URI
+	 *
+	 * @return string
+	 */
+	protected function getToken( $uri = '' ) :? string {
+		$response = $this->client->get( $uri, [
+			'query' => [
+				'action' => 'tokens',
+				'format' => 'json',
+			],
+			'auth' => 'oauth',
+		] );
+
+		$data = json_decode( $response->getBody(), true );
+
+		return !empty( $data['tokens']['edittoken'] ) ? $data['tokens']['edittoken'] : null;
 	}
 
 	/**

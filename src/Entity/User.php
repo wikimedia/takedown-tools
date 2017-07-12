@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
-use MediaWiki\OAuthClient\Token;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -32,15 +31,11 @@ class User implements UserInterface, JWTUserInterface {
 
 	/**
 	 * @var string
-	 *
-	 * @ORM\Column(name="token", type="string", length=255, nullable=true)
 	 */
 	private $token;
 
 	/**
 	 * @var string
-	 *
-	 * @ORM\Column(name="secret", type="string", length=255, nullable=true)
 	 */
 	private $secret;
 
@@ -48,11 +43,6 @@ class User implements UserInterface, JWTUserInterface {
 	 * @var array
 	 */
 	private $roles;
-
-	/**
-	 * @var Token
-	 */
-	private $oauthToken;
 
 	/**
 	 * User
@@ -63,6 +53,8 @@ class User implements UserInterface, JWTUserInterface {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getInt( 'id' );
 		$this->username = $params->getString( 'username' );
+		$this->token = $params->getString( 'token' );
+		$this->secret = $params->getString( 'secret' );
 		$this->roles = $params->getArray( 'roles', [] );
 	}
 
@@ -148,7 +140,7 @@ class User implements UserInterface, JWTUserInterface {
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @Groups({"api"})
+	 * @Groups({"api", "token"})
 	 *
 	 * @return null
 	 */
@@ -165,13 +157,14 @@ class User implements UserInterface, JWTUserInterface {
 	 */
 	public function setToken( string $token ) {
 		$this->token = $token;
-		$this->oauthToken = null;
 
 		return $this;
 	}
 
 	/**
 	 * Token
+	 *
+	 * @Groups({"token"})
 	 *
 	 * @return null
 	 */
@@ -188,7 +181,6 @@ class User implements UserInterface, JWTUserInterface {
 	 */
 	public function setSecret( string $secret ) {
 		$this->secret = $secret;
-		$this->oauthToken = null;
 
 		return $this;
 	}
@@ -196,23 +188,12 @@ class User implements UserInterface, JWTUserInterface {
 	/**
 	 * Secret
 	 *
+	 * @Groups({"token"})
+	 *
 	 * @return null
 	 */
 	public function getSecret() :? string {
 		return $this->secret;
-	}
-
-	/**
-	 * OAuth Token
-	 *
-	 * @return Token
-	 */
-	public function getOauthToken() : Token {
-		if ( !$this->oauthToken ) {
-			$this->oauthToken = new Token( $this->token, $this->secret );
-		}
-
-		return $this->oauthToken;
 	}
 
 	/**

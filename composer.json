@@ -11,6 +11,7 @@
 				"geosocio/entity-utils": "^1.0.5",
 				"geosocio/serialize-response": "^1.0.2",
 				"guzzlehttp/guzzle": "^6.2",
+				"guzzlehttp/oauth-subscriber": "^0.3.0",
 				"lexik/jwt-authentication-bundle": "^2.4",
 				"mediawiki/oauthclient": "^0.1.2",
 				"sensio/framework-extra-bundle": "^3.0",

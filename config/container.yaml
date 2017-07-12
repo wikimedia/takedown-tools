@@ -30,20 +30,35 @@ services:
     calls:
       - [setCallback, ["@=service('request_stack').getMasterRequest().getUriForPath('/login')"]]
 
+  app.handler_stack_factory:
+    class: App\Client\HandlerStackFactory
+    arguments:
+      - '@security.token_storage'
+      - '%env(OAUTH_CONSUMER_KEY)%'
+      - '%env(OAUTH_CONSUMER_SECRET)%'
+
+  app.handler_stack:
+    class: GuzzleHttp\HandlerStack
+    factory: ['@app.handler_stack_factory', 'createHandlerStack']
+
   app.mediawiki_client_guzzle:
     class: GuzzleHttp\Client
     arguments:
       -
         base_uri: '%env(MEDIAWIKI_API_URL)%'
+        handler: '@app.handler_stack'
 
   app.mediawiki_client:
     class: App\Client\MediaWikiClient
     arguments:
       - '@app.mediawiki_client_guzzle'
       - '@serializer'
+      - '%kernel.environment%'
 
   app.event.jwt_created_listener:
       class: App\EventListener\JWTCreatedEventListener
+      arguments:
+        - '@serializer'
       tags:
           -
             name: kernel.event_listener
