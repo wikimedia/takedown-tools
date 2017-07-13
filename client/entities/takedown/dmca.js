@@ -22,11 +22,7 @@ export class Dmca extends Record( {
 	wmfSend: undefined,
 	wmfTitle: undefined,
 	commonsSend: undefined,
-	commonsTitle: undefined,
-	commonsText: undefined,
 	commonsVillagePumpSend: undefined,
-	commonsVillagePumpText: undefined,
-	userNotices: new Set(),
 	userNoticeIds: new Set()
 } ) {
 	constructor( data = {} ) {
