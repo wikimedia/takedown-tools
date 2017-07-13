@@ -12,7 +12,7 @@ import { CountrySet } from 'entities/country.set';
 import { User } from 'entities/user';
 import { DatePicker } from 'components/fields/date-picker';
 // import { TakedownCreateDmcaUserNotice } from './user-notice';
-import { defaultCommonsText, defaultCommonsVillagePumpText } from 'utils';
+// import { defaultCommonsText, defaultCommonsVillagePumpText } from 'utils';
 
 export class TakedownCreateDmca extends React.Component {
 
@@ -91,29 +91,29 @@ export class TakedownCreateDmca extends React.Component {
 		this.props.deleteFile( file );
 	}
 
-	getCommonsTitle() {
-		return this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle || '';
-	}
-
-	isCommonsTitleReadOnly() {
-		return typeof this.props.takedown.dmca.commonsTitle === 'undefined' && this.props.takedown.dmca.wmfTitle;
-	}
-
-	getCommonsText() {
-		if ( typeof this.props.takedown.dmca.commonsText !== 'undefined' ) {
-			return this.props.takedown.dmca.commonsText;
-		}
-
-		return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
-	}
-
-	getCommonsVillagePumpText() {
-		if ( typeof this.props.takedown.dmca.commonsVillagePumpText !== 'undefined' ) {
-			return this.props.takedown.dmca.commonsVillagePumpText;
-		}
-
-		return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
-	}
+	// getCommonsTitle() {
+	// 	return this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle || '';
+	// }
+	//
+	// isCommonsTitleReadOnly() {
+	// 	return typeof this.props.takedown.dmca.commonsTitle === 'undefined' && this.props.takedown.dmca.wmfTitle;
+	// }
+	//
+	// getCommonsText() {
+	// 	if ( typeof this.props.takedown.dmca.commonsText !== 'undefined' ) {
+	// 		return this.props.takedown.dmca.commonsText;
+	// 	}
+	//
+	// 	return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+	// }
+	//
+	// getCommonsVillagePumpText() {
+	// 	if ( typeof this.props.takedown.dmca.commonsVillagePumpText !== 'undefined' ) {
+	// 		return this.props.takedown.dmca.commonsVillagePumpText;
+	// 	}
+	//
+	// 	return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+	// }
 
 	render() {
 		const countries = CountrySet.map( ( country ) => {

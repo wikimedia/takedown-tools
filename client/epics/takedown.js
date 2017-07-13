@@ -8,7 +8,7 @@ import { Takedown } from 'entities/takedown/takedown';
 import { MetadataSet } from 'entities/metadata.set';
 import * as TakedownActions from 'actions/takedown';
 import * as TokenActions from 'actions/token';
-import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText } from 'utils';
+// import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText } from 'utils';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -95,24 +95,24 @@ export function takedownSave( action$, store ) {
 				switch ( takedown.type ) {
 					case 'dmca':
 						// If the wiki text was not modified, apply the default text.
-						if ( takedown.dmca.commonsSend ) {
-							takedown = takedown.setIn( [ 'dmca', 'commonsTitle' ], takedown.dmca.commonsTitle || takedown.dmca.wmfTitle );
-							takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
-						}
-						if ( takedown.dmca.commonsVillagePumpSend ) {
-							takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
-						}
-						if ( takedown.dmca.userNotices.size > 0 ) {
-							takedown = takedown.setIn( [ 'dmca', 'userNotices' ], takedown.dmca.userNotices.filter( ( user ) => {
-								// Ensure that notices are only sent to those who are invovled.
-								return !!takedown.involvedIds.find( ( id ) => id === user.id );
-							} ).map( ( user ) => {
-								return user.set( 'notice', user.notice || defaultUserNoticeText( user.username, takedown.dmca.pageIds ) );
-							} ) );
-							// Remove the id field so Symfony doesn't get confused.
-							// @link https://github.com/symfony/symfony/issues/23494
-							takedown = takedown.setIn( [ 'dmca', 'userNoticeIds' ], undefined );
-						}
+						// if ( takedown.dmca.commonsSend ) {
+						// 	takedown = takedown.setIn( [ 'dmca', 'commonsTitle' ], takedown.dmca.commonsTitle || takedown.dmca.wmfTitle );
+						// 	takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
+						// }
+						// if ( takedown.dmca.commonsVillagePumpSend ) {
+						// 	takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
+						// }
+						// if ( takedown.dmca.userNotices.size > 0 ) {
+						// 	takedown = takedown.setIn( [ 'dmca', 'userNotices' ], takedown.dmca.userNotices.filter( ( user ) => {
+						// 		// Ensure that notices are only sent to those who are invovled.
+						// 		return !!takedown.involvedIds.find( ( id ) => id === user.id );
+						// 	} ).map( ( user ) => {
+						// 		return user.set( 'notice', user.notice || defaultUserNoticeText( user.username, takedown.dmca.pageIds ) );
+						// 	} ) );
+						// 	// Remove the id field so Symfony doesn't get confused.
+						// 	// @link https://github.com/symfony/symfony/issues/23494
+						// 	takedown = takedown.setIn( [ 'dmca', 'userNoticeIds' ], undefined );
+						// }
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
 						}
