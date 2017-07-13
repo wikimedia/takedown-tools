@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
-import { TakedownCreateDmcaContainer } from './dmca.container';
+import { TakedownCreateDmcaContainer } from './dmca/dmca.container';
 import { TakedownCreateCpContainer } from './cp.container';
 import { SelectUsers } from '../../fields/select-users';
 import { MetadataField } from '../../fields/metadata';

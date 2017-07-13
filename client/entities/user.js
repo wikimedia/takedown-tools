@@ -4,7 +4,8 @@ export class User extends Record( {
 	id: undefined,
 	username: undefined,
 	status: 'clean',
-	error: undefined
+	error: undefined,
+	notice: undefined
 }, 'User' ) {
 
 	equals( other ) {

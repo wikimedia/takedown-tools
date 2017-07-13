@@ -32,6 +32,22 @@ export function makeGetInvolved() {
 	);
 }
 
+export function makeGetNotices() {
+	return createSelector(
+		state => state.user.list,
+		( _, props ) => props.takedown && props.takedown.dmca ? props.takedown.dmca.userNoticeIds : new Set(),
+		( users, userNoticeIds ) => {
+			return userNoticeIds.map( ( id ) => {
+				return users.find( ( user ) => {
+					return user.id === id;
+				} );
+			} ).filter( ( user ) => {
+				return typeof user !== 'undefined';
+			} );
+		}
+	);
+}
+
 export function makeGetApprover() {
 	return createSelector(
 		state => state.user.list,

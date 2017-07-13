@@ -43,7 +43,7 @@
     "postinstall": "webpack -p",
     "watch": "webpack --progress --watch",
     "lint": "eslint --color .",
-		"test": "eslint --color ."
+    "test": "eslint --color ."
   },
   "devDependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.23.0",

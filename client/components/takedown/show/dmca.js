@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import * as moment from 'moment';
 import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
-import { Takedown } from '../../../entities/takedown/takedown';
-import { Site } from '../../../entities/site';
-import { CountrySet } from '../../../entities/country.set';
+import { Takedown } from 'entities/takedown/takedown';
+import { Site } from 'entities/site';
+import { CountrySet } from 'entities/country.set';
 import 'fileicon.css/fileicon.css';
 
 export class TakedownShowDmca extends React.Component {
@@ -17,7 +17,8 @@ export class TakedownShowDmca extends React.Component {
 			originalUrls,
 			body,
 			files,
-			wmfTitle;
+			wmfTitle,
+			notices;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -96,6 +97,16 @@ export class TakedownShowDmca extends React.Component {
 			);
 		}
 
+		notices = this.props.notices.map( ( user ) => {
+			return (
+				<div key={user.id}>
+					<a href={'https://' + this.props.site.domain + '/wiki/User_talk:' + user.username.replace( / /g, '_' )}>
+						{user.username}
+					</a>
+				</div>
+			);
+		} ).toArray();
+
 		return (
 			<tbody className="border-top-0">
 				<tr>
@@ -152,6 +163,14 @@ export class TakedownShowDmca extends React.Component {
 					</td>
 					<td>
 						{this.props.takedown.dmca.commonsVillagePumpSend ? 'Yes' : 'No'}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						User Talk Notices
+					</td>
+					<td>
+						{notices}
 					</td>
 				</tr>
 				<tr>
@@ -217,5 +236,6 @@ TakedownShowDmca.propTypes = {
 	takedown: PropTypes.instanceOf( Takedown ),
 	site: PropTypes.instanceOf( Site ),
 	files: PropTypes.instanceOf( Set ),
+	notices: PropTypes.instanceOf( Set ),
 	token: PropTypes.string
 };

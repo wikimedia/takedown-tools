@@ -25,7 +25,9 @@ export class Dmca extends Record( {
 	commonsTitle: undefined,
 	commonsText: undefined,
 	commonsVillagePumpSend: undefined,
-	commonsVillagePumpText: undefined
+	commonsVillagePumpText: undefined,
+	userNotices: new Set(),
+	userNoticeIds: new Set()
 } ) {
 	constructor( data = {} ) {
 		data = {
@@ -33,7 +35,9 @@ export class Dmca extends Record( {
 			senderAddress: new List( data.senderAddress ? data.senderAddress : [] ),
 			pageIds: new Set( data.pageIds ? data.pageIds : [] ),
 			originalUrls: fromJS( data.originalUrls ? data.originalUrls : [] ).toOrderedMap(),
-			fileIds: fromJS( data.fileIds ? data.fileIds : [] ).toList()
+			fileIds: fromJS( data.fileIds ? data.fileIds : [] ).toList(),
+			userNotices: new Set( data.noticeUsers ? data.noticeUsers : [] ),
+			userNoticeIds: new Set( data.userNoticeIds ? data.userNoticeIds : [] )
 		};
 		super( data );
 	}

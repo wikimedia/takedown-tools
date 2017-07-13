@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
 import moment from 'moment';
-import { SelectPages } from '../../fields/select-pages';
-import { ListField } from '../../fields/list';
-import { FileUploadField } from '../../fields/file-upload';
-import { Takedown } from '../../../entities/takedown/takedown';
-import { Site } from '../../../entities/site';
-import { CountrySet } from '../../../entities/country.set';
-import { DatePicker } from '../../fields/date-picker';
-import { defaultCommonsText, defaultCommonsVillagePumpText } from '../../../utils';
+import { SelectPages } from 'components/fields/select-pages';
+import { ListField } from 'components/fields/list';
+import { FileUploadField } from 'components/fields/file-upload';
+import { Takedown } from 'entities/takedown/takedown';
+import { Site } from 'entities/site';
+import { CountrySet } from 'entities/country.set';
+import { User } from 'entities/user';
+import { DatePicker } from 'components/fields/date-picker';
+import { TakedownCreateDmcaUserNotice } from './user-notice';
+import { defaultCommonsText, defaultCommonsVillagePumpText } from 'utils';
 
 export class TakedownCreateDmca extends React.Component {
 
@@ -131,7 +133,9 @@ export class TakedownCreateDmca extends React.Component {
 			commonsNoticeTextEdit,
 			commonsVillagePumpSend,
 			commonsVillagePumpTextEdit,
-			commonsVillagePumpForm;
+			commonsVillagePumpForm,
+			userNoticeForm,
+			noticeUsers;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			country = countries.find( ( data ) => {
@@ -335,6 +339,32 @@ export class TakedownCreateDmca extends React.Component {
 			);
 		}
 
+		if ( this.props.involved.length > 0 && this.props.takedown.siteId ) {
+			noticeUsers = this.props.involved.map( ( user ) => {
+				const noticeUser = this.props.takedown.dmca.userNotices.find( ( item ) => {
+					return item.id === user.id;
+				} );
+
+				return (
+					<TakedownCreateDmcaUserNotice
+						key={user.id}
+						user={user}
+						noticeUser={noticeUser}
+						notices={this.props.takedown.dmca.userNotices}
+						pageIds={this.props.takedown.dmca.pageIds}
+						disabled={this.props.disabled}
+						onChange={( notices ) => this.updateField( 'userNotices', notices )} />
+				);
+			} );
+
+			userNoticeForm = (
+				<fieldset className="form-group">
+					<legend>User Notices</legend>
+					{noticeUsers}
+				</fieldset>
+			);
+		}
+
 		return (
 			<div>
 				<div className="form-group">
@@ -466,6 +496,7 @@ export class TakedownCreateDmca extends React.Component {
 					{wmfAnnouncement}
 				</fieldset>
 				{commonsNotice}
+				{userNoticeForm}
 			</div>
 		);
 	}
@@ -477,6 +508,7 @@ TakedownCreateDmca.propTypes = {
 	deleteFile: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
 	site: PropTypes.instanceOf( Site ),
+	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
 	files: PropTypes.instanceOf( Set ).isRequired,
 	disabled: PropTypes.bool
 };

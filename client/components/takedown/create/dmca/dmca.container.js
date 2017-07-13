@@ -1,13 +1,14 @@
 import { connect } from 'react-redux';
 import { TakedownCreateDmca } from './dmca';
-import * as FileActions from '../../../actions/file';
-import * as TakedownActions from '../../../actions/takedown';
-import * as TakedownSelectors from '../../../selectors/takedown';
+import * as FileActions from 'actions/file';
+import * as TakedownActions from 'actions/takedown';
+import * as TakedownSelectors from 'selectors/takedown';
 
 export const TakedownCreateDmcaContainer = connect(
 	() => {
 		const getSite = TakedownSelectors.makeGetSite(),
-			getFiles = TakedownSelectors.makeGetFiles();
+			getFiles = TakedownSelectors.makeGetFiles(),
+			getInonvolved = TakedownSelectors.makeGetInvolved();
 		return ( state, props ) => {
 			props = {
 				...props,
@@ -16,6 +17,7 @@ export const TakedownCreateDmcaContainer = connect(
 
 			return {
 				takedown: state.takedown.create,
+				involved: getInonvolved( state, props ),
 				site: getSite( state, props ),
 				files: getFiles( state, props )
 			};

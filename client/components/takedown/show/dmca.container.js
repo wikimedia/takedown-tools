@@ -4,10 +4,12 @@ import * as TakedownSelectors from '../../../selectors/takedown';
 
 export const TakedownShowDmcaContainer = connect(
 	() => {
-		const getFiles = TakedownSelectors.makeGetFiles();
+		const getFiles = TakedownSelectors.makeGetFiles(),
+			getNotices = TakedownSelectors.makeGetNotices();
 		return ( state, props ) => {
 			return {
 				files: getFiles( state, props ),
+				notices: getNotices( state, props ),
 				token: state.token
 			};
 		};

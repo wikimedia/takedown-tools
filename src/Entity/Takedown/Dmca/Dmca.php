@@ -7,6 +7,7 @@ use App\Entity\Action;
 use App\Entity\Country;
 use App\Entity\Takedown\Takedown;
 use App\Entity\Takedown\Dmca\Page;
+use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -235,6 +236,21 @@ class Dmca {
 	private $files;
 
 	/**
+	 * @var Collection
+	 *
+	 * @ORM\ManyToMany(targetEntity="App\Entity\User", cascade={"persist"})
+	 * @ORM\JoinTable(name="takedown_dmca_user_notice",
+	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(
+	 *        name="user_id",
+	 *        referencedColumnName="user_id"
+	 *      )}
+	 * )
+	 * @Attach()
+	 */
+	private $userNotices;
+
+	/**
 	 * Takedown
 	 *
 	 * @param array $data Data to construct the object.
@@ -275,6 +291,11 @@ class Dmca {
 		$this->pages = $params->getCollection(
 			'files',
 			File::class,
+			new ArrayCollection()
+		);
+		$this->userNotices = $params->getCollection(
+			'userNotices',
+			User::class,
 			new ArrayCollection()
 		);
 	}
@@ -1125,6 +1146,86 @@ class Dmca {
 	public function getFileIds() : array {
 		return $this->files->map( function ( $file ) {
 			return $file->getId();
+		} )->toArray();
+	}
+
+	/**
+	 * User Notices
+	 *
+	 * @return Collection
+	 */
+	public function getUserNotices() : Collection {
+		return $this->userNotices;
+	}
+
+	/**
+	 * Add User Notice
+	 *
+	 * @param User $user User
+	 *
+	 * @return self
+	 */
+	public function addUserNotice( User $user ) : self {
+		$this->userNotices->add( $user );
+
+		return $this;
+	}
+
+	/**
+	 * Set User Notices
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param Collection $userNotices User Notices
+	 *
+	 * @return self
+	 */
+	public function setUserNotices( Collection $userNotices ) : self {
+		$this->userNotices = $userNotices;
+
+		return $this;
+	}
+
+	/**
+	 * Remove User Notice
+	 *
+	 * @param User $userNotice User Notice
+	 *
+	 * @return self
+	 */
+	public function removeUserNotice( User $userNotice ) : self {
+		$this->userNotices->remove( $userNotice );
+
+		return $this;
+	}
+
+	/**
+	 * Set User Notice Ids
+	 *
+	 * @param int[] $userNoticeIds User Ids
+	 *
+	 * @return Collection
+	 */
+	public function setUserNoticeIds( array $userNoticeIds ) : self {
+		$this->userNotices = new ArrayCollection( array_map( function ( $id ) {
+			return new User( [
+				'id' => $id,
+			] );
+		}, $userNoticeIds ) );
+
+		return $this;
+	}
+
+	/**
+	 * User Notices Ids
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return Collection
+	 */
+	public function getUserNoticeIds() : array {
+		return $this->userNotices->map( function ( $user ) {
+			return $user->getId();
 		} )->toArray();
 	}
 

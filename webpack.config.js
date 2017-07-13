@@ -12,6 +12,12 @@ module.exports = {
 		path: path.resolve( __dirname, 'public/bundles' )
 	},
 	devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
+	resolve: {
+		modules: [
+			path.resolve( './client' ),
+			path.resolve( './node_modules' )
+		]
+	},
 	module: {
 		rules: [
 			{
