@@ -114,7 +114,7 @@ class AuthController {
 		$identiy = $this->oauthClient->identify( $accessToken );
 
 		// Load the user from the API.
-		$user = $this->client->getUserByUsername( $identiy->username );
+		$user = $this->client->getUser( $identiy->username )->wait();
 		$user->setRoles( $this->getRolesFromGroups( $identiy->groups ) );
 
 		// If the user is not already in the database, save it.

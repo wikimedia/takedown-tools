@@ -98,13 +98,21 @@ export class TakedownShowDmca extends React.Component {
 		}
 
 		notices = this.props.notices.map( ( user ) => {
-			return (
-				<div key={user.id}>
-					<a href={'https://' + this.props.site.domain + '/wiki/User_talk:' + user.username.replace( / /g, '_' )}>
-						{user.username}
-					</a>
-				</div>
-			);
+			const id = 'User_talk:' + user.username.replace( / /g, '_' );
+
+			if ( this.props.site.info ) {
+				return (
+					<div key={user.id}>
+						<a href={'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath )}>
+							{user.username}
+						</a>
+					</div>
+				);
+			} else {
+				return (
+					<div key={user.id}>{user.username}</div>
+				);
+			}
 		} ).toArray();
 
 		return (

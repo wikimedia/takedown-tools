@@ -109,6 +109,9 @@ export function takedownSave( action$, store ) {
 							} ).map( ( user ) => {
 								return user.set( 'notice', user.notice || defaultUserNoticeText( user.username, takedown.dmca.pageIds ) );
 							} ) );
+							// Remove the id field so Symfony doesn't get confused.
+							// @link https://github.com/symfony/symfony/issues/23494
+							takedown = takedown.setIn( [ 'dmca', 'userNoticeIds' ], undefined );
 						}
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );

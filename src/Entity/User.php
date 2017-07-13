@@ -155,7 +155,7 @@ class User implements UserInterface, JWTUserInterface {
 	 *
 	 * @return self
 	 */
-	public function setToken( string $token ) {
+	public function setToken( string $token ) : self {
 		$this->token = $token;
 
 		return $this;
@@ -179,7 +179,7 @@ class User implements UserInterface, JWTUserInterface {
 	 *
 	 * @return self
 	 */
-	public function setSecret( string $secret ) {
+	public function setSecret( string $secret ) : self {
 		$this->secret = $secret;
 
 		return $this;
@@ -190,7 +190,7 @@ class User implements UserInterface, JWTUserInterface {
 	 *
 	 * @Groups({"token"})
 	 *
-	 * @return null
+	 * @return string
 	 */
 	public function getSecret() :? string {
 		return $this->secret;

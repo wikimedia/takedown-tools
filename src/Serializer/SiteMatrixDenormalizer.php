@@ -36,6 +36,7 @@ class SiteMatrixDenormalizer implements DenormalizerInterface {
 			foreach ( $data as $info ) {
 				$sites[] = new Site( [
 					'id' => $info['dbname'],
+					'domain' => parse_url( $info[ 'url' ], PHP_URL_HOST )
 				] );
 			}
 		}

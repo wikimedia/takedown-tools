@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
+use App\EntityT\Takedown\Dmca\CommonsPost;
 use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use function GuzzleHttp\Promise\settle;
 
@@ -135,17 +138,6 @@ class TakedownController {
 				} );
 		}
 
-		if ( $takedown->getDmca() && $takedown->getDmca()->getCommonsSend() ) {
-			if ( $takedown->getDmca()->getCommonsSend() ) {
-				$promises[] = $this->client->postCommons( $takedown->getDmca()->getCommonsText() );
-			}
-			if ( $takedown->getDmca()->getCommonsVillagePumpSend() ) {
-				$promises[] = $this->client->postCommonsVillagePump(
-					$takedown->getDmca()->getCommonsVillagePumpText()
-				);
-			}
-		}
-
 		// Settle the promises.
 		// The requests are not executed unless we explicitly wait since we are not
 		// in an event loop.
@@ -178,6 +170,132 @@ class TakedownController {
 		$em->flush();
 
 		return $this->showAction( $takedown );
+	}
+
+	/**
+	 * Create Legal Takedown
+	 *
+	 * @Route("/api/takedown/{takedown}/commons", defaults={"_format" = "json"})
+	 * @Method({"POST"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 * @param Request $request Request
+	 *
+	 * @return Response
+	 */
+	public function createCommonsPostAction( Takedown $takedown, Request $request ) : array {
+		$em = $this->doctrine->getEntityManager();
+
+		$post = $this->serializer->deserialize(
+			$request->getContent(),
+			CommonsPost::class,
+			$request->getRequestFormat(),
+			[
+				'groups' => [ 'api' ]
+			]
+		);
+
+		$response = $this->client->postCommons( $post->getText() )->wait();
+
+		$takedown->getDmca()->setCommonsSend( true );
+
+		$em->flush();
+
+		return $response;
+	}
+
+	/**
+	 * Create Legal Takedown
+	 *
+	 * @Route("/api/takedown/{takedown}/commons-village-pump", defaults={"_format" = "json"})
+	 * @Method({"POST"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 * @param Request $request Request
+	 *
+	 * @return Response
+	 */
+	public function createCommonsVillagePumpPostAction(
+		Takedown $takedown,
+		Request $request
+	) : array {
+		$em = $this->doctrine->getEntityManager();
+
+		$post = $this->serializer->deserialize(
+			$request->getContent(),
+			CommonsPost::class,
+			$request->getRequestFormat(),
+			[
+				'groups' => [ 'api' ]
+			]
+		);
+
+		$response = $this->client->postCommonsVillagePump( $post->getText() )->wait();
+
+		$takedown->getDmca()->setCommonsVillagePumpSend( true );
+
+		$em->flush();
+
+		return $response;
+	}
+
+	/**
+	 * Create Legal Takedown
+	 *
+	 * @Route("/api/takedown/{takedown}/user-notice/{user}", defaults={"_format" = "json"})
+	 * @Method({"POST"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 * @param User $user User
+	 * @param Request $request Request
+	 *
+	 * @return Response
+	 */
+	public function createUserNoticeAction(
+		Takedown $takedown,
+		User $user,
+		Request $request
+	) : array {
+		$em = $this->doctrine->getEntityManager();
+
+		$post = $this->serializer->deserialize(
+			$request->getContent(),
+			CommonsPost::class,
+			$request->getRequestFormat(),
+			[
+				'groups' => [ 'api' ]
+			]
+		);
+
+		// @TODO Ensure the user is in the invovled users and *not* in the existing
+		// list of notices that have been sent.
+		$exists = $takedown->getDmca()->getUserNotices()->exists( function ( $item ) {
+			return $item->getId() === $user->getId();
+		} );
+
+		if ( $exists ) {
+			throw new BadRequestHttpException( 'User Notice Already Sent' );
+		}
+
+		$exists = $takedown->getInvolved()->exists( function ( $item ) {
+			return $item->getId() === $user->getId();
+		} );
+		if ( !$exists ) {
+			throw new BadRequestHttpException( 'User is not an invovled user' );
+		}
+
+		$response = $this->client->getSiteById( $takedown->getSite()->getId() )
+			->then( function ( $site ) use ( $takedown ) {
+				return $this->client->postUserTalk( $site, $user );
+			} )->wait();
+
+		// @TODO Handle a Captcha Response.
+
+		$takedown->getDmca()->addUserNotice( $user );
+
+		$em->flush();
+
+		return $response;
 	}
 
 	/**

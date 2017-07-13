@@ -48,6 +48,56 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	}
 
 	/**
+	 * Get Site by Id
+	 *
+	 * @param string $id Site to retrieve
+	 *
+	 * @return Site
+	 */
+	public function getSiteById( string $id ) : PromiseInterface {
+		return $this->getSites()->then( function ( $sites ) use ( $id ) {
+			$item = reset( $sites );
+			while ( $item !== false ) {
+					if ( $item->getId() === $id ) {
+							return $item;
+					};
+
+					$item = next( $sites );
+			}
+
+			return null;
+		} );
+	}
+
+	/**
+	 * Get All Sites.
+	 *
+	 * @return PromiseInterface
+	 */
+	public function getSites() : PromiseInterface {
+		$request = new Request( 'GET', '' );
+
+		return $this->client->sendAsync( $request, [
+			'query' => [
+				'action' => 'sitematrix',
+				'format' => 'json',
+			],
+		] )->then( function( $response ) {
+			$data = json_decode( $response->getBody(), true );
+
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response );
+			}
+
+			return $this->serializer->deserialize(
+				(string)$response->getBody(),
+				Site::class . '[]',
+				'json'
+			);
+		} );
+	}
+
+	/**
 	 * Post notice to Commons.
 	 *
 	 * @param string $text Text to Post.
@@ -142,6 +192,58 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	}
 
 	/**
+	 * Post to User Talk Page.
+	 *
+	 * @param Site $site Site
+	 * @param User $user User
+	 *
+	 * @return PromiseInterface
+	 */
+	public function postUserTalk( Site $site, User $user ) : PromiseInterface {
+		$url = 'https://test2.wikipedia.org/w/api.php';
+		$title = 'User_talk:' . str_replace( ' ', '_', $user->getUsername() );
+
+		if ( $this->environment === 'prod' ) {
+			$url = 'https://' . $site->getDomain() . '/w/api.php';
+		}
+
+		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $user ) {
+			$request = new Request( 'POST', $url );
+
+			return $this->client->sendAsync( $request, [
+				'query' => [
+					'action' => 'edit',
+					'format' => 'json',
+				],
+				'form_params' => [
+					'title' => $title,
+					'sectiontitle' => 'Notice of upload removal',
+					'section' => 'new',
+					'summary' => 'Notice of upload removal',
+					'text' => $user->getNotice(),
+					'recreate' => true,
+					// Tokens are required.
+					// @link https://phabricator.wikimedia.org/T126257
+					'token' => $token,
+				],
+				'auth' => 'oauth',
+			] );
+		} )
+		->then( function( $response ) {
+			$data = json_decode( $response->getBody(), true );
+
+			dump( $data );
+			exit;
+
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response );
+			}
+
+			return json_decode( $response->getBody(), true );
+		} );
+	}
+
+	/**
 	 * Get Token.
 	 *
 	 * @param string $uri URI
@@ -208,28 +310,6 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
 		}, function ( RequestException $e ) {
 			return null;
-		} );
-	}
-
-	/**
-	 * Get All Sites.
-	 *
-	 * @return PromiseInterface
-	 */
-	public function getSites() : PromiseInterface {
-		return $this->client->getAsync( '', [
-			'query' => [
-				'action' => 'sitematrix',
-				'format' => 'json',
-			],
-		] )->then( function( ResponseInterface $response ) {
-			return $this->serializer->deserialize(
-				(string)$response->getBody(),
-				Site::class . '[]',
-				'json'
-			);
-		}, function ( RequestException $e ) {
-			return [];
 		} );
 	}
 }
