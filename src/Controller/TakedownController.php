@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use function GuzzleHttp\Promise\settle;
@@ -209,7 +210,7 @@ class TakedownController {
 				throw $e;
 			}
 
-			return new Response( $data, 409 );
+			return new JsonResponse( $data, 409 );
 		}
 
 		$takedown->getDmca()->setCommonsSend( true );
@@ -258,7 +259,7 @@ class TakedownController {
 				throw $e;
 			}
 
-			return new Response( $data, 409 );
+			return new JsonResponse( $data, 409 );
 		}
 
 		$takedown->getDmca()->setCommonsVillagePumpSend( true );
@@ -329,7 +330,7 @@ class TakedownController {
 				throw $e;
 			}
 
-			return new Response( $data, 409 );
+			return new JsonResponse( $data, 409 );
 		}
 
 		$takedown->getDmca()->addUserNotice( $user );

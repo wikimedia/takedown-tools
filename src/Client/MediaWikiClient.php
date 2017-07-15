@@ -99,7 +99,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'sitematrix',
 				'format' => 'json',
 			],
-		] )->then( function( ResponseInterface $response ) {
+		] )->then( function( ResponseInterface $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -122,17 +122,18 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return array
 	 */
 	public function postCommons( string $text ) : PromiseInterface {
-		$url = 'https://test2.wikipedia.org/w/api.php';
+		$domain = 'test2.wikipedia.org';
 		$title = 'Office_actions/DMCA_notices';
 
 		if ( $this->environment === 'prod' ) {
-			$url = 'https://commons.wikimedia.org/w/api.php';
+			$domain = 'commons.wikimedia.org';
 			$title = 'Commons:Office_actions/DMCA_notices';
 		}
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $text ) {
-			$request = new Request( 'POST', $url );
+		$url = 'https://' . $domain . '/w/api.php';
+		$request = new Request( 'POST', $url );
 
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $text ) {
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
@@ -150,14 +151,31 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) {
+		->then( function( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
+
+			// Override for testing.
+			// @TODO Remove this!
+			$data = [
+				'edit' => [
+					'captcha' => [
+							'type' => 'image',
+							'mime' => 'image/png',
+							'id' => '1221847824',
+							'url' => '/w/index.php?title=Special:Captcha/image&wpCaptchaId=1221847824'
+						],
+						'result' => 'Failure'
+				],
+			];
 
 			if ( array_key_exists( 'error', $data ) ) {
 				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
+			// Handle Captcha Responses.
 			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
+				// Change the Captcha to an absolute url.
+				$data['edit']['captcha']['url'] = 'https://' . $domain . $data['edit']['captcha']['url'];
 				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
@@ -173,17 +191,18 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return array
 	 */
 	public function postCommonsVillagePump( string $text ) : PromiseInterface {
-		$url = 'https://test2.wikipedia.org/w/api.php';
+		$domain = 'test2.wikipedia.org';
 		$title = 'Wikipedia:Simple_talk';
 
 		if ( $this->environment === 'prod' ) {
-			$url = 'https://commons.wikimedia.org/w/api.php';
+			$domain = 'commons.wikimedia.org';
 			$title = 'Commons:Village_pump';
 		}
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $text ) {
-			$request = new Request( 'POST', $url );
+		$url = 'https://' . $domain . '/w/api.php';
+		$request = new Request( 'POST', $url );
 
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $text ) {
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
@@ -201,21 +220,18 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) {
+		->then( function( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
 				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
+			// Handle Captcha Responses.
 			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
-				throw new ClientException(
-					$data['edit']['result'],
-					$request,
-					$response,
-					null,
-					$data['edit']
-				);
+				// Change the Captcha to an absolute url.
+				$data['edit']['captcha']['url'] = 'https://' . $domain . $data['edit']['captcha']['url'];
+				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
 			return $data['edit'];
@@ -231,16 +247,17 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return PromiseInterface
 	 */
 	public function postUserTalk( Site $site, User $user ) : PromiseInterface {
-		$url = 'https://test2.wikipedia.org/w/api.php';
+		$domain = 'test2.wikipedia.org';
 		$title = 'User_talk:' . str_replace( ' ', '_', $user->getUsername() );
 
 		if ( $this->environment === 'prod' ) {
-			$url = 'https://' . $site->getDomain() . '/w/api.php';
+			$domain = $site->getDomain();
 		}
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $url, $title, $user ) {
-			$request = new Request( 'POST', $url );
+		$url = 'https://' . $domain . '/w/api.php';
+		$request = new Request( 'POST', $url );
 
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $user ) {
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
@@ -260,11 +277,18 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) {
+		->then( function( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
 				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
+			}
+
+			// Handle Captcha Responses.
+			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
+				// Change the Captcha to an absolute url.
+				$data['edit']['captcha']['url'] = 'https://' . $domain . $data['edit']['captcha']['url'];
+				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
 			return $data;
@@ -279,13 +303,14 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return string
 	 */
 	protected function getToken( $uri = '' ) : PromiseInterface {
-		return $this->client->getAsync( $uri, [
+		$request = new Request( 'GET', $uri );
+		return $this->client->sendAsync( $request, [
 			'query' => [
 				'action' => 'tokens',
 				'format' => 'json',
 			],
 			'auth' => 'oauth',
-		] )->then( function( $response ) {
+		] )->then( function( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {

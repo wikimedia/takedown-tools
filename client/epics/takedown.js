@@ -6,6 +6,7 @@ import 'rxjs/add/observable/dom/ajax';
 import { push } from 'react-router-redux';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { MetadataSet } from 'app/entities/metadata.set';
+import { Captcha } from 'app/entities/captcha';
 import * as TakedownActions from 'app/actions/takedown';
 import * as TokenActions from 'app/actions/token';
 import { defaultCommonsText, defaultCommonsVillagePumpText, getWmfTitle } from 'app/utils';
@@ -239,12 +240,19 @@ export function saveDmcaPost( action$, store ) {
 
 					return TakedownActions.update( takedown );
 				} )
-				.catch( () => {
+				.catch( ( ajaxError ) => {
 					let takedown = store.getState().takedown.list.find( ( item ) => {
 						return action.takedown.id === item.id;
 					} );
 
+					if ( ajaxError.status === 409 && ajaxError.xhr.response.captcha ) {
+						takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'captcha' );
+						takedown = takedown.setIn( [ 'dmca', action.postName, 'captcha' ], new Captcha( ajaxError.xhr.response.captcha ) );
+						return Observable.of( TakedownActions.update( takedown ) );
+					}
+
 					takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'error' );
+					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ], ajaxError.status );
 
 					return Observable.of( TakedownActions.update( takedown ) );
 				} );

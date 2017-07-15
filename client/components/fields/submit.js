@@ -11,6 +11,9 @@ export class Submit extends React.Component {
 			case 'error':
 				className = 'btn btn-danger';
 				break;
+			case 'captcha':
+				className = 'btn btn-warning';
+				break;
 			case 'saving':
 				disabled = true;
 				break;
