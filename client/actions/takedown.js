@@ -26,13 +26,13 @@ export function update( takedown ) {
 	};
 }
 
-// export function savePost( takedown, postName ) {
-// 	return {
-// 		type: 'TAKEDOWN_POST_SAVE',
-// 		takedown: takedown,
-// 		postName: postName
-// 	};
-// }
+export function saveDmcaPost( takedown, postName ) {
+	return {
+		type: 'TAKEDOWN_DMCA_POST_SAVE',
+		takedown: takedown,
+		postName: postName
+	};
+}
 
 export function fetch( id ) {
 	return {

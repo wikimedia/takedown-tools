@@ -4,13 +4,15 @@ namespace App\Client;
 
 use App\Entity\Site;
 use App\Entity\User;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\settle;
 
 class MediaWikiClient implements MediaWikiClientInterface {
@@ -26,6 +28,16 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	protected $serializer;
 
 	/**
+	 * @var DenormalizerInterface
+	 */
+	protected $denormalizer;
+
+	/**
+	 * @var DecoderInterface
+	 */
+	protected $decoder;
+
+	/**
 	 * @var string
 	 */
 	protected $environment;
@@ -35,15 +47,20 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @param ClientInterface $client Configured Guzzle Client.
 	 * @param SerializerInterface $serializer Syfmony Serializer.
+	 * @param DenormalizerInterface $denormalizer Syfmony Denormalizer.
+	 * @param DecoderInterface $decoder Syfmony Decoder.
 	 * @param string $environment Kernel Environment.
 	 */
 	public function __construct(
 		ClientInterface $client,
 		SerializerInterface $serializer,
+		DenormalizerInterface $denormalizer,
+		DecoderInterface $decoder,
 		string $environment
 	) {
 		$this->client = $client;
 		$this->serializer = $serializer;
+		$this->decoder = $decoder;
 		$this->environment = $environment;
 	}
 
@@ -82,15 +99,15 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'sitematrix',
 				'format' => 'json',
 			],
-		] )->then( function( $response ) {
-			$data = json_decode( $response->getBody(), true );
+		] )->then( function( ResponseInterface $response ) {
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
-				throw new BadResponseException( $data['error']['info'], $request, $response );
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
-			return $this->serializer->deserialize(
-				(string)$response->getBody(),
+			return $this->denormalizer->denormalize(
+				$data,
 				Site::class . '[]',
 				'json'
 			);
@@ -128,19 +145,23 @@ class MediaWikiClient implements MediaWikiClientInterface {
 					'recreate' => true,
 					// Tokens are required.
 					// @link https://phabricator.wikimedia.org/T126257
-					'token' => $oken,
+					'token' => $token,
 				],
 				'auth' => 'oauth',
 			] );
 		} )
 		->then( function( $response ) {
-			$data = json_decode( $response->getBody(), true );
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
-				throw new BadResponseException( $data['error']['info'], $request, $response );
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
-			return json_decode( $response->getBody(), true );
+			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
+				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
+			}
+
+			return $data['edit'];
 		} );
 	}
 
@@ -181,13 +202,23 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			] );
 		} )
 		->then( function( $response ) {
-			$data = json_decode( $response->getBody(), true );
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
-				throw new BadResponseException( $data['error']['info'], $request, $response );
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
-			return json_decode( $response->getBody(), true );
+			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
+				throw new ClientException(
+					$data['edit']['result'],
+					$request,
+					$response,
+					null,
+					$data['edit']
+				);
+			}
+
+			return $data['edit'];
 		} );
 	}
 
@@ -230,16 +261,13 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			] );
 		} )
 		->then( function( $response ) {
-			$data = json_decode( $response->getBody(), true );
-
-			dump( $data );
-			exit;
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
-				throw new BadResponseException( $data['error']['info'], $request, $response );
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
-			return json_decode( $response->getBody(), true );
+			return $data;
 		} );
 	}
 
@@ -258,10 +286,10 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			],
 			'auth' => 'oauth',
 		] )->then( function( $response ) {
-			$data = json_decode( $response->getBody(), true );
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
-				throw new BadResponseException( $data['error']['info'], $request, $response );
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
 			}
 
 			return !empty( $data['tokens']['edittoken'] ) ? $data['tokens']['edittoken'] : null;
@@ -306,9 +334,9 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'meta' => 'globaluserinfo',
 				'guiuser' => $username,
 			],
-		] )->then( function( ResponseInterface $response ) {
+		] )->then( function( $response ) {
 			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
-		}, function ( RequestException $e ) {
+		}, function ( $e ) {
 			return null;
 		} );
 	}

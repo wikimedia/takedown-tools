@@ -151,24 +151,6 @@ export class TakedownShowDmca extends React.Component {
 					<td>{files}</td>
 				</tr>
 				<tr>
-					<td>
-						<a href="https://wikimediafoundation.org">Wikimedia Foundation</a> Announcement
-					</td>
-					<td>
-						{wmfTitle}
-					</td>
-				</tr>
-				<TakedownShowDmcaCommonsPostContainer postName="commonsPost" takedown={this.props.takedown} />
-				<TakedownShowDmcaCommonsPostContainer postName="commonsVillagePumpPost" takedown={this.props.takedown} />
-				<tr>
-					<td>
-						User Talk Notices
-					</td>
-					<td>
-						{notices}
-					</td>
-				</tr>
-				<tr>
 					<th colSpan="2">Sender</th>
 				</tr>
 				<tr>
@@ -221,6 +203,27 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Title</td>
 					<td>{this.props.takedown.dmca.lumenTitle}</td>
+				</tr>
+				<tr>
+					<th colSpan="2">Posts</th>
+				</tr>
+				<tr>
+					<td>
+						<a href="https://wikimediafoundation.org">Wikimedia Foundation</a> Announcement
+					</td>
+					<td>
+						{wmfTitle}
+					</td>
+				</tr>
+				<TakedownShowDmcaCommonsPostContainer postName="commonsPost" takedown={this.props.takedown} />
+				<TakedownShowDmcaCommonsPostContainer postName="commonsVillagePumpPost" takedown={this.props.takedown} />
+				<tr>
+					<td>
+						User Talk Notices
+					</td>
+					<td>
+						{notices}
+					</td>
 				</tr>
 			</tbody>
 		);

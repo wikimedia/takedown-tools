@@ -109,7 +109,7 @@ export class TakedownCreate extends React.Component {
 						</div>
 						{metaDataField}
 						{takedownTypeForm}
-						<Submit status={this.takedown.status} value="Save" />
+						<Submit status={this.props.takedown.status} value="Save" />
 					</form>
 				</div>
 			</div>

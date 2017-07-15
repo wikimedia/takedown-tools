@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EntityT\Takedown\Dmca;
+namespace App\Entity\Takedown\Dmca;
 
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;

@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
-use App\EntityT\Takedown\Dmca\CommonsPost;
+use App\Entity\Takedown\Dmca\CommonsPost;
 use GeoSocio\EntityAttacher\EntityAttacherInterface;
+use GuzzleHttp\Exception\RequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -183,7 +184,7 @@ class TakedownController {
 	 *
 	 * @return Response
 	 */
-	public function createCommonsPostAction( Takedown $takedown, Request $request ) : array {
+	public function createCommonsPostAction( Takedown $takedown, Request $request ) {
 		$em = $this->doctrine->getEntityManager();
 
 		$post = $this->serializer->deserialize(
@@ -195,13 +196,27 @@ class TakedownController {
 			]
 		);
 
-		$response = $this->client->postCommons( $post->getText() )->wait();
+		try {
+			$this->client->postCommons( $post->getText() )->wait();
+		} catch ( RequestException $e ) {
+			if ( $e->getResponse()->getStatusCode() !== 200 ) {
+				throw $e;
+			}
+
+			$data = $e->getHandlerContext();
+
+			if ( !array_key_exists( 'captcha', $data ) ) {
+				throw $e;
+			}
+
+			return new Response( $data, 409 );
+		}
 
 		$takedown->getDmca()->setCommonsSend( true );
 
 		$em->flush();
 
-		return $response;
+		return $takedown;
 	}
 
 	/**
@@ -218,7 +233,7 @@ class TakedownController {
 	public function createCommonsVillagePumpPostAction(
 		Takedown $takedown,
 		Request $request
-	) : array {
+	) {
 		$em = $this->doctrine->getEntityManager();
 
 		$post = $this->serializer->deserialize(
@@ -230,13 +245,27 @@ class TakedownController {
 			]
 		);
 
-		$response = $this->client->postCommonsVillagePump( $post->getText() )->wait();
+		try {
+			$this->client->postCommonsVillagePump( $post->getText() )->wait();
+		} catch ( RequestException $e ) {
+			if ( $e->getResponse()->getStatusCode() !== 200 ) {
+				throw $e;
+			}
+
+			$data = $e->getHandlerContext();
+
+			if ( !array_key_exists( 'captcha', $data ) ) {
+				throw $e;
+			}
+
+			return new Response( $data, 409 );
+		}
 
 		$takedown->getDmca()->setCommonsVillagePumpSend( true );
 
 		$em->flush();
 
-		return $response;
+		return $takedown;
 	}
 
 	/**
@@ -255,7 +284,7 @@ class TakedownController {
 		Takedown $takedown,
 		User $user,
 		Request $request
-	) : array {
+	) {
 		$em = $this->doctrine->getEntityManager();
 
 		$post = $this->serializer->deserialize(
@@ -284,18 +313,30 @@ class TakedownController {
 			throw new BadRequestHttpException( 'User is not an invovled user' );
 		}
 
-		$response = $this->client->getSiteById( $takedown->getSite()->getId() )
-			->then( function ( $site ) use ( $takedown ) {
-				return $this->client->postUserTalk( $site, $user );
-			} )->wait();
+		try {
+			$this->client->getSiteById( $takedown->getSite()->getId() )
+				->then( function ( $site ) use ( $takedown ) {
+					return $this->client->postUserTalk( $site, $user );
+				} )->wait();
+		} catch ( RequestException $e ) {
+			if ( $e->getResponse()->getStatusCode() !== 200 ) {
+				throw $e;
+			}
 
-		// @TODO Handle a Captcha Response.
+			$data = $e->getHandlerContext();
+
+			if ( !array_key_exists( 'captcha', $data ) ) {
+				throw $e;
+			}
+
+			return new Response( $data, 409 );
+		}
 
 		$takedown->getDmca()->addUserNotice( $user );
 
 		$em->flush();
 
-		return $response;
+		return $takedown;
 	}
 
 	/**
@@ -308,7 +349,7 @@ class TakedownController {
 	 *
 	 * @return Response
 	 */
-	public function deletection( Takedown $takedown ) : string {
+	public function deleteAction( Takedown $takedown ) : string {
 		$em = $this->doctrine->getEntityManager();
 
 		$em->remove( $takedown );

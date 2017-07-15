@@ -4,7 +4,7 @@ import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
-import { defaultCommonsText, defaultCommonsVillagePumpText } from 'app/utils';
+import { defaultCommonsText, defaultCommonsVillagePumpText, getWmfTitle } from 'app/utils';
 
 export class TakedownShowDmcaCommonsPost extends React.Component {
 
@@ -43,17 +43,13 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 	}
 
 	getWmfTitle() {
-		return this.props.takedown.dmca.wmfTitle ? this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' ) : undefined;
+		return this.props.takedown.dmca.wmfTitle ? getWmfTitle( this.props.takedown.dmca.wmfTitle ) : undefined;
 	}
 
 	handleSubmit( event ) {
 		event.preventDefault();
 
-		const post = this.props.takedown.dmca[ this.props.postName ]
-			.set( 'title', this.getCommonsTitle() )
-			.set( 'text', this.getCommonsText() );
-
-		this.props.savePost( this.props.takedown, this.props.postName, post );
+		this.props.savePost( this.props.takedown, this.props.postName );
 	}
 
 	render() {

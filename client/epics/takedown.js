@@ -8,7 +8,7 @@ import { Takedown } from 'app/entities/takedown/takedown';
 import { MetadataSet } from 'app/entities/metadata.set';
 import * as TakedownActions from 'app/actions/takedown';
 import * as TokenActions from 'app/actions/token';
-// import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText } from 'utils';
+import { defaultCommonsText, defaultCommonsVillagePumpText, getWmfTitle } from 'app/utils';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -180,6 +180,73 @@ export function takedownSave( action$, store ) {
 					// Set the takedown state.
 					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', ajaxError.status );
 					return Observable.of( TakedownActions.updateCreate( takedown ) );
+				} );
+		} );
+}
+
+export function saveDmcaPost( action$, store ) {
+	return action$.ofType( 'TAKEDOWN_DMCA_POST_SAVE' )
+		.switchMap( ( action ) => {
+			let post = action.takedown.dmca[ action.postName ],
+				send,
+				endPoint;
+
+			// Prepare post for saving.
+			post = post.set( 'title', undefined ).set( 'status', undefined );
+
+			switch ( action.postName ) {
+				case 'commonsPost':
+					endPoint = 'commons';
+					send = 'commonsSend';
+					post = post.set( 'text', post.text || defaultCommonsText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.dmca.pageIds ) );
+					break;
+				case 'commonsVillagePumpPost':
+					endPoint = 'commons-village-pump';
+					send = 'commonsVillagePumpSend';
+					post = post.set( 'text', post.text || defaultCommonsVillagePumpText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.dmca.pageIds ) );
+					break;
+			}
+
+			// Prepare post for saving.
+			post = post.set( 'title', undefined ).set( 'status', undefined );
+
+			return Observable.ajax( {
+				url: '/api/takedown/' + action.takedown.id + '/' + endPoint,
+				method: 'POST',
+				body: JSON.stringify( post.toJS() ),
+				responseType: 'json',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + store.getState().token
+				}
+			} )
+				.map( ( ajaxResponse ) => {
+					let takedown = store.getState().takedown.list.find( ( item ) => {
+						return action.takedown.id === item.id;
+					} );
+
+					const response = new Takedown( ajaxResponse.response );
+
+					// @TODO Handle the Captcha Response!
+
+					if ( !takedown ) {
+						return {
+							type: 'ERROR'
+						};
+					}
+
+					takedown = takedown.setIn( [ 'dmca', send ], response.dmca[ send ] );
+
+					return TakedownActions.update( takedown );
+				} )
+				.catch( () => {
+					let takedown = store.getState().takedown.list.find( ( item ) => {
+						return action.takedown.id === item.id;
+					} );
+
+					takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'error' );
+
+					return Observable.of( TakedownActions.update( takedown ) );
 				} );
 		} );
 }

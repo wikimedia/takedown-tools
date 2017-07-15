@@ -47,6 +47,17 @@ export function numericHash( id ) {
 }
 
 /**
+ * Generates the default Commmons Text.
+ *
+ * @param {string} id
+ *
+ * @return {string}
+ */
+export function getWmfTitle( id ) {
+	return id ? id.replace( 'DMCA_', '' ).replace( /_/g, ' ' ) : undefined;
+}
+
+/**
  * Generates the Affected Files text.
  *
  * @param {Set} pageIds

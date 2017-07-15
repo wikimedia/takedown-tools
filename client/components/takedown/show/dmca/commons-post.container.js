@@ -17,8 +17,8 @@ export const TakedownShowDmcaCommonsPostContainer = connect(
 			updateTakedown: ( takedown ) => {
 				return dispatch( TakedownActions.update( takedown ) );
 			},
-			savePost: ( takedown, post ) => {
-				return dispatch( TakedownActions.savePost( takedown, post ) );
+			savePost: ( takedown, postName ) => {
+				return dispatch( TakedownActions.saveDmcaPost( takedown, postName ) );
 			}
 		};
 	}

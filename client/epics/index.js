@@ -16,5 +16,6 @@ export default combineEpics(
 	TakedownEpic.fetchTakedownList,
 	TakedownEpic.fetchTakedown,
 	TakedownEpic.takedownSave,
+	TakedownEpic.saveDmcaPost,
 	UserEpic.fetchUsers
 );
