@@ -38,8 +38,20 @@ export class TakedownShow extends React.Component {
 		}
 
 		const involved = this.props.involved.map( ( user ) => {
+			const id = 'User:' + user.username.replace( / /g, '_' );
+
+			let username = user.username;
+
+			if ( this.props.site && this.props.site.info ) {
+				username = (
+					<a href={'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath )}>
+						{user.username}
+					</a>
+				);
+			}
+
 			return (
-				<div key={user.id}>{user.username}</div>
+				<div key={user.id}>{username}</div>
 			);
 		} );
 
@@ -51,9 +63,9 @@ export class TakedownShow extends React.Component {
 
 		if ( this.props.site.id ) {
 			site = (
-				<span>
-					{this.props.site.name} ({this.props.site.domain})
-				</span>
+				<a href={'https://' + this.props.site.domain}>
+					{this.props.site.name}
+				</a>
 			);
 		}
 
