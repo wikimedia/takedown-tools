@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import moment from 'moment';
-import { Takedown } from '../../../entities/takedown/takedown';
-import { User } from '../../../entities/user';
-import { Site } from '../../../entities/site';
-import { Loading } from '../../loading';
-import { Error } from '../../error';
-import { TakedownShowDmcaContainer } from './dmca.container';
+import { Takedown } from 'app/entities/takedown/takedown';
+import { User } from 'app/entities/user';
+import { Site } from 'app/entities/site';
+import { Loading } from 'app/components/loading';
+import { Error } from 'app/components/error';
+import { TakedownShowDmcaContainer } from './dmca/dmca.container';
 import { TakedownShowCp } from './cp';
 
 export class TakedownShow extends React.Component {

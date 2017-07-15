@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { TakedownShowDmca } from './dmca';
-import * as TakedownSelectors from '../../../selectors/takedown';
+import * as TakedownSelectors from 'app/selectors/takedown';
 
 export const TakedownShowDmcaContainer = connect(
 	() => {

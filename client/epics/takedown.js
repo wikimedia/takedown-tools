@@ -4,10 +4,10 @@ import { Set } from 'immutable';
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
 import { push } from 'react-router-redux';
-import { Takedown } from 'entities/takedown/takedown';
-import { MetadataSet } from 'entities/metadata.set';
-import * as TakedownActions from 'actions/takedown';
-import * as TokenActions from 'actions/token';
+import { Takedown } from 'app/entities/takedown/takedown';
+import { MetadataSet } from 'app/entities/metadata.set';
+import * as TakedownActions from 'app/actions/takedown';
+import * as TokenActions from 'app/actions/token';
 // import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText } from 'utils';
 
 export function fetchTakedownList( action$, store ) {

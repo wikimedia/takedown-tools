@@ -19,6 +19,21 @@ export function add( takedown ) {
 	};
 }
 
+export function update( takedown ) {
+	return {
+		type: 'TAKEDOWN_UPDATE',
+		takedown: takedown
+	};
+}
+
+// export function savePost( takedown, postName ) {
+// 	return {
+// 		type: 'TAKEDOWN_POST_SAVE',
+// 		takedown: takedown,
+// 		postName: postName
+// 	};
+// }
+
 export function fetch( id ) {
 	return {
 		type: 'TAKEDOWN_FETCH',

@@ -1,5 +1,5 @@
 import { Record, Set } from 'immutable';
-import { Dmca } from './dmca';
+import { Dmca } from './dmca/dmca';
 import { Cp } from './cp';
 
 export class Takedown extends Record( {

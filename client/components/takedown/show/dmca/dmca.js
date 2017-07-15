@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import * as moment from 'moment';
 import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
-import { Takedown } from 'entities/takedown/takedown';
-import { Site } from 'entities/site';
-import { CountrySet } from 'entities/country.set';
+import { Takedown } from 'app/entities/takedown/takedown';
+import { Site } from 'app/entities/site';
+import { CountrySet } from 'app/entities/country.set';
+import { TakedownShowDmcaCommonsPostContainer } from './commons-post.container';
 import 'fileicon.css/fileicon.css';
 
 export class TakedownShowDmca extends React.Component {
@@ -157,22 +158,8 @@ export class TakedownShowDmca extends React.Component {
 						{wmfTitle}
 					</td>
 				</tr>
-				<tr>
-					<td>
-						Posted to <a href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices">Commons</a>
-					</td>
-					<td>
-						{this.props.takedown.dmca.commonsSend ? 'Yes' : 'No'}
-					</td>
-				</tr>
-				<tr>
-					<td>
-						Posted to <a href="https://commons.wikimedia.org/wiki/Commons:Village_pump">Commons Village Pump</a>
-					</td>
-					<td>
-						{this.props.takedown.dmca.commonsVillagePumpSend ? 'Yes' : 'No'}
-					</td>
-				</tr>
+				<TakedownShowDmcaCommonsPostContainer postName="commonsPost" takedown={this.props.takedown} />
+				<TakedownShowDmcaCommonsPostContainer postName="commonsVillagePumpPost" takedown={this.props.takedown} />
 				<tr>
 					<td>
 						User Talk Notices

@@ -13,10 +13,9 @@ module.exports = {
 	},
 	devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
 	resolve: {
-		modules: [
-			path.resolve( './client' ),
-			path.resolve( './node_modules' )
-		]
+		alias: {
+			app: path.resolve( './client' )
+		}
 	},
 	module: {
 		rules: [

@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { TakedownCreateDmca } from './dmca';
-import * as FileActions from 'actions/file';
-import * as TakedownActions from 'actions/takedown';
-import * as TakedownSelectors from 'selectors/takedown';
+import * as FileActions from 'app/actions/file';
+import * as TakedownActions from 'app/actions/takedown';
+import * as TakedownSelectors from 'app/selectors/takedown';
 
 export const TakedownCreateDmcaContainer = connect(
 	() => {

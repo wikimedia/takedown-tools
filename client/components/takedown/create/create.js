@@ -5,10 +5,11 @@ import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { TakedownCreateDmcaContainer } from './dmca/dmca.container';
 import { TakedownCreateCpContainer } from './cp.container';
-import { SelectUsers } from '../../fields/select-users';
-import { MetadataField } from '../../fields/metadata';
-import { Takedown } from '../../../entities/takedown/takedown';
-import { User } from '../../../entities/user';
+import { Submit } from 'app/components/fields/submit';
+import { SelectUsers } from 'app/components/fields/select-users';
+import { MetadataField } from 'app/components/fields/metadata';
+import { Takedown } from 'app/entities/takedown/takedown';
+import { User } from 'app/entities/user';
 
 export class TakedownCreate extends React.Component {
 
@@ -51,29 +52,11 @@ export class TakedownCreate extends React.Component {
 	}
 
 	render() {
-		let submitClass = 'btn btn-primary',
-			submitDisabled = false,
-			disabled = false,
+		let disabled = this.props.takedown.status === 'saving',
 			dmcaButtonClass = 'btn btn-secondary',
 			cpButtonClass = 'btn btn-secondary',
 			takedownTypeForm,
 			metaDataField;
-
-		switch ( this.props.takedown.status ) {
-			case 'error':
-				submitClass = 'btn btn-danger';
-				break;
-			case 'saving':
-				disabled = true;
-				submitDisabled = true;
-				break;
-			case 'pending':
-				submitDisabled = true;
-				break;
-			case 'clean':
-				submitDisabled = true;
-				break;
-		}
 
 		switch ( this.props.takedown.type ) {
 			case 'dmca':
@@ -126,11 +109,7 @@ export class TakedownCreate extends React.Component {
 						</div>
 						{metaDataField}
 						{takedownTypeForm}
-						<div className="form-group row">
-							<div className="col text-right">
-								<input type="submit" className={submitClass} disabled={submitDisabled} value="Save" />
-							</div>
-						</div>
+						<Submit status={this.takedown.status} value="Save" />
 					</form>
 				</div>
 			</div>

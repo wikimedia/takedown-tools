@@ -1,4 +1,4 @@
-import { Takedown } from '../../entities/takedown/takedown';
+import { Takedown } from 'app/entities/takedown/takedown';
 
 export default function create( state = new Takedown(), action ) {
 	switch ( action.type ) {

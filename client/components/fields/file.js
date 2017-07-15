@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import { Set } from 'immutable';
 import * as shortid from 'shortid';
-import { File } from '../../entities/file';
+import { File } from 'app/entities/file';
 
 export class FileField extends React.Component {
 

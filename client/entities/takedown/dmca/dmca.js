@@ -1,4 +1,5 @@
 import { Record, Set, List, fromJS } from 'immutable';
+import { Post } from './post';
 
 export class Dmca extends Record( {
 	lumenSend: undefined,
@@ -22,18 +23,22 @@ export class Dmca extends Record( {
 	wmfSend: undefined,
 	wmfTitle: undefined,
 	commonsSend: undefined,
+	commonsPost: new Post(),
 	commonsVillagePumpSend: undefined,
+	commonsVillagePumpPost: new Post(),
 	userNoticeIds: new Set()
 } ) {
 	constructor( data = {} ) {
 		data = {
 			...data,
-			senderAddress: new List( data.senderAddress ? data.senderAddress : [] ),
-			pageIds: new Set( data.pageIds ? data.pageIds : [] ),
-			originalUrls: fromJS( data.originalUrls ? data.originalUrls : [] ).toOrderedMap(),
-			fileIds: fromJS( data.fileIds ? data.fileIds : [] ).toList(),
-			userNotices: new Set( data.noticeUsers ? data.noticeUsers : [] ),
-			userNoticeIds: new Set( data.userNoticeIds ? data.userNoticeIds : [] )
+			senderAddress: new List( data.senderAddress || [] ),
+			pageIds: new Set( data.pageIds || [] ),
+			originalUrls: fromJS( data.originalUrls || [] ).toOrderedMap(),
+			fileIds: fromJS( data.fileIds || [] ).toList(),
+			commonsPost: new Post( data.commonsPost || {} ),
+			commonsVillagePumpPost: new Post( data.commonsVillagePumpPost || {} ),
+			userNotices: new Set( data.noticeUsers || [] ),
+			userNoticeIds: new Set( data.userNoticeIds || [] )
 		};
 		super( data );
 	}

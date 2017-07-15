@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
 import moment from 'moment';
-import { SelectPages } from 'components/fields/select-pages';
-import { ListField } from 'components/fields/list';
-import { FileUploadField } from 'components/fields/file-upload';
-import { Takedown } from 'entities/takedown/takedown';
-import { Site } from 'entities/site';
-import { CountrySet } from 'entities/country.set';
-import { User } from 'entities/user';
-import { DatePicker } from 'components/fields/date-picker';
+import { SelectPages } from 'app/components/fields/select-pages';
+import { ListField } from 'app/components/fields/list';
+import { FileUploadField } from 'app/components/fields/file-upload';
+import { Takedown } from 'app/entities/takedown/takedown';
+import { Site } from 'app/entities/site';
+import { CountrySet } from 'app/entities/country.set';
+import { User } from 'app/entities/user';
+import { DatePicker } from 'app/components/fields/date-picker';
 // import { TakedownCreateDmcaUserNotice } from './user-notice';
 // import { defaultCommonsText, defaultCommonsVillagePumpText } from 'utils';
 
@@ -91,22 +91,6 @@ export class TakedownCreateDmca extends React.Component {
 		this.props.deleteFile( file );
 	}
 
-	// getCommonsTitle() {
-	// 	return this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle || '';
-	// }
-	//
-	// isCommonsTitleReadOnly() {
-	// 	return typeof this.props.takedown.dmca.commonsTitle === 'undefined' && this.props.takedown.dmca.wmfTitle;
-	// }
-	//
-	// getCommonsText() {
-	// 	if ( typeof this.props.takedown.dmca.commonsText !== 'undefined' ) {
-	// 		return this.props.takedown.dmca.commonsText;
-	// 	}
-	//
-	// 	return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
-	// }
-	//
 	// getCommonsVillagePumpText() {
 	// 	if ( typeof this.props.takedown.dmca.commonsVillagePumpText !== 'undefined' ) {
 	// 		return this.props.takedown.dmca.commonsVillagePumpText;
