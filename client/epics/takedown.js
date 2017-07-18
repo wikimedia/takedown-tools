@@ -250,8 +250,6 @@ export function saveDmcaUserNotice( action$, store ) {
 				notice = notice.set( 'captcha', undefined );
 			}
 
-			console.log( "NOTICE SEND", notice);
-
 			return Observable.ajax( {
 				url: '/api/takedown/' + action.takedown.id + '/user-notice/' + action.user.id,
 				method: 'POST',

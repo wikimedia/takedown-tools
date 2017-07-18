@@ -61,8 +61,6 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 			);
 		}
 
-		console.log( "NOTICE RENDER", notice );
-
 		return (
 			<form onSubmit={this.handleSubmit.bind( this )}>
 				<div className="form-group">
