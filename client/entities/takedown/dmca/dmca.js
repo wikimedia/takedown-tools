@@ -1,4 +1,4 @@
-import { Record, Set, List, fromJS } from 'immutable';
+import { Record, Set, List, Map, fromJS } from 'immutable';
 import { Post } from './post';
 
 export class Dmca extends Record( {
@@ -26,7 +26,8 @@ export class Dmca extends Record( {
 	commonsPost: new Post(),
 	commonsVillagePumpSend: undefined,
 	commonsVillagePumpPost: new Post(),
-	userNoticeIds: new Set()
+	userNoticeIds: new Set(),
+	notices: new Map()
 } ) {
 	constructor( data = {} ) {
 		data = {
@@ -37,8 +38,8 @@ export class Dmca extends Record( {
 			fileIds: fromJS( data.fileIds || [] ).toList(),
 			commonsPost: new Post( data.commonsPost || {} ),
 			commonsVillagePumpPost: new Post( data.commonsVillagePumpPost || {} ),
-			userNotices: new Set( data.noticeUsers || [] ),
-			userNoticeIds: new Set( data.userNoticeIds || [] )
+			userNoticeIds: new Set( data.userNoticeIds || [] ),
+			notices: new Map( data.notices || [] )
 		};
 		super( data );
 	}

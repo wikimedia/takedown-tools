@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
+import { CaptchaField } from 'app/components/fields/captcha';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
 import { defaultCommonsText, defaultCommonsVillagePumpText, getWmfTitle } from 'app/utils';
@@ -109,6 +110,7 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 							disabled={disabled}
 							onChange={( value ) => this.updateField( 'text', value )} />
 					</div>
+					<CaptchaField captcha={post.captcha} onChange={( value ) => this.updateField( 'captcha', value )} />
 					<Submit status={post.status === 'clean' ? 'dirty' : post.status} value="Post" />
 				</form>
 			);

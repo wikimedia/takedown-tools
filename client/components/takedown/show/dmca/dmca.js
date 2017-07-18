@@ -6,12 +6,15 @@ import { Title } from 'mediawiki-title';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
+import { User } from 'app/entities/user';
 import { TakedownShowDmcaCommonsPostContainer } from './commons-post.container';
+import { TakedownShowDmcaUserNoticeContainer } from './user-notice.container';
 import 'fileicon.css/fileicon.css';
 
 export class TakedownShowDmca extends React.Component {
 	render() {
 		let senderCountry,
+			userNotices,
 			sent,
 			actionTaken,
 			pages,
@@ -98,23 +101,24 @@ export class TakedownShowDmca extends React.Component {
 			);
 		}
 
-		notices = this.props.notices.map( ( user ) => {
-			const id = 'User_talk:' + user.username.replace( / /g, '_' );
+		if ( this.props.site ) {
+			notices = this.props.involved.map( ( user ) => {
+				return (
+					<TakedownShowDmcaUserNoticeContainer key={user.id} user={user} takedown={this.props.takedown} site={this.props.site} />
+				);
+			} );
 
-			if ( this.props.site.info ) {
-				return (
-					<div key={user.id}>
-						<a href={'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath )}>
-							{user.username}
-						</a>
-					</div>
-				);
-			} else {
-				return (
-					<div key={user.id}>{user.username}</div>
-				);
-			}
-		} ).toArray();
+			userNotices = (
+				<tr>
+					<td>
+						User Talk Notices
+					</td>
+					<td>
+						{notices}
+					</td>
+				</tr>
+			);
+		}
 
 		return (
 			<tbody className="border-top-0">
@@ -217,14 +221,7 @@ export class TakedownShowDmca extends React.Component {
 				</tr>
 				<TakedownShowDmcaCommonsPostContainer postName="commonsPost" takedown={this.props.takedown} />
 				<TakedownShowDmcaCommonsPostContainer postName="commonsVillagePumpPost" takedown={this.props.takedown} />
-				<tr>
-					<td>
-						User Talk Notices
-					</td>
-					<td>
-						{notices}
-					</td>
-				</tr>
+				{userNotices}
 			</tbody>
 		);
 	}
@@ -234,6 +231,6 @@ TakedownShowDmca.propTypes = {
 	takedown: PropTypes.instanceOf( Takedown ),
 	site: PropTypes.instanceOf( Site ),
 	files: PropTypes.instanceOf( Set ),
-	notices: PropTypes.instanceOf( Set ),
+	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ),
 	token: PropTypes.string
 };

@@ -7,9 +7,10 @@ import { push } from 'react-router-redux';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { MetadataSet } from 'app/entities/metadata.set';
 import { Captcha } from 'app/entities/captcha';
+import { Post } from 'app/entities/takedown/dmca/post';
 import * as TakedownActions from 'app/actions/takedown';
 import * as TokenActions from 'app/actions/token';
-import { defaultCommonsText, defaultCommonsVillagePumpText, getWmfTitle } from 'app/utils';
+import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText, getWmfTitle } from 'app/utils';
 
 export function fetchTakedownList( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_LIST_FETCH' )
@@ -95,25 +96,6 @@ export function takedownSave( action$, store ) {
 			if ( takedown.type ) {
 				switch ( takedown.type ) {
 					case 'dmca':
-						// If the wiki text was not modified, apply the default text.
-						// if ( takedown.dmca.commonsSend ) {
-						// 	takedown = takedown.setIn( [ 'dmca', 'commonsTitle' ], takedown.dmca.commonsTitle || takedown.dmca.wmfTitle );
-						// 	takedown = takedown.setIn( [ 'dmca', 'commonsText' ], takedown.dmca.commonsText || defaultCommonsText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
-						// }
-						// if ( takedown.dmca.commonsVillagePumpSend ) {
-						// 	takedown = takedown.setIn( [ 'dmca', 'commonsVillagePumpText' ], takedown.dmca.commonsVillagePumpText || defaultCommonsVillagePumpText( takedown.dmca.commonsTitle, takedown.dmca.wmfTitle, takedown.dmca.pageIds ) );
-						// }
-						// if ( takedown.dmca.userNotices.size > 0 ) {
-						// 	takedown = takedown.setIn( [ 'dmca', 'userNotices' ], takedown.dmca.userNotices.filter( ( user ) => {
-						// 		// Ensure that notices are only sent to those who are invovled.
-						// 		return !!takedown.involvedIds.find( ( id ) => id === user.id );
-						// 	} ).map( ( user ) => {
-						// 		return user.set( 'notice', user.notice || defaultUserNoticeText( user.username, takedown.dmca.pageIds ) );
-						// 	} ) );
-						// 	// Remove the id field so Symfony doesn't get confused.
-						// 	// @link https://github.com/symfony/symfony/issues/23494
-						// 	takedown = takedown.setIn( [ 'dmca', 'userNoticeIds' ], undefined );
-						// }
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
 						}
@@ -187,7 +169,7 @@ export function takedownSave( action$, store ) {
 
 export function saveDmcaPost( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_DMCA_POST_SAVE' )
-		.switchMap( ( action ) => {
+		.flatMap( ( action ) => {
 			let post = action.takedown.dmca[ action.postName ],
 				send,
 				endPoint;
@@ -228,8 +210,6 @@ export function saveDmcaPost( action$, store ) {
 
 					const response = new Takedown( ajaxResponse.response );
 
-					// @TODO Handle the Captcha Response!
-
 					if ( !takedown ) {
 						return {
 							type: 'ERROR'
@@ -253,6 +233,71 @@ export function saveDmcaPost( action$, store ) {
 
 					takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'error' );
 					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ], ajaxError.status );
+
+					return Observable.of( TakedownActions.update( takedown ) );
+				} );
+		} );
+}
+
+export function saveDmcaUserNotice( action$, store ) {
+	return action$.ofType( 'TAKEDOWN_DMCA_USER_NOTICE_SAVE' )
+		.flatMap( ( action ) => {
+			let notice = action.takedown.dmca.notices.get( action.user.id ) || new Post();
+
+			notice = notice.set( 'text', notice.text || defaultUserNoticeText( action.user.username, action.takedown.dmca.pageIds ) );
+
+			if ( !notice.captcha.id ) {
+				notice = notice.set( 'captcha', undefined );
+			}
+
+			console.log( "NOTICE SEND", notice);
+
+			return Observable.ajax( {
+				url: '/api/takedown/' + action.takedown.id + '/user-notice/' + action.user.id,
+				method: 'POST',
+				body: notice.toJSON(),
+				responseType: 'json',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + store.getState().token
+				}
+			} )
+				.map( ( ajaxResponse ) => {
+					// Get the takedown from the state in case it's been updated while
+					// the save was in progress.
+					let takedown = store.getState().takedown.list.find( ( item ) => {
+						return action.takedown.id === item.id;
+					} );
+
+					const response = new Takedown( ajaxResponse.response );
+
+					if ( !takedown ) {
+						return {
+							type: 'ERROR'
+						};
+					}
+
+					takedown = takedown.setIn( [ 'dmca', 'userNoticeIds' ], response.dmca.userNoticeIds );
+
+					return TakedownActions.update( takedown );
+				} )
+				.catch( ( ajaxError ) => {
+					// Get the takedown from the state in case it's been updated while
+					// the save was in progress.
+					let takedown = store.getState().takedown.list.find( ( item ) => {
+							return action.takedown.id === item.id;
+						} ),
+						notice = takedown.dmca.notices.get( action.user.id ) || new Post();
+
+					if ( ajaxError.status === 409 && ajaxError.xhr.response.captcha ) {
+						notice = notice.set( 'status', 'captcha' );
+						notice = notice.set( 'captcha', new Captcha( ajaxError.xhr.response.captcha ) );
+					} else {
+						notice = notice.set( 'status', 'error' );
+						notice = notice.set( 'error', ajaxError.status );
+					}
+
+					takedown = takedown.setIn( [ 'dmca', 'notices', action.user.id ], notice );
 
 					return Observable.of( TakedownActions.update( takedown ) );
 				} );

@@ -5,11 +5,11 @@ import * as TakedownSelectors from 'app/selectors/takedown';
 export const TakedownShowDmcaContainer = connect(
 	() => {
 		const getFiles = TakedownSelectors.makeGetFiles(),
-			getNotices = TakedownSelectors.makeGetNotices();
+			getInvolved = TakedownSelectors.makeGetInvolved();
 		return ( state, props ) => {
 			return {
 				files: getFiles( state, props ),
-				notices: getNotices( state, props ),
+				involved: getInvolved( state, props ),
 				token: state.token
 			};
 		};

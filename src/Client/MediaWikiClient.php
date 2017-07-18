@@ -4,6 +4,7 @@ namespace App\Client;
 
 use App\Entity\Site;
 use App\Entity\User;
+use App\Entity\Takedown\Dmca\Post;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
@@ -15,6 +16,9 @@ use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use function GuzzleHttp\Promise\settle;
 
+/**
+ * Media Wiki Client
+ */
 class MediaWikiClient implements MediaWikiClientInterface {
 
 	/**
@@ -60,6 +64,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	) {
 		$this->client = $client;
 		$this->serializer = $serializer;
+		$this->denormalizer = $denormalizer;
 		$this->decoder = $decoder;
 		$this->environment = $environment;
 	}
@@ -99,7 +104,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'sitematrix',
 				'format' => 'json',
 			],
-		] )->then( function( ResponseInterface $response ) use ( $request ) {
+		] )->then( function( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -117,11 +122,11 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	/**
 	 * Post notice to Commons.
 	 *
-	 * @param string $text Text to Post.
+	 * @param Post $post Text to Post.
 	 *
 	 * @return array
 	 */
-	public function postCommons( string $text ) : PromiseInterface {
+	public function postCommons( Post $post ) : PromiseInterface {
 		$domain = 'test2.wikipedia.org';
 		$title = 'Office_actions/DMCA_notices';
 
@@ -133,40 +138,35 @@ class MediaWikiClient implements MediaWikiClientInterface {
 		$url = 'https://' . $domain . '/w/api.php';
 		$request = new Request( 'POST', $url );
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $text ) {
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $post ) {
+			$params = [
+				'title' => $title,
+				'summary' => 'new takedown',
+				'appendtext' => $post->getText(),
+				'recreate' => true,
+				// Tokens are required.
+				// @link https://phabricator.wikimedia.org/T126257
+				'token' => $token,
+			];
+
+			if ( $post->getCaptcha() ) {
+				$params = array_merge( $params, [
+					'captchaid' => $post->getCaptcha()->getId(),
+					'captchaword' => $post->getCaptcha()->getWord(),
+				] );
+			}
+
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
 					'format' => 'json',
 				],
-				'form_params' => [
-					'title' => $title,
-					'summary' => 'new takedown',
-					'appendtext' => $text,
-					'recreate' => true,
-					// Tokens are required.
-					// @link https://phabricator.wikimedia.org/T126257
-					'token' => $token,
-				],
+				'form_params' => $params,
 				'auth' => 'oauth',
 			] );
 		} )
 		->then( function( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
-
-			// Override for testing.
-			// @TODO Remove this!
-			$data = [
-				'edit' => [
-					'captcha' => [
-							'type' => 'image',
-							'mime' => 'image/png',
-							'id' => '1221847824',
-							'url' => '/w/index.php?title=Special:Captcha/image&wpCaptchaId=1221847824'
-						],
-						'result' => 'Failure'
-				],
-			];
 
 			if ( array_key_exists( 'error', $data ) ) {
 				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
@@ -186,11 +186,11 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	/**
 	 * Post notice to Commons Village Pump.
 	 *
-	 * @param string $text Text to Post.
+	 * @param Post $post Commons Post
 	 *
 	 * @return array
 	 */
-	public function postCommonsVillagePump( string $text ) : PromiseInterface {
+	public function postCommonsVillagePump( Post $post ) : PromiseInterface {
 		$domain = 'test2.wikipedia.org';
 		$title = 'Wikipedia:Simple_talk';
 
@@ -202,21 +202,30 @@ class MediaWikiClient implements MediaWikiClientInterface {
 		$url = 'https://' . $domain . '/w/api.php';
 		$request = new Request( 'POST', $url );
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $text ) {
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $post ) {
+			$params = [
+				'title' => $title,
+				'summary' => 'new DMCA takedown notifcation',
+				'appendtext' => $post->getText(),
+				'recreate' => true,
+				// Tokens are required.
+				// @link https://phabricator.wikimedia.org/T126257
+				'token' => $token,
+			];
+
+			if ( $post->getCaptcha() ) {
+				$params = array_merge( $params, [
+					'captchaid' => $post->getCaptcha()->getId(),
+					'captchaword' => $post->getCaptcha()->getWord(),
+				] );
+			}
+
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
 					'format' => 'json',
 				],
-				'form_params' => [
-					'title' => $title,
-					'summary' => 'new DMCA takedown notifcation',
-					'appendtext' => $text,
-					'recreate' => true,
-					// Tokens are required.
-					// @link https://phabricator.wikimedia.org/T126257
-					'token' => $token,
-				],
+				'form_params' => $params,
 				'auth' => 'oauth',
 			] );
 		} )
@@ -243,10 +252,11 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @param Site $site Site
 	 * @param User $user User
+	 * @param Post $notice User Notice
 	 *
 	 * @return PromiseInterface
 	 */
-	public function postUserTalk( Site $site, User $user ) : PromiseInterface {
+	public function postUserTalk( Site $site, User $user, Post $notice ) : PromiseInterface {
 		$domain = 'test2.wikipedia.org';
 		$title = 'User_talk:' . str_replace( ' ', '_', $user->getUsername() );
 
@@ -257,23 +267,32 @@ class MediaWikiClient implements MediaWikiClientInterface {
 		$url = 'https://' . $domain . '/w/api.php';
 		$request = new Request( 'POST', $url );
 
-		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $user ) {
+		return $this->getToken( $url )->then( function ( $token ) use ( $request, $title, $notice ) {
+			$params = [
+				'title' => $title,
+				'sectiontitle' => 'Notice of upload removal',
+				'section' => 'new',
+				'summary' => 'Notice of upload removal',
+				'text' => $notice->getText(),
+				'recreate' => true,
+				// Tokens are required.
+				// @link https://phabricator.wikimedia.org/T126257
+				'token' => $token,
+			];
+
+			if ( $notice->getCaptcha() ) {
+				$params = array_merge( $params, [
+					'captchaid' => $notice->getCaptcha()->getId(),
+					'captchaword' => $notice->getCaptcha()->getWord(),
+				] );
+			}
+
 			return $this->client->sendAsync( $request, [
 				'query' => [
 					'action' => 'edit',
 					'format' => 'json',
 				],
-				'form_params' => [
-					'title' => $title,
-					'sectiontitle' => 'Notice of upload removal',
-					'section' => 'new',
-					'summary' => 'Notice of upload removal',
-					'text' => $user->getNotice(),
-					'recreate' => true,
-					// Tokens are required.
-					// @link https://phabricator.wikimedia.org/T126257
-					'token' => $token,
-				],
+				'form_params' => $params,
 				'auth' => 'oauth',
 			] );
 		} )
@@ -285,7 +304,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			}
 
 			// Handle Captcha Responses.
-			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data['edit'] ) ) {
+			if ( array_key_exists( 'edit', $data ) && array_key_exists( 'captcha', $data[ 'edit' ] ) ) {
 				// Change the Captcha to an absolute url.
 				$data['edit']['captcha']['url'] = 'https://' . $domain . $data['edit']['captcha']['url'];
 				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
@@ -324,7 +343,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	/**
 	 * Get Users by Usernames
 	 *
-	 * @param string $usernames Users to retrieve.
+	 * @param string[] $usernames Users to retrieve.
 	 *
 	 * @return PromiseInterface
 	 */

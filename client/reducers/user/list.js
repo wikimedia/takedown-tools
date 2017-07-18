@@ -12,6 +12,9 @@ export default function list( state = new Set(), action ) {
 		case 'USER_ADD_MULTIPLE':
 			return state.union( action.users ).sortBy( user => user.id );
 
+		case 'USER_UPDATE':
+			return state.remove( action.user ).add( action.user ).sortBy( user => user.id );
+
 		case 'TOKEN_ADD':
 			return list( state, {
 				type: 'USER_ADD',

@@ -11,3 +11,10 @@ export function add( user ) {
 		user: user
 	};
 }
+
+export function update( user ) {
+	return {
+		type: 'USER_UPDATE',
+		user: user
+	};
+}

@@ -34,6 +34,14 @@ export function saveDmcaPost( takedown, postName ) {
 	};
 }
 
+export function saveDmcaUserNotice( takedown, user ) {
+	return {
+		type: 'TAKEDOWN_DMCA_USER_NOTICE_SAVE',
+		takedown: takedown,
+		user: user
+	};
+}
+
 export function fetch( id ) {
 	return {
 		type: 'TAKEDOWN_FETCH',

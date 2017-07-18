@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
-use App\Entity\Takedown\Dmca\CommonsPost;
+use App\Entity\Takedown\Dmca\Post;
 use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use GuzzleHttp\Exception\RequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -190,7 +190,7 @@ class TakedownController {
 
 		$post = $this->serializer->deserialize(
 			$request->getContent(),
-			CommonsPost::class,
+			Post::class,
 			$request->getRequestFormat(),
 			[
 				'groups' => [ 'api' ]
@@ -198,7 +198,7 @@ class TakedownController {
 		);
 
 		try {
-			$this->client->postCommons( $post->getText() )->wait();
+			$this->client->postCommons( $post )->wait();
 		} catch ( RequestException $e ) {
 			if ( $e->getResponse()->getStatusCode() !== 200 ) {
 				throw $e;
@@ -239,7 +239,7 @@ class TakedownController {
 
 		$post = $this->serializer->deserialize(
 			$request->getContent(),
-			CommonsPost::class,
+			Post::class,
 			$request->getRequestFormat(),
 			[
 				'groups' => [ 'api' ]
@@ -247,7 +247,7 @@ class TakedownController {
 		);
 
 		try {
-			$this->client->postCommonsVillagePump( $post->getText() )->wait();
+			$this->client->postCommonsVillagePump( $post )->wait();
 		} catch ( RequestException $e ) {
 			if ( $e->getResponse()->getStatusCode() !== 200 ) {
 				throw $e;
@@ -290,16 +290,16 @@ class TakedownController {
 
 		$post = $this->serializer->deserialize(
 			$request->getContent(),
-			CommonsPost::class,
+			Post::class,
 			$request->getRequestFormat(),
 			[
 				'groups' => [ 'api' ]
 			]
 		);
 
-		// @TODO Ensure the user is in the invovled users and *not* in the existing
+		// Ensure the user is in the invovled users and *not* in the existing
 		// list of notices that have been sent.
-		$exists = $takedown->getDmca()->getUserNotices()->exists( function ( $item ) {
+		$exists = $takedown->getDmca()->getUserNotices()->exists( function ( $key, $item ) use ( $user ) {
 			return $item->getId() === $user->getId();
 		} );
 
@@ -307,7 +307,7 @@ class TakedownController {
 			throw new BadRequestHttpException( 'User Notice Already Sent' );
 		}
 
-		$exists = $takedown->getInvolved()->exists( function ( $item ) {
+		$exists = $takedown->getInvolved()->exists( function ( $key, $item ) use ( $user ) {
 			return $item->getId() === $user->getId();
 		} );
 		if ( !$exists ) {
@@ -316,8 +316,8 @@ class TakedownController {
 
 		try {
 			$this->client->getSiteById( $takedown->getSite()->getId() )
-				->then( function ( $site ) use ( $takedown ) {
-					return $this->client->postUserTalk( $site, $user );
+				->then( function ( $site ) use ( $user, $post ) {
+					return $this->client->postUserTalk( $site, $user, $post );
 				} )->wait();
 		} catch ( RequestException $e ) {
 			if ( $e->getResponse()->getStatusCode() !== 200 ) {
