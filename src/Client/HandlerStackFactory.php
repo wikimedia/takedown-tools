@@ -7,6 +7,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
+/**
+ * Handler Stack Factory
+ */
 class HandlerStackFactory {
 
 	/**

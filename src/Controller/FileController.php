@@ -44,19 +44,19 @@ class FileController {
 	 * @param Filesystem $filesystem File System.
 	 * @param ExtensionGuesserInterface $extensionGuesser Extension Guesser.
 	 * @param RegistryInterface $doctrine Doctrine.
-	 * @param string $projectDir Project Directory.
+	 * @param string $dir Files Directory.
 	 */
 	public function __construct(
 		Filesystem $filesystem,
 		ExtensionGuesserInterface $extensionGuesser,
 		RegistryInterface $doctrine,
-		string $projectDir
+		string $dir
 	) {
 		$this->filesystem = $filesystem;
 		$this->extensionGuesser = $extensionGuesser;
 		$this->doctrine = $doctrine;
 		$this->doctrine = $doctrine;
-		$this->dir = $projectDir . '/var/files';
+		$this->dir = $dir;
 	}
 
 	/**
@@ -90,11 +90,11 @@ class FileController {
 	 * @Method({"POST"})
 	 *
 	 * @param Request $request Request
-	 * @param string $name Name
+	 * @param string|null $name Name
 	 *
 	 * @return User
 	 */
-	public function createAction( Request $request, string $name = null ) : File {
+	public function createAction( Request $request, ?string $name = null ) : File {
 		$ext = $this->extensionGuesser->guess( $request->headers->get( 'Content-Type' ) );
 
 		if ( !$ext ) {

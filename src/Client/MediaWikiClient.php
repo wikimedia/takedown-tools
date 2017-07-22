@@ -10,7 +10,6 @@ use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\PromiseInterface;
-use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -76,7 +75,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return Site
 	 */
-	public function getSiteById( string $id ) : PromiseInterface {
+	public function getSite( string $id ) : PromiseInterface {
 		return $this->getSites()->then( function ( $sites ) use ( $id ) {
 			$item = reset( $sites );
 			while ( $item !== false ) {

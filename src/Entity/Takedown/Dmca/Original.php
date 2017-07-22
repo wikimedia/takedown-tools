@@ -60,7 +60,7 @@ class Original {
 	/**
 	 * Set Id.
 	 *
-	 * @param string $id ID
+	 * @param int $id ID
 	 *
 	 * @return self
 	 */

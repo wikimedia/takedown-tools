@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Client\LumenClientInterface;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
@@ -44,23 +45,31 @@ class TakedownController {
 	protected $attacher;
 
 	/**
+	 * @var LumenClientInterface
+	 */
+	protected $lumenClient;
+
+	/**
 	 * Takedown Controller.
 	 *
 	 * @param RegistryInterface $doctrine Doctrine.
 	 * @param SerializerInterface $serializer Serializer.
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
 	 * @param EntityAttacherInterface $attacher Entity Attacher.
+	 * @param LumenClientInterface $lumenClient Lumen Client.
 	 */
 	public function __construct(
 		RegistryInterface $doctrine,
 		SerializerInterface $serializer,
 		MediaWikiClientInterface $client,
-		EntityAttacherInterface $attacher
+		EntityAttacherInterface $attacher,
+		LumenClientInterface $lumenClient
 	) {
 		$this->doctrine = $doctrine;
 		$this->serializer = $serializer;
 		$this->client = $client;
 		$this->attacher = $attacher;
+		$this->lumenClient = $lumenClient;
 	}
 
 	/**
@@ -138,6 +147,15 @@ class TakedownController {
 				->then( function( $user ) use ( $takedown ) {
 					$takedown->getCp()->setApprover( $user );
 				} );
+		}
+
+		// Send to Lumen.
+		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
+			$promises[] = $this->lumenClient->postNotice( $takedown )->then( function( $response ) {
+				dump( $response );
+				exit;
+				// @TODO Save the notice id in the database!
+			} );
 		}
 
 		// Settle the promises.
@@ -315,7 +333,7 @@ class TakedownController {
 		}
 
 		try {
-			$this->client->getSiteById( $takedown->getSite()->getId() )
+			$this->client->getSite( $takedown->getSite()->getId() )
 				->then( function ( $site ) use ( $user, $post ) {
 					return $this->client->postUserTalk( $site, $user, $post );
 				} )->wait();

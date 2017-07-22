@@ -1,6 +1,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+  app.files_dir: '%kernel.project_dir%/var/files'
 
 services:
   app.cache:
@@ -84,6 +85,7 @@ services:
       - '@serializer'
       - '@app.mediawiki_client'
       - '@entity_attacher'
+      - '@app.lumen_client'
 
   app.controller_user:
     class: App\Controller\UserController
@@ -102,7 +104,7 @@ services:
       - '@filesystem'
       - '@app.extension_guesser'
       - '@doctrine'
-      - '%kernel.project_dir%'
+      - '%app.files_dir%'
 
   app.return_listener:
     class: GeoSocio\SerializeResponse\EventListener\KernelViewListener
@@ -128,3 +130,27 @@ services:
       public: false
       tags:
         - { name: serializer.normalizer }
+
+  app.serializer_lumen:
+      class: App\Serializer\LumenNormalizer
+      arguments:
+        - '%app.files_dir%'
+        - '%kernel.environment%'
+      public: false
+      tags:
+        - { name: serializer.normalizer }
+
+  app.lumen_client_guzzle:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: 'https://lumendatabase.org'
+
+  app.lumen_client:
+    class: App\Client\LumenClient
+    arguments:
+      - '@app.lumen_client_guzzle'
+      - '@app.mediawiki_client'
+      - '@serializer'
+      - '%env(LUMEN_AUTH_TOKEN)%'
+      - '%app.files_dir%'

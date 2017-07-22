@@ -264,7 +264,7 @@ class Dmca {
 		$this->wmfTitle = $params->getString( 'wmfTitle' );
 		$this->commonsSend = $params->getBoolean( 'commonsSend', false );
 		$this->commonsVillagePumpSend = $params->getBoolean( 'commonsSend', false );
-		$this->pages = $params->getCollection(
+		$this->files = $params->getCollection(
 			'files',
 			File::class,
 			new ArrayCollection()
@@ -779,7 +779,7 @@ class Dmca {
 	 * Action Taken
 	 *
 	 *
-	 * @return \DateTime
+	 * @return Action
 	 */
 	public function getActionTaken() :? Action {
 		return $this->actionTaken;
