@@ -155,12 +155,12 @@ class TakedownController {
 				// @TODO Do somethign with the response!
 				dump( $response );
 				exit;
-			}, function($e) {
+			}, function( $e ) {
 				// @TODO Remove this catch.
-				dump($e->getRequest());
-				dump($e->getResponse());
+				dump( $e->getRequest() );
+				dump( $e->getResponse() );
 				exit;
-			});
+			} );
 		}
 
 		// Settle the promises.

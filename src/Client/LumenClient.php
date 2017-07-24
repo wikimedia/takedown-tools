@@ -28,7 +28,6 @@ class LumenClient implements LumenClientInterface {
 	 */
 	protected $normalizer;
 
-
 	/**
 	 * @var string
 	 */
