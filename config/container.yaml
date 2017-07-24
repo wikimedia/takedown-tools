@@ -144,6 +144,9 @@ services:
     arguments:
       -
         base_uri: 'https://lumendatabase.org'
+        headers:
+          X-Authentication-Token: '%env(LUMEN_AUTH_TOKEN)%'
+          Accept: 'application/json'
 
   app.lumen_client:
     class: App\Client\LumenClient
@@ -151,5 +154,4 @@ services:
       - '@app.lumen_client_guzzle'
       - '@app.mediawiki_client'
       - '@serializer'
-      - '%env(LUMEN_AUTH_TOKEN)%'
       - '%app.files_dir%'

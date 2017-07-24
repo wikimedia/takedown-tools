@@ -81,6 +81,17 @@ class LumenNormalizer implements NormalizerInterface {
 			];
 		} )->toArray();
 
+		$recipient = [
+			'name' => 'Wikimedia Foundation',
+			'kind' => 'organization',
+			'address_line_1' => '149 New Montgomery St. 6th FL',
+			'city' => 'San Francisco',
+			'state' => 'CA',
+			'zip' => '94105',
+			'country_code' => 'US',
+			'phone' => '4158396885'
+		];
+
 		$data = [
 			'title' => $object->getDmca()->getLumenTitle(),
 			'type' => $this->environment === 'prod' ? 'DMCA' : 'Other',
@@ -100,13 +111,12 @@ class LumenNormalizer implements NormalizerInterface {
 			'entity_notice_roles_attributes' => [
 				[
 					'name' => 'submitter',
-					// @TODO Add recipient.
-					// 'entity_attributes' => $config['CE_recipient'],
+					'entity_attributes' => $recipient,
 				],
 				[
 					'name' => 'recipient',
 					// @TODO Add recipient.
-					// 'entity_attributes' => $config['CE_recipient'],
+					'entity_attributes' => $recipient,
 				],
 				[
 					'name' => 'sender',

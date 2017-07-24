@@ -28,10 +28,6 @@ class LumenClient implements LumenClientInterface {
 	 */
 	protected $normalizer;
 
-	/**
-	 * @var string
-	 */
-	protected $token;
 
 	/**
 	 * @var string
@@ -44,20 +40,17 @@ class LumenClient implements LumenClientInterface {
 	 * @param ClientInterface $client Guzzle Client
 	 * @param MediaWikiClientInterface $mediaWikiClient MediaWiki Client
 	 * @param NormalizerInterface $normalizer Normalizer
-	 * @param string $token Authentication Token
 	 * @param string $filesDir Files Directory.
 	 */
 	public function __construct(
 		ClientInterface $client,
 		MediaWikiClientInterface $mediaWikiClient,
 		NormalizerInterface $normalizer,
-		string $token,
 		string $filesDir
 	) {
 		$this->client = $client;
 		$this->mediaWikiClient = $mediaWikiClient;
 		$this->normalizer = $normalizer;
-		$this->token = $token;
 		$this->filesDir = $filesDir;
 	}
 
@@ -83,7 +76,6 @@ class LumenClient implements LumenClientInterface {
 		return $promise->then( function ( $takedown ) {
 			$multipart = $this->multipart( [
 				'notice' => $this->normalizer->normalize( $takedown, 'lumen' ),
-				'authentication_token' => $this->token,
 			] );
 
 			$files = [];
