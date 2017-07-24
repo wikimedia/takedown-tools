@@ -13,24 +13,16 @@ class LumenNormalizer implements NormalizerInterface {
 	/**
 	 * @var string
 	 */
-	protected $filesDir;
-
-	/**
-	 * @var string
-	 */
 	protected $environment;
 
 	/**
 	 * Lumen Normalizer
 	 *
-	 * @param string $filesDir Files Directory.
 	 * @param string $environment Environment.
 	 */
 	public function __construct(
-		string $filesDir,
 		string $environment
 	) {
-		$this->filesDir = $filesDir;
 		$this->environment = $environment;
 	}
 
@@ -84,7 +76,8 @@ class LumenNormalizer implements NormalizerInterface {
 		$files = $object->getDmca()->getFiles()->map( function( $file ) {
 			return [
 				'kind' => 'original',
-				'file' => $this->filesDir . '/' . $file->getPath()
+				// Do not add the filename since the file needs to be uploaded.
+				// 'file' => $this->filesDir . '/' . $file->getPath()
 			];
 		} )->toArray();
 

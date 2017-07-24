@@ -4,7 +4,6 @@ namespace App\Client;
 
 use App\Entity\Takedown\Takedown;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -76,32 +75,87 @@ class LumenClient implements LumenClientInterface {
 			$promise = $this->mediaWikiClient->getSite( $takedown->getSite()->getId() )->then(
 				function ( $site ) use ( $takedown ) {
 					$takedown->setSite( $site );
-					return new FulfilledPromise( $takedown );
+					return $takedown;
 				}
 			);
 		}
 
 		return $promise->then( function ( $takedown ) {
-			$options = [
-				'form_params' => [
-					'notice' => $this->normalizer->normalize( $takedown, 'lumen' ),
-					'authentication_token' => $this->token,
-				],
-			];
+			$multipart = $this->multipart( [
+				'notice' => $this->normalizer->normalize( $takedown, 'lumen' ),
+				'authentication_token' => $this->token,
+			] );
 
-			$options['multipart'] = $takedown->getDmca()->getFiles()->map( function( $file ) {
-				return [
-					'name' => 'notice[file_uploads_attributes]['
-						. $takedown->getDmca()->getFiles()->indexOf( $file ) . '][file]',
+			$files = [];
+
+			$takedown->getDmca()->getFiles()->forAll( function( $index, $file ) {
+				$files[] = [
+					'name' => 'notice[file_uploads_attributes][' . $index . '][file]',
 					'filename' => $file->getName(),
 					'contents' => fopen( $this->filesDir . '/' . $file->getPath(), 'r' )
 				];
-			} )->toArray();
+			} );
 
-			dump( $options );
-			exit;
+			$multipart = array_merge( $multipart, $files );
 
-			return $this->client->requestAsync( 'POST', '/notices', $options );
+			return $this->client->requestAsync( 'POST', '/notices', [
+					'multipart' => $multipart,
+			] );
 		} );
+	}
+
+	/**
+	 * Flatten Form Params.
+	 *
+	 * @link https://stackoverflow.com/a/42660877/864374
+	 *
+	 * @param mixed $data Data to Flatten
+	 * @param string $originalKey Key of Placement
+	 *
+	 * @return array
+	 */
+	protected function flatten( $data, string $originalKey = '' ) {
+		$output = [];
+
+		foreach ( $data as $key => $value ) {
+			$newKey = $originalKey;
+
+			if ( empty( $originalKey ) ) {
+				$newKey .= $key;
+			} else {
+				$newKey .= '[' . $key . ']';
+			}
+
+			if ( is_array( $value ) ) {
+				$output = array_merge( $output, $this->flatten( $value, $newKey ) );
+			} else {
+				$output[$newKey] = $value;
+			}
+		}
+
+		return $output;
+	}
+
+	/**
+	 * Convert Form Params to Multipart
+	 *
+	 * @link https://stackoverflow.com/a/42660877/864374
+	 *
+	 * @param mixed $data Data to Convert
+	 *
+	 * @return array
+	 */
+	protected function multipart( $data ) {
+		$flat = $this->flatten( $data );
+		$data = [];
+
+		foreach ( $flat as $key => $value ) {
+			$data[] = [
+				'name'  => $key,
+				'contents' => $value
+		  ];
+		}
+
+		return $data;
 	}
 }

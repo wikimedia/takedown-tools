@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
-use function GuzzleHttp\Promise\settle;
+use GuzzleHttp\Promise;
 
 /**
  * @Route(service="app.controller_takedown")
@@ -152,16 +152,16 @@ class TakedownController {
 		// Send to Lumen.
 		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
 			$promises[] = $this->lumenClient->postNotice( $takedown )->then( function( $response ) {
+				// @TODO Do somethign with the response!
 				dump( $response );
 				exit;
-				// @TODO Save the notice id in the database!
 			} );
 		}
 
 		// Settle the promises.
 		// The requests are not executed unless we explicitly wait since we are not
 		// in an event loop.
-		settle( $promises )->wait();
+		Promise\all( $promises )->wait();
 
 		// Attach the takedown to existing entities.
 		$takedown = $this->attacher->attach( $takedown );

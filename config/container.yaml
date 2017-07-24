@@ -134,7 +134,6 @@ services:
   app.serializer_lumen:
       class: App\Serializer\LumenNormalizer
       arguments:
-        - '%app.files_dir%'
         - '%kernel.environment%'
       public: false
       tags:

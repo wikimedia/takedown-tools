@@ -13,7 +13,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use function GuzzleHttp\Promise\settle;
+use GuzzleHttp\Promise;
 
 /**
  * Media Wiki Client
@@ -351,15 +351,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->getUser( $username );
 		}, $usernames );
 
-		return settle( $promises )->then( function( $results ) {
-			$results = array_filter( $results, function ( $result ) {
-				return $result['state'] === PromiseInterface::FULFILLED;
-			} );
-
-			return array_map( function( $result ) {
-				return $result['value'];
-			}, $results );
-		} );
+		return Promise\all( $promises );
 	}
 
 	/**
