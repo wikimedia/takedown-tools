@@ -11,6 +11,7 @@ use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use GuzzleHttp\Exception\RequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use GuzzleHttp\Promise;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route(service="app.controller_takedown")
@@ -50,23 +53,25 @@ class TakedownController {
 	protected $lumenClient;
 
 	/**
+	 * @var ValidatorInterface
+	 */
+	protected $validator;
+
+	/**
 	 * Takedown Controller.
 	 *
 	 * @param RegistryInterface $doctrine Doctrine.
-	 * @param SerializerInterface $serializer Serializer.
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
 	 * @param EntityAttacherInterface $attacher Entity Attacher.
 	 * @param LumenClientInterface $lumenClient Lumen Client.
 	 */
 	public function __construct(
 		RegistryInterface $doctrine,
-		SerializerInterface $serializer,
 		MediaWikiClientInterface $client,
 		EntityAttacherInterface $attacher,
 		LumenClientInterface $lumenClient
 	) {
 		$this->doctrine = $doctrine;
-		$this->serializer = $serializer;
 		$this->client = $client;
 		$this->attacher = $attacher;
 		$this->lumenClient = $lumenClient;
@@ -77,6 +82,7 @@ class TakedownController {
 	 *
 	 * @Route("/api/takedown.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
+	 * @Groups({"api"})
 	 *
 	 * @param Request $request Request
 	 *
@@ -98,6 +104,7 @@ class TakedownController {
 	 *
 	 * @Route("/api/takedown/{takedown}.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
+	 * @Groups({"api"})
 	 *
 	 * @param Takedown $takedown Takedown
 	 *
@@ -112,23 +119,15 @@ class TakedownController {
 	 *
 	 * @Route("/api/takedown", defaults={"_format" = "json"})
 	 * @Method({"POST"})
+	 * @Groups({"api"})
 	 *
-	 * @param Request $request Request
+	 * @param Takedown $takedown Takedown
 	 *
 	 * @return Response
 	 */
-	public function createAction( Request $request ) : Takedown {
+	public function createAction( Takedown $takedown ) {
 		$em = $this->doctrine->getEntityManager();
 		$promises = [];
-
-		$takedown = $this->serializer->deserialize(
-			$request->getContent(),
-			Takedown::class,
-			$request->getRequestFormat(),
-			[
-				'groups' => [ 'api' ]
-			]
-		);
 
 		// Get the user ids from the API.
 		$usernames = $takedown->getInvolvedNames();
@@ -201,24 +200,17 @@ class TakedownController {
 	 * Create Legal Takedown
 	 *
 	 * @Route("/api/takedown/{takedown}/commons", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
 	 * @Method({"POST"})
+	 * @Groups({"api"})
 	 *
 	 * @param Takedown $takedown Takedown
-	 * @param Request $request Request
+	 * @param Post $post Post
 	 *
 	 * @return Response
 	 */
-	public function createCommonsPostAction( Takedown $takedown, Request $request ) {
+	public function createCommonsPostAction( Takedown $takedown, Post $post ) {
 		$em = $this->doctrine->getEntityManager();
-
-		$post = $this->serializer->deserialize(
-			$request->getContent(),
-			Post::class,
-			$request->getRequestFormat(),
-			[
-				'groups' => [ 'api' ]
-			]
-		);
 
 		try {
 			$this->client->postCommons( $post )->wait();
@@ -247,27 +239,17 @@ class TakedownController {
 	 * Create Legal Takedown
 	 *
 	 * @Route("/api/takedown/{takedown}/commons-village-pump", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
 	 * @Method({"POST"})
+	 * @Groups({"api"})
 	 *
 	 * @param Takedown $takedown Takedown
-	 * @param Request $request Request
+	 * @param Post $post Post
 	 *
 	 * @return Response
 	 */
-	public function createCommonsVillagePumpPostAction(
-		Takedown $takedown,
-		Request $request
-	) {
+	public function createCommonsVillagePumpPostAction( Takedown $takedown, Post $post ) {
 		$em = $this->doctrine->getEntityManager();
-
-		$post = $this->serializer->deserialize(
-			$request->getContent(),
-			Post::class,
-			$request->getRequestFormat(),
-			[
-				'groups' => [ 'api' ]
-			]
-		);
 
 		try {
 			$this->client->postCommonsVillagePump( $post )->wait();
@@ -296,29 +278,23 @@ class TakedownController {
 	 * Create Legal Takedown
 	 *
 	 * @Route("/api/takedown/{takedown}/user-notice/{user}", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
+	 * @ParamConverter("user", class="App\Entity\User")
 	 * @Method({"POST"})
+	 * @Groups({"api"})
 	 *
 	 * @param Takedown $takedown Takedown
 	 * @param User $user User
-	 * @param Request $request Request
+	 * @param Post $post Post
 	 *
 	 * @return Response
 	 */
 	public function createUserNoticeAction(
 		Takedown $takedown,
 		User $user,
-		Request $request
+		Post $post
 	) {
 		$em = $this->doctrine->getEntityManager();
-
-		$post = $this->serializer->deserialize(
-			$request->getContent(),
-			Post::class,
-			$request->getRequestFormat(),
-			[
-				'groups' => [ 'api' ]
-			]
-		);
 
 		// Ensure the user is in the invovled users and *not* in the existing
 		// list of notices that have been sent.
@@ -367,6 +343,7 @@ class TakedownController {
 	 * Takedown
 	 *
 	 * @Route("/api/takedown/{takedown}.{_format}", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
 	 * @Method({"DELETE"})
 	 *
 	 * @param Takedown $takedown Takedown

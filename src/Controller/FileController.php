@@ -6,12 +6,14 @@ use App\Entity\User;
 use App\Entity\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesserInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @Route(service="app.controller_file")
@@ -63,7 +65,9 @@ class FileController {
 	 * Get File
 	 *
 	 * @Route("/api/file/{file}.{_format}")
+	 * @ParamConverter("file", class="App\Entity\File")
 	 * @Method({"GET"})
+	 * @Groups({"api"})
 	 *
 	 * @param File $file File
 	 * @param Request $request Request
@@ -88,6 +92,7 @@ class FileController {
 	 *
 	 * @Route("/api/file/{name}", defaults={"_format" = "json"})
 	 * @Method({"POST"})
+	 * @Groups({"api"})
 	 *
 	 * @param Request $request Request
 	 * @param string|null $name Name
@@ -137,6 +142,7 @@ class FileController {
 	 * Delete File
 	 *
 	 * @Route("/api/file/{file}")
+	 * @ParamConverter("file", class="App\Entity\File")
 	 * @Method({"DELETE"})
 	 *
 	 * @param File $file File

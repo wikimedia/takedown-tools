@@ -2,7 +2,6 @@
 
 namespace App\Entity\Takedown;
 
-use App;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Metadata;
@@ -15,15 +14,17 @@ use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\CreatedTrait;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown")
  * @ORM\HasLifecycleCallbacks
  *
- * @todo add validation.
+ * @Assert\GroupSequenceProvider
  */
-class Takedown {
+class Takedown implements GroupSequenceProviderInterface {
 
 	use CreatedTrait;
 
@@ -52,6 +53,8 @@ class Takedown {
 	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
 	 * @ORM\JoinColumn(name="reporter", referencedColumnName="user_id")
 	 * @Attach()
+	 * @Assert\NotNull()
+	 * @Assert\Valid()
 	 */
 	private $reporter;
 
@@ -61,6 +64,7 @@ class Takedown {
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Site", cascade={"persist"})
 	 * @ORM\JoinColumn(name="site", referencedColumnName="site_id")
 	 * @Attach()
+	 * @Assert\NotNull(groups={"Lumen"})
 	 */
 	private $site;
 
@@ -104,6 +108,7 @@ class Takedown {
 	 *	cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
+	 * @Assert\Valid()
 	 */
 	private $dmca;
 
@@ -117,6 +122,7 @@ class Takedown {
 	 *  cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
+	 * @Assert\Valid()
 	 */
 	private $cp;
 
@@ -554,5 +560,20 @@ class Takedown {
 			$this->cp = clone $this->cp;
 			$this->cp->setTakedown( $this );
 		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getGroupSequence() {
+		$groups = [ 'Takedown' ];
+
+		if ( $this->dmca && $this->dmca->getLumenSend() ) {
+			$groups[] = 'Lumen';
+		}
+
+		return $groups;
 	}
 }

@@ -14,14 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown_dmca")
  *
- * @todo add validation.
+ * @Assert\GroupSequenceProvider
  */
-class Dmca {
+class Dmca implements GroupSequenceProviderInterface {
 
 	/**
 	 * @var Takedown
@@ -46,6 +48,7 @@ class Dmca {
 	 * @var string
 	 *
 	 * @ORM\Column(name="lumen_title", type="string", length=255, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $lumenTitle;
 
@@ -75,48 +78,54 @@ class Dmca {
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_name", type="string", length=63, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $senderName;
 
 	 /**
-	* @var string
-	*
-	* @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
-	*/
+	  * @var string
+	  *
+	  * @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
+	  * @Assert\NotBlank(groups={"Lumen"})
+	  */
 	 private $senderPerson;
 
 	 /**
-	* @var string
-	*
-	* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
-	*/
+		* @var string
+		*
+		* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
+		* @Assert\NotBlank(groups={"Lumen"})
+		*/
 	 private $senderFirm;
 
 	 /**
-	* @var string
-	*
-	* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
-	*/
+		* @var string
+		*
+		* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
+		* @Assert\NotBlank(groups={"Lumen"})
+		*/
 	 private $senderAddress1;
 
 	 /**
-	* @var string
-	*
-	* @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
-	*/
+		* @var string
+		*
+		* @ORM\Column(name="sender_address_2", type="string", length=127, nullable=true)
+		*/
 	 private $senderAddress2;
 
 	 /**
-	* @var string
-	*
-	* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
-	*/
+		* @var string
+		*
+		* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
+		* @Assert\NotBlank(groups={"Lumen"})
+		*/
 	 private $senderCity;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_state", type="string", length=63, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	private $senderState;
 
@@ -124,38 +133,44 @@ class Dmca {
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_zip", type="string", length=15, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	private $senderZip;
 
- /**
-	* @var Country
-	*
-	* @ORM\ManyToOne(targetEntity="App\Entity\Country")
-	* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
-	* @Attach()
-	*/
+	 /**
+		* @var Country
+		*
+		* @ORM\ManyToOne(targetEntity="App\Entity\Country")
+		* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
+		* @Attach()
+		* @Assert\Valid()
+		* @Assert\NotNull(groups={"Lumen"})
+		*/
 	private $senderCountry;
 
 	/**
 	 * @var \DateTimeInterface
 	 *
 	 * @ORM\Column(name="sent", type="date", nullable=true)
+	 * @Assert\NotNull(groups={"Lumen"})
 	 */
 	private $sent;
 
-	/**
-	* @var Action
-	*
-	* @ORM\ManyToOne(targetEntity="App\Entity\Action")
-	* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
-	* @Attach()
-	*/
+	 /**
+		* @var Action
+		*
+		* @ORM\ManyToOne(targetEntity="App\Entity\Action")
+		* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
+		* @Attach()
+		* @Assert\NotNull(groups={"Lumen"})
+		*/
 	private $actionTaken;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="method", type="string", length=127, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $method;
 
@@ -163,6 +178,7 @@ class Dmca {
 	 * @var string
 	 *
 	 * @ORM\Column(name="subject", type="string", length=255, nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $subject;
 
@@ -170,6 +186,7 @@ class Dmca {
 	 * @var string
 	 *
 	 * @ORM\Column(name="body", type="text", nullable=true)
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $body;
 
@@ -1152,5 +1169,19 @@ class Dmca {
 				'dmca' => $this,
 			] );
 		} );
+	}
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getGroupSequence() {
+		$groups = [ 'Dmca' ];
+
+		if ( $this->lumenSend ) {
+			$groups[] = 'Lumen';
+		}
+
+		return $groups;
 	}
 }

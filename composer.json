@@ -9,7 +9,7 @@
 				"doctrine/orm": "^2.5",
 				"geosocio/entity-attacher-bundle": "^1.0.5",
 				"geosocio/entity-utils": "^1.0.5",
-				"geosocio/serialize-response": "^1.0.2",
+				"geosocio/http-serializer": "^4.0.0",
 				"guzzlehttp/guzzle": "^6.2",
 				"guzzlehttp/oauth-subscriber": "^0.3.0",
 				"lexik/jwt-authentication-bundle": "^2.4",
@@ -21,6 +21,7 @@
 				"symfony/framework-bundle": "^3.3",
 				"symfony/property-info": "^3.3",
 				"symfony/serializer": "^3.3",
+				"symfony/validator": "^3.3",
 				"symfony/yaml": "^3.3"
 		},
     "require-dev": {

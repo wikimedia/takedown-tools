@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -16,6 +17,7 @@ class Country {
 	 *
 	 * @ORM\Column(name="country_id", type="string", length=2)
 	 * @ORM\Id
+	 * @Assert\Country()
 	 */
 	private $id;
 

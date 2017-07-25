@@ -1,6 +1,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+  locale: 'en'
   app.files_dir: '%kernel.project_dir%/var/files'
 
 services:
@@ -82,7 +83,6 @@ services:
     class: App\Controller\TakedownController
     arguments:
       - '@doctrine'
-      - '@serializer'
       - '@app.mediawiki_client'
       - '@entity_attacher'
       - '@app.lumen_client'
@@ -106,17 +106,68 @@ services:
       - '@doctrine'
       - '%app.files_dir%'
 
+  # @TODO Remove this when bundle becomes available.
+  app.group_loader:
+    class: GeoSocio\HttpSerializer\Loader\GroupLoader
+    arguments:
+      - '@controller_resolver'
+      - '@annotation_reader'
+
+
+  # @TODO Remove this when bundle becomes available.
   app.return_listener:
-    class: GeoSocio\SerializeResponse\EventListener\KernelViewListener
+    class: GeoSocio\HttpSerializer\EventListener\KernelViewListener
     arguments:
         - '@serializer'
         - '@serializer'
-        - '@security.token_storage'
-        # Default Groups
-        -
-          - 'api'
+        - '@serializer'
+        - '@app.group_loader'
+        - '@event_dispatcher'
     tags:
         - { name: kernel.event_listener, event: kernel.view }
+
+  # @TODO Remove this when bundle becomes available.
+  app.exception_listener:
+    class: GeoSocio\HttpSerializer\EventListener\KernelExceptionListener
+    arguments:
+        - '@serializer'
+        - '@serializer'
+        - '@serializer'
+        - '@event_dispatcher'
+        - 'json'
+    tags:
+        - { name: kernel.event_listener, event: kernel.exception }
+
+  # @TODO Remove this when bundle becomes available.
+  app.serializer_exception:
+      class: GeoSocio\HttpSerializer\Serializer\ExceptionNormalizer
+      arguments:
+          - '%kernel.environment%'
+      public: false
+      tags:
+        - { name: serializer.normalizer }
+
+  # @TODO Remove this when bundle becomes available.
+  app.serializer_constraint:
+      class: GeoSocio\HttpSerializer\Serializer\ConstraintViolationNormalizer
+      public: false
+      tags:
+        - { name: serializer.normalizer }
+
+  # @TODO Remove this when bundle becomes available.
+  app.content_class_resolver:
+      class: GeoSocio\HttpSerializer\ArgumentResolver\ContentClassResolver
+      arguments:
+        - '@serializer'
+        - '@serializer'
+        - '@serializer'
+        - '@app.group_loader'
+        - '@event_dispatcher'
+        - '@validator'
+      public: false
+      tags:
+        - { name: controller.argument_value_resolver, priority: 100 }
+
 
   app.serializer_global_user_info:
       class: App\Serializer\GlobalUserInfoDenormalizer

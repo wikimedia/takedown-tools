@@ -71,7 +71,7 @@ final class Kernel extends BaseKernel {
 							'glob'
 						);
 				}
-				$loader->load( $confDir . '/container' . self::CONFIG_EXTS, 'glob' );
+				$loader->load( $confDir . '/services' . self::CONFIG_EXTS, 'glob' );
 		}
 
 		/**
