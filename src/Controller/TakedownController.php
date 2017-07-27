@@ -104,6 +104,7 @@ class TakedownController {
 	 *
 	 * @Route("/api/takedown/{takedown}.{_format}", defaults={"_format" = "json"})
 	 * @Method({"GET"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
 	 * @Groups({"api"})
 	 *
 	 * @param Takedown $takedown Takedown
@@ -145,21 +146,17 @@ class TakedownController {
 			$promises[] = $this->client->getUser( $username )
 				->then( function( $user ) use ( $takedown ) {
 					$takedown->getCp()->setApprover( $user );
+					return $takedown;
 				} );
 		}
 
 		// Send to Lumen.
 		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
-			$promises[] = $this->lumenClient->postNotice( $takedown )->then( function( $response ) {
-				// @TODO Do somethign with the response!
-				dump( $response );
-				exit;
-			}, function( $e ) {
-				// @TODO Remove this catch.
-				dump( $e->getRequest() );
-				dump( $e->getResponse() );
-				exit;
-			} );
+			$promises[] = $this->lumenClient->postNotice( $takedown )
+				->then( function( $id ) use ( $takedown ) {
+					$takedown->getDmca()->setLumenId( $id );
+					return $takedown;
+				} );
 		}
 
 		// Settle the promises.

@@ -6,7 +6,7 @@ import { Takedown } from 'app/entities/takedown/takedown';
 import { User } from 'app/entities/user';
 import { Site } from 'app/entities/site';
 import { Loading } from 'app/components/loading';
-import { Error } from 'app/components/error';
+import { ErrorComponent } from 'app/components/error';
 import { TakedownShowDmcaContainer } from './dmca/dmca.container';
 import { TakedownShowCp } from './cp';
 
@@ -24,7 +24,7 @@ export class TakedownShow extends React.Component {
 				);
 			} else if ( this.props.status === 'done' ) {
 				return (
-					<Error code={404} />
+					<ErrorComponent code={404} />
 				);
 			} else {
 				return null;
@@ -33,7 +33,7 @@ export class TakedownShow extends React.Component {
 
 		if ( this.props.takedown.error ) {
 			return (
-				<Error code={this.props.takedown.error} />
+				<ErrorComponent error={this.props.takedown.error} />
 			);
 		}
 

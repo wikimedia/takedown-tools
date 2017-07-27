@@ -3,13 +3,14 @@ import ReactDOM from 'react-dom';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createHistory from 'history/createBrowserHistory';
-import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
+import { ConnectedRouter, routerMiddleware, replace } from 'react-router-redux';
 import App from './components/app';
 import reducer from './reducers/index';
 import { createEpicMiddleware } from 'redux-observable';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import epic from './epics';
 import './styles/styles.scss';
+import querystring from 'querystring';
 
 function main() {
 	const token = window.localStorage.getItem( 'token' ),
@@ -23,20 +24,29 @@ function main() {
 		store = createStore(
 			reducer,
 			composeWithDevTools( applyMiddleware( router, epicMiddleware ) )
-		);
+		),
+		query = querystring.parse( window.location.search.replace( '?', '' ) );
 
-	// If no token is available, redirect to login.
-	if ( !token ) {
+	if ( query.token ) {
+		// Add the token to the store.
+		store.dispatch( {
+			type: 'TOKEN_ADD',
+			token: query.token
+		} );
+
+		// Remove the token from the url.
+		store.dispatch( replace( window.location.pathname ) );
+	} else if ( token ) {
+		// Add the token to the store.
+		store.dispatch( {
+			type: 'TOKEN_ADD',
+			token: token
+		} );
+	} else {
+		// If no token is available, redirect to login.
 		window.location = '/login';
 		return;
 	}
-
-	// Add the token to the store. If server rendering is enabled, this should
-	// move to after render.
-	store.dispatch( {
-		type: 'TOKEN_ADD',
-		token: token
-	} );
 
 	ReactDOM.render(
 		<Provider store={store}>

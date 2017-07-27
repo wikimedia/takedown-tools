@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
+import { FormError } from 'app/components/fields/form-error';
 import { CaptchaField } from 'app/components/fields/captcha';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
@@ -11,7 +12,8 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 
 	updateField( fieldName, value ) {
 		const takedown = this.props.takedown.setIn( [ 'dmca', this.props.postName, fieldName ], value )
-			.setIn( [ 'dmca', this.props.postName, 'status' ], 'dirty' );
+			.setIn( [ 'dmca', this.props.postName, 'status' ], 'dirty' )
+			.setIn( [ 'dmca', this.props.postName, 'error' ], undefined );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -111,7 +113,14 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 							onChange={( value ) => this.updateField( 'text', value )} />
 					</div>
 					<CaptchaField captcha={post.captcha} onChange={( value ) => this.updateField( 'captcha', value )} />
-					<Submit status={post.status === 'clean' ? 'dirty' : post.status} value="Post" />
+					<div className="form-group row align-items-center">
+						<div className="col-11">
+							<FormError error={this.props.takedown.error} />
+						</div>
+						<div className="col-1 text-right">
+							<Submit status={post.status === 'clean' ? 'dirty' : post.status} value="Post" />
+						</div>
+					</div>
 				</form>
 			);
 		}

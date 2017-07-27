@@ -6,6 +6,8 @@ import 'react-select/dist/react-select.css';
 import { TakedownCreateDmcaContainer } from './dmca/dmca.container';
 import { TakedownCreateCpContainer } from './cp.container';
 import { Submit } from 'app/components/fields/submit';
+import { FormError } from 'app/components/fields/form-error';
+import { FormGroup } from 'app/components/fields/form-group';
 import { SelectUsers } from 'app/components/fields/select-users';
 import { MetadataField } from 'app/components/fields/metadata';
 import { Takedown } from 'app/entities/takedown/takedown';
@@ -27,20 +29,38 @@ export class TakedownCreate extends React.Component {
 		}
 	}
 
+	removeErrors( takedown, propertyPath ) {
+		let violations;
+
+		if ( takedown.error && propertyPath ) {
+			violations = takedown.error.constraintViolations.filter( ( violation ) => {
+				return violation.propertyPath !== propertyPath;
+			} );
+
+			takedown = takedown.setIn( [ 'error', 'constraintViolations' ], violations );
+		}
+
+		return takedown;
+	}
+
 	updateField( fieldName, value ) {
-		const takedown = this.props.takedown
+		let takedown = this.props.takedown
 			.set( fieldName, value )
 			.set( 'status', 'dirty' );
+
+		takedown = this.removeErrors( takedown, fieldName );
 
 		this.props.updateTakedown( takedown );
 	}
 
 	updateInvolved( involved ) {
-		const takedown = this.props.takedown
+		let takedown = this.props.takedown
 			.set( 'involvedIds', involved.map( ( user ) => {
 				return user.id;
 			} ) )
 			.set( 'status', 'dirty' );
+
+		takedown = this.removeErrors( takedown, 'invovled' );
 
 		this.props.addUsers( involved );
 		this.props.updateTakedown( takedown );
@@ -78,7 +98,7 @@ export class TakedownCreate extends React.Component {
 			metaDataField = (
 				<div className="form-group row">
 					<div className="col">
-						<label htmlFor="metadataIds">Metadata</label> <small id="passwordHelpInline" className="text-muted">check all that are true</small>
+						<label className="form-control-label" htmlFor="metadataIds">Metadata</label> <small id="passwordHelpInline" className="text-muted">check all that are true</small>
 						<MetadataField type={this.props.takedown.type} value={this.props.takedown.metadataIds} onChange={( value ) => this.updateField( 'metadataIds', value )} />
 					</div>
 				</div>
@@ -90,16 +110,20 @@ export class TakedownCreate extends React.Component {
 				<div className="col">
 					<h2>Create Takedown</h2>
 					<form onSubmit={this.onSubmit.bind( this )}>
+						<FormGroup path="siteId" error={this.props.takedown.error} render={ () => (
+							<div>
+								<label className="form-control-label" htmlFor="siteId">Site</label>
+								<Select name="siteId" disabled={disabled} options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data ? data.value : undefined )} />
+							</div>
+						) } />
+						<FormGroup path="involvedIds" error={this.props.takedown.error} render={ () => (
+							<div>
+								<label className="form-control-label" htmlFor="involvedIds">Involved Users</label>
+								<SelectUsers disabled={disabled} name="involvedIds" multi={true} value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
+							</div>
+						) } />
 						<div className="form-group">
-							<label htmlFor="siteId">Site</label>
-							<Select name="siteId" disabled={disabled} options={this.props.siteOptions} value={this.props.takedown.siteId} onChange={( data ) => this.updateField( 'siteId', data ? data.value : undefined )} />
-						</div>
-						<div className="form-group">
-							<label htmlFor="involvedIds">Involved Users</label>
-							<SelectUsers disabled={disabled} name="involvedIds" multi={true} value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
-						</div>
-						<div className="form-group">
-							<label>Type</label>
+							<label className="form-control-label">Type</label>
 							<div className="row">
 								<div className="col btn-group">
 									<button type="button" disabled={disabled} style={ { zIndex: 0 } } className={dmcaButtonClass} onClick={() => this.updateField( 'type', 'dmca' )}>DMCA</button>
@@ -109,7 +133,14 @@ export class TakedownCreate extends React.Component {
 						</div>
 						{metaDataField}
 						{takedownTypeForm}
-						<Submit status={this.props.takedown.status} value="Save" />
+						<div className="form-group row align-items-center">
+							<div className="col-11">
+								<FormError error={this.props.takedown.error} />
+							</div>
+							<div className="col-1 text-right">
+								<Submit status={this.props.takedown.status} value="Save" />
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>

@@ -53,8 +53,6 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
 	 * @ORM\JoinColumn(name="reporter", referencedColumnName="user_id")
 	 * @Attach()
-	 * @Assert\NotNull()
-	 * @Assert\Valid()
 	 */
 	private $reporter;
 
@@ -64,7 +62,6 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * @ORM\ManyToOne(targetEntity="App\Entity\Site", cascade={"persist"})
 	 * @ORM\JoinColumn(name="site", referencedColumnName="site_id")
 	 * @Attach()
-	 * @Assert\NotNull(groups={"Lumen"})
 	 */
 	private $site;
 
@@ -108,7 +105,6 @@ class Takedown implements GroupSequenceProviderInterface {
 	 *	cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
-	 * @Assert\Valid()
 	 */
 	private $dmca;
 
@@ -122,7 +118,6 @@ class Takedown implements GroupSequenceProviderInterface {
 	 *  cascade={"persist", "remove"}
 	 *)
 	 * @Attach()
-	 * @Assert\Valid()
 	 */
 	private $cp;
 
@@ -191,6 +186,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * Get Reporter
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull()
 	 *
 	 * @return int
 	 */
@@ -245,6 +241,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * Get Site Id
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Lumen"})
 	 *
 	 * @return string
 	 */
@@ -486,6 +483,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * DMCA
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Valid()
 	 *
 	 * @return Dmca
 	 */
@@ -527,6 +525,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * Child Protection
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Valid()
 	 *
 	 * @return ChildProtection
 	 */

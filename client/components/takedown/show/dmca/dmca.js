@@ -22,7 +22,8 @@ export class TakedownShowDmca extends React.Component {
 			body,
 			files,
 			wmfTitle,
-			notices;
+			notices,
+			lumen;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
 			senderCountry = CountrySet.find( ( country ) => {
@@ -120,6 +121,14 @@ export class TakedownShowDmca extends React.Component {
 			);
 		}
 
+		if ( this.props.takedown.dmca.lumenId ) {
+			lumen = (
+				<a href={'https://lumendatabase.org/notices/' + this.props.takedown.dmca.lumenId}>
+					{this.props.takedown.dmca.lumenTitle}
+				</a>
+			);
+		}
+
 		return (
 			<tbody className="border-top-0">
 				<tr>
@@ -198,15 +207,8 @@ export class TakedownShowDmca extends React.Component {
 					<td>{senderCountry ? senderCountry.name : undefined}</td>
 				</tr>
 				<tr>
-					<th colSpan="2">Lumen</th>
-				</tr>
-				<tr>
-					<td>Sent to Lumen</td>
-					<td>{this.props.takedown.dmca.lumenSend ? 'Yes' : 'No'}</td>
-				</tr>
-				<tr>
-					<td>Title</td>
-					<td>{this.props.takedown.dmca.lumenTitle}</td>
+					<td>Lumen</td>
+					<td>{lumen}</td>
 				</tr>
 				<tr>
 					<th colSpan="2">Posts</th>

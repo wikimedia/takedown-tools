@@ -8,6 +8,7 @@ import { Takedown } from 'app/entities/takedown/takedown';
 import { MetadataSet } from 'app/entities/metadata.set';
 import { Captcha } from 'app/entities/captcha';
 import { Post } from 'app/entities/takedown/dmca/post';
+import { Error } from 'app/entities/error';
 import * as TakedownActions from 'app/actions/takedown';
 import * as TokenActions from 'app/actions/token';
 import { defaultCommonsText, defaultCommonsVillagePumpText, defaultUserNoticeText, getWmfTitle } from 'app/utils';
@@ -60,7 +61,7 @@ export function fetchTakedown( action$, store ) {
 
 					const takedown = new Takedown( {
 						id: action.id,
-						error: ajaxError.status,
+						error: new Error( ajaxError.xhr.response ),
 						status: 'error'
 					} );
 
@@ -99,6 +100,10 @@ export function takedownSave( action$, store ) {
 						if ( takedown.dmca.wmfTitle ) {
 							takedown = takedown.setIn( [ 'dmca', 'wmfTitle' ], 'DMCA_' + takedown.dmca.wmfTitle.replace( / /g, '_' ) );
 						}
+
+						// Set default value(s).
+						takedown = takedown.setIn( [ 'dmca', 'actionTakenId' ], takedown.dmca.actionTakenId || 'no' );
+
 						removeType = 'cp';
 						break;
 					case 'cp':
@@ -161,7 +166,7 @@ export function takedownSave( action$, store ) {
 					}
 
 					// Set the takedown state.
-					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', ajaxError.status );
+					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
 					return Observable.of( TakedownActions.updateCreate( takedown ) );
 				} );
 		} );
@@ -232,7 +237,7 @@ export function saveDmcaPost( action$, store ) {
 					}
 
 					takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'error' );
-					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ], ajaxError.status );
+					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ],  new Error( ajaxError.xhr.response ) );
 
 					return Observable.of( TakedownActions.update( takedown ) );
 				} );
@@ -292,7 +297,7 @@ export function saveDmcaUserNotice( action$, store ) {
 						notice = notice.set( 'captcha', new Captcha( ajaxError.xhr.response.captcha ) );
 					} else {
 						notice = notice.set( 'status', 'error' );
-						notice = notice.set( 'error', ajaxError.status );
+						notice = notice.set( 'error',  new Error( ajaxError.xhr.response ) );
 					}
 
 					takedown = takedown.setIn( [ 'dmca', 'notices', action.user.id ], notice );

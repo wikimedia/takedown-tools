@@ -3,6 +3,7 @@
 namespace App\Client;
 
 use App\Entity\Takedown\Takedown;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -91,7 +92,18 @@ class LumenClient implements LumenClientInterface {
 
 			return $this->client->requestAsync( 'POST', '/notices', [
 					'multipart' => $multipart,
-			] );
+			] )->then( function ( $response ) {
+				if ( !$response->hasHeader( 'Location' ) ) {
+					return null;
+				}
+
+				$location = $response->getHeader( 'Location' )[0];
+				$path = parse_url( $location, PHP_URL_PATH );
+				$pieces = explode( '/', $path );
+				$id = intval( end( $pieces ) );
+
+				return $id ?? null;
+			} );
 		} );
 	}
 

@@ -26,11 +26,7 @@ export class Submit extends React.Component {
 		}
 
 		return (
-			<div className="form-group row">
-				<div className="col text-right">
-					<input type="submit" className={className} disabled={disabled} value={this.props.value} />
-				</div>
-			</div>
+			<input type="submit" className={className} disabled={disabled} value={this.props.value} />
 		);
 	}
 }

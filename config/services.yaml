@@ -198,6 +198,7 @@ services:
         headers:
           X-Authentication-Token: '%env(LUMEN_AUTH_TOKEN)%'
           Accept: 'application/json'
+          User-Agent: 'WikiMediaLumenBot/1.0'
 
   app.lumen_client:
     class: App\Client\LumenClient

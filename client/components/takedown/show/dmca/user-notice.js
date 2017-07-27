@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
+import { FormError } from 'app/components/fields/form-error';
 import { CaptchaField } from 'app/components/fields/captcha';
 import { User } from 'app/entities/user';
 import { Site } from 'app/entities/site';
@@ -15,7 +16,8 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 		const notice = this.props.takedown.dmca.notices.get( this.props.user.id ) || new Post(),
 			takedown = this.props.takedown.setIn( [ 'dmca', 'notices', this.props.user.id ], notice )
 				.setIn( [ 'dmca', 'notices', this.props.user.id, fieldName ], value )
-				.setIn( [ 'dmca', 'notices', this.props.user.id, 'status' ], 'dirty' );
+				.setIn( [ 'dmca', 'notices', this.props.user.id, 'status' ], 'dirty' )
+				.setIn( [ 'dmca', 'notices', this.props.user.id, 'error' ], undefined );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -74,7 +76,14 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 						onChange={( value ) => this.updateField( 'text', value )} />
 				</div>
 				<CaptchaField captcha={notice.captcha} onChange={( value ) => this.updateField( 'captcha', value )} />
-				<Submit status={notice.status === 'clean' ? 'dirty' : notice.status} value="Post" />
+				<div className="form-group row align-items-center">
+					<div className="col-11">
+						<FormError error={notice.error} />
+					</div>
+					<div className="col-1 text-right">
+						<Submit status={notice.status === 'clean' ? 'dirty' : notice.status} value="Post" />
+					</div>
+				</div>
 			</form>
 		);
 	}

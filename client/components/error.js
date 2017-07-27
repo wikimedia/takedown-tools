@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Error } from 'app/entities/error';
 
-export class Error extends React.Component {
+export class ErrorComponent extends React.Component {
 	render() {
-		let error;
+		let error,
+			code,
+			message;
 
 		switch ( this.props.code ) {
 			case 401:
@@ -23,16 +26,40 @@ export class Error extends React.Component {
 				break;
 		}
 
+		if ( this.props.error ) {
+			if ( this.props.error.code ) {
+				code = (
+					<strong>{this.props.error.code}</strong>
+				);
+			}
+
+			if ( this.props.error.message ) {
+				message = (
+					<div className="row">
+						<div className="col">
+							<div className="alert alert-danger mb-0" role="alert">
+								{code} {this.props.error.message}
+							</div>
+						</div>
+					</div>
+				);
+			}
+		}
+
 		return (
-			<div className="row">
-				<div className="col">
-					<h2>{error}</h2>
+			<div>
+				<div className="row">
+					<div className="col">
+						<h2>{error}</h2>
+					</div>
 				</div>
+				{message}
 			</div>
 		);
 	}
 }
 
-Error.propTypes = {
-	code: PropTypes.number
+ErrorComponent.propTypes = {
+	code: PropTypes.number,
+	error: PropTypes.instanceOf( Error )
 };

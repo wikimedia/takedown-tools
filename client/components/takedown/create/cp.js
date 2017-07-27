@@ -12,14 +12,16 @@ export class TakedownCreateCp extends React.Component {
 
 	updateField( fieldName, value ) {
 		const takedown = this.props.takedown.setIn( [ 'cp', fieldName ], value )
-			.set( 'status', 'dirty' );
+			.set( 'status', 'dirty' )
+			.set( 'error', undefined );
 
 		this.props.updateTakedown( takedown );
 	}
 
 	mergeFields( data ) {
 		const takedown = this.props.takedown.mergeIn( [ 'cp' ], data )
-			.set( 'status', 'dirty' );
+			.set( 'status', 'dirty' )
+			.set( 'error', undefined );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -92,7 +94,7 @@ export class TakedownCreateCp extends React.Component {
 		if ( this.props.takedown.cp.approved ) {
 			approverReasonField = (
 				<div className="form-group">
-					<label htmlFor="approver">Approver</label>
+					<label className="form-control-label" htmlFor="approver">Approver</label>
 					<SelectUsers
 						disabled={this.props.disabled}
 						name="approver"
@@ -106,7 +108,7 @@ export class TakedownCreateCp extends React.Component {
 		} else {
 			approverReasonField = (
 				<div className="form-group">
-					<label htmlFor="deniedApprovalReason">Denied Approval Reason</label>
+					<label className="form-control-label" htmlFor="deniedApprovalReason">Denied Approval Reason</label>
 					<input className="form-control" type="text" name="deniedApprovalReason" value={this.props.takedown.cp.deniedApprovalReason || ''} onChange={this.handleChange.bind( this )} />
 				</div>
 			);
@@ -122,7 +124,7 @@ export class TakedownCreateCp extends React.Component {
 				if ( file.exif ) {
 					exif = (
 						<div className="form-group">
-							<label>Exif Data</label>
+							<label className="form-control-label">Exif Data</label>
 							<div>
 								<pre className="small bg-faded pt-2 pb-2 pl-2 pr-2">
 									<code>
@@ -152,11 +154,11 @@ export class TakedownCreateCp extends React.Component {
 									<div className="form-control-static">{file.name}</div>
 								</div>
 								<div className="form-group">
-									<label>Uploaded</label> <small className="text-muted">in local time</small>
+									<label className="form-control-label">Uploaded</label> <small className="text-muted">in local time</small>
 									<DatePicker time={true} disabled={this.props.disabled} value={file.uploaded} onChange={( value ) => this.updateFile( file.set( 'uploaded', value ) )} />
 								</div>
 								<div className="form-group">
-									<label htmlFor={'files[' + index + '][ip]' }>IP Address</label>
+									<label className="form-control-label" htmlFor={'files[' + index + '][ip]' }>IP Address</label>
 									<input type="text" disabled={this.props.disabled} className="form-control" name={'files[' + index + '][ip]' } value={file.ip || ''} onChange={( event ) => this.updateFile( file.set( 'ip', event.target.value ) )} />
 								</div>
 								{exif}
@@ -171,7 +173,7 @@ export class TakedownCreateCp extends React.Component {
 		return (
 			<div>
 				<div className="form-group">
-					<label>Approved</label>
+					<label className="form-control-label">Approved</label>
 					<div className="form-check">
 						<label className="form-check-label">
 							<input
@@ -201,15 +203,15 @@ export class TakedownCreateCp extends React.Component {
 				</div>
 				{approverReasonField}
 				<div className="form-group">
-					<label>Accessed</label> <small className="text-muted">when did you you access the content?</small>
+					<label className="form-control-label">Accessed</label> <small className="text-muted">when did you you access the content?</small>
 					<DatePicker time={true} disabled={this.props.disabled} value={this.props.takedown.cp.accessed} onChange={( value ) => this.updateField( 'accessed', value )} />
 				</div>
 				<div className="form-group">
-					<label htmlFor="comments">Additional Information</label> <small className="text-muted">cu data, other info we may have etc</small>
+					<label className="form-control-label" htmlFor="comments">Additional Information</label> <small className="text-muted">cu data, other info we may have etc</small>
 					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="comments" value={this.props.takedown.cp.comments || ''} onChange={this.handleChange.bind( this )} />
 				</div>
 				<div className="form-group">
-					<label>Files</label>
+					<label className="form-control-label">Files</label>
 					<FileField onAddFiles={this.addFiles.bind( this )} />
 					{files}
 				</div>

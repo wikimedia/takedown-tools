@@ -5,14 +5,13 @@ import { Set } from 'immutable';
 import moment from 'moment';
 import { SelectPages } from 'app/components/fields/select-pages';
 import { ListField } from 'app/components/fields/list';
+import { FormGroup } from 'app/components/fields/form-group';
 import { FileUploadField } from 'app/components/fields/file-upload';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
 import { User } from 'app/entities/user';
 import { DatePicker } from 'app/components/fields/date-picker';
-// import { TakedownCreateDmcaUserNotice } from './user-notice';
-// import { defaultCommonsText, defaultCommonsVillagePumpText } from 'utils';
 
 export class TakedownCreateDmca extends React.Component {
 
@@ -42,16 +41,42 @@ export class TakedownCreateDmca extends React.Component {
 		}
 	}
 
-	updateField( fieldName, value ) {
-		const takedown = this.props.takedown.setIn( [ 'dmca', fieldName ], value )
+	removeErrors( takedown, propertyPath ) {
+		let violations;
+
+		if ( takedown.error && propertyPath ) {
+			violations = takedown.error.constraintViolations.filter( ( violation ) => {
+				return violation.propertyPath !== propertyPath;
+			} );
+
+			takedown = takedown.setIn( [ 'error', 'constraintViolations' ], violations );
+		}
+
+		return takedown;
+	}
+
+	updateField( fieldName, value, propertyPath ) {
+		let takedown = this.props.takedown.setIn( [ 'dmca', fieldName ], value )
 			.set( 'status', 'dirty' );
+
+		if ( takedown.error ) {
+			if ( !propertyPath ) {
+				propertyPath = 'dmca.' + fieldName;
+			}
+
+			takedown = this.removeErrors( takedown, propertyPath );
+		}
 
 		this.props.updateTakedown( takedown );
 	}
 
 	mergeFields( data ) {
-		const takedown = this.props.takedown.mergeIn( [ 'dmca' ], data )
+		let takedown = this.props.takedown.mergeIn( [ 'dmca' ], data )
 			.set( 'status', 'dirty' );
+
+		Object.keys( data ).forEach( ( fieldName ) => {
+			takedown = this.removeErrors( takedown, 'dmca.' + fieldName );
+		} );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -70,10 +95,13 @@ export class TakedownCreateDmca extends React.Component {
 
 	addFiles( files ) {
 		const fileIds = this.props.takedown.dmca.fileIds.unshift( ...files.map( ( file ) => {
-				return file.id;
-			} ).toArray() ),
-			takedown = this.props.takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
-				.set( 'status', 'dirty' );
+			return file.id;
+		} ).toArray() );
+
+		let takedown = this.props.takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
+			.set( 'status', 'dirty' );
+
+		takedown = this.removeErrors( takedown, 'dmca.files' );
 
 		this.props.addFiles( files );
 		this.props.updateTakedown( takedown );
@@ -87,17 +115,11 @@ export class TakedownCreateDmca extends React.Component {
 		takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
 			.set( 'status', 'dirty' );
 
+		takedown = this.removeErrors( takedown, 'dmca.files' );
+
 		this.props.updateTakedown( takedown );
 		this.props.deleteFile( file );
 	}
-
-	// getCommonsVillagePumpText() {
-	// 	if ( typeof this.props.takedown.dmca.commonsVillagePumpText !== 'undefined' ) {
-	// 		return this.props.takedown.dmca.commonsVillagePumpText;
-	// 	}
-	//
-	// 	return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
-	// }
 
 	render() {
 		const countries = CountrySet.map( ( country ) => {
@@ -120,17 +142,25 @@ export class TakedownCreateDmca extends React.Component {
 
 		if ( this.props.takedown.dmca.lumenSend ) {
 			lumenTitleField = (
-				<div className="form-group">
-					<label htmlFor="lumenTitle">Title</label>
-					<input type="text" className="form-control" name="lumenTitle" value={this.props.takedown.dmca.lumenTitle || ''} onChange={this.handleChange.bind( this )} />
-				</div>
+				<FormGroup path="dmca.lumenTitle" error={this.props.takedown.error} render={ ( hasError, className ) => (
+					<div>
+						<label className="form-control-label" htmlFor="lumenTitle">Title</label>
+						<input
+							type="text"
+							className={className}
+							name="lumenTitle"
+							value={this.props.takedown.dmca.lumenTitle || ''}
+							onChange={this.handleChange.bind( this )}
+						/>
+					</div>
+				) } />
 			);
 		}
 
 		if ( this.props.takedown.dmca.wmfTitle && this.props.takedown.dmca.body ) {
 			wmfText = (
 				<div className="form-group">
-					<label>Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
+					<label className="form-control-label">Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
 					<textarea className="form-control" readOnly rows="5" value={
 						'<div class="mw-code" style="white-space: pre; word-wrap: break-word;"><nowiki>\n' +
 						this.props.takedown.dmca.body +
@@ -143,281 +173,130 @@ export class TakedownCreateDmca extends React.Component {
 		if ( this.props.takedown.dmca.wmfSend ) {
 			wmfAnnouncement = (
 				<div>
-					<div className="form-group">
-						<label>Title</label>
-						<div className="input-group">
-							<span className="input-group-addon">DMCA</span>
-							<input type="text" disabled={this.props.disabled} className="form-control" name="wmfTitle" value={this.props.takedown.dmca.wmfTitle || ''} onChange={this.handleChange.bind( this )} />
+					<FormGroup path="dmca.wmfTitle" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">Title</label>
+							<div className="input-group">
+								<span className="input-group-addon">DMCA</span>
+								<input type="text" disabled={this.props.disabled} className={className} name="wmfTitle" value={this.props.takedown.dmca.wmfTitle || ''} onChange={this.handleChange.bind( this )} />
+							</div>
 						</div>
-					</div>
+					) } />
 					{wmfText}
 				</div>
 			);
 		}
 
-		// if ( this.props.site.projectId === 'commons' ) {
-		//
-		// 	if ( this.props.takedown.dmca.commonsSend ) {
-		//
-		// 		if ( this.isCommonsTitleReadOnly() ) {
-		// 			commonsNoticeTitleEdit = (
-		// 				<span className="input-group-btn">
-		// 					<button className="btn btn-secondary" type="button" onClick={() => {
-		// 						this.updateField( 'commonsTitle', this.props.takedown.dmca.wmfTitle || '' );
-		// 						this.commonsTitleInput.focus();
-		// 					}}><i className="material-icons">edit</i></button>
-		// 				</span>
-		// 			);
-		// 		}
-		//
-		// 		if ( typeof this.props.takedown.dmca.commonsText === 'undefined' ) {
-		// 			commonsNoticeTextEdit = (
-		// 				<span className="input-group-btn">
-		// 					<button className="btn btn-secondary" type="button" onClick={() => {
-		// 						this.updateField( 'commonsText', defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds ) );
-		// 						this.commonsTitleInput.focus();
-		// 					}}><i className="material-icons">edit</i></button>
-		// 				</span>
-		// 			);
-		// 		}
-		//
-		// 		if ( this.props.takedown.dmca.commonsVillagePumpSend ) {
-		//
-		// 			if ( typeof this.props.takedown.dmca.commonsVillagePumpText === 'undefined' ) {
-		// 				commonsVillagePumpTextEdit = (
-		// 					<span className="input-group-btn">
-		// 						<button className="btn btn-secondary" type="button" onClick={() => {
-		// 							this.updateField( 'commonsVillagePumpText', defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds ) );
-		// 							this.commonsVilagePumpTextInput.focus();
-		// 						}}><i className="material-icons">edit</i></button>
-		// 					</span>
-		// 				);
-		// 			}
-		//
-		// 			commonsVillagePumpForm = (
-		// 				<div className="form-group">
-		// 					<label>Text</label>
-		// 					<div className="input-group">
-		// 						<textarea
-		// 							className="form-control"
-		// 							name="commonsVillagePumpText"
-		// 							rows="5"
-		// 							ref={( element ) => { this.commonsVillagePumpTextInput = element; }}
-		// 							value={this.getCommonsVillagePumpText()}
-		// 							readOnly={typeof this.props.takedown.dmca.commonsVillagePumpText === 'undefined'}
-		// 							onChange={this.handleChange.bind( this )} />
-		// 						{commonsVillagePumpTextEdit}
-		// 					</div>
-		// 				</div>
-		// 			);
-		// 		}
-		//
-		// 		if ( this.props.takedown.dmca.commonsTitle || this.props.takedown.dmca.wmfTitle ) {
-		// 			commonsVillagePumpSend = (
-		// 				<div>
-		// 					<div className="form-group">
-		// 						<div className="form-check">
-		// 							<label className="form-check-label">
-		// 								<input
-		// 									disabled={this.props.disabled}
-		// 									className="form-check-input"
-		// 									type="checkbox"
-		// 									name="commonsVillagePumpSend"
-		// 									value="commonsVillagePumpSend"
-		// 									checked={!!this.props.takedown.dmca.commonsVillagePumpSend}
-		// 									onChange={ ( event ) => {
-		// 										if ( !event.target.checked ) {
-		// 											this.mergeFields( {
-		// 												commonsVillagePumpSend: event.target.checked,
-		// 												commonsVillagePumpText: undefined
-		// 											} );
-		// 										} else {
-		// 											this.updateField( 'commonsVillagePumpSend', event.target.checked );
-		// 										}
-		// 									} }
-		// 								/> Post to Commons Village Pump
-		// 							</label>
-		// 						</div>
-		// 					</div>
-		// 					{commonsVillagePumpForm}
-		// 				</div>
-		// 			);
-		// 		}
-		//
-		// 		commonsForm = (
-		// 			<div>
-		// 				<div className="form-group">
-		// 					<label>Title</label>
-		// 					<div className="input-group">
-		// 						<input
-		// 							type="text"
-		// 							className="form-control"
-		// 							name="commonsTitle"
-		// 							ref={( element ) => { this.commonsTitleInput = element; }}
-		// 							value={this.getCommonsTitle()}
-		// 							readOnly={this.isCommonsTitleReadOnly()}
-		// 							onChange={this.handleChange.bind( this )} />
-		// 						{commonsNoticeTitleEdit}
-		// 					</div>
-		// 				</div>
-		// 				<div className="form-group">
-		// 					<label>Text</label>
-		// 					<div className="input-group">
-		// 						<textarea
-		// 							className="form-control"
-		// 							name="commonsText"
-		// 							rows="5"
-		// 							ref={( element ) => { this.commonsTextInput = element; }}
-		// 							value={this.getCommonsText()}
-		// 							readOnly={typeof this.props.takedown.dmca.commonsText === 'undefined'}
-		// 							onChange={this.handleChange.bind( this )} />
-		// 						{commonsNoticeTextEdit}
-		// 					</div>
-		// 				</div>
-		// 				{commonsVillagePumpSend}
-		// 			</div>
-		// 		);
-		// 	}
-		//
-		// 	commonsNotice = (
-		// 		<fieldset className="form-gorup">
-		// 			<legend>Commons</legend>
-		// 			<div className="form-group">
-		// 				<div className="form-check">
-		// 					<label className="form-check-label">
-		// 						<input
-		// 							disabled={this.props.disabled}
-		// 							className="form-check-input"
-		// 							type="checkbox"
-		// 							name="commonsSend"
-		// 							value="commonsSend"
-		// 							checked={!!this.props.takedown.dmca.commonsSend}
-		// 							onChange={ ( event ) => {
-		// 								if ( !event.target.checked ) {
-		// 									this.mergeFields( {
-		// 										commonsSend: event.target.checked,
-		// 										commonsTitle: undefined,
-		// 										commonsText: undefined,
-		// 										commonsVillagePumpSend: undefined,
-		// 										commonsVillagePumpText: undefined
-		// 									} );
-		// 								} else {
-		// 									this.updateField( 'commonsSend', event.target.checked );
-		// 								}
-		// 							} }
-		// 						/> Post to Commons
-		// 					</label>
-		// 				</div>
-		// 			</div>
-		// 			{commonsForm}
-		// 		</fieldset>
-		// 	);
-		// }
-
-		// if ( this.props.involved.length > 0 && this.props.takedown.siteId ) {
-		// 	noticeUsers = this.props.involved.map( ( user ) => {
-		// 		const noticeUser = this.props.takedown.dmca.userNotices.find( ( item ) => {
-		// 			return item.id === user.id;
-		// 		} );
-		//
-		// 		return (
-		// 			<TakedownCreateDmcaUserNotice
-		// 				key={user.id}
-		// 				user={user}
-		// 				noticeUser={noticeUser}
-		// 				notices={this.props.takedown.dmca.userNotices}
-		// 				pageIds={this.props.takedown.dmca.pageIds}
-		// 				disabled={this.props.disabled}
-		// 				onChange={( notices ) => this.updateField( 'userNotices', notices )} />
-		// 		);
-		// 	} );
-		//
-		// 	userNoticeForm = (
-		// 		<fieldset className="form-group">
-		// 			<legend>User Notices</legend>
-		// 			{noticeUsers}
-		// 		</fieldset>
-		// 	);
-		// }
-
 		return (
 			<div>
-				<div className="form-group">
-					<label>Sent</label> <small className="text-muted">date the takedown was sent</small>
-					<DatePicker disabled={this.props.disabled} value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
-				</div>
-				<div className="form-group">
-					<label htmlFor="actionTakenId">Action Taken</label>
-					<select disabled={this.props.disabled} className="form-control" name="actionTakenId" value={this.props.takedown.dmca.actionTakenId || 'no'} onChange={this.handleChange.bind( this )}>
-						<option value="yes">Yes</option>
-						<option value="no">No</option>
-						<option value="partial">Partial</option>
-					</select>
-				</div>
-				<div className="form-group">
-					<label htmlFor="pageIds">Affected Pages</label>
-					<SelectPages disabled={this.props.disabled} site={this.props.site} name="pageIds" value={this.props.takedown.dmca.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
-				</div>
-				<div className="form-group">
-					<label htmlFor="originalUrls">Original URLs</label> <small className="text-muted">location of original work</small>
-					<ListField disabled={this.props.disabled} required={true} type="url" name="originalUrls" value={this.props.takedown.dmca.originalUrls} onChange={ ( originalUrls ) => this.updateField( 'originalUrls', originalUrls ) } />
-				</div>
-				<div className="form-group">
-					<label htmlFor="method">Method</label> <small className="text-muted">how was the C&D sent? (e.g. email, postal mail, fax ...)</small>
-					<input type="text" className="form-control" disabled={this.props.disabled} name="method" value={this.props.takedown.dmca.method || ''} onChange={this.handleChange.bind( this )} />
-				</div>
-				<div className="form-group">
-					<label htmlFor="subject">Subject</label> <small className="text-muted">of the email or fax received</small>
-					<input type="text" className="form-control" disabled={this.props.disabled} name="subject" value={this.props.takedown.dmca.subject || ''} onChange={this.handleChange.bind( this )} />
-				</div>
-				<div className="form-group">
-					<label htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
-					<textarea className="form-control" rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
-				</div>
-				<div className="form-group">
-					<label>Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
-					<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
-				</div>
+				<FormGroup path="dmca.sent" error={this.props.takedown.error} render={ () => (
+					<div>
+						<label className="form-control-label">Sent</label> <small className="text-muted">date the takedown was sent</small>
+						<DatePicker disabled={this.props.disabled} value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
+					</div>
+				) } />
+				<FormGroup path="dmca.actionTaken" error={this.props.takedown.error} render={ ( hasError, className ) => (
+					<div>
+						<label className="form-control-label" htmlFor="actionTakenId">Action Taken</label>
+						<select disabled={this.props.disabled} className={className} name="actionTakenId" value={this.props.takedown.dmca.actionTakenId || 'no'} onChange={this.handleChange.bind( this )}>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+							<option value="partial">Partial</option>
+						</select>
+					</div>
+				) } />
+				<FormGroup path="dmca.pageIds" error={this.props.takedown.error} render={ () => (
+					<div>
+						<label className="form-control-label" htmlFor="pageIds">Affected Pages</label>
+						<SelectPages disabled={this.props.disabled} site={this.props.site} name="pageIds" value={this.props.takedown.dmca.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
+					</div>
+				) } />
+				<FormGroup path="dmca.originalUrls" error={this.props.takedown.error} render={ () => (
+					<div>
+						<label className="form-control-label" htmlFor="originalUrls">Original URLs</label> <small className="text-muted">location of original work</small>
+						<ListField disabled={this.props.disabled} required={true} type="url" name="originalUrls" value={this.props.takedown.dmca.originalUrls} onChange={ ( originalUrls ) => this.updateField( 'originalUrls', originalUrls ) } />
+					</div>
+				) } />
+				<FormGroup path="dmca.method" error={this.props.takedown.error} render={ ( hasError, className ) => (
+					<div>
+						<label className="form-control-label" htmlFor="method">Method</label> <small className="text-muted">how was the C&D sent? (e.g. email, postal mail, fax ...)</small>
+						<input type="text" className={className} disabled={this.props.disabled} name="method" value={this.props.takedown.dmca.method || ''} onChange={this.handleChange.bind( this )} />
+					</div>
+				) } />
+				<FormGroup path="dmca.subject" error={this.props.takedown.error} render={ ( hasError, className ) => (
+					<div>
+						<label className="form-control-label" htmlFor="subject">Subject</label> <small className="text-muted">of the email or fax received</small>
+						<input type="text" className={className} disabled={this.props.disabled} name="subject" value={this.props.takedown.dmca.subject || ''} onChange={this.handleChange.bind( this )} />
+					</div>
+				) } />
+				<FormGroup path="dmca.body" error={this.props.takedown.error} render={ ( hasError, className ) => (
+					<div>
+						<label className="form-control-label" htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
+						<textarea className={className} rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
+					</div>
+				) } />
+				<FormGroup path="dmca.files" error={this.props.takedown.error} render={ () => (
+					<div>
+						<label className="form-control-label">Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
+						<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
+					</div>
+				) } />
 				<fieldset className="form-group">
 					<legend>Sender</legend>
-					<div className="form-group">
-						<label>Name</label> <small className="text-muted">person or organization</small>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderName" value={this.props.takedown.dmca.senderName || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>Name</label> <small className="text-muted">attorney or individual signing</small>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderPerson" value={this.props.takedown.dmca.senderPerson || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>Law Firm or Agent</label> <small className="text-muted">if any</small>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderFirm" value={this.props.takedown.dmca.senderFirm || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>Address</label>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderAddress[0]" value={this.props.takedown.dmca.senderAddress.get( 0, '' )} onChange={this.handleListChange.bind( this )} />
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderAddress[1]" value={this.props.takedown.dmca.senderAddress.get( 1, '' )} onChange={this.handleListChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>City</label>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderCity" value={this.props.takedown.dmca.senderCity || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>State / Providence</label>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderState" value={this.props.takedown.dmca.senderState || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>Zip / Postal Code</label>
-						<input disabled={this.props.disabled} type="text" className="form-control" name="senderZip" value={this.props.takedown.dmca.senderZip || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-					<div className="form-group">
-						<label>Country</label>
-						<Select disabled={this.props.disabled} name="senderCountryCode" options={countries} value={country} onChange={( data ) => this.updateField( 'senderCountryCode', data ? data.value : undefined )} />
-					</div>
+					<FormGroup path="dmca.senderName" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">Name</label> <small className="text-muted">person or organization</small>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderName" value={this.props.takedown.dmca.senderName || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderPerson" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">Name</label> <small className="text-muted">attorney or individual signing</small>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderPerson" value={this.props.takedown.dmca.senderPerson || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderFirm" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">Law Firm or Agent</label> <small className="text-muted">if any</small>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderFirm" value={this.props.takedown.dmca.senderFirm || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderAddress" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">Address</label>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderAddress[0]" value={this.props.takedown.dmca.senderAddress.get( 0, '' )} onChange={this.handleListChange.bind( this )} />
+							<input disabled={this.props.disabled} type="text" className={className} name="senderAddress[1]" value={this.props.takedown.dmca.senderAddress.get( 1, '' )} onChange={this.handleListChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderCity" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">City</label>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderCity" value={this.props.takedown.dmca.senderCity || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderState" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label">State / Providence</label>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderState" value={this.props.takedown.dmca.senderState || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderZip" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label>Zip / Postal Code</label>
+							<input disabled={this.props.disabled} type="text" className={className} name="senderZip" value={this.props.takedown.dmca.senderZip || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.senderCountryCode" error={this.props.takedown.error} render={ () => (
+						<div>
+							<label className="form-control-label">Country</label>
+							<Select disabled={this.props.disabled} name="senderCountryCode" options={countries} value={country} onChange={( data ) => this.updateField( 'senderCountryCode', data ? data.value : undefined )} />
+						</div>
+					) } />
 				</fieldset>
 				<fieldset className="form-group">
 					<legend>Lumen</legend>
-					<div className="form-group">
-						<div className="form-check">
+					<FormGroup path="dmca.lumenSend" error={this.props.takedown.error} render={ ( hasError ) => (
+						<div className={hasError ? 'form-check has-danger' : 'form-check'}>
 							<label className="form-check-label">
 								<input
 									disabled={this.props.disabled}
@@ -439,13 +318,13 @@ export class TakedownCreateDmca extends React.Component {
 								/> Send to Lumen
 							</label>
 						</div>
-					</div>
+					) } />
 					{lumenTitleField}
 				</fieldset>
 				<fieldset className="form-gorup">
 					<legend>Wikimedia Foundation</legend>
-					<div className="form-group">
-						<div className="form-check">
+					<FormGroup path="dmca.lumenSend" error={this.props.takedown.error} render={ ( hasError ) => (
+						<div className={hasError ? 'form-check has-danger' : 'form-check'}>
 							<label className="form-check-label">
 								<input
 									disabled={this.props.disabled}
@@ -467,7 +346,7 @@ export class TakedownCreateDmca extends React.Component {
 								/> Post to Wikimedia Foundation
 							</label>
 						</div>
-					</div>
+					) } />
 					{wmfAnnouncement}
 				</fieldset>
 			</div>

@@ -3,6 +3,7 @@ import { Post } from './post';
 
 export class Dmca extends Record( {
 	lumenSend: undefined,
+	lumenId: undefined,
 	lumenTitle: undefined,
 	senderName: undefined,
 	senderPerson: undefined,

@@ -39,16 +39,20 @@ class Dmca implements GroupSequenceProviderInterface {
 
 	/**
 	 * @var bool
-	 *
-	 * @ORM\Column(name="lumen_send", type="boolean", options={"default"=false})
 	 */
 	private $lumenSend;
+
+	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="lumen_id", type="integer", nullable=true)
+	 */
+	private $lumenId;
 
 	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="lumen_title", type="string", length=255, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $lumenTitle;
 
@@ -78,7 +82,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_name", type="string", length=63, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $senderName;
 
@@ -86,7 +89,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	  * @var string
 	  *
 	  * @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
-	  * @Assert\NotBlank(groups={"Lumen"})
 	  */
 	 private $senderPerson;
 
@@ -94,7 +96,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		* @var string
 		*
 		* @ORM\Column(name="sender_firm", type="string", length=63, nullable=true)
-		* @Assert\NotBlank(groups={"Lumen"})
 		*/
 	 private $senderFirm;
 
@@ -102,7 +103,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		* @var string
 		*
 		* @ORM\Column(name="sender_address_1", type="string", length=127, nullable=true)
-		* @Assert\NotBlank(groups={"Lumen"})
 		*/
 	 private $senderAddress1;
 
@@ -117,7 +117,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		* @var string
 		*
 		* @ORM\Column(name="sender_city", type="string", length=63, nullable=true)
-		* @Assert\NotBlank(groups={"Lumen"})
 		*/
 	 private $senderCity;
 
@@ -125,7 +124,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_state", type="string", length=63, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	private $senderState;
 
@@ -133,7 +131,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="sender_zip", type="string", length=15, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	private $senderZip;
 
@@ -143,8 +140,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		* @ORM\ManyToOne(targetEntity="App\Entity\Country")
 		* @ORM\JoinColumn(name="sender_country", referencedColumnName="country_id")
 		* @Attach()
-		* @Assert\Valid()
-		* @Assert\NotNull(groups={"Lumen"})
 		*/
 	private $senderCountry;
 
@@ -152,7 +147,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var \DateTimeInterface
 	 *
 	 * @ORM\Column(name="sent", type="date", nullable=true)
-	 * @Assert\NotNull(groups={"Lumen"})
 	 */
 	private $sent;
 
@@ -162,7 +156,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		* @ORM\ManyToOne(targetEntity="App\Entity\Action")
 		* @ORM\JoinColumn(name="action_taken", referencedColumnName="action_id")
 		* @Attach()
-		* @Assert\NotNull(groups={"Lumen"})
 		*/
 	private $actionTaken;
 
@@ -170,7 +163,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="method", type="string", length=127, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $method;
 
@@ -178,7 +170,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="subject", type="string", length=255, nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $subject;
 
@@ -186,7 +177,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @var string
 	 *
 	 * @ORM\Column(name="body", type="text", nullable=true)
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 */
 	 private $body;
 
@@ -333,12 +323,34 @@ class Dmca implements GroupSequenceProviderInterface {
 	/**
 	 * Send to Lumen
 	 *
-	 * @Groups({"api"})
-	 *
 	 * @return bool
 	 */
 	public function getLumenSend() :? bool {
 		return $this->lumenSend;
+	}
+
+	/**
+	 * Set Lumen Id
+	 *
+	 * @param int|null $lumenId Lumen Id
+	 *
+	 * @return self
+	 */
+	public function setLumenId( ?int $lumenId ) : self {
+		$this->lumenId = $lumenId;
+
+		return $this;
+	}
+
+	/**
+	 * Lumen Id
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return bool
+	 */
+	public function getLumenId() :? int {
+		return $this->lumenId;
 	}
 
 	/**
@@ -360,6 +372,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Lumen Title
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=255)
 	 *
 	 * @return string
 	 */
@@ -406,6 +420,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Pages
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Count(min=1, groups={"Lumen"})
 	 *
 	 * @return array
 	 */
@@ -474,6 +489,10 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Originals
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Count(min=1, groups={"Lumen"})
+	 * @Assert\All( {
+	 *     @Assert\Url()
+	 * } )
 	 *
 	 * @return array
 	 */
@@ -522,6 +541,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Name.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=63)
 	 *
 	 * @return string
 	 */
@@ -548,6 +569,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Person.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=63)
 	 *
 	 * @return string
 	 */
@@ -574,6 +597,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Firm.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=63)
 	 *
 	 * @return string
 	 */
@@ -607,6 +632,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Address.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 *
 	 * @return string[]
 	 */
@@ -640,6 +666,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * City.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=63)
 	 *
 	 * @return string
 	 */
@@ -666,6 +694,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * State.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=63)
 	 *
 	 * @return string
 	 */
@@ -692,6 +722,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Zip.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=15)
 	 *
 	 * @return string
 	 */
@@ -742,6 +774,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Country.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Lumen"})
 	 *
 	 * @return Country
 	 */
@@ -772,6 +805,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Sent
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Lumen"})
 	 *
 	 * @return \DateTime
 	 */
@@ -823,6 +857,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Action Taken Id.
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Lumen"})
 	 *
 	 * @return Country
 	 */
@@ -853,6 +888,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Method
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=127)
 	 *
 	 * @return string
 	 */
@@ -879,6 +916,8 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Subject
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
+	 * @Assert\Length(max=255)
 	 *
 	 * @return string
 	 */
@@ -905,6 +944,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Body
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotBlank(groups={"Lumen"})
 	 *
 	 * @return string
 	 */
@@ -931,6 +971,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * WMF Title
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Length(max=255)
 	 *
 	 * @return string
 	 */
@@ -1170,6 +1211,7 @@ class Dmca implements GroupSequenceProviderInterface {
 			] );
 		} );
 	}
+
 	/**
 	 * {@inheritdoc}
 	 *

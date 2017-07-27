@@ -44,8 +44,13 @@ class LumenNormalizer implements NormalizerInterface {
 		];
 
 		if ( $object->getDmca()->getSenderAddress() ) {
-			$sender['address_line_1'] = $object->getDmca()->getSenderAddress()[0];
-			$sender['address_line_2'] = $object->getDmca()->getSenderAddress()[1];
+			$address = $object->getDmca()->getSenderAddress();
+			if ( isset( $address[0] ) ) {
+				$sender['address_line_1'] = $address[0];
+			}
+			if ( isset( $address[1] ) ) {
+				$sender['address_line_2'] = $address[1];
+			}
 		}
 
 		if ( $object->getDmca()->getSenderCountry() ) {

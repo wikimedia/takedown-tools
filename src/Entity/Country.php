@@ -17,7 +17,6 @@ class Country {
 	 *
 	 * @ORM\Column(name="country_id", type="string", length=2)
 	 * @ORM\Id
-	 * @Assert\Country()
 	 */
 	private $id;
 
@@ -46,6 +45,8 @@ class Country {
 
 	/**
 	 * Id
+	 *
+	 * @Assert\Country()
 	 *
 	 * @return string
 	 */
