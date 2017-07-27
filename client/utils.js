@@ -192,3 +192,25 @@ export function defaultUserNoticeText( username, pageIds ) {
 	'Sincerely,\n' +
 	'~~~~';
 }
+
+/**
+ * Remove Errors from a Record.
+ *
+ * @param {Record} record
+ * @param {string} propertyPath
+ *
+ * @return {Record}
+ */
+export function removeErrors( record, propertyPath ) {
+	let violations;
+
+	if ( record.error && propertyPath ) {
+		violations = record.error.constraintViolations.filter( ( violation ) => {
+			return violation.propertyPath !== propertyPath;
+		} );
+
+		record = record.setIn( [ 'error', 'constraintViolations' ], violations );
+	}
+
+	return record;
+}

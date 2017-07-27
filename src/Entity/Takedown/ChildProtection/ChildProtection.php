@@ -10,14 +10,16 @@ use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown_cp")
  *
- * @@todo add validation.
+ * @Assert\GroupSequenceProvider
  */
-class ChildProtection {
+class ChildProtection implements GroupSequenceProviderInterface {
 
 	/**
 	 * @var Takedown
@@ -198,6 +200,7 @@ class ChildProtection {
 	 * Approver Name
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Approved"})
 	 *
 	 * @return int
 	 */
@@ -254,6 +257,7 @@ class ChildProtection {
 	 * Sent
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Approved"})
 	 *
 	 * @return \DateTime
 	 */
@@ -308,6 +312,7 @@ class ChildProtection {
 	 * Files
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Valid()
 	 *
 	 * @return Collection
 	 */
@@ -352,5 +357,20 @@ class ChildProtection {
 			$file->setCp( $this );
 			return $file;
 		} );
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getGroupSequence() {
+		$groups = [ 'ChildProtection' ];
+
+		if ( $this->approved ) {
+			$groups[] = 'Approved';
+		}
+
+		return $groups;
 	}
 }

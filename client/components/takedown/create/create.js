@@ -12,6 +12,7 @@ import { SelectUsers } from 'app/components/fields/select-users';
 import { MetadataField } from 'app/components/fields/metadata';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { User } from 'app/entities/user';
+import { removeErrors } from 'app/utils';
 
 export class TakedownCreate extends React.Component {
 
@@ -48,7 +49,7 @@ export class TakedownCreate extends React.Component {
 			.set( fieldName, value )
 			.set( 'status', 'dirty' );
 
-		takedown = this.removeErrors( takedown, fieldName );
+		takedown = removeErrors( takedown, fieldName );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -60,7 +61,7 @@ export class TakedownCreate extends React.Component {
 			} ) )
 			.set( 'status', 'dirty' );
 
-		takedown = this.removeErrors( takedown, 'invovled' );
+		takedown = removeErrors( takedown, 'invovled' );
 
 		this.props.addUsers( involved );
 		this.props.updateTakedown( takedown );
@@ -96,12 +97,12 @@ export class TakedownCreate extends React.Component {
 
 		if ( this.props.takedown.type ) {
 			metaDataField = (
-				<div className="form-group row">
-					<div className="col">
+				<FormGroup path="metadataIds" error={this.props.takedown.error} render={() => (
+					<div>
 						<label className="form-control-label" htmlFor="metadataIds">Metadata</label> <small id="passwordHelpInline" className="text-muted">check all that are true</small>
 						<MetadataField type={this.props.takedown.type} value={this.props.takedown.metadataIds} onChange={( value ) => this.updateField( 'metadataIds', value )} />
 					</div>
-				</div>
+				)} />
 			);
 		}
 

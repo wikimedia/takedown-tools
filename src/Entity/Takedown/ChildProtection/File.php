@@ -6,14 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="takedown_cp_file")
  *
- * @todo add validation.
+ * @Assert\GroupSequenceProvider
  */
-class File {
+class File implements GroupSequenceProviderInterface {
 
 	/**
 	 * @var int
@@ -82,7 +84,7 @@ class File {
 	/**
 	 * Set Id.
 	 *
-	 * @param string $id ID
+	 * @param int $id ID
 	 *
 	 * @return self
 	 */
@@ -144,6 +146,8 @@ class File {
 	 * Get Name
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Length(max=255)
+	 * @Assert\NotBlank(groups={"Approved"})
 	 *
 	 * @return string
 	 */
@@ -170,6 +174,8 @@ class File {
 	 * Get IP Address
 	 *
 	 * @Groups({"api"})
+	 * @Assert\Ip()
+	 * @Assert\NotBlank(groups={"Approved"})
 	 *
 	 * @return string
 	 */
@@ -196,6 +202,7 @@ class File {
 	 * Get created
 	 *
 	 * @Groups({"api"})
+	 * @Assert\NotNull(groups={"Approved"})
 	 *
 	 * @return \DateTime
 	 */
@@ -227,5 +234,20 @@ class File {
 	 */
 	public function getExif() :? array {
 		return $this->exif;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 *
+	 * @return array
+	 */
+	public function getGroupSequence() {
+		$groups = [ 'File' ];
+
+		if ( $this->getCp() && $this->getCp()->isApproved() ) {
+			$groups[] = 'Approved';
+		}
+
+		return $groups;
 	}
 }

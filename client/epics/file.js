@@ -176,14 +176,16 @@ export function readExif( action$ ) {
 		.filter( ( action ) => action.takedown.cp.files.size > 0 )
 		.flatMap( ( action ) => {
 			return Observable.from( action.takedown.cp.files )
+				.filter( ( file ) => file.status === 'local' )
 				.filter( ( file ) => typeof file.exif === 'undefined' )
 				.flatMap( ( file ) => {
 					return readAsArrayBuffer( file.file )
 						.then( ( arrayBuffer ) => {
-							return file.set( 'exif', readFromBinaryFile( arrayBuffer ) );
+							const exif = readFromBinaryFile( arrayBuffer );
+							return file.set( 'exif', exif || undefined ).set( 'status', 'ready' );
 						} )
 						.catch( () => {
-							return file.set( 'exif', null );
+							return file.set( 'status', 'ready' );
 						} );
 				} )
 				.map( ( file ) => {

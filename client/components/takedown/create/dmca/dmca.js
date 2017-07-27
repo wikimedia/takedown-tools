@@ -12,6 +12,7 @@ import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
 import { User } from 'app/entities/user';
 import { DatePicker } from 'app/components/fields/date-picker';
+import { removeErrors } from 'app/utils';
 
 export class TakedownCreateDmca extends React.Component {
 
@@ -41,31 +42,11 @@ export class TakedownCreateDmca extends React.Component {
 		}
 	}
 
-	removeErrors( takedown, propertyPath ) {
-		let violations;
-
-		if ( takedown.error && propertyPath ) {
-			violations = takedown.error.constraintViolations.filter( ( violation ) => {
-				return violation.propertyPath !== propertyPath;
-			} );
-
-			takedown = takedown.setIn( [ 'error', 'constraintViolations' ], violations );
-		}
-
-		return takedown;
-	}
-
-	updateField( fieldName, value, propertyPath ) {
+	updateField( fieldName, value ) {
 		let takedown = this.props.takedown.setIn( [ 'dmca', fieldName ], value )
 			.set( 'status', 'dirty' );
 
-		if ( takedown.error ) {
-			if ( !propertyPath ) {
-				propertyPath = 'dmca.' + fieldName;
-			}
-
-			takedown = this.removeErrors( takedown, propertyPath );
-		}
+		takedown = removeErrors( takedown, 'dmca.' + fieldName );
 
 		this.props.updateTakedown( takedown );
 	}
@@ -75,7 +56,7 @@ export class TakedownCreateDmca extends React.Component {
 			.set( 'status', 'dirty' );
 
 		Object.keys( data ).forEach( ( fieldName ) => {
-			takedown = this.removeErrors( takedown, 'dmca.' + fieldName );
+			takedown = removeErrors( takedown, 'dmca.' + fieldName );
 		} );
 
 		this.props.updateTakedown( takedown );
@@ -101,7 +82,7 @@ export class TakedownCreateDmca extends React.Component {
 		let takedown = this.props.takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
 			.set( 'status', 'dirty' );
 
-		takedown = this.removeErrors( takedown, 'dmca.files' );
+		takedown = removeErrors( takedown, 'dmca.files' );
 
 		this.props.addFiles( files );
 		this.props.updateTakedown( takedown );
@@ -115,7 +96,7 @@ export class TakedownCreateDmca extends React.Component {
 		takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds )
 			.set( 'status', 'dirty' );
 
-		takedown = this.removeErrors( takedown, 'dmca.files' );
+		takedown = removeErrors( takedown, 'dmca.files' );
 
 		this.props.updateTakedown( takedown );
 		this.props.deleteFile( file );
