@@ -3,7 +3,6 @@
 namespace App\Client;
 
 use App\Entity\Takedown\Takedown;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;

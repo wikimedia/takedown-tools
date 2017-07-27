@@ -38,6 +38,14 @@ class NcmeNormalizer implements NormalizerInterface {
 			$data['incidentSummary']['incidentDateTime'] = $file->getUploaded()->format( 'c' );
 		}
 
+		if ( $object->getPages()->count() ) {
+			$urls = $object->getPages()->map( function( $page ) use ( $object ) {
+				return $page->getUrl( $object->getSite() );
+			} )->toArray();
+
+			$data['internetDetails']['webPageIncident']['url'] = $urls;
+		}
+
 		return $data;
 	}
 

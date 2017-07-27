@@ -64,27 +64,8 @@ class LumenNormalizer implements NormalizerInterface {
 		} )->toArray();
 
 		$infringing = $object->getPages()->map( function ( $page ) use ( $object ) {
-			$site = $object->getSite();
-
-			if ( !$site ) {
-				return [
-					'url' => '/' . $page->getKey(),
-				];
-			}
-
-			$path = '/wiki/' . $page->getKey();
-
-			if ( $site->getInfo() ) {
-				$info = $site->getInfo();
-
-				if ( !empty( $info['general']['articlepath'] ) ) {
-					$template = $info['general']['articlepath'];
-					$path = preg_replace( '/^(.*)$/', $template, $page->getKey() );
-				}
-			}
-
 			return [
-				'url' => 'https://' . $site->getDomain() . $path,
+				'url' => $page->getUrl( $object->getSite() ),
 			];
 		} )->toArray();
 

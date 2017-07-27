@@ -2,6 +2,7 @@
 
 namespace App\Entity\Takedown;
 
+use App\Entity\Site;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
@@ -91,5 +92,31 @@ class Page {
 	 */
 	public function getKey() :? string {
 		return $this->key;
+	}
+
+	/**
+	 * Get URL
+	 *
+	 * @param Site|null $site Site
+	 *
+	 * @return string
+	 */
+	public function getUrl( ?Site $site = null ) : string {
+		if ( !$site ) {
+			return '/' . $this->key;
+		}
+
+		$path = '/wiki/' . $this->key;
+
+		if ( $site->getInfo() ) {
+			$info = $site->getInfo();
+
+			if ( !empty( $info['general']['articlepath'] ) ) {
+				$template = $info['general']['articlepath'];
+				$path = preg_replace( '/^(.*)$/', $template, $this->key );
+			}
+		}
+
+		return 'https://' . $site->getDomain() . $path;
 	}
 }
