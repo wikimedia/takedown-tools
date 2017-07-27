@@ -237,7 +237,7 @@ export function saveDmcaPost( action$, store ) {
 					}
 
 					takedown = takedown.setIn( [ 'dmca', action.postName, 'status' ], 'error' );
-					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ],  new Error( ajaxError.xhr.response ) );
+					takedown = takedown.setIn( [ 'dmca', action.postName, 'error' ], new Error( ajaxError.xhr.response ) );
 
 					return Observable.of( TakedownActions.update( takedown ) );
 				} );
@@ -297,7 +297,7 @@ export function saveDmcaUserNotice( action$, store ) {
 						notice = notice.set( 'captcha', new Captcha( ajaxError.xhr.response.captcha ) );
 					} else {
 						notice = notice.set( 'status', 'error' );
-						notice = notice.set( 'error',  new Error( ajaxError.xhr.response ) );
+						notice = notice.set( 'error', new Error( ajaxError.xhr.response ) );
 					}
 
 					takedown = takedown.setIn( [ 'dmca', 'notices', action.user.id ], notice );

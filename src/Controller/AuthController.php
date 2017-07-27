@@ -51,7 +51,7 @@ class AuthController {
 	 * AuthController
 	 *
 	 * @param CacheInterface $cache PSR Cache Interface
-	 * @param ClientInterface $client MediWiki Client.
+	 * @param MediaWikiClientInterface $client MediWiki Client.
 	 * @param Client $oauthClient MediWiki OAuth Client.
 	 * @param TokenStorageInterface $tokenStorage Symfony Token Storage.
 	 * @param JWTTokenManagerInterface $jwtManager JWT Manager
