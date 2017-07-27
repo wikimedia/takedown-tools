@@ -3,6 +3,7 @@
 namespace App\Serializer;
 
 use App\Entity\Takedown\Takedown;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
@@ -25,11 +26,16 @@ class NcmeNormalizer implements NormalizerInterface {
 				// @FIXME ASSUMPTION, not even asking yet
 				'incidentType' => 'Child Pornography (possession, manufacture, and distribution)',
 			],
+			'internetDetails' => [],
 		];
 
-		// @TODO Get the date of the oldest file and use that for the summary.
-		if ( $object->getCp()->getAccessed() ) {
-			$data['incidentSummary']['incidentDateTime'] = $object->getCp()->getAccessed()->format( 'c' );
+		$criteria = Criteria::create()
+			->orderBy( [ 'uploaded' => 'DESC' ] );
+		$files = $object->getCp()->getFiles()->matching( $citeria );
+
+		if ( $files->count() ) {
+			$file = $files->first();
+			$data['incidentSummary']['incidentDateTime'] = $file->getUploaded()->format( 'c' );
 		}
 
 		return $data;

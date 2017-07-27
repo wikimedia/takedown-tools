@@ -70,7 +70,7 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 					<TextEdit
 						rows="5"
 						value={notice.text}
-						default={defaultUserNoticeText( this.props.user.username, this.props.takedown.dmca.pageIds )}
+						default={defaultUserNoticeText( this.props.user.username, this.props.takedown.pageIds )}
 						name="text"
 						disabled={disabled}
 						onChange={( value ) => this.updateField( 'text', value )} />

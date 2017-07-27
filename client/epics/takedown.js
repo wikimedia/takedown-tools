@@ -186,12 +186,12 @@ export function saveDmcaPost( action$, store ) {
 				case 'commonsPost':
 					endPoint = 'commons';
 					send = 'commonsSend';
-					post = post.set( 'text', post.text || defaultCommonsText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.dmca.pageIds ) );
+					post = post.set( 'text', post.text || defaultCommonsText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
 					break;
 				case 'commonsVillagePumpPost':
 					endPoint = 'commons-village-pump';
 					send = 'commonsVillagePumpSend';
-					post = post.set( 'text', post.text || defaultCommonsVillagePumpText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.dmca.pageIds ) );
+					post = post.set( 'text', post.text || defaultCommonsVillagePumpText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
 					break;
 			}
 

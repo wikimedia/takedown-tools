@@ -1,32 +1,30 @@
 <?php
 
-namespace App\Entity\Takedown\Dmca;
+namespace App\Entity\Takedown;
 
-use App\Entity\Takedown\Dmca\Dmca;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="takedown_dmca_page")
- *
- * @todo add validation.
+ * @ORM\Table(name="takedown_page")
  */
 class Page {
 
 	/**
-	 * @var Dmca
+	 * @var Takedown
 	 *
 	 * @ORM\Id
 	 * @ORM\ManyToOne(
-	 *	targetEntity="App\Entity\Takedown\Dmca\Dmca",
+	 *	targetEntity="App\Entity\Takedown\Takedown",
 	 *	inversedBy="pages"
 	 *)
 	 * @ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")
 	 * @Attach()
 	 */
-	private $dmca;
+	private $takedown;
 
 	/**
 	 * @var string
@@ -45,30 +43,30 @@ class Page {
 	 */
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
-		$this->dmca = $params->getInstance( 'dmca', Dmca::class, new Dmca() );
+		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->key = $params->getString( 'key' );
 	}
 
 	/**
-	 * Set Dmca
+	 * Set Takedown
 	 *
-	 * @param Dmca $dmca Dmca
+	 * @param Takedown $takedown Takedown
 	 *
 	 * @return self
 	 */
-	public function setDmca( Dmca $dmca ) : self {
-		$this->dmca = $dmca;
+	public function setTakedown( Takedown $takedown ) : self {
+		$this->takedown = $takedown;
 
 		return $this;
 	}
 
 	/**
-	 * Get Dmca
+	 * Get Takedown
 	 *
-	 * @return Dmca
+	 * @return Takedown
 	 */
-	public function getDmca() :? Dmca {
-		return $this->dmca;
+	public function getTakedown() :? Takedown {
+		return $this->takedown;
 	}
 
 	/**
@@ -86,6 +84,8 @@ class Page {
 
 	/**
 	 * Get Key
+	 *
+	 * @Assert\Length(max=255)
 	 *
 	 * @return string
 	 */

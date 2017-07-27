@@ -64,13 +64,22 @@ class LumenClient implements LumenClientInterface {
 	public function postNotice( Takedown $takedown ) : PromiseInterface {
 		$promise = new FulfilledPromise( $takedown );
 
+		// Get the site with info.
 		if ( $takedown->getSite() ) {
-			$promise = $this->mediaWikiClient->getSite( $takedown->getSite()->getId() )->then(
-				function ( $site ) use ( $takedown ) {
+			$promise = $this->mediaWikiClient->getSite( $takedown->getSite()->getId() )
+				->then( function ( $site ) use ( $takedown ) {
 					$takedown->setSite( $site );
-					return $takedown;
-				}
-			);
+
+					if ( $site->getInfo() ) {
+						return $takedown;
+					}
+
+					return $this->mediaWikiClient->getSiteInfo( $site )
+						->then( function ( $info ) use ( $takedown ) {
+							$takedown->getSite()->setInfo( $info );
+							return $takedown;
+						} );
+				} );
 		}
 
 		return $promise->then( function ( $takedown ) {

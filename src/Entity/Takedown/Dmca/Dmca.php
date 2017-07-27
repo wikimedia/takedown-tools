@@ -6,7 +6,6 @@ use App\Entity\File;
 use App\Entity\Action;
 use App\Entity\Country;
 use App\Entity\Takedown\Takedown;
-use App\Entity\Takedown\Dmca\Page;
 use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -55,17 +54,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @ORM\Column(name="lumen_title", type="string", length=255, nullable=true)
 	 */
 	 private $lumenTitle;
-
-	/**
-	 * @var Collection
-	 *
-	 * @ORM\OneToMany(
-	 * 	targetEntity="App\Entity\Takedown\Dmca\Page",
-	 * 	mappedBy="dmca",
-	 * 	cascade={"persist", "remove"}
-	 *)
-	 */
-	private $pages;
 
 	/**
 	 * @var Collection
@@ -247,11 +235,6 @@ class Dmca implements GroupSequenceProviderInterface {
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->lumenSend = $params->getBoolean( 'lumenSend', false );
 		$this->lumenTitle = $params->getString( 'lumenTitle' );
-		$this->pages = $params->getCollection(
-			'pages',
-			Page::class,
-			new ArrayCollection()
-		);
 		$this->originals = $params->getCollection(
 			'originals',
 			Original::class,
@@ -379,75 +362,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 */
 	public function getlumenTitle() :? string {
 		return $this->lumenTitle;
-	}
-
-	/**
-	 * Pages
-	 *
-	 * @return Collection
-	 */
-	public function getPages() : Collection {
-		return $this->pages;
-	}
-
-	/**
-	 * Add Page
-	 *
-	 * @param Page $page Page
-	 *
-	 * @return self
-	 */
-	public function addPage( Page $page ) : self {
-		$this->pages->add( $page );
-
-		return $this;
-	}
-
-	/**
-	 * Remove Page
-	 *
-	 * @param Page $page Page
-	 *
-	 * @return self
-	 */
-	public function removePage( Page $page ) : self {
-		$this->pages->remove( $page );
-
-		return $this;
-	}
-
-	/**
-	 * Pages
-	 *
-	 * @Groups({"api"})
-	 * @Assert\Count(min=1, groups={"Lumen"})
-	 *
-	 * @return array
-	 */
-	public function getPageIds() : array {
-		return $this->pages->map( function ( $page ) {
-			return $page->getKey();
-		} )->toArray();
-	}
-
-	/**
-	 * Pages
-	 *
-	 * @Groups({"api"})
-	 *
-	 * @param string[] $pageIds Page ids
-	 *
-	 * @return Collection
-	 */
-	public function setPageIds( array $pageIds ) : self {
-		$this->pages = new ArrayCollection( array_map( function ( $id ) {
-			return new Page( [
-				'key' => $id,
-				'dmca' => $this,
-			] );
-		}, $pageIds ) );
-
-		return $this;
 	}
 
 	/**
@@ -1197,13 +1111,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @return void
 	 */
 	public function __clone() {
-		$this->pages = $this->pages->map( function( $page ) {
-			return new Page( [
-				'key' => $page->getKey(),
-				'dmca' => $this,
-			] );
-		} );
-
 		$this->originals = $this->originals->map( function( $original ) {
 			return new Original( [
 				'url' => $original->getUrl(),

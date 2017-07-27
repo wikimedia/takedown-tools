@@ -63,7 +63,7 @@ class LumenNormalizer implements NormalizerInterface {
 			];
 		} )->toArray();
 
-		$infringing = $object->getDmca()->getPages()->map( function ( $page ) use ( $object ) {
+		$infringing = $object->getPages()->map( function ( $page ) use ( $object ) {
 			$site = $object->getSite();
 
 			if ( !$site ) {
@@ -72,17 +72,25 @@ class LumenNormalizer implements NormalizerInterface {
 				];
 			}
 
-			// @TODO Use the article path!
+			$path = '/wiki/' . $page->getKey();
+
+			if ( $site->getInfo() ) {
+				$info = $site->getInfo();
+
+				if ( !empty( $info['general']['articlepath'] ) ) {
+					$template = $info['general']['articlepath'];
+					$path = preg_replace( '/^(.*)$/', $template, $page->getKey() );
+				}
+			}
+
 			return [
-				'url' => 'https://' . $site->getDomain() . '/wiki/' . $page->getKey(),
+				'url' => 'https://' . $site->getDomain() . $path,
 			];
 		} )->toArray();
 
 		$files = $object->getDmca()->getFiles()->map( function( $file ) {
 			return [
 				'kind' => 'original',
-				// Do not add the filename since the file needs to be uploaded.
-				// 'file' => $this->filesDir . '/' . $file->getPath()
 			];
 		} )->toArray();
 
@@ -106,7 +114,7 @@ class LumenNormalizer implements NormalizerInterface {
 			'source' => $object->getDmca()->getMethod(),
 			'tag_list' => 'wikipedia, wikimedia',
 			'jurisidiction_list' => 'US, CA',
-			'url_count' => $object->getDmca()->getPages()->count(),
+			'url_count' => $object->getPages()->count(),
 			'works_attributes' => [
 				[
 					'copyrighted_urls_attributes' => $originals,
@@ -120,7 +128,6 @@ class LumenNormalizer implements NormalizerInterface {
 				],
 				[
 					'name' => 'recipient',
-					// @TODO Add recipient.
 					'entity_attributes' => $recipient,
 				],
 				[

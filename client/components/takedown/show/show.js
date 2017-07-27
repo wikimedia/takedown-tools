@@ -5,6 +5,7 @@ import moment from 'moment';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { User } from 'app/entities/user';
 import { Site } from 'app/entities/site';
+import { Title } from 'mediawiki-title';
 import { Loading } from 'app/components/loading';
 import { ErrorComponent } from 'app/components/error';
 import { TakedownShowDmcaContainer } from './dmca/dmca.container';
@@ -59,7 +60,8 @@ export class TakedownShow extends React.Component {
 			type,
 			metadata,
 			typeShow,
-			created;
+			created,
+			pages;
 
 		if ( this.props.site.id ) {
 			site = (
@@ -88,6 +90,27 @@ export class TakedownShow extends React.Component {
 					);
 					break;
 			}
+		}
+
+		if ( this.props.takedown.siteId && this.props.takedown.pageIds && this.props.site.info ) {
+			pages = this.props.takedown.pageIds.map( ( id ) => {
+				const url = 'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath ),
+					title = Title.newFromText( id, this.props.site.info );
+
+				let content;
+
+				if ( title.getNamespace().isMain() ) {
+					content = title.getKey().replace( /_/g, ' ' );
+				} else {
+					content = `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`;
+				}
+
+				return (
+					<div key={id}>
+						<a href={url}>{content}</a>
+					</div>
+				);
+			} );
 		}
 
 		if ( this.props.metadata.size > 0 ) {
@@ -130,6 +153,10 @@ export class TakedownShow extends React.Component {
 								<tr>
 									<td>Involved Users</td>
 									<td>{involved}</td>
+								</tr>
+								<tr>
+									<td>Pages Affected</td>
+									<td>{pages}</td>
 								</tr>
 								<tr>
 									<td>Metadata</td>

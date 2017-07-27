@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as moment from 'moment';
 import { Set } from 'immutable';
-import { Title } from 'mediawiki-title';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
@@ -37,27 +36,6 @@ export class TakedownShowDmca extends React.Component {
 
 		if ( this.props.takedown.dmca.actionTakenId ) {
 			actionTaken = this.props.takedown.dmca.actionTakenId.charAt( 0 ).toUpperCase() + this.props.takedown.dmca.actionTakenId.slice( 1 );
-		}
-
-		if ( this.props.takedown.siteId && this.props.takedown.dmca.pageIds && this.props.site.info ) {
-			pages = this.props.takedown.dmca.pageIds.map( ( id ) => {
-				const url = 'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath ),
-					title = Title.newFromText( id, this.props.site.info );
-
-				let content;
-
-				if ( title.getNamespace().isMain() ) {
-					content = title.getKey().replace( /_/g, ' ' );
-				} else {
-					content = `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`;
-				}
-
-				return (
-					<div key={id}>
-						<a href={url}>{content}</a>
-					</div>
-				);
-			} );
 		}
 
 		files = this.props.files.map( ( file ) => {
@@ -138,10 +116,6 @@ export class TakedownShowDmca extends React.Component {
 				<tr>
 					<td>Action Taken</td>
 					<td>{actionTaken}</td>
-				</tr>
-				<tr>
-					<td>Pages Affected</td>
-					<td>{pages}</td>
 				</tr>
 				<tr>
 					<td>Original Urls</td>

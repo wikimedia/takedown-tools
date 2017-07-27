@@ -14,6 +14,7 @@ export class Takedown extends Record( {
 	error: undefined,
 	siteId: undefined,
 	type: undefined,
+	pageIds: new Set(),
 	metadataIds: new Set(),
 	dmca: new Dmca(),
 	cp: new Cp()
@@ -22,6 +23,7 @@ export class Takedown extends Record( {
 	constructor( data = {} ) {
 		data = {
 			...data,
+			pageIds: new Set( data.pageIds || [] ),
 			metadataIds: new Set( data.metadataIds ? data.metadataIds : [] ),
 			dmca: new Dmca( data.dmca ? data.dmca : {} ),
 			cp: new Cp( data.cp ? data.cp : {} )

@@ -5,6 +5,7 @@ namespace App\Entity\Takedown;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Metadata;
+use App\Entity\Takedown\Page;
 use App\Entity\Takedown\Dmca\Dmca;
 use App\Entity\Takedown\ChildProtection\ChildProtection;
 use Doctrine\Common\Collections\Collection;
@@ -83,6 +84,17 @@ class Takedown implements GroupSequenceProviderInterface {
 	/**
 	 * @var Collection
 	 *
+	 * @ORM\OneToMany(
+	 * 	targetEntity="App\Entity\Takedown\Page",
+	 * 	mappedBy="takedown",
+	 * 	cascade={"persist", "remove"}
+	 *)
+	 */
+	private $pages;
+
+	/**
+	 * @var Collection
+	 *
 	 * @ORM\ManyToMany(targetEntity="App\Entity\Metadata")
 	 * @ORM\JoinTable(name="takedown_metadata",
 	 *      joinColumns={@ORM\JoinColumn(name="takedown_id", referencedColumnName="takedown_id")},
@@ -131,7 +143,12 @@ class Takedown implements GroupSequenceProviderInterface {
 		$this->id = $params->getInt( 'id' );
 		$this->reporter = $params->getInstance( 'reporter', User::class );
 		$this->involved = $params->getCollection( 'involved', User::class, new ArrayCollection() );
-		$this->metadata = $params->getCollection( 'involved', Metadata::class, new ArrayCollection() );
+		$this->metadata = $params->getCollection( 'metadata', Metadata::class, new ArrayCollection() );
+		$this->pages = $params->getCollection(
+			'pages',
+			Page::class,
+			new ArrayCollection()
+		);
 		$this->dmca = $params->getInstance( 'dmca', Dmca::class );
 		$this->cp = $params->getInstance( 'cp', ChildProtection::class );
 	}
@@ -258,7 +275,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param int $siteId Site Id.
+	 * @param string $siteId Site Id.
 	 *
 	 * @return User
 	 */
@@ -363,6 +380,75 @@ class Takedown implements GroupSequenceProviderInterface {
 		}, $userNames );
 
 		$this->involved = new ArrayCollection( $users );
+
+		return $this;
+	}
+
+	/**
+	 * Pages
+	 *
+	 * @return Collection
+	 */
+	public function getPages() : Collection {
+		return $this->pages;
+	}
+
+	/**
+	 * Add Page
+	 *
+	 * @param Page $page Page
+	 *
+	 * @return self
+	 */
+	public function addPage( Page $page ) : self {
+		$this->pages->add( $page );
+
+		return $this;
+	}
+
+	/**
+	 * Remove Page
+	 *
+	 * @param Page $page Page
+	 *
+	 * @return self
+	 */
+	public function removePage( Page $page ) : self {
+		$this->pages->remove( $page );
+
+		return $this;
+	}
+
+	/**
+	 * Pages
+	 *
+	 * @Groups({"api"})
+	 * @Assert\Count(min=1, groups={"Lumen"})
+	 *
+	 * @return array
+	 */
+	public function getPageIds() : array {
+		return $this->pages->map( function ( $page ) {
+			return $page->getKey();
+		} )->toArray();
+	}
+
+	/**
+	 * Pages
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string[] $pageIds Page ids
+	 *
+	 * @return Collection
+	 */
+	public function setPageIds( array $pageIds ) : self {
+		$this->pages = new ArrayCollection( array_map( function ( $id ) {
+			return new Page( [
+				'key' => $id,
+				'dmca' => $this,
+			] );
+		}, $pageIds ) );
 
 		return $this;
 	}
@@ -550,6 +636,13 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * @return Takedown
 	 */
 	public function __clone() {
+		$this->pages = $this->pages->map( function( $page ) {
+			return new Page( [
+				'key' => $page->getKey(),
+				'takedown' => $this,
+			] );
+		} );
+
 		if ( $this->dmca ) {
 			$this->dmca = clone $this->dmca;
 			$this->dmca->setTakedown( $this );

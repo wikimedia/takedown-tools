@@ -8,9 +8,11 @@ import { TakedownCreateCpContainer } from './cp.container';
 import { Submit } from 'app/components/fields/submit';
 import { FormError } from 'app/components/fields/form-error';
 import { FormGroup } from 'app/components/fields/form-group';
+import { SelectPages } from 'app/components/fields/select-pages';
 import { SelectUsers } from 'app/components/fields/select-users';
 import { MetadataField } from 'app/components/fields/metadata';
 import { Takedown } from 'app/entities/takedown/takedown';
+import { Site } from 'app/entities/site';
 import { User } from 'app/entities/user';
 import { removeErrors } from 'app/utils';
 
@@ -123,6 +125,12 @@ export class TakedownCreate extends React.Component {
 								<SelectUsers disabled={disabled} name="involvedIds" multi={true} value={this.props.involved} users={ this.props.users.toArray() } onChange={this.updateInvolved.bind( this )} />
 							</div>
 						) } />
+						<FormGroup path="pageIds" error={this.props.takedown.error} render={ () => (
+							<div>
+								<label className="form-control-label" htmlFor="pageIds">Affected Pages</label>
+								<SelectPages disabled={disabled} site={this.props.site} name="pageIds" value={this.props.takedown.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
+							</div>
+						) } />
 						<div className="form-group">
 							<label className="form-control-label">Type</label>
 							<div className="row">
@@ -153,6 +161,7 @@ TakedownCreate.propTypes = {
 	fetchSites: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
 	users: PropTypes.instanceOf( Set ).isRequired,
+	site: PropTypes.instanceOf( Site ),
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
 	siteOptions: PropTypes.arrayOf( PropTypes.shape( {
 		label: PropTypes.string,

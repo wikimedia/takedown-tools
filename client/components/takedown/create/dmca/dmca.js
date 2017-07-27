@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
 import moment from 'moment';
-import { SelectPages } from 'app/components/fields/select-pages';
 import { ListField } from 'app/components/fields/list';
 import { FormGroup } from 'app/components/fields/form-group';
 import { FileUploadField } from 'app/components/fields/file-upload';
@@ -186,12 +185,6 @@ export class TakedownCreateDmca extends React.Component {
 						</select>
 					</div>
 				) } />
-				<FormGroup path="dmca.pageIds" error={this.props.takedown.error} render={ () => (
-					<div>
-						<label className="form-control-label" htmlFor="pageIds">Affected Pages</label>
-						<SelectPages disabled={this.props.disabled} site={this.props.site} name="pageIds" value={this.props.takedown.dmca.pageIds} onChange={ ( pageIds ) => this.updateField( 'pageIds', pageIds ) } />
-					</div>
-				) } />
 				<FormGroup path="dmca.originalUrls" error={this.props.takedown.error} render={ () => (
 					<div>
 						<label className="form-control-label" htmlFor="originalUrls">Original URLs</label> <small className="text-muted">location of original work</small>
@@ -340,7 +333,6 @@ TakedownCreateDmca.propTypes = {
 	addFiles: PropTypes.func.isRequired,
 	deleteFile: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
-	site: PropTypes.instanceOf( Site ),
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
 	files: PropTypes.instanceOf( Set ).isRequired,
 	disabled: PropTypes.bool

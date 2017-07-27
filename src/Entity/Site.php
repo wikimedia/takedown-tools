@@ -27,6 +27,11 @@ class Site {
 	private $domain;
 
 	/**
+	 * @var array
+	 */
+	private $info;
+
+	/**
 	 * Site
 	 *
 	 * @param array $data Data to construct the object.
@@ -35,6 +40,7 @@ class Site {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getString( 'id' );
 		$this->domain = $params->getString( 'domain' );
+		$this->info = $params->getArray( 'info' );
 	}
 
 	/**
@@ -79,5 +85,27 @@ class Site {
 	 */
 	public function getDomain() :? string {
 		return $this->domain;
+	}
+
+	/**
+	 * Set Info.
+	 *
+	 * @param array $info Info Array
+	 *
+	 * @return self
+	 */
+	public function setInfo( array $info ) {
+		$this->info = $info;
+
+		return $this;
+	}
+
+	/**
+	 * Get Info
+	 *
+	 * @return array
+	 */
+	public function getInfo() :? array {
+		return $this->info;
 	}
 }

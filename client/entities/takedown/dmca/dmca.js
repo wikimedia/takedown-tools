@@ -15,7 +15,6 @@ export class Dmca extends Record( {
 	senderCountryCode: undefined,
 	sent: undefined,
 	actionTakenId: undefined,
-	pageIds: new Set(),
 	originalUrls: new List(),
 	method: undefined,
 	subject: undefined,
@@ -34,7 +33,6 @@ export class Dmca extends Record( {
 		data = {
 			...data,
 			senderAddress: new List( data.senderAddress || [] ),
-			pageIds: new Set( data.pageIds || [] ),
 			originalUrls: fromJS( data.originalUrls || [] ).toOrderedMap(),
 			fileIds: fromJS( data.fileIds || [] ).toList(),
 			commonsPost: new Post( data.commonsPost || {} ),

@@ -73,7 +73,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @param string $id Site to retrieve
 	 *
-	 * @return Site
+	 * @return PromiseInterface
 	 */
 	public function getSite( string $id ) : PromiseInterface {
 		return $this->getSites()->then( function ( $sites ) use ( $id ) {
@@ -87,6 +87,34 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			}
 
 			return null;
+		} );
+	}
+
+	/**
+	 * Get Site Info
+	 *
+	 * @param Site $site Site to retrieve
+	 *
+	 * @return PromiseInterface
+	 */
+	public function getSiteInfo( Site $site ) : PromiseInterface {
+		$request = new Request( 'GET', 'https://' . $site->getDomain() . '/w/api.php' );
+
+		return $this->client->sendAsync( $request, [
+			'query' => [
+				'action' => 'query',
+				'format' => 'json',
+				'meta' => 'siteinfo',
+				'siprop' => 'general|namespaces|namespacealiases|specialpagealiases',
+			],
+		] )->then( function( $response ) use ( $request ) {
+			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
+
+			if ( array_key_exists( 'error', $data ) ) {
+				throw new BadResponseException( $data['error']['info'], $request, $response, null, $data );
+			}
+
+			return $data['query'];
 		} );
 	}
 

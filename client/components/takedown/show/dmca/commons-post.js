@@ -29,9 +29,9 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 	getDefaultCommonsText() {
 		switch ( this.props.postName ) {
 			case 'commonsPost':
-				return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+				return defaultCommonsText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.pageIds );
 			case 'commonsVillagePumpPost':
-				return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.dmca.pageIds );
+				return defaultCommonsVillagePumpText( this.getCommonsTitle(), this.props.takedown.dmca.wmfTitle, this.props.takedown.pageIds );
 		}
 
 		return '';
