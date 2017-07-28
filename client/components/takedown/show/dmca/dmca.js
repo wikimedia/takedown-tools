@@ -16,7 +16,6 @@ export class TakedownShowDmca extends React.Component {
 			userNotices,
 			sent,
 			actionTaken,
-			pages,
 			originalUrls,
 			body,
 			files,
