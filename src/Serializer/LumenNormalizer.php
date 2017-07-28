@@ -11,19 +11,17 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class LumenNormalizer implements NormalizerInterface {
 
 	/**
-	 * @var string
+	 * @var array
 	 */
-	protected $environment;
+	protected $organization;
 
 	/**
 	 * Lumen Normalizer
 	 *
-	 * @param string $environment Environment.
+	 * @param array $organization Organization.
 	 */
-	public function __construct(
-		string $environment
-	) {
-		$this->environment = $environment;
+	public function __construct( array $organization ) {
+		$this->organization = $organization;
 	}
 
 	/**
@@ -76,19 +74,20 @@ class LumenNormalizer implements NormalizerInterface {
 		} )->toArray();
 
 		$recipient = [
-			'name' => 'Wikimedia Foundation',
+			'name' => $this->organization['name'] ?? '',
 			'kind' => 'organization',
-			'address_line_1' => '149 New Montgomery St. 6th FL',
-			'city' => 'San Francisco',
-			'state' => 'CA',
-			'zip' => '94105',
-			'country_code' => 'US',
-			'phone' => '4158396885'
+			'address_line_1' => $this->organization['address'][0] ?? '',
+			'address_line_2' =>  $this->organization['address'][1] ?? '',
+			'city' => $this->organization['city'] ?? '',
+			'state' => $this->organization['state'] ?? '',
+			'zip' => $this->organization['zip'] ?? '',
+			'country_code' => $this->organization['country'] ?? '',
+			'phone' => $this->organization['phone'] ?? '',
 		];
 
 		$data = [
 			'title' => $object->getDmca()->getLumenTitle(),
-			'type' => $this->environment === 'prod' ? 'DMCA' : 'Other',
+			'type' => 'DMCA',
 			'subject' => $object->getDmca()->getSubject(),
 			'body' => $object->getDmca()->getBody(),
 			'language' => 'en',

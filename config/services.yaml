@@ -3,6 +3,22 @@
 parameters:
   locale: 'en'
   app.files_dir: '%kernel.project_dir%/var/files'
+  app.organization:
+    name: 'Wikimedia Foundation'
+    address:
+      - '1 Montgomery Street'
+      - 'Suite 1600'
+    city: 'San Francisco'
+    state: 'CA'
+    zip: 94104
+    country: 'US'
+    phone: '+1-415-839-6885'
+  app.contact:
+    name:
+      first: '%env(CONTACT_FIRST_NAME)%'
+      last: '%env(CONTACT_LAST_NAME)%'
+    email: '%env(CONTACT_EMAIL)%'
+    phone: '%env(CONTACT_PHONE)%'
 
 services:
   app.cache:
@@ -21,7 +37,7 @@ services:
   app.oauth_client_config:
     class: MediaWiki\OAuthClient\ClientConfig
     arguments:
-      - '%env(OAUTH_ENDPOINT)%'
+      - 'https://meta.wikimedia.org/w/index.php?title=Special:OAuth'
     calls:
       - [setConsumer, ['@app.oauth_consumer']]
 
@@ -47,7 +63,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       -
-        base_uri: '%env(MEDIAWIKI_API_URL)%'
+        base_uri: 'https://meta.wikimedia.org/w/api.php'
         handler: '@app.handler_stack'
 
   app.mediawiki_client:
@@ -186,7 +202,7 @@ services:
   app.serializer_lumen:
       class: App\Serializer\LumenNormalizer
       arguments:
-        - '%kernel.environment%'
+        - '%app.organization%'
       public: false
       tags:
         - { name: serializer.normalizer }
@@ -195,7 +211,7 @@ services:
     class: GuzzleHttp\Client
     arguments:
       -
-        base_uri: 'https://lumendatabase.org'
+        base_uri: "@=parameter('kernel.environment') === 'prod' ? 'https://lumendatabase.org' : 'https://api-beta.lumendatabase.org'"
         headers:
           X-Authentication-Token: '%env(LUMEN_AUTH_TOKEN)%'
           Accept: 'application/json'
@@ -208,3 +224,32 @@ services:
       - '@app.mediawiki_client'
       - '@serializer'
       - '%app.files_dir%'
+
+  app.ncme_client_guzzle:
+    class: GuzzleHttp\Client
+    arguments:
+      -
+        base_uri: "@=parameter('kernel.environment') === 'prod' ? 'https://report.cybertip.org/ispws/' : 'https://exttest.cybertip.org/ispws/'"
+        headers:
+          Accept: 'text/xml'
+          Content-Type: 'text/xml; charset=utf-8'
+        auth:
+          - '%env(NCME_USER)%'
+          - '%env(NCME_PASS)%'
+
+  app.ncme_client:
+    class: App\Client\LumenClient
+    arguments:
+      - '@app.ncme_client_guzzle'
+      - '@app.mediawiki_client'
+      - '@serializer'
+      - '@serializer'
+
+  app.serializer_ncme:
+      class: App\Serializer\NcmeNormalizer
+      arguments:
+        - '%app.organization%'
+        - '%app.contact%'
+      public: false
+      tags:
+        - { name: serializer.normalizer }

@@ -102,11 +102,11 @@ class Page {
 	 * @return string
 	 */
 	public function getUrl( ?Site $site = null ) : string {
-		if ( !$site ) {
-			return '/' . $this->key;
-		}
-
 		$path = '/wiki/' . $this->key;
+
+		if ( !$site ) {
+			return $path;
+		}
 
 		if ( $site->getInfo() ) {
 			$info = $site->getInfo();
