@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use GuzzleHttp\Promise;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -58,23 +59,31 @@ class TakedownController {
 	protected $validator;
 
 	/**
+	 * @var TokenStorageInterface
+	 */
+	protected $tokenStorage;
+
+	/**
 	 * Takedown Controller.
 	 *
 	 * @param RegistryInterface $doctrine Doctrine.
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
 	 * @param EntityAttacherInterface $attacher Entity Attacher.
 	 * @param LumenClientInterface $lumenClient Lumen Client.
+	 * @param TokenStorageInterface $tokenStorage Token Storage.
 	 */
 	public function __construct(
 		RegistryInterface $doctrine,
 		MediaWikiClientInterface $client,
 		EntityAttacherInterface $attacher,
-		LumenClientInterface $lumenClient
+		LumenClientInterface $lumenClient,
+		TokenStorageInterface $tokenStorage
 	) {
 		$this->doctrine = $doctrine;
 		$this->client = $client;
 		$this->attacher = $attacher;
 		$this->lumenClient = $lumenClient;
+		$this->tokenStorage = $tokenStorage;
 	}
 
 	/**
@@ -129,6 +138,14 @@ class TakedownController {
 	public function createAction( Takedown $takedown ) {
 		$em = $this->doctrine->getEntityManager();
 		$promises = [];
+
+		// If the reporter is the same as the current user, set the current user
+		// object as the report since it has more data.
+		if ( $takedown->getReporter() && $this->getUser() ) {
+			if ( $takedown->getReporter()->getId() === $this->getUser()->getId() ) {
+				$takedown->setReporter( $this->getUser() );
+			}
+		}
 
 		// Get the user ids from the API.
 		$usernames = $takedown->getInvolvedNames();
@@ -355,6 +372,27 @@ class TakedownController {
 
 		return '';
 	}
+
+	/**
+	 * Get a user from the Security Token Storage.
+	 *
+	 * @return User
+	 */
+	 protected function getUser() :? User {
+		 $token = $this->tokenStorage->getToken();
+
+		 if ( $token === null ) {
+			 return $token;
+		 }
+
+		 $user = $token->getUser();
+
+		 if ( ! $user instanceof User ) {
+				 return null;
+		 }
+
+		 return $user;
+	 }
 
 	/**
 	 * Gets the offset from the Request.

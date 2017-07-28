@@ -396,6 +396,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'format' => 'json',
 				'meta' => 'globaluserinfo',
 				'guiuser' => $username,
+				'guiprop' => 'groups'
 			],
 		] )->then( function( $response ) {
 			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );

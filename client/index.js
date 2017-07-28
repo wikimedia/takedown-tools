@@ -30,7 +30,7 @@ function main() {
 	if ( query.token ) {
 		// Add the token to the store.
 		store.dispatch( {
-			type: 'TOKEN_ADD',
+			type: 'TOKEN_SET',
 			token: query.token
 		} );
 

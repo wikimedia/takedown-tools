@@ -115,7 +115,8 @@ class AuthController {
 
 		// Load the user from the API.
 		$user = $this->client->getUser( $identiy->username )->wait();
-		$user->setRoles( $this->getRolesFromGroups( $identiy->groups ) );
+		$roles = array_merge( $user->getRoles(), User::getRolesFromGroups( $identiy->groups ) );
+		$user->setRoles( array_unique( $roles ) );
 
 		// If the user is not already in the database, save it.
 		$existing = null;
@@ -127,6 +128,8 @@ class AuthController {
 			$em->flush();
 		}
 
+		$user->setEmail( $identiy->email );
+		$user->setEmailVerified( $identiy->confirmed_email );
 		$user->setToken( $accessToken->key );
 		$user->setSecret( $accessToken->secret );
 
@@ -149,25 +152,6 @@ class AuthController {
 			return [
 				'token' => $this->jwtManager->create( $this->getUser() )
 			];
-	}
-
- /**
-	* Get roles from groups.
-	*
-	* @param array $groups Groups.
-	*
-	* @return array
-	*/
-	protected function getRolesFromGroups( array $groups ) : array {
-		$groups = array_filter( $groups, function( $group ) {
-			return $group !== "*";
-		} );
-
-		$roles = array_map( function( $group ) {
-			return 'ROLE_' . strtoupper( $group );
-		}, $groups );
-
-		return array_values( $roles );
 	}
 
  /**

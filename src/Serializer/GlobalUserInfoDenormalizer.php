@@ -21,8 +21,9 @@ class GlobalUserInfoDenormalizer implements DenormalizerInterface {
 		$info = $data['query']['globaluserinfo'];
 
 		return new User( [
-			'id' => !empty( $info['id'] ) ? $info['id'] : null,
-			'username' => !empty( $info['name'] ) ? $info['name'] : null
+			'id' => $info['id'] ?? null,
+			'username' => $info['name'] ?? null,
+			'roles' => User::getRolesFromGroups( $info['groups'] ?? [] )
 		] );
 	}
 

@@ -86,6 +86,7 @@ services:
       - '@app.mediawiki_client'
       - '@entity_attacher'
       - '@app.lumen_client'
+      - '@security.token_storage'
 
   app.controller_user:
     class: App\Controller\UserController

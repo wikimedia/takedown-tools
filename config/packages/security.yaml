@@ -30,6 +30,5 @@ security:
           - IS_AUTHENTICATED_ANONYMOUSLY
       -
         path: ^/api
-        # @TODO Update to a more restricive role!
         roles:
-          - ROLE_AUTOCONFIRMED
+          - ROLE_STAFF

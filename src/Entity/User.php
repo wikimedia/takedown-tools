@@ -7,6 +7,7 @@ use GeoSocio\EntityUtils\ParameterBag;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -32,6 +33,16 @@ class User implements UserInterface, JWTUserInterface {
 	/**
 	 * @var string
 	 */
+	private $email;
+
+	/**
+	 * @var bool
+	 */
+	private $emailVerified;
+
+	/**
+	 * @var string
+	 */
 	private $token;
 
 	/**
@@ -53,6 +64,8 @@ class User implements UserInterface, JWTUserInterface {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getInt( 'id' );
 		$this->username = $params->getString( 'username' );
+		$this->email = $params->getString( 'email' );
+		$this->emailVerified = $params->getString( 'emailVerified' );
 		$this->token = $params->getString( 'token' );
 		$this->secret = $params->getString( 'secret' );
 		$this->roles = $params->getArray( 'roles', [] );
@@ -138,6 +151,55 @@ class User implements UserInterface, JWTUserInterface {
 	}
 
 	/**
+	 * Email
+	 *
+	 * @Groups({"token"})
+	 * @Assert\Email()
+	 *
+	 * @return null
+	 */
+	public function getEmail() :? string {
+		return $this->email;
+	}
+
+	/**
+	 * Set Email.
+	 *
+	 * @param string $email Email
+	 *
+	 * @return self
+	 */
+	public function setEmail( string $email ) : self {
+		$this->email = $email;
+
+		return $this;
+	}
+
+	/**
+	 * Email Verified
+	 *
+	 * @Groups({"token"})
+	 *
+	 * @return null
+	 */
+	public function isEmailVerified() :? bool {
+		return $this->emailVerified;
+	}
+
+	/**
+	 * Set Email Verified
+	 *
+	 * @param bool $emailVerified Email Verified
+	 *
+	 * @return self
+	 */
+	public function setEmailVerified( bool $emailVerified ) : self {
+		$this->emailVerified = $emailVerified;
+
+		return $this;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 *
 	 * @Groups({"api", "token"})
@@ -215,6 +277,25 @@ class User implements UserInterface, JWTUserInterface {
 	 */
 	public static function createFromPayload( $username, array $payload ) {
 		return new static( $payload );
+	}
+
+	/**
+	* Get roles from groups.
+	*
+	* @param array $groups Groups.
+	*
+	* @return array
+	*/
+	public static function getRolesFromGroups( array $groups ) : array {
+		$groups = array_filter( $groups, function( $group ) {
+			return $group !== "*";
+		} );
+
+		$roles = array_map( function( $group ) {
+			return 'ROLE_' . strtoupper( $group );
+		}, $groups );
+
+		return array_values( $roles );
 	}
 
 }

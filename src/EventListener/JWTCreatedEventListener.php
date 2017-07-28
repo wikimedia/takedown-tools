@@ -5,6 +5,9 @@ namespace App\EventListener;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * JWT Created Event Listener
+ */
 class JWTCreatedEventListener {
 
 	/**

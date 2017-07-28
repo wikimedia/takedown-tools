@@ -27,6 +27,14 @@ class NcmeNormalizer implements NormalizerInterface {
 				'incidentType' => 'Child Pornography (possession, manufacture, and distribution)',
 			],
 			'internetDetails' => [],
+			'reporter' => [
+				'reportingPerson' => [
+					'email' => [
+						'@verified' => $object->getReporter()->isEmailVerified(),
+						'#' => $object->getReporter()->getEmail(),
+					],
+				],
+			],
 		];
 
 		$criteria = Criteria::create()
