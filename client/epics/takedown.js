@@ -175,7 +175,7 @@ export function takedownSave( action$, store ) {
 					Observable.of( TakedownActions.clearCreate() )
 				);
 
-				if ( response.type === 'cp' ) {
+				if ( response.type === 'cp' && response.cp.ncmecId ) {
 					if ( create.cp.files.size > 0 ) {
 
 						if ( create.cp.files.size !== response.cp.files.size ) {
