@@ -8,6 +8,7 @@ import { Takedown } from 'app/entities/takedown/takedown';
 import { User } from 'app/entities/user';
 import { FormGroup } from 'app/components/fields/form-group';
 import { removeErrors } from 'app/utils';
+import { TakedownCreateCpFile } from './file';
 import 'fileicon.css/fileicon.css';
 
 export class TakedownCreateCp extends React.Component {
@@ -59,48 +60,6 @@ export class TakedownCreateCp extends React.Component {
 		this.props.updateTakedown( takedown );
 	}
 
-	updateFile( file, fieldName, value ) {
-		file = file.set( fieldName, value );
-
-		let takedown = this.props.takedown,
-			files = takedown.cp.files;
-
-		const key = files.findIndex( ( item ) => {
-			return item.id === file.id;
-		} );
-
-		if ( key === -1 ) {
-			return;
-		}
-
-		files = files.set( key, file );
-		takedown = takedown.setIn( [ 'cp', 'files' ], files )
-			.set( 'status', 'dirty' );
-
-		takedown = removeErrors( takedown, `cp.files[${key}].${fieldName}` );
-
-		this.props.updateTakedown( takedown );
-	}
-
-	removeFile( file ) {
-		let takedown = this.props.takedown,
-			files = takedown.cp.files;
-
-		const key = files.findIndex( ( item ) => {
-			return item.id === file.id;
-		} );
-
-		if ( key === -1 ) {
-			return;
-		}
-
-		files = files.remove( key );
-		takedown = takedown.setIn( [ 'cp', 'files' ], files )
-			.set( 'status', 'dirty' );
-
-		this.props.updateTakedown( takedown );
-	}
-
 	render() {
 		let approverReasonField,
 			files;
@@ -133,65 +92,16 @@ export class TakedownCreateCp extends React.Component {
 		}
 
 		if ( this.props.takedown.cp.files.size > 0 ) {
-			files = this.props.takedown.cp.files.map( ( file, index ) => {
-				const ext = file.name.split( '.' ).pop();
-
-				let exif,
-					removeClasses = [ 'btn', 'btn-outline-danger', 'btn-sm' ];
-
-				if ( file.exif ) {
-					exif = (
-						<FormGroup path={`cp.files[${index}].exif`} error={this.props.takedown.error} render={() => (
-							<div>
-								<label className="form-control-label">Exif Data</label>
-								<div>
-									<pre className="small bg-faded pt-2 pb-2 pl-2 pr-2">
-										<code>
-											{JSON.stringify( file.exif, undefined, 2 )}
-										</code>
-									</pre>
-								</div>
-							</div>
-						)} />
-					);
-				}
-
-				if ( this.props.disabled ) {
-					removeClasses = [
-						...removeClasses,
-						'disabled'
-					];
-				}
-
-				return (
-					<div className="form-control mb-2" key={file.id}>
-						<div className="row pb-2">
-							<div className="col-1">
-								<div className="file-icon file-icon-lg ml-3 mt-2" data-type={ext}></div>
-							</div>
-							<div className="col-10">
-								<div>
-									<div className="form-control-static">{file.name}</div>
-								</div>
-								<FormGroup path={`cp.files[${index}].uploaded`} error={this.props.takedown.error} render={() => (
-									<div>
-										<label className="form-control-label">Uploaded</label> <small className="text-muted">in local time</small>
-										<DatePicker time={true} disabled={this.props.disabled} value={file.uploaded} onChange={( value ) => this.updateFile( file, 'uploaded', value )} />
-									</div>
-								)} />
-								<FormGroup path={`cp.files[${index}].ip`} error={this.props.takedown.error} render={() => (
-									<div>
-										<label className="form-control-label" htmlFor={`files[${index}][ip]`}>IP Address</label>
-										<input type="text" disabled={this.props.disabled} className="form-control" name={`files[${index}][ip]`} value={file.ip || ''} onChange={( event ) => this.updateFile( file, 'ip', event.target.value )} />
-									</div>
-								)} />
-								{exif}
-								<button type="button" className={removeClasses.join( ' ' )} onClick={() => this.removeFile( file )}>Remove</button>
-							</div>
-						</div>
-					</div>
-				);
-			} ).toArray();
+			files = this.props.takedown.cp.files.map( ( file, index ) => (
+				<TakedownCreateCpFile
+					takedown={this.props.takedown}
+					file={file}
+					index={index}
+					updateTakedown={this.props.updateTakedown}
+					disabled={this.props.disabled}
+					key={file.id}
+				/>
+			) ).toArray();
 		}
 
 		return (

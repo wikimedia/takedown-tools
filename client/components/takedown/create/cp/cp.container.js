@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import { TakedownCreateCp } from './cp';
-import * as TakedownSelectors from '../../../selectors/takedown';
-import * as TakedownActions from '../../../actions/takedown';
-import * as UserActions from '../../../actions/user';
+import * as TakedownSelectors from 'app/selectors/takedown';
+import * as TakedownActions from 'app/actions/takedown';
+import * as UserActions from 'app/actions/user';
 
 export const TakedownCreateCpContainer = connect(
 	() => {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Set } from 'immutable';
 import { FileField } from './file';
+import { FileProgress } from 'app/components/file-progress';
 import 'fileicon.css/fileicon.css';
 
 export class FileUploadField extends React.Component {
@@ -12,33 +13,8 @@ export class FileUploadField extends React.Component {
 			files = this.props.value.map( ( file ) => {
 				const ext = file.name.split( '.' ).pop();
 
-				let progressStyle,
-					progressClasses = [ 'progress' ];
-
-				switch ( file.status ) {
-					case 'uploading':
-						progressStyle = {
-							width: file.progress + '%'
-						};
-						break;
-
-					case 'ready':
-						progressClasses = [
-							...progressClasses,
-							'done'
-						];
-						break;
-					case 'error':
-						progressClasses = [
-							...progressClasses,
-							'error'
-						];
-						break;
-				}
-
 				return (
-					<div className="input-group mb-2" key={file.id}>
-						<span className={progressClasses.join( ' ' )} style={progressStyle}></span>
+					<FileProgress className="input-group mb-2" file={file} key={file.id}>
 						<span className="form-control flex-row justify-content-start align-items-center">
 							<span className="file-icon mr-2" data-type={ext}></span>
 							<span>{file.name}</span>
@@ -46,7 +22,7 @@ export class FileUploadField extends React.Component {
 						<span className="input-group-btn">
 							<button className="btn btn-secondary" type="button" onClick={() => this.props.onRemoveFile( file )}>×</button>
 						</span>
-					</div>
+					</FileProgress>
 				);
 			} );
 		}

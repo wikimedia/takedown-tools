@@ -4,7 +4,7 @@ import { Set } from 'immutable';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { TakedownCreateDmcaContainer } from './dmca/dmca.container';
-import { TakedownCreateCpContainer } from './cp.container';
+import { TakedownCreateCpContainer } from './cp/cp.container';
 import { Submit } from 'app/components/fields/submit';
 import { FormError } from 'app/components/fields/form-error';
 import { FormGroup } from 'app/components/fields/form-group';
