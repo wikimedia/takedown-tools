@@ -6,15 +6,14 @@ use App\Entity\Takedown\Takedown;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
  * Ncme Client.
  */
-class NcmeClient {
+class NcmeClient implements NcmeClientInterface {
 
 	/**
 	 * @var ClientInterface
@@ -37,23 +36,31 @@ class NcmeClient {
 	protected $encoder;
 
 	/**
+	 * @var DecoderInterface
+	 */
+	protected $decoder;
+
+	/**
 	 * Lumen Client
 	 *
 	 * @param ClientInterface $client Guzzle Client
 	 * @param MediaWikiClientInterface $mediaWikiClient MediaWiki Client
 	 * @param NormalizerInterface $normalizer Normalizer
 	 * @param EncoderInterface $encoder Encoder
+	 * @param DecoderInterface $decoder Decoder
 	 */
 	public function __construct(
 		ClientInterface $client,
 		MediaWikiClientInterface $mediaWikiClient,
 		NormalizerInterface $normalizer,
-		EncoderInterface $encoder
+		EncoderInterface $encoder,
+		DecoderInterface $decoder
 	) {
 		$this->client = $client;
 		$this->mediaWikiClient = $mediaWikiClient;
 		$this->normalizer = $normalizer;
 		$this->encoder = $encoder;
+		$this->decoder = $decoder;
 	}
 
 	/**
@@ -63,7 +70,7 @@ class NcmeClient {
 	 *
 	 * @return PromiseInterface
 	 */
-	public function postReport( Takedown $takedown ) : PromiseInterface {
+	public function createReport( Takedown $takedown ) : PromiseInterface {
 		$promise = new FulfilledPromise( $takedown );
 
 		// Get the site with info.
@@ -90,15 +97,13 @@ class NcmeClient {
 				'xml_root_node_name' => 'report',
 			] );
 
-			dump( $xml );
-			exit;
-
-			return $this->client->requestAsync( 'POST', [
+			return $this->client->requestAsync( 'POST', 'submit', [
 				'body' => $xml,
 			] )->then( function ( $response ) {
-				// @TODO Do something with the response!
-				dump( $response );
-				exit;
+				$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
+
+				$reportId = intval( $data['reportId'] ?? 0 );
+				return $reportId ?? null;
 			} );
 		} );
 	}

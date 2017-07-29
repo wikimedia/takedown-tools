@@ -180,7 +180,7 @@ export class TakedownShowDmca extends React.Component {
 					<td>{senderCountry ? senderCountry.name : undefined}</td>
 				</tr>
 				<tr>
-					<td>Lumen</td>
+					<td><a href="http://lumendatabase.org/">Lumen</a></td>
 					<td>{lumen}</td>
 				</tr>
 				<tr>

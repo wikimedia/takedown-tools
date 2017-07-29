@@ -6,9 +6,9 @@ use App\Entity\Takedown\Takedown;
 use GuzzleHttp\Promise\PromiseInterface;
 
 /**
- * Lumen Client Interface
+ * Ncme Client.
  */
-interface LumenClientInterface {
+interface NcmeClientInterface {
 
 	/**
 	 * Post Lumen Notice
@@ -17,5 +17,6 @@ interface LumenClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	public function createNotice( Takedown $takedown ) : PromiseInterface;
+	public function createReport( Takedown $takedown ) : PromiseInterface;
+
 }

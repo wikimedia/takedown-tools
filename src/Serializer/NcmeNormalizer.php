@@ -52,20 +52,73 @@ class NcmeNormalizer implements NormalizerInterface {
 			'#' => [
 				'address' => $street ?? null,
 				'city' => $this->organization['city'] ?? null,
+				'zipCode' => $this->organization['zip'] ?? null,
 				'state' => $this->organization['state'] ?? null,
 				'country' => $this->organization['country'] ?? null,
-				'zipCode' => $this->organization['zip'] ?? null,
 			],
 		];
 
-		$data = [
+		// Sort the files by uploaded date.
+		$criteria = Criteria::create()
+			->orderBy( [ 'uploaded' => 'DESC' ] );
+		$files = $object->getCp()->getFiles()->matching( $criteria );
+
+		// Use the first file's date as the incident date.
+		$incidentDateTime = null;
+		if ( $files->count() ) {
+			$file = $files->first();
+			$incidentDateTime = $file->getUploaded()->format( 'c' );
+		}
+
+		// Get the Reporter's Email.
+		$reporterEmail = [];
+		if ( $object->getReporter()->getEmail() ) {
+			$reporterEmail = [
+				'@verified' => $object->getReporter()->isEmailVerified(),
+				'#' => $object->getReporter()->getEmail(),
+			];
+		}
+
+		// Get the IP Address of all of the uploaded files.
+		$capture = $object->getCp()->getFiles()->map( function ( $file ) {
+			return [
+				'ipAddress' => $file->getIp(),
+				'eventName' => 'Upload',
+				'dateTime' => $file->getUploaded() ? $file->getUploaded()->format( 'c' ) : null,
+			];
+		} )->toArray();
+
+		// Add the page urls.
+		$urls = $object->getPages()->map( function( $page ) use ( $object ) {
+			return $page->getUrl( $object->getSite() );
+		} )->toArray();
+
+		// Add the reported user's screen name.
+		$screenName = null;
+		$profileUrl = null;
+		if ( $object->getInvolved()->count() ) {
+			$user = $object->getInvolved()->first();
+			$screenName = $user->getUsername();
+
+			if ( $object->getSite() ) {
+				$profileUrl = $user->getUrl( $object->getSite() );
+			}
+		}
+
+		return [
 			'incidentSummary' => [
 				// @FIXME ASSUMPTION, not even asking yet
 				'incidentType' => 'Child Pornography (possession, manufacture, and distribution)',
+				'incidentDateTime' => $incidentDateTime,
 			],
-			'internetDetails' => [],
+			'internetDetails' => [
+				'webPageIncident' => [
+					'url' => $urls,
+				],
+			],
 			'reporter' => [
 				'reportingPerson' => [
+					'email' => $reporterEmail,
 					'address' => $address,
 				],
 				'contactPerson' => [
@@ -79,61 +132,12 @@ class NcmeNormalizer implements NormalizerInterface {
 				],
 			],
 			'personOrUserReported' => [
+				'screenName' => $screenName,
+				'profileUrl' => $profileUrl,
+				'ipCaptureEvent' => $capture,
 				'additionalInfo' => $object->getCp()->getComments()
 			],
 		];
-
-		// Get the Reporter's Email.
-		if ( $object->getReporter()->getEmail() ) {
-			$data['reporter']['reportingPerson']['email'] = [
-				'@verified' => $object->getReporter()->isEmailVerified(),
-				'#' => $object->getReporter()->getEmail(),
-			];
-		}
-
-		// Sort the files by uploaded date.
-		$criteria = Criteria::create()
-			->orderBy( [ 'uploaded' => 'DESC' ] );
-		$files = $object->getCp()->getFiles()->matching( $citeria );
-
-		// Use the first file's date as the incident date.
-		if ( $files->count() ) {
-			$file = $files->first();
-			$data['incidentSummary']['incidentDateTime'] = $file->getUploaded()->format( 'c' );
-		}
-
-		// Add the page urls.
-		if ( $object->getPages()->count() ) {
-			$urls = $object->getPages()->map( function( $page ) use ( $object ) {
-				return $page->getUrl( $object->getSite() );
-			} )->toArray();
-
-			$data['internetDetails']['webPageIncident']['url'] = $urls;
-		}
-
-		// Add the reported user's screen name.
-		if ( $object->getInvovled()->count() ) {
-			$user = $object->getInvolved()->first();
-			$data['personOrUserReported']['screenName'] = $user->getUsername();
-
-			if ( $object->getSite() ) {
-				$url = $user->getUrl( $object->getSite() );
-				$data['personOrUserReported']['profileUrl'] = $url;
-			}
-		}
-
-		// Get the IP Address of all of the uploaded files.
-		$capture = $object->getCp()->getFiles()->map( function ( $file ) {
-			return [
-				'ipAddress' => $file->getIp(),
-				'eventName' => 'Upload',
-				'dateTime' => $file->getUploaded() ? $file->getUploaded()->format( 'c' ) : null,
-			];
-		} )->toArray();
-
-		$data['personOrUserReported']['ipCaptureEvent'] = $capture;
-
-		return $data;
 	}
 
 	/**

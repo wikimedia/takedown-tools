@@ -65,7 +65,7 @@ class User implements UserInterface, JWTUserInterface {
 		$this->id = $params->getInt( 'id' );
 		$this->username = $params->getString( 'username' );
 		$this->email = $params->getString( 'email' );
-		$this->emailVerified = $params->getString( 'emailVerified' );
+		$this->emailVerified = $params->getBoolean( 'emailVerified' );
 		$this->token = $params->getString( 'token' );
 		$this->secret = $params->getString( 'secret' );
 		$this->roles = $params->getArray( 'roles', [] );

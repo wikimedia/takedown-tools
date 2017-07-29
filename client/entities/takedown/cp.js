@@ -2,6 +2,7 @@ import { Record, List } from 'immutable';
 import { File } from '../file';
 
 export class Cp extends Record( {
+	ncmeId: undefined,
 	approved: false,
 	approverName: undefined,
 	approverId: undefined,

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Client\NcmeClientInterface;
 use App\Client\LumenClientInterface;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
@@ -54,6 +55,11 @@ class TakedownController {
 	protected $lumenClient;
 
 	/**
+	 * @var NcmeClientInterface
+	 */
+	protected $ncmeClient;
+
+	/**
 	 * @var ValidatorInterface
 	 */
 	protected $validator;
@@ -70,6 +76,7 @@ class TakedownController {
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
 	 * @param EntityAttacherInterface $attacher Entity Attacher.
 	 * @param LumenClientInterface $lumenClient Lumen Client.
+	 * @param NcmeClientInterface $ncmeClient NCME Client.
 	 * @param TokenStorageInterface $tokenStorage Token Storage.
 	 */
 	public function __construct(
@@ -77,12 +84,14 @@ class TakedownController {
 		MediaWikiClientInterface $client,
 		EntityAttacherInterface $attacher,
 		LumenClientInterface $lumenClient,
+		NcmeClientInterface $ncmeClient,
 		TokenStorageInterface $tokenStorage
 	) {
 		$this->doctrine = $doctrine;
 		$this->client = $client;
 		$this->attacher = $attacher;
 		$this->lumenClient = $lumenClient;
+		$this->ncmeClient = $ncmeClient;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -169,9 +178,18 @@ class TakedownController {
 
 		// Send to Lumen.
 		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
-			$promises[] = $this->lumenClient->postNotice( $takedown )
-				->then( function( $id ) use ( $takedown ) {
-					$takedown->getDmca()->setLumenId( $id );
+			$promises[] = $this->lumenClient->createNotice( $takedown )
+				->then( function( $noticeId ) use ( $takedown ) {
+					$takedown->getDmca()->setLumenId( $noticeId );
+					return $takedown;
+				} );
+		}
+
+		// Send to NCME
+		if ( $takedown->getCp() && $takedown->getCp()->isApproved() ) {
+			$promises[] = $this->ncmeClient->createReport( $takedown )
+				->then( function ( $reportId ) use ( $takedown ) {
+					$takedown->getCp()->setNcmeId( $reportId );
 					return $takedown;
 				} );
 		}

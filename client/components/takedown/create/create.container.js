@@ -9,7 +9,7 @@ import * as SiteSelectors from '../../../selectors/site';
 
 export const TakedownCreateContainer = connect(
 	() => {
-		const getInvovled = TakedownSelectors.makeGetInvolved(),
+		const getInvolved = TakedownSelectors.makeGetInvolved(),
 			getSite = TakedownSelectors.makeGetSite();
 
 		return ( state, props ) => {
@@ -20,7 +20,7 @@ export const TakedownCreateContainer = connect(
 
 			return {
 				reporter: UserSelectors.getAuthUser( state ),
-				involved: getInvovled( state, props ),
+				involved: getInvolved( state, props ),
 				site: getSite( state, props ),
 				takedown: state.takedown.create,
 				users: state.user.list,

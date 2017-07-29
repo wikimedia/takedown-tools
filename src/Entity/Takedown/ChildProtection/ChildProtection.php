@@ -31,6 +31,13 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	private $takedown;
 
 	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="ncme_id", type="integer", nullable=true)
+	 */
+	private $ncmeId;
+
+	/**
 	 * @var bool
 	 *
 	 * @ORM\Column(name="approved", type="boolean", options={"default"=false})
@@ -114,6 +121,30 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	 */
 	public function getTakedown() :? Takedown {
 		return $this->takedown;
+	}
+
+	/**
+	 * Set NCME Id
+	 *
+	 * @param int|null $ncmeId NCME Id
+	 *
+	 * @return self
+	 */
+	public function setNcmeId( ?int $ncmeId ) : self {
+		$this->ncmeId = $ncmeId;
+
+		return $this;
+	}
+
+	/**
+	 * NCME Id
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return bool
+	 */
+	public function getNcmeId() :? int {
+		return $this->ncmeId;
 	}
 
 	/**
@@ -313,6 +344,7 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 * @Assert\Valid()
+	 * @Assert\Count(min=1, groups={"Approved"})
 	 *
 	 * @return Collection
 	 */

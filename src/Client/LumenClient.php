@@ -60,7 +60,7 @@ class LumenClient implements LumenClientInterface {
 	 *
 	 * @return PromiseInterface
 	 */
-	public function postNotice( Takedown $takedown ) : PromiseInterface {
+	public function createNotice( Takedown $takedown ) : PromiseInterface {
 		$promise = new FulfilledPromise( $takedown );
 
 		// Get the site with info.

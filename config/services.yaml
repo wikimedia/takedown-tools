@@ -102,6 +102,7 @@ services:
       - '@app.mediawiki_client'
       - '@entity_attacher'
       - '@app.lumen_client'
+      - '@app.ncme_client'
       - '@security.token_storage'
 
   app.controller_user:
@@ -238,10 +239,11 @@ services:
           - '%env(NCME_PASS)%'
 
   app.ncme_client:
-    class: App\Client\LumenClient
+    class: App\Client\NcmeClient
     arguments:
       - '@app.ncme_client_guzzle'
       - '@app.mediawiki_client'
+      - '@serializer'
       - '@serializer'
       - '@serializer'
 
