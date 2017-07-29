@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
 use App\Entity\Takedown\Dmca\Post;
+use App\Entity\Takedown\ChildProtection\File;
 use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use GuzzleHttp\Exception\RequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -385,10 +386,58 @@ class TakedownController {
 	public function deleteAction( Takedown $takedown ) : string {
 		$em = $this->doctrine->getEntityManager();
 
+		// Retract the report before deleting the takedown.
+		if ( $takedown->getCp() && $takedown->getCp()->getNcmecId() ) {
+			$this->ncmecClient->retractReport( $takedown )->then( function ( $result ) use ( $takedown ) {
+				$takedown->getCp()->setNcmecId( null );
+				return $takedown;
+			} )->wait();
+		}
+
 		$em->remove( $takedown );
 		$em->flush();
 
 		return '';
+	}
+
+	/**
+	 * Send NCMEC File
+	 *
+	 * @Route("/api/takedown/{takedown}/ncmec/file/{file}", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
+	 * @ParamConverter("file", class="App\Entity\Takedown\ChildProtection\File")
+	 * @Method({"POST"})
+	 * @Groups({"api"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 * @param File $file File
+	 * @param Request $request Request
+	 *
+	 * @return array
+	 */
+	public function sendNcmecFileAction(
+		Takedown $takedown,
+		File $file,
+		Request $request
+	) : array {
+		if ( !$takedown->getCp() ) {
+			throw new BadRequestHttpException( 'Takedown is missing Child Protection' );
+		}
+
+		if ( !$takedown->getCp()->getNcmecId() ) {
+			throw new BadRequestHttpException( 'Takedown is missing NCMEC ID' );
+		}
+
+		$fileId = $this->ncmecClient->sendFile( $takedown, $file, $request->getContent( true ) )->wait();
+
+		$file->setNcmecId( $fileId );
+
+		$em = $this->doctrine->getEntityManager();
+		$em->flush();
+
+		$em->refresh( $takedown );
+
+		return $takedown;
 	}
 
 	/**

@@ -182,10 +182,10 @@ export function readExif( action$ ) {
 					return readAsArrayBuffer( file.file )
 						.then( ( arrayBuffer ) => {
 							const exif = readFromBinaryFile( arrayBuffer );
-							return file.set( 'exif', exif || undefined ).set( 'status', 'ready' );
+							return file.set( 'exif', exif || undefined ).set( 'status', 'exif' );
 						} )
 						.catch( () => {
-							return file.set( 'status', 'ready' );
+							return file.set( 'status', 'exif' );
 						} );
 				} )
 				.map( ( file ) => {

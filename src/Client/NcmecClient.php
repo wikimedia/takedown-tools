@@ -3,7 +3,9 @@
 namespace App\Client;
 
 use App\Entity\Takedown\Takedown;
+use App\Entity\Takedown\ChildProtection\File;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
@@ -99,6 +101,9 @@ class NcmecClient implements NcmecClientInterface {
 
 			return $this->client->requestAsync( 'POST', 'submit', [
 				'body' => $xml,
+				'headers' => [
+					'Content-Type' => 'text/xml; charset=utf-8',
+				],
 			] )->then( function ( $response ) {
 				$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
 
@@ -108,4 +113,75 @@ class NcmecClient implements NcmecClientInterface {
 		} );
 	}
 
+	/**
+	 * Send NCMEC File
+	 *
+	 * @param Takedown $takedown Takedown
+	 * @param File $file File
+	 * @param resource $content Content Stream
+	 *
+	 * @return PromiseInterface
+	 */
+	public function sendFile( Takedown $takedown, File $file, $content ) : PromiseInterface {
+		if ( !is_resource( $content ) ) {
+			throw new \InvalidArgumentException( 'Content must be a resource' );
+		}
+
+		return $this->client->requestAsync( 'POST', 'upload', [
+			'multipart' => [
+				[
+					'name' => 'id',
+					'contents' => $takedown->getCp()->getNcmecId(),
+				],
+				[
+					'name' => 'file',
+					'contents' => $content,
+					'filename' => $file->getName(),
+				],
+			],
+		] )->then( function ( $response ) {
+			$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
+
+			// @TODO Send the file info!
+			return $data['fileId'] ?? null;
+		} );
+	}
+
+	/**
+	 * Finish NCMEC Report
+	 *
+	 * @param Takedown $takedown Takedown
+	 *
+	 * @return PromiseInterface
+	 */
+	public function finishReport( Takedown $takedown ) : PromiseInterface {
+		return $this->client->requestAsync( 'POST', 'finish', [
+			'form_params' => [
+				'id' => $takedown->getCp()->getNcmecId()
+			],
+		] )->then( function ( $response ) {
+			$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
+
+			return $data;
+		} );
+	}
+
+	/**
+	 * Retract NCMEC Report
+	 *
+	 * @param Takedown $takedown Takedown
+	 *
+	 * @return PromiseInterface
+	 */
+	public function retractReport( Takedown $takedown ) : PromiseInterface {
+		return $this->client->requestAsync( 'POST', 'retract', [
+			'form_params' => [
+				'id' => $takedown->getCp()->getNcmecId()
+			],
+		] )->then( function ( $response ) {
+			$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
+
+			return $data;
+		} );
+	}
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab7f0605f42f71c21db219052240e30f",
+    "content-hash": "f474f82d236e390f935a8b7c1ce98963",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -886,16 +886,16 @@
         },
         {
             "name": "geosocio/http-serializer",
-            "version": "4.0.0",
+            "version": "4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/http-serializer.git",
-                "reference": "fdcc572f6d4ee9ab7264db23ead46b55e20eb3c4"
+                "reference": "3f61a01d0bdef567962c88a4d47b41f5e3b21735"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/http-serializer/zipball/fdcc572f6d4ee9ab7264db23ead46b55e20eb3c4",
-                "reference": "fdcc572f6d4ee9ab7264db23ead46b55e20eb3c4",
+                "url": "https://api.github.com/repos/geosocio/http-serializer/zipball/3f61a01d0bdef567962c88a4d47b41f5e3b21735",
+                "reference": "3f61a01d0bdef567962c88a4d47b41f5e3b21735",
                 "shasum": ""
             },
             "require": {
@@ -921,7 +921,7 @@
                 "LGPL-3"
             ],
             "description": "Serializes a Controller Request & Response",
-            "time": "2017-07-25T21:11:47+00:00"
+            "time": "2017-07-29T01:05:38+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

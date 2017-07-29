@@ -184,7 +184,7 @@ services:
         - '@validator'
       public: false
       tags:
-        - { name: controller.argument_value_resolver, priority: 100 }
+        - { name: controller.argument_value_resolver, priority: 0 }
 
 
   app.serializer_global_user_info:
@@ -233,7 +233,6 @@ services:
         base_uri: "@=parameter('kernel.environment') === 'prod' ? 'https://report.cybertip.org/ispws/' : 'https://exttest.cybertip.org/ispws/'"
         headers:
           Accept: 'text/xml'
-          Content-Type: 'text/xml; charset=utf-8'
         auth:
           - '%env(NCMEC_USER)%'
           - '%env(NCMEC_PASS)%'

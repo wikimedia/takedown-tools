@@ -7,7 +7,7 @@ export class FormGroup extends React.Component {
 	render() {
 		const standard = (
 			<div className="form-group">
-				{this.props.render( false, 'form-control' )}
+				{this.props.children || this.props.render( false, 'form-control' )}
 			</div>
 		);
 
@@ -31,7 +31,7 @@ export class FormGroup extends React.Component {
 
 		return (
 			<div className="form-group has-danger">
-				{this.props.render( true, 'form-control form-control-danger' )}
+				{this.props.children || this.props.render( true, 'form-control form-control-danger' )}
 				{errors.map( ( error ) => (
 					<div className="form-control-feedback" key={error.code}>
 						{error.message}
@@ -43,7 +43,8 @@ export class FormGroup extends React.Component {
 }
 
 FormGroup.propTypes = {
+	children: PropTypes.node,
 	path: PropTypes.string.isRequired,
-	render: PropTypes.func.isRequired,
+	render: PropTypes.func,
 	error: PropTypes.instanceOf( Error )
 };
