@@ -188,7 +188,7 @@ class TakedownController {
 
 		// Send to NCME
 		if ( $takedown->getCp() && $takedown->getCp()->isApproved() ) {
-			$promises[] = $this->ncmeClient->createReport( $takedown )
+			$promises[] = $this->ncmecClient->createReport( $takedown )
 				->then( function ( $reportId ) use ( $takedown ) {
 					$takedown->getCp()->setNcmecId( $reportId );
 					return $takedown;
@@ -419,7 +419,7 @@ class TakedownController {
 		Takedown $takedown,
 		File $file,
 		Request $request
-	) : array {
+	) : Takedown {
 		if ( !$takedown->getCp() ) {
 			throw new BadRequestHttpException( 'Takedown is missing Child Protection' );
 		}

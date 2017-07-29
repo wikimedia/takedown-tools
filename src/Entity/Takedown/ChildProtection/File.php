@@ -39,6 +39,13 @@ class File implements GroupSequenceProviderInterface {
 	private $cp;
 
 	/**
+	 * @var int
+	 *
+	 * @ORM\Column(name="ncmec_id", type="string", length=63, nullable=true)
+	 */
+	private $ncmecId;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="name", type="string", length=255, nullable=true)
@@ -125,6 +132,30 @@ class File implements GroupSequenceProviderInterface {
 	 */
 	public function getCp() :? ChildProtection {
 		return $this->cp;
+	}
+
+	/**
+	 * Set NCMEC Id
+	 *
+	 * @param string|null $ncmecId NCMEC Id
+	 *
+	 * @return self
+	 */
+	public function setNcmecId( ?string $ncmecId ) : self {
+		$this->ncmecId = $ncmecId;
+
+		return $this;
+	}
+
+	/**
+	 * NCMEC Id
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @return bool
+	 */
+	public function getNcmecId() :? string {
+		return $this->ncmecId;
 	}
 
 	/**

@@ -83,8 +83,8 @@ export class TakedownCreateCpFile extends React.Component {
 		}
 
 		return (
-			<FileProgress className="form-control mb-2" file={this.props.file}>
-				<div className="row pb-2">
+			<FileProgress className="form-control p-0 mb-2" file={this.props.file}>
+				<div className="row pb-4 pt-2">
 					<div className="col-1">
 						<div className="file-icon file-icon-lg ml-3 mt-2" data-type={ext}></div>
 					</div>

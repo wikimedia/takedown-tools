@@ -37,7 +37,10 @@ export class FileProgress extends React.Component {
 }
 
 FileProgress.propTypes = {
-	file: PropTypes.instanceOf( File ).isRequired,
+	file: PropTypes.shape( {
+		progress: PropTypes.number,
+		status: PropTypes.string
+	} ),
 	children: PropTypes.node.isRequired,
 	className: PropTypes.string
 };

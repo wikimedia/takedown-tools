@@ -137,8 +137,8 @@ export function makeGetSite() {
 				return new Site();
 			}
 
-			let site = sites.find( ( site ) => {
-				return site.id === siteId;
+			let site = sites.find( ( item ) => {
+				return item.id === siteId;
 			} );
 
 			if ( !site ) {

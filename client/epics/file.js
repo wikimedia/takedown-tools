@@ -36,42 +36,52 @@ export function upload( action$, store ) {
 		} )
 		.filter( ( file ) => file.status === 'local' )
 		.flatMap( ( file ) => {
-			const progressSubscriber = new Subject(),
-				progress = progressSubscriber.map( ( event ) => {
-					const percent = parseInt( ( event.loaded / event.total ) * 100 );
-					file = file.set( 'progress', percent );
-					return FileActions.update( file );
-				} ),
-				request = Observable.ajax( {
-					url: '/api/file/' + encodeURIComponent( file.name ),
-					method: 'POST',
-					body: file.file,
-					progressSubscriber: progressSubscriber,
-					responseType: 'json',
-					headers: {
-						Authorization: 'Bearer ' + store.getState().token,
-						'Content-Type': file.file.type
+			let progressSubscriber,
+				progress,
+				request;
+
+			progressSubscriber = new Subject();
+
+			progress = progressSubscriber.map( ( event ) => {
+				const percent = parseInt( ( event.loaded / event.total ) * 100 );
+				file = file.set( 'progress', percent );
+				return FileActions.update( file );
+			} );
+
+			request = Observable.ajax( {
+				url: '/api/file/' + encodeURIComponent( file.name ),
+				method: 'POST',
+				body: file.file,
+				progressSubscriber: progressSubscriber,
+				responseType: 'json',
+				headers: {
+					Authorization: 'Bearer ' + store.getState().token,
+					'Content-Type': file.file.type
+				}
+			} )
+				.flatMap( ( ajaxResponse ) => {
+					const key = store.getState().takedown.create.dmca.fileIds.keyOf( file.id ),
+						response = new File( ajaxResponse.response );
+
+					let takedown = store.getState().takedown.create,
+						fileIds = takedown.dmca.fileIds;
+
+					if ( typeof key !== 'undefined' ) {
+						takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds.set( key, response.id ) );
+						return Observable.concat(
+							Observable.of( FileActions.swap( file, response ) ),
+							Observable.of( TakedownActions.updateCreate( takedown ) )
+						);
 					}
+
+					return Observable.of( FileActions.swap( file, response ) );
 				} )
-					.flatMap( ( ajaxResponse ) => {
-						const key = store.getState().takedown.create.dmca.fileIds.keyOf( file.id ),
-							response = new File( ajaxResponse.response );
+				.takeUntil( action$.ofType( 'FILE_DELETE' ).filter( ( action ) => action.file.id === file.id ) );
 
-						let takedown = store.getState().takedown.create,
-							fileIds = takedown.dmca.fileIds;
-
-						if ( typeof key !== 'undefined' ) {
-							takedown = takedown.setIn( [ 'dmca', 'fileIds' ], fileIds.set( key, response.id ) );
-							return Observable.concat(
-								Observable.of( FileActions.swap( file, response ) ),
-								Observable.of( TakedownActions.updateCreate( takedown ) )
-							);
-						}
-
-						return Observable.of( FileActions.swap( file, response ) );
-					} )
-					.takeUntil( action$.ofType( 'FILE_DELETE' ).filter( ( action ) => action.file.id === file.id ) );
-
+			// Return an observable that emits:
+			// 1) The updated file status.
+			// 2) The upload progress.
+			// 3) The upload itself.
 			file = file.set( 'status', 'uploading' );
 			return Observable.merge(
 				Observable.of( FileActions.update( file ) ),

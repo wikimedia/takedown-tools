@@ -46,6 +46,10 @@ export class TakedownShowCp extends React.Component {
 								</td>
 							</tr>
 							<tr>
+								<td><a href="http://www.missingkids.com/">NCMEC</a></td>
+								<td>{file.ncmecId}</td>
+							</tr>
+							<tr>
 								<td>Uploaded</td>
 								<td>{uploaded}</td>
 							</tr>

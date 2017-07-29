@@ -114,10 +114,10 @@ export class TakedownShow extends React.Component {
 		}
 
 		if ( this.props.metadata.size > 0 ) {
-			metadata = this.props.metadata.map( ( metadata ) => {
+			metadata = this.props.metadata.map( ( data ) => {
 				return (
-					<div key={metadata.id}>
-						{metadata.label}
+					<div key={data.id}>
+						{data.label}
 					</div>
 				);
 			} ).toArray();

@@ -1,8 +1,9 @@
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Set } from 'immutable';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
+import 'rxjs/add/operator/do';
 import { push } from 'react-router-redux';
 import { Takedown } from 'app/entities/takedown/takedown';
 import { MetadataSet } from 'app/entities/metadata.set';
@@ -150,25 +151,122 @@ export function takedownSave( action$, store ) {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + store.getState().token
 				}
-			} )
-				.flatMap( ( ajaxResponse ) => {
-					const takedown = new Takedown( ajaxResponse.response );
+			} ).catch( ( ajaxError ) => {
+				if ( ajaxError.status === 401 ) {
+					return Observable.of( TokenActions.tokenRemove() );
+				}
 
-					return Observable.concat(
-						Observable.of( TakedownActions.add( takedown ) ),
-						Observable.of( push( '/takedown/' + takedown.id ) ),
-						Observable.of( TakedownActions.clearCreate() )
-					);
-				} )
-				.catch( ( ajaxError ) => {
-					if ( ajaxError.status === 401 ) {
-						return Observable.of( TokenActions.tokenRemove() );
+				// Set the takedown state. Use what is in the sotre since it might
+				// have been updated since we started saving.
+				const errorTakedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
+				return Observable.of( TakedownActions.updateCreate( errorTakedown ) );
+			} ).flatMap( ( ajaxResponse ) => {
+				let response = new Takedown( ajaxResponse.response ),
+					create = store.getState().takedown.create,
+					add,
+					error,
+					uploads,
+					finish;
+
+				add = Observable.of( TakedownActions.add( response ) );
+
+				finish = Observable.concat(
+					Observable.of( push( '/takedown/' + response.id ) ),
+					Observable.of( TakedownActions.clearCreate() )
+				);
+
+				if ( response.type === 'cp' ) {
+					if ( create.cp.files.size > 0 ) {
+
+						if ( create.cp.files.size !== response.cp.files.size ) {
+							error = create.set( 'status', 'error' ).set( 'error', new Error( {
+								message: 'File list does not match response.'
+							} ) );
+							return Observable.of( TakedownActions.updateCreate( error ) );
+						}
+
+						uploads = Observable.from( create.cp.files.toArray() )
+							.flatMap( ( file, index ) => {
+								let progressSubscriber,
+									progress,
+									serverFile,
+									request;
+
+								serverFile = response.cp.files.get( index );
+
+								if ( serverFile.name !== file.name ) {
+									throw new Error( {
+										message: 'File names do not match'
+									} );
+								}
+
+								progressSubscriber = new Subject();
+
+								progress = progressSubscriber.map( ( event ) => {
+									const percent = parseInt( ( event.loaded / event.total ) * 100 );
+
+									create = store.getState().takedown.create;
+
+									file = file.set( 'progress', percent );
+									create = create.setIn( [ 'cp', 'files', index ], file );
+									return TakedownActions.updateCreate( create );
+								} );
+
+								request = Observable.ajax( {
+									url: `/api/takedown/${response.id}/ncmec/file/${serverFile.id}`,
+									method: 'POST',
+									body: file.file,
+									progressSubscriber: progressSubscriber,
+									responseType: 'json',
+									headers: {
+										Authorization: 'Bearer ' + store.getState().token,
+										'Content-Type': file.file.type
+									}
+								} ).catch( ( ajaxError ) => {
+									file = file.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
+									create = store.getState().takedown.create;
+									create = create.setIn( [ 'cp', 'files', index ], file );
+									return Observable.of( TakedownActions.updateCreate( create ) );
+								} ).flatMap( ( uploadResponse ) => {
+									response = new Takedown( uploadResponse.response );
+
+									file = file.set( 'status', 'ready' );
+									create = store.getState().takedown.create;
+									create = create.setIn( [ 'cp', 'files', index ], file );
+									return Observable.concat(
+										Observable.of( TakedownActions.update( response ) ),
+										Observable.of( TakedownActions.updateCreate( create ) )
+									);
+								} );
+
+								// Return an observable that emits:
+								// 1) The updated file status.
+								// 2) The upload progress.
+								// 3) The upload itself.
+								file = file.set( 'status', 'uploading' );
+								create = store.getState().takedown.create;
+								create = create.setIn( [ 'cp', 'files', index ], file );
+								return Observable.merge(
+									Observable.of( TakedownActions.updateCreate( create ) ),
+									progress,
+									request
+								);
+							} );
+
+						return Observable.concat(
+							add,
+							uploads,
+							// @TODO add observable that finishes the report.
+							finish
+						);
 					}
+				}
 
-					// Set the takedown state.
-					const takedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
-					return Observable.of( TakedownActions.updateCreate( takedown ) );
-				} );
+				return Observable.concat(
+					add,
+					finish
+				);
+			} );
 		} );
 }
 
@@ -290,17 +388,17 @@ export function saveDmcaUserNotice( action$, store ) {
 					let takedown = store.getState().takedown.list.find( ( item ) => {
 							return action.takedown.id === item.id;
 						} ),
-						notice = takedown.dmca.notices.get( action.user.id ) || new Post();
+						post = takedown.dmca.notices.get( action.user.id ) || new Post();
 
 					if ( ajaxError.status === 409 && ajaxError.xhr.response.captcha ) {
-						notice = notice.set( 'status', 'captcha' );
-						notice = notice.set( 'captcha', new Captcha( ajaxError.xhr.response.captcha ) );
+						post = post.set( 'status', 'captcha' );
+						post = post.set( 'captcha', new Captcha( ajaxError.xhr.response.captcha ) );
 					} else {
-						notice = notice.set( 'status', 'error' );
-						notice = notice.set( 'error', new Error( ajaxError.xhr.response ) );
+						post = post.set( 'status', 'error' );
+						post = post.set( 'error', new Error( ajaxError.xhr.response ) );
 					}
 
-					takedown = takedown.setIn( [ 'dmca', 'notices', action.user.id ], notice );
+					takedown = takedown.setIn( [ 'dmca', 'notices', action.user.id ], post );
 
 					return Observable.of( TakedownActions.update( takedown ) );
 				} );

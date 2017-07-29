@@ -9,7 +9,8 @@ export class File extends Record( {
 	file: undefined,
 	uploaded: undefined,
 	ip: undefined,
-	exif: undefined
+	exif: undefined,
+	ncmecId: undefined
 } ) {
 
 	equals( other ) {

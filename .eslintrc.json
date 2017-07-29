@@ -26,6 +26,7 @@
 			{
 				"int32Hint": true
 			}
-		]
+		],
+		"no-shadow": "error"
   }
 }

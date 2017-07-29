@@ -42,8 +42,8 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 		notice = this.props.takedown.dmca.notices.get( this.props.user.id ) || new Post();
 		disabled = notice.status === 'saving';
 
-		userNotice = this.props.takedown.dmca.userNoticeIds.find( ( id ) => {
-			return id === this.props.user.id;
+		userNotice = this.props.takedown.dmca.userNoticeIds.find( ( userId ) => {
+			return userId === this.props.user.id;
 		} );
 
 		if ( userNotice ) {
