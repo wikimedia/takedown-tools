@@ -102,7 +102,7 @@ services:
       - '@app.mediawiki_client'
       - '@entity_attacher'
       - '@app.lumen_client'
-      - '@app.ncme_client'
+      - '@app.ncmec_client'
       - '@security.token_storage'
 
   app.controller_user:
@@ -226,7 +226,7 @@ services:
       - '@serializer'
       - '%app.files_dir%'
 
-  app.ncme_client_guzzle:
+  app.ncmec_client_guzzle:
     class: GuzzleHttp\Client
     arguments:
       -
@@ -235,20 +235,20 @@ services:
           Accept: 'text/xml'
           Content-Type: 'text/xml; charset=utf-8'
         auth:
-          - '%env(NCME_USER)%'
-          - '%env(NCME_PASS)%'
+          - '%env(NCMEC_USER)%'
+          - '%env(NCMEC_PASS)%'
 
-  app.ncme_client:
-    class: App\Client\NcmeClient
+  app.ncmec_client:
+    class: App\Client\NcmecClient
     arguments:
-      - '@app.ncme_client_guzzle'
+      - '@app.ncmec_client_guzzle'
       - '@app.mediawiki_client'
       - '@serializer'
       - '@serializer'
       - '@serializer'
 
-  app.serializer_ncme:
-      class: App\Serializer\NcmeNormalizer
+  app.serializer_ncmec:
+      class: App\Serializer\NcmecNormalizer
       arguments:
         - '%app.organization%'
         - '%app.contact%'

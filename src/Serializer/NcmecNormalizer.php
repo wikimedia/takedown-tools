@@ -7,9 +7,9 @@ use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Ncme Normalizer
+ * NCMEC Normalizer
  */
-class NcmeNormalizer implements NormalizerInterface {
+class NcmecNormalizer implements NormalizerInterface {
 
 	/**
 	 * @var array
@@ -149,6 +149,6 @@ class NcmeNormalizer implements NormalizerInterface {
 	 * @return bool
 	 */
 	public function supportsNormalization( $data, $format = null ) {
-		return $format === 'ncme' && $data instanceof Takedown && $data->getCp();
+		return $format === 'ncmec' && $data instanceof Takedown && $data->getCp();
 	}
 }

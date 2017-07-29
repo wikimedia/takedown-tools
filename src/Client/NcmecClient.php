@@ -11,9 +11,9 @@ use Symfony\Component\Serializer\Encoder\EncoderInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 /**
- * Ncme Client.
+ * NCMEC Client.
  */
-class NcmeClient implements NcmeClientInterface {
+class NcmecClient implements NcmecClientInterface {
 
 	/**
 	 * @var ClientInterface
@@ -64,7 +64,7 @@ class NcmeClient implements NcmeClientInterface {
 	}
 
 	/**
-	 * Post Lumen Notice
+	 * Create NCMEC Report
 	 *
 	 * @param Takedown $takedown Takedown
 	 *
@@ -92,7 +92,7 @@ class NcmeClient implements NcmeClientInterface {
 		}
 
 		return $promise->then( function ( $takedown ) {
-			$data = $this->normalizer->normalize( $takedown, 'ncme' );
+			$data = $this->normalizer->normalize( $takedown, 'ncmec' );
 			$xml = $this->encoder->encode( $data, 'xml', [
 				'xml_root_node_name' => 'report',
 			] );

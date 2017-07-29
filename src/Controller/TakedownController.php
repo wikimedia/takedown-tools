@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Client\NcmeClientInterface;
+use App\Client\NcmecClientInterface;
 use App\Client\LumenClientInterface;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
@@ -55,9 +55,9 @@ class TakedownController {
 	protected $lumenClient;
 
 	/**
-	 * @var NcmeClientInterface
+	 * @var NcmecClientInterface
 	 */
-	protected $ncmeClient;
+	protected $ncmecClient;
 
 	/**
 	 * @var ValidatorInterface
@@ -76,7 +76,7 @@ class TakedownController {
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
 	 * @param EntityAttacherInterface $attacher Entity Attacher.
 	 * @param LumenClientInterface $lumenClient Lumen Client.
-	 * @param NcmeClientInterface $ncmeClient NCME Client.
+	 * @param NcmecClientInterface $ncmecClient NCMEC Client.
 	 * @param TokenStorageInterface $tokenStorage Token Storage.
 	 */
 	public function __construct(
@@ -84,14 +84,14 @@ class TakedownController {
 		MediaWikiClientInterface $client,
 		EntityAttacherInterface $attacher,
 		LumenClientInterface $lumenClient,
-		NcmeClientInterface $ncmeClient,
+		NcmecClientInterface $ncmecClient,
 		TokenStorageInterface $tokenStorage
 	) {
 		$this->doctrine = $doctrine;
 		$this->client = $client;
 		$this->attacher = $attacher;
 		$this->lumenClient = $lumenClient;
-		$this->ncmeClient = $ncmeClient;
+		$this->ncmecClient = $ncmecClient;
 		$this->tokenStorage = $tokenStorage;
 	}
 
@@ -189,7 +189,7 @@ class TakedownController {
 		if ( $takedown->getCp() && $takedown->getCp()->isApproved() ) {
 			$promises[] = $this->ncmeClient->createReport( $takedown )
 				->then( function ( $reportId ) use ( $takedown ) {
-					$takedown->getCp()->setNcmeId( $reportId );
+					$takedown->getCp()->setNcmecId( $reportId );
 					return $takedown;
 				} );
 		}

@@ -8,7 +8,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 /**
  * Ncme Client.
  */
-interface NcmeClientInterface {
+interface NcmecClientInterface {
 
 	/**
 	 * Post Lumen Notice

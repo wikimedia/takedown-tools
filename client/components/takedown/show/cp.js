@@ -72,8 +72,8 @@ export class TakedownShowCp extends React.Component {
 		return (
 			<tbody className="border-top-0">
 				<tr>
-					<td><a href="http://www.missingkids.com/">NCME</a></td>
-					<td>{this.props.takedown.cp.ncmeId}</td>
+					<td><a href="http://www.missingkids.com/">NCMEC</a></td>
+					<td>{this.props.takedown.cp.ncmecId}</td>
 				</tr>
 				<tr>
 					<td>Approved</td>

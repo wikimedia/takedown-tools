@@ -33,9 +33,9 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	/**
 	 * @var int
 	 *
-	 * @ORM\Column(name="ncme_id", type="integer", nullable=true)
+	 * @ORM\Column(name="ncmec_id", type="integer", nullable=true)
 	 */
-	private $ncmeId;
+	private $ncmecId;
 
 	/**
 	 * @var bool
@@ -124,27 +124,27 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	}
 
 	/**
-	 * Set NCME Id
+	 * Set NCMEC Id
 	 *
-	 * @param int|null $ncmeId NCME Id
+	 * @param int|null $ncmecId NCMEC Id
 	 *
 	 * @return self
 	 */
-	public function setNcmeId( ?int $ncmeId ) : self {
-		$this->ncmeId = $ncmeId;
+	public function setNcmecId( ?int $ncmecId ) : self {
+		$this->ncmecId = $ncmecId;
 
 		return $this;
 	}
 
 	/**
-	 * NCME Id
+	 * NCMEC Id
 	 *
 	 * @Groups({"api"})
 	 *
 	 * @return bool
 	 */
-	public function getNcmeId() :? int {
-		return $this->ncmeId;
+	public function getNcmecId() :? int {
+		return $this->ncmecId;
 	}
 
 	/**
