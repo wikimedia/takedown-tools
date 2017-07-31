@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
+import { FormGroup } from 'app/components/fields/form-group';
 import { FormError } from 'app/components/fields/form-error';
 import { CaptchaField } from 'app/components/fields/captcha';
 import { Takedown } from 'app/entities/takedown/takedown';
@@ -18,14 +19,6 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 		this.props.updateTakedown( takedown );
 	}
 
-	getCommonsText() {
-		if ( typeof this.props.takedown.dmca[ this.props.postName ].text !== 'undefined' ) {
-			return this.props.takedown.dmca[ this.props.postName ].text;
-		}
-
-		return this.getDefaultCommonsText();
-	}
-
 	getDefaultCommonsText() {
 		switch ( this.props.postName ) {
 			case 'commonsPost':
@@ -38,7 +31,11 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 	}
 
 	getCommonsTitle() {
-		return this.props.takedown.dmca[ this.props.postName ].title || this.getDefaultCommonsTitle();
+		if ( typeof this.props.takedown.dmca[ this.props.postName ].title !== 'undefined' ) {
+			return this.props.takedown.dmca[ this.props.postName ].title;
+		}
+
+		return this.getDefaultCommonsTitle();
 	}
 
 	getDefaultCommonsTitle() {
@@ -58,8 +55,9 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 	render() {
 		let disabled,
 			name,
-			send,
-			verb,
+			id,
+			page,
+			domain,
 			text,
 			post;
 
@@ -69,55 +67,65 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 
 		post = this.props.takedown.dmca[ this.props.postName ];
 		disabled = post.status === 'saving';
+		domain = APP_ENV === 'prod' ? 'commons.wikimedia.org' : 'test2.wikipedia.org';
 
 		switch ( this.props.postName ) {
 			case 'commonsPost':
-				send = this.props.takedown.dmca.commonsSend;
+				id = this.props.takedown.dmca.commonsId;
+				page = APP_ENV === 'prod' ? 'Commons:Office_actions/DMCA_notices' : 'Office_actions/DMCA_notices';
 				name = (
-					<a href="https://commons.wikimedia.org/wiki/Commons:Office_actions/DMCA_notices">Commons</a>
+					<a href={`https://${domain}/wiki/${page}`}>Commons</a>
 				);
 				break;
 			case 'commonsVillagePumpPost':
-				send = this.props.takedown.dmca.commonsVillagePumpSend;
+				id = this.props.takedown.dmca.commonsVillagePumpId;
+				page = APP_ENV === 'prod' ? 'Commons:Village_pump' : 'Wikipedia:Simple_talk';
 				name = (
-					<a href="https://commons.wikimedia.org/wiki/Commons:Village_pump">Commons Village Pump</a>
+					<a href={`https://${domain}/wiki/${page}?type=revision&diff=${id}`}>Commons Village Pump</a>
 				);
 				break;
 		}
 
-		if ( send ) {
-			verb = 'Posted';
-			text = 'Yes';
+		if ( id ) {
+			text = (
+				<a href={`https://${domain}/wiki/${page}?type=revision&diff=${id}`}>{id}</a>
+			);
 		} else {
-			verb = 'Post';
-
 			text = (
 				<form onSubmit={this.handleSubmit.bind( this )}>
-					<div className="form-group">
-						<label htmlFor="title">Title</label>
-						<TextEdit
-							value={post.title}
-							default={this.getDefaultCommonsTitle()}
-							name="title"
-							disabled={disabled}
-							onChange={( value ) => this.updateField( 'title', value )} />
-					</div>
-					<div className="form-group">
-						<label htmlFor="text">Text</label>
-						<TextEdit
-							rows="5"
-							value={post.text}
-							default={this.getDefaultCommonsText()}
-							name="text"
-							disabled={disabled}
-							onChange={( value ) => this.updateField( 'text', value )} />
-					</div>
-					<CaptchaField captcha={post.captcha} onChange={( value ) => this.updateField( 'captcha', value )} />
-					<div className="form-group row align-items-center">
-						<div className="col-11">
-							<FormError error={this.props.takedown.error} />
+					<FormGroup path="title" error={post.error} render={( hasError, className ) => (
+						<div>
+							<label htmlFor="title">Title</label>
+							<TextEdit
+								className={className}
+								value={post.title}
+								default={this.getDefaultCommonsTitle()}
+								name="title"
+								disabled={disabled}
+								onChange={( value ) => this.updateField( 'title', value )}
+							/>
 						</div>
-						<div className="col-1 text-right">
+					)} />
+					<FormGroup path="text" error={post.error} render={( hasError, className ) => (
+						<div>
+							<label htmlFor="text">Text</label>
+							<TextEdit
+								rows="5"
+								className={className}
+								value={post.text}
+								default={this.getDefaultCommonsText()}
+								name="text"
+								disabled={disabled}
+								onChange={( value ) => this.updateField( 'text', value )}
+							/>
+						</div>
+					)} />
+					<CaptchaField captcha={post.captcha} error={post.error} onChange={( value ) => this.updateField( 'captcha', value )} />
+					<div className="form-group row align-items-center">
+						<div className="col">
+							<FormError error={post.error} />
+						</div>
+						<div className="col col-auto text-right">
 							<Submit status={post.status === 'clean' ? 'dirty' : post.status} value="Post" />
 						</div>
 					</div>
@@ -128,7 +136,7 @@ export class TakedownShowDmcaCommonsPost extends React.Component {
 		return (
 			<tr>
 				<td>
-					{verb} to {name}
+					{name}
 				</td>
 				<td>
 					{text}

@@ -206,7 +206,9 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
-			return $data['edit'];
+			$id = intval( $data['edit']['newrevid'] ?? 0 );
+
+			return $id ?? null;
 		} );
 	}
 
@@ -270,7 +272,9 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
-			return $data['edit'];
+			$id = intval( $data['edit']['newrevid'] ?? 0 );
+
+			return $id ?? null;
 		} );
 	}
 
@@ -337,7 +341,9 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				throw new ClientException( $data['edit']['result'], $request, $response, null, $data['edit'] );
 			}
 
-			return $data;
+			$id = intval( $data['edit']['newrevid'] ?? 0 );
+
+			return $id ?? null;
 		} );
 	}
 

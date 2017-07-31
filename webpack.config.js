@@ -1,4 +1,7 @@
+require( 'dotenv' ).config();
+
 const path = require( 'path' ),
+	webpack = require( 'webpack' ),
 	ExtractTextPlugin = require( 'extract-text-webpack-plugin' ),
 	extractSass = new ExtractTextPlugin( {
 		filename: 'style.css',
@@ -42,6 +45,9 @@ module.exports = {
 		]
 	},
 	plugins: [
-		extractSass
+		extractSass,
+		new webpack.DefinePlugin( {
+			APP_ENV: JSON.stringify( process.env.APP_ENV )
+		} )
 	]
 };

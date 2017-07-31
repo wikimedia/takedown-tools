@@ -22,9 +22,9 @@ export class Dmca extends Record( {
 	fileIds: new List(),
 	wmfSend: undefined,
 	wmfTitle: undefined,
-	commonsSend: undefined,
+	commonsId: undefined,
 	commonsPost: new Post(),
-	commonsVillagePumpSend: undefined,
+	commonsVillagePumpId: undefined,
 	commonsVillagePumpPost: new Post(),
 	userNoticeIds: new Set(),
 	notices: new Map()

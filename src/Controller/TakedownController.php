@@ -246,7 +246,7 @@ class TakedownController {
 		$em = $this->doctrine->getEntityManager();
 
 		try {
-			$this->client->postCommons( $post )->wait();
+			$id = $this->client->postCommons( $post )->wait();
 		} catch ( RequestException $e ) {
 			if ( $e->getResponse()->getStatusCode() !== 200 ) {
 				throw $e;
@@ -261,7 +261,7 @@ class TakedownController {
 			return new JsonResponse( $data, 409 );
 		}
 
-		$takedown->getDmca()->setCommonsSend( true );
+		$takedown->getDmca()->setCommonsId( $id );
 
 		$em->flush();
 
@@ -285,7 +285,7 @@ class TakedownController {
 		$em = $this->doctrine->getEntityManager();
 
 		try {
-			$this->client->postCommonsVillagePump( $post )->wait();
+			$id = $this->client->postCommonsVillagePump( $post )->wait();
 		} catch ( RequestException $e ) {
 			if ( $e->getResponse()->getStatusCode() !== 200 ) {
 				throw $e;
@@ -300,7 +300,7 @@ class TakedownController {
 			return new JsonResponse( $data, 409 );
 		}
 
-		$takedown->getDmca()->setCommonsVillagePumpSend( true );
+		$takedown->getDmca()->setCommonsVillagePumpId( $id );
 
 		$em->flush();
 
@@ -328,6 +328,10 @@ class TakedownController {
 		Post $post
 	) {
 		$em = $this->doctrine->getEntityManager();
+
+		if ( !$takedown->getSite() ) {
+			throw new BadRequestHttpException( 'Takedown is missing Site' );
+		}
 
 		// Ensure the user is in the invovled users and *not* in the existing
 		// list of notices that have been sent.

@@ -5,6 +5,7 @@ namespace App\Entity\Takedown\Dmca;
 use App\Entity\Captcha;
 use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Commons Post
@@ -34,6 +35,8 @@ class Post {
 
 	/**
 	 * Text
+	 *
+	 * @Assert\NotBlank()
 	 *
 	 * @return string
 	 */

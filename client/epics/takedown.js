@@ -323,7 +323,7 @@ export function saveDmcaPost( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_DMCA_POST_SAVE' )
 		.flatMap( ( action ) => {
 			let post = action.takedown.dmca[ action.postName ],
-				send,
+				key,
 				endPoint;
 
 			// Prepare post for saving.
@@ -332,13 +332,13 @@ export function saveDmcaPost( action$, store ) {
 			switch ( action.postName ) {
 				case 'commonsPost':
 					endPoint = 'commons';
-					send = 'commonsSend';
-					post = post.set( 'text', post.text || defaultCommonsText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
+					key = 'commonsId';
+					post = post.set( 'text', typeof post.text !== 'undefined' ? post.text : defaultCommonsText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
 					break;
 				case 'commonsVillagePumpPost':
 					endPoint = 'commons-village-pump';
-					send = 'commonsVillagePumpSend';
-					post = post.set( 'text', post.text || defaultCommonsVillagePumpText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
+					key = 'commonsVillagePumpId';
+					post = post.set( 'text', typeof post.text !== 'undefined' ? post.text : defaultCommonsVillagePumpText( post.title || getWmfTitle( action.takedown.dmca.wmfTitle ) || '', action.takedown.dmca.wmfTitle, action.takedown.pageIds ) );
 					break;
 			}
 
@@ -368,7 +368,7 @@ export function saveDmcaPost( action$, store ) {
 						};
 					}
 
-					takedown = takedown.setIn( [ 'dmca', send ], response.dmca[ send ] );
+					takedown = takedown.setIn( [ 'dmca', key ], response.dmca[ key ] );
 
 					return TakedownActions.update( takedown );
 				} )
@@ -396,7 +396,7 @@ export function saveDmcaUserNotice( action$, store ) {
 		.flatMap( ( action ) => {
 			let notice = action.takedown.dmca.notices.get( action.user.id ) || new Post();
 
-			notice = notice.set( 'text', notice.text || defaultUserNoticeText( action.user.username, action.takedown.dmca.pageIds ) );
+			notice = notice.set( 'text', typeof notice.text !== 'undefined' ? notice.text : defaultUserNoticeText( action.user.username, action.takedown.pageIds ) );
 
 			if ( !notice.captcha.id ) {
 				notice = notice.set( 'captcha', undefined );

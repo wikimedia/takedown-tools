@@ -29,10 +29,10 @@ export class TextEdit extends React.Component {
 				<Input
 					type="text"
 					rows={rows > 1 ? rows : undefined}
-					className="form-control"
+					className={typeof this.props.className !== 'undefined' ? this.props.className : 'form-control'}
 					name={this.props.name}
 					ref={( element ) => { this.input = element; }}
-					value={this.props.value || this.props.default}
+					value={typeof this.props.value !== 'undefined' ? this.props.value : this.props.default}
 					readOnly={typeof this.props.value === 'undefined' && this.props.default}
 					onChange={this.handleChange.bind( this )} />
 				{button}
@@ -51,6 +51,7 @@ TextEdit.propTypes = {
 	value: PropTypes.string,
 	'default': PropTypes.string,
 	name: PropTypes.string,
+	className: PropTypes.string,
 	disabled: PropTypes.bool,
 	rows: PropTypes.oneOfType( [
 		PropTypes.number,

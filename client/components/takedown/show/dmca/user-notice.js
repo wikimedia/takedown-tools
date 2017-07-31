@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { TextEdit } from 'app/components/fields/text-edit';
 import { Submit } from 'app/components/fields/submit';
 import { FormError } from 'app/components/fields/form-error';
+import { FormGroup } from 'app/components/fields/form-group';
 import { CaptchaField } from 'app/components/fields/captcha';
 import { User } from 'app/entities/user';
 import { Site } from 'app/entities/site';
@@ -33,14 +34,16 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 			id,
 			username,
 			disabled,
+			domain,
 			notice;
 
-		if ( !this.props.site ) {
+		if ( !this.props.site.id ) {
 			return null;
 		}
 
 		notice = this.props.takedown.dmca.notices.get( this.props.user.id ) || new Post();
 		disabled = notice.status === 'saving';
+		domain = APP_ENV === 'prod' ? this.props.site.domain : 'test2.wikipedia.org';
 
 		userNotice = this.props.takedown.dmca.userNoticeIds.find( ( userId ) => {
 			return userId === this.props.user.id;
@@ -52,7 +55,7 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 
 			if ( this.props.site && this.props.site.info ) {
 				username = (
-					<a href={'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath )}>
+					<a href={'https://' + domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath )}>
 						{this.props.user.username}
 					</a>
 				);
@@ -65,22 +68,26 @@ export class TakedownShowDmcaUserNotice extends React.Component {
 
 		return (
 			<form onSubmit={this.handleSubmit.bind( this )}>
-				<div className="form-group">
-					<label htmlFor="text">{this.props.user.username}</label>
-					<TextEdit
-						rows="5"
-						value={notice.text}
-						default={defaultUserNoticeText( this.props.user.username, this.props.takedown.pageIds )}
-						name="text"
-						disabled={disabled}
-						onChange={( value ) => this.updateField( 'text', value )} />
-				</div>
-				<CaptchaField captcha={notice.captcha} onChange={( value ) => this.updateField( 'captcha', value )} />
+				<FormGroup path="text" error={notice.error} render={( hasError, className ) => (
+					<div>
+						<label htmlFor="text">{this.props.user.username}</label>
+						<TextEdit
+							rows="5"
+							className={className}
+							value={notice.text}
+							default={defaultUserNoticeText( this.props.user.username, this.props.takedown.pageIds )}
+							name="text"
+							disabled={disabled}
+							onChange={( value ) => this.updateField( 'text', value )}
+						/>
+					</div>
+				)} />
+				<CaptchaField captcha={notice.captcha} error={notice.error} onChange={( value ) => this.updateField( 'captcha', value )} />
 				<div className="form-group row align-items-center">
-					<div className="col-11">
+					<div className="col">
 						<FormError error={notice.error} />
 					</div>
-					<div className="col-1 text-right">
+					<div className="col col-auto text-right">
 						<Submit status={notice.status === 'clean' ? 'dirty' : notice.status} value="Post" />
 					</div>
 				</div>

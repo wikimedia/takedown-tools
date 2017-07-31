@@ -79,7 +79,7 @@ export class TakedownShowDmca extends React.Component {
 			);
 		}
 
-		if ( this.props.site ) {
+		if ( this.props.site.id ) {
 			notices = this.props.involved.map( ( user ) => {
 				return (
 					<TakedownShowDmcaUserNoticeContainer key={user.id} user={user} takedown={this.props.takedown} site={this.props.site} />
@@ -100,7 +100,7 @@ export class TakedownShowDmca extends React.Component {
 
 		if ( this.props.takedown.dmca.lumenId ) {
 			lumen = (
-				<a href={'https://lumendatabase.org/notices/' + this.props.takedown.dmca.lumenId}>
+				<a href={APP_ENV === 'prod' ? `https://lumendatabase.org/notices/${this.props.takedown.dmca.lumenId}` : `https://api-beta.lumendatabase.org/notices/${this.props.takedown.dmca.lumenId}`}>
 					{this.props.takedown.dmca.lumenTitle}
 				</a>
 			);
@@ -180,7 +180,7 @@ export class TakedownShowDmca extends React.Component {
 					<td>{senderCountry ? senderCountry.name : undefined}</td>
 				</tr>
 				<tr>
-					<td><a href="http://lumendatabase.org/">Lumen</a></td>
+					<td><a href={APP_ENV === 'prod' ? 'https://lumendatabase.org' : 'https://api-beta.lumendatabase.org'}>Lumen</a></td>
 					<td>{lumen}</td>
 				</tr>
 				<tr>
@@ -188,7 +188,7 @@ export class TakedownShowDmca extends React.Component {
 				</tr>
 				<tr>
 					<td>
-						<a href="https://wikimediafoundation.org">Wikimedia Foundation</a> Announcement
+						<a href="https://wikimediafoundation.org">Wikimedia Foundation</a>
 					</td>
 					<td>
 						{wmfTitle}

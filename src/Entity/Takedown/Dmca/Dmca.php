@@ -176,18 +176,18 @@ class Dmca implements GroupSequenceProviderInterface {
 	 private $wmfTitle;
 
 	 /**
-		* @var bool
+		* @var int
 		*
-		* @ORM\Column(name="commons_send", type="boolean", options={"default"=false})
+		* @ORM\Column(name="commons_id", type="bigint", nullable=true)
 		*/
-	private $commonsSend;
+	private $commonsId;
 
 	/**
-	 * @var bool
+	 * @var int
 	 *
-	 * @ORM\Column(name="commons_vp_send", type="boolean", options={"default"=false})
+	 * @ORM\Column(name="commons_vp_id", type="bigint", nullable=true)
 	 */
- private $commonsVillagePumpSend;
+ private $commonsVillagePumpId;
 
 	/**
 	 * @var Collection
@@ -252,8 +252,8 @@ class Dmca implements GroupSequenceProviderInterface {
 		$this->subject = $params->getString( 'subject' );
 		$this->body = $params->getString( 'body' );
 		$this->wmfTitle = $params->getString( 'wmfTitle' );
-		$this->commonsSend = $params->getBoolean( 'commonsSend', false );
-		$this->commonsVillagePumpSend = $params->getBoolean( 'commonsSend', false );
+		$this->commonsId = $params->getBoolean( 'commonsId' );
+		$this->commonsVillagePumpId = $params->getBoolean( 'commonsVillagePumpId' );
 		$this->files = $params->getCollection(
 			'files',
 			File::class,
@@ -894,55 +894,51 @@ class Dmca implements GroupSequenceProviderInterface {
 	}
 
 	/**
-	 * Set Send to Commons
+	 * Set Commons Revision Id
 	 *
-	 * @Groups({"api"})
-	 *
-	 * @param bool $commonsSend Send to Commons
+	 * @param int $commonsId Set Commons Revision Id
 	 *
 	 * @return self
 	 */
-	public function setCommonsSend( bool $commonsSend ) : self {
-		$this->commonsSend = $commonsSend;
+	public function setCommonsId( int $commonsId ) : self {
+		$this->commonsId = $commonsId;
 
 		return $this;
 	}
 
 	/**
-	 * Send to Commons
+	 * Commons Revision Id
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @return bool
+	 * @return int
 	 */
-	public function getCommonsSend() :? bool {
-		return $this->commonsSend;
+	public function getCommonsId() :? int {
+		return $this->commonsId;
 	}
 
 	/**
-	 * Set Send to Commons Village Pump
+	 * Set Commons Village Pump Revision Id
 	 *
-	 * @Groups({"api"})
-	 *
-	 * @param bool $commonsVillagePumpSend Send to Commons
+	 * @param int $commonsVillagePumpId Commons Village Pump Revision Id
 	 *
 	 * @return self
 	 */
-	public function setCommonsVillagePumpSend( bool $commonsVillagePumpSend ) : self {
-		$this->commonsVillagePumpSend = $commonsVillagePumpSend;
+	public function setCommonsVillagePumpId( int $commonsVillagePumpId ) : self {
+		$this->commonsVillagePumpId = $commonsVillagePumpId;
 
 		return $this;
 	}
 
 	/**
-	 * Send to Commons
+	 * Commons Village Pump Revision Id
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @return bool
+	 * @return int
 	 */
-	public function getCommonsVillagePumpSend() :? bool {
-		return $this->commonsVillagePumpSend;
+	public function getCommonsVillagePumpId() :? int {
+		return $this->commonsVillagePumpId;
 	}
 
 	/**

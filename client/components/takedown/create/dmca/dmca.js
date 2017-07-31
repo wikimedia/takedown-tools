@@ -136,13 +136,13 @@ export class TakedownCreateDmca extends React.Component {
 			);
 		}
 
-		if ( this.props.takedown.dmca.wmfTitle && this.props.takedown.dmca.body ) {
+		if ( this.props.takedown.dmca.wmfTitle ) {
 			wmfText = (
 				<div className="form-group">
 					<label className="form-control-label">Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
 					<textarea className="form-control" readOnly rows="5" value={
 						'<div class="mw-code" style="white-space: pre; word-wrap: break-word;"><nowiki>\n' +
-						this.props.takedown.dmca.body +
+						( this.props.takedown.dmca.body || '' ) +
 						`\n</nowiki></div>\n[[Category:DMCA ${moment().format( 'Y' )}]]`
 					} />
 				</div>
