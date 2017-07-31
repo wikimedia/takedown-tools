@@ -71,10 +71,34 @@ export function fetchTakedown( action$, store ) {
 		} );
 }
 
+export function deleteTakedown( action$, store ) {
+	return action$.ofType( 'TAKEDOWN_DELETE' ).flatMap( ( action ) => {
+		return Observable.ajax( {
+			url: '/api/takedown/' + action.takedown.id,
+			method: 'DELETE',
+			responseType: 'json',
+			headers: {
+				Authorization: 'Bearer ' + store.getState().token
+			}
+		} ).map( () => {
+			return TakedownActions.remove( action.takedown );
+		} ).catch( ( ajaxError ) => {
+			if ( ajaxError.status === 401 ) {
+				return Observable.of( TokenActions.tokenRemove() );
+			}
+
+			// If the delete failed, add the takedown back.
+			const takedown = action.takedown.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
+			return Observable.of( TakedownActions.add( takedown ) );
+		} );
+	} );
+}
+
 export function takedownSave( action$, store ) {
 	return action$.ofType( 'TAKEDOWN_CREATE_SAVE' )
 		.switchMap( () => {
 			let takedown = store.getState().takedown.create,
+				response,
 				invovled,
 				involvedNames = [],
 				metadataIds,
@@ -151,23 +175,15 @@ export function takedownSave( action$, store ) {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + store.getState().token
 				}
-			} ).catch( ( ajaxError ) => {
-				if ( ajaxError.status === 401 ) {
-					return Observable.of( TokenActions.tokenRemove() );
-				}
-
-				// Set the takedown state. Use what is in the sotre since it might
-				// have been updated since we started saving.
-				const errorTakedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
-				return Observable.of( TakedownActions.updateCreate( errorTakedown ) );
 			} ).flatMap( ( ajaxResponse ) => {
-				let response = new Takedown( ajaxResponse.response ),
-					create = store.getState().takedown.create,
+				let create = store.getState().takedown.create,
 					add,
 					error,
 					uploads,
+					report,
 					finish;
 
+				response = new Takedown( ajaxResponse.response );
 				add = Observable.of( TakedownActions.add( response ) );
 
 				finish = Observable.concat(
@@ -210,6 +226,11 @@ export function takedownSave( action$, store ) {
 									file = file.set( 'progress', percent );
 									create = create.setIn( [ 'cp', 'files', index ], file );
 									return TakedownActions.updateCreate( create );
+								} ).catch( () => {
+									file = file.set( 'status', 'error' );
+									create = store.getState().takedown.create;
+									create = create.setIn( [ 'cp', 'files', index ], file );
+									return Observable.of( TakedownActions.updateCreate( create ) );
 								} );
 
 								request = Observable.ajax( {
@@ -222,11 +243,6 @@ export function takedownSave( action$, store ) {
 										Authorization: 'Bearer ' + store.getState().token,
 										'Content-Type': file.file.type
 									}
-								} ).catch( ( ajaxError ) => {
-									file = file.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) );
-									create = store.getState().takedown.create;
-									create = create.setIn( [ 'cp', 'files', index ], file );
-									return Observable.of( TakedownActions.updateCreate( create ) );
 								} ).flatMap( ( uploadResponse ) => {
 									response = new Takedown( uploadResponse.response );
 
@@ -253,10 +269,24 @@ export function takedownSave( action$, store ) {
 								);
 							} );
 
+						report = Observable.ajax( {
+							url: `/api/takedown/${response.id}/ncmec/finish`,
+							method: 'POST',
+							responseType: 'json',
+							headers: {
+								Authorization: 'Bearer ' + store.getState().token
+							}
+						} ).flatMap( ( uploadResponse ) => {
+							response = new Takedown( uploadResponse.response );
+							return Observable.of( TakedownActions.update( response ) );
+						} );
+
 						return Observable.concat(
 							add,
-							uploads,
-							// @TODO add observable that finishes the report.
+							Observable.concat(
+								uploads,
+								report
+							),
 							finish
 						);
 					}
@@ -266,6 +296,25 @@ export function takedownSave( action$, store ) {
 					add,
 					finish
 				);
+			} ).catch( ( ajaxError ) => {
+				if ( ajaxError.status === 401 ) {
+					return Observable.of( TokenActions.tokenRemove() );
+				}
+
+				const errorTakedown = store.getState().takedown.create.set( 'status', 'error' ).set( 'error', new Error( ajaxError.xhr.response ) ),
+					error = Observable.of( TakedownActions.updateCreate( errorTakedown ) );
+
+				// If there is already a saved takedown, delete it.
+				if ( response && response.id ) {
+					return Observable.concat(
+						Observable.of( TakedownActions.deleteTakedown( response ) ),
+						error
+					);
+				}
+
+				// Set the takedown state. Use what is in the sotre since it might
+				// have been updated since we started saving.
+				return error;
 			} );
 		} );
 }

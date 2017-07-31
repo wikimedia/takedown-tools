@@ -13,6 +13,9 @@ export default function list( state = new Set(), action ) {
 				return moment.utc( b.created ).diff( moment.utc( a.created ) );
 			} );
 
+		case 'TAKEDOWN_DELETE':
+			return state.delete( action.takedown );
+
 		case 'TAKEDOWN_DMCA_POST_SAVE':
 			return state.delete( action.takedown ).add( action.takedown.setIn( [ 'dmca', action.postName, 'status' ], 'saving' ) ).sort( ( a, b ) => {
 				return moment.utc( b.created ).diff( moment.utc( a.created ) );

@@ -127,6 +127,8 @@ class NcmecClient implements NcmecClientInterface {
 			throw new \InvalidArgumentException( 'Content must be a resource' );
 		}
 
+		$file = clone $file;
+
 		return $this->client->requestAsync( 'POST', 'upload', [
 			'multipart' => [
 				[
@@ -139,11 +141,25 @@ class NcmecClient implements NcmecClientInterface {
 					'filename' => $file->getName(),
 				],
 			],
-		] )->then( function ( $response ) {
+		] )->then( function ( $response ) use ( $file ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
 
-			// @TODO Send the file info!
-			return $data['fileId'] ?? null;
+			// Do not modify the original file.
+			$file->setNcmecId( $data['fileId'] ?? null );
+
+			$data = $this->normalizer->normalize( $file, 'ncmec' );
+			$xml = $this->encoder->encode( $data, 'xml', [
+				'xml_root_node_name' => 'fileDetails',
+			] );
+
+			return $this->client->requestAsync( 'POST', 'fileinfo', [
+				'body' => $xml,
+				'headers' => [
+					'Content-Type' => 'text/xml; charset=utf-8'
+				]
+			] )->then( function ( $response ) use ( $file ) {
+				return $file;
+			} );
 		} );
 	}
 
@@ -160,9 +176,7 @@ class NcmecClient implements NcmecClientInterface {
 				'id' => $takedown->getCp()->getNcmecId()
 			],
 		] )->then( function ( $response ) {
-			$data = $this->decoder->decode( (string)$response->getBody(), 'xml' );
-
-			return $data;
+			return $this->decoder->decode( (string)$response->getBody(), 'xml' );
 		} );
 	}
 

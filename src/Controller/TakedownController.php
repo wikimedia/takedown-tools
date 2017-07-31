@@ -428,14 +428,41 @@ class TakedownController {
 			throw new BadRequestHttpException( 'Takedown is missing NCMEC ID' );
 		}
 
-		$fileId = $this->ncmecClient->sendFile( $takedown, $file, $request->getContent( true ) )->wait();
-
-		$file->setNcmecId( $fileId );
-
 		$em = $this->doctrine->getEntityManager();
+
+		$file = $this->ncmecClient->sendFile( $takedown, $file, $request->getContent( true ) )->wait();
+		$file = $em->merge( $file );
+
 		$em->flush();
 
 		$em->refresh( $takedown );
+
+		return $takedown;
+	}
+
+	/**
+	 * Send NCMEC File
+	 *
+	 * @Route("/api/takedown/{takedown}/ncmec/finish", defaults={"_format" = "json"})
+	 * @ParamConverter("takedown", class="App\Entity\Takedown\Takedown")
+	 * @Method({"POST"})
+	 * @Groups({"api"})
+	 *
+	 * @param Takedown $takedown Takedown
+	 *
+	 * @return array
+	 */
+	public function finishNcmecReportAction( Takedown $takedown ) : Takedown {
+		if ( !$takedown->getCp() ) {
+			throw new BadRequestHttpException( 'Takedown is missing Child Protection' );
+		}
+
+		if ( !$takedown->getCp()->getNcmecId() ) {
+			throw new BadRequestHttpException( 'Takedown is missing NCMEC ID' );
+		}
+
+		// Finish the report.
+		$this->ncmecClient->finishReport( $takedown )->wait();
 
 		return $takedown;
 	}

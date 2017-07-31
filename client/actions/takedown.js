@@ -26,6 +26,20 @@ export function update( takedown ) {
 	};
 }
 
+export function deleteTakedown( takedown ) {
+	return {
+		type: 'TAKEDOWN_DELETE',
+		takedown: takedown
+	};
+}
+
+export function remove( takedown ) {
+	return {
+		type: 'TAKEDOWN_REMOVE',
+		takedown: takedown
+	};
+}
+
 export function saveDmcaPost( takedown, postName ) {
 	return {
 		type: 'TAKEDOWN_DMCA_POST_SAVE',

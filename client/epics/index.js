@@ -15,6 +15,7 @@ export default combineEpics(
 	SiteEpic.fetchSiteInfo,
 	TakedownEpic.fetchTakedownList,
 	TakedownEpic.fetchTakedown,
+	TakedownEpic.deleteTakedown,
 	TakedownEpic.takedownSave,
 	TakedownEpic.saveDmcaPost,
 	TakedownEpic.saveDmcaUserNotice,

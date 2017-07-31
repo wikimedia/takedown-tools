@@ -9,7 +9,7 @@
 				"doctrine/orm": "^2.5",
 				"geosocio/entity-attacher-bundle": "^1.0.5",
 				"geosocio/entity-utils": "^1.0.5",
-				"geosocio/http-serializer": "^4.0.2",
+				"geosocio/http-serializer-bundle": "^1.0.4",
 				"guzzlehttp/guzzle": "^6.2",
 				"guzzlehttp/oauth-subscriber": "^0.3.0",
 				"lexik/jwt-authentication-bundle": "^2.4",

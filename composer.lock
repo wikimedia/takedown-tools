@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f474f82d236e390f935a8b7c1ce98963",
+    "content-hash": "941da80c4e82d3d01e301530cbb2ad93",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -886,16 +886,16 @@
         },
         {
             "name": "geosocio/http-serializer",
-            "version": "4.0.2",
+            "version": "4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/geosocio/http-serializer.git",
-                "reference": "3f61a01d0bdef567962c88a4d47b41f5e3b21735"
+                "reference": "615874764f7f178aa0fff5fb2c325898d6e875aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/geosocio/http-serializer/zipball/3f61a01d0bdef567962c88a4d47b41f5e3b21735",
-                "reference": "3f61a01d0bdef567962c88a4d47b41f5e3b21735",
+                "url": "https://api.github.com/repos/geosocio/http-serializer/zipball/615874764f7f178aa0fff5fb2c325898d6e875aa",
+                "reference": "615874764f7f178aa0fff5fb2c325898d6e875aa",
                 "shasum": ""
             },
             "require": {
@@ -908,7 +908,8 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^6.2",
-                "squizlabs/php_codesniffer": "^3.0"
+                "squizlabs/php_codesniffer": "^3.0",
+                "symfony/var-dumper": "^3.3"
             },
             "type": "library",
             "autoload": {
@@ -921,7 +922,44 @@
                 "LGPL-3"
             ],
             "description": "Serializes a Controller Request & Response",
-            "time": "2017-07-29T01:05:38+00:00"
+            "time": "2017-07-30T17:25:20+00:00"
+        },
+        {
+            "name": "geosocio/http-serializer-bundle",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/geosocio/http-serializer-bundle.git",
+                "reference": "352621dec28114f0af8f7b04cabc2ceb07398d0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/geosocio/http-serializer-bundle/zipball/352621dec28114f0af8f7b04cabc2ceb07398d0b",
+                "reference": "352621dec28114f0af8f7b04cabc2ceb07398d0b",
+                "shasum": ""
+            },
+            "require": {
+                "geosocio/http-serializer": "^4.0.0",
+                "symfony/config": "^3.0",
+                "symfony/dependency-injection": "^3.0",
+                "symfony/http-kernel": "^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.2",
+                "squizlabs/php_codesniffer": "^3.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "GeoSocio\\HttpSerializerBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPA-3"
+            ],
+            "description": "Symfony Bundle for Serializing Http Requests & Responses",
+            "time": "2017-07-30T20:01:31+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

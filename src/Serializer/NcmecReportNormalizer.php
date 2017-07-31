@@ -9,7 +9,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * NCMEC Normalizer
  */
-class NcmecNormalizer implements NormalizerInterface {
+class NcmecReportNormalizer implements NormalizerInterface {
 
 	/**
 	 * @var array
