@@ -172,7 +172,8 @@ export function makeGetContentLink() {
 				return;
 			}
 
-			return takedown.pageIds.map( ( id, key ) => {
+			// The index of a set is the value, so convert to an array first.
+			return takedown.pageIds.toArray().map( ( id, index ) => {
 				let title, url, link;
 
 				title = id.replace( /_/g, ' ' );
@@ -188,9 +189,7 @@ export function makeGetContentLink() {
 					return link;
 				}
 
-				// @TODO FIGURE OUT WHY THIS IS A VALUE INSTEAD OF A KEY!
-				console.log( key );
-				if ( key === 0 ) {
+				if ( index === 0 ) {
 					inter = foundation.info.interwikimap.find( ( map ) => {
 						return url === id.replace( /^(.*)$/, map.url );
 					} );
