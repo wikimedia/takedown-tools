@@ -74,10 +74,10 @@ class Dmca implements GroupSequenceProviderInterface {
 	 private $senderName;
 
 	 /**
-	  * @var string
-	  *
-	  * @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
-	  */
+		* @var string
+		*
+		* @ORM\Column(name="sender_person", type="string", length=63, nullable=true)
+		*/
 	 private $senderPerson;
 
 	 /**
@@ -134,7 +134,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	/**
 	 * @var \DateTimeInterface
 	 *
-	 * @ORM\Column(name="sent", type="date", nullable=true)
+	 * @ORM\Column(name="sent", type="datetime", nullable=true)
 	 */
 	private $sent;
 
@@ -153,6 +153,20 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @ORM\Column(name="method", type="string", length=127, nullable=true)
 	 */
 	 private $method;
+
+	 /**
+		* @var string
+		*
+		* @ORM\Column(name="to", type="string", length=255, nullable=true)
+		*/
+	 private $to;
+
+	 /**
+		* @var string
+		*
+		* @ORM\Column(name="from", type="string", length=255, nullable=true)
+		*/
+	private $from;
 
 	/**
 	 * @var string
@@ -249,6 +263,8 @@ class Dmca implements GroupSequenceProviderInterface {
 		$this->senderCountry = $params->getInstance( 'country', Country::class );
 		$this->date = $params->getInstance( 'sent', \DateTime::class );
 		$this->method = $params->getString( 'method' );
+		$this->to = $params->getString( 'to' );
+		$this->from = $params->getString( 'from' );
 		$this->subject = $params->getString( 'subject' );
 		$this->body = $params->getString( 'body' );
 		$this->wmfTitle = $params->getString( 'wmfTitle' );
@@ -809,6 +825,60 @@ class Dmca implements GroupSequenceProviderInterface {
 	 */
 	public function getMethod() :? string {
 		return $this->method;
+	}
+
+	/**
+	 * Set To
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $to To
+	 *
+	 * @return self
+	 */
+	public function setTo( string $to ) : self {
+		$this->to = $to;
+
+		return $this;
+	}
+
+	/**
+	 * To
+	 *
+	 * @Groups({"api"})
+	 * @Assert\Length(max=255)
+	 *
+	 * @return string
+	 */
+	public function getTo() :? string {
+		return $this->to;
+	}
+
+	/**
+	 * Set From
+	 *
+	 * @Groups({"api"})
+	 *
+	 * @param string $from From
+	 *
+	 * @return self
+	 */
+	public function setFrom( string $from ) : self {
+		$this->from = $from;
+
+		return $this;
+	}
+
+	/**
+	 * From
+	 *
+	 * @Groups({"api"})
+	 * @Assert\Length(max=255)
+	 *
+	 * @return string
+	 */
+	public function getFrom() :? string {
+		return $this->from;
 	}
 
 	/**

@@ -16,6 +16,7 @@
     "immutable": "^3.8.1",
     "mediawiki-title": "^0.6.3",
     "moment": "^2.18.1",
+    "moment-timezone": "^0.5.13",
     "node-sass": "^4.5.3",
     "promise-file-reader": "^0.3.1",
     "prop-types": "^15.5.10",

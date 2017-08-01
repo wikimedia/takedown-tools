@@ -149,3 +149,59 @@ export function makeGetSite() {
 		}
 	);
 }
+
+const getFoundationSite = createSelector(
+	state => state.site.list,
+	( sites ) => {
+		return sites.find( ( item ) => {
+			return item.id === 'foundationwiki';
+		} );
+	}
+);
+
+export function makeGetContentLink() {
+	const getSite = makeGetSite();
+	return createSelector(
+		state => state.takedown.create,
+		getSite,
+		getFoundationSite,
+		( takedown, site, foundation ) => {
+			let inter;
+
+			if ( takedown.pageIds.size === 0 ) {
+				return;
+			}
+
+			return takedown.pageIds.map( ( id, key ) => {
+				let title, url, link;
+
+				title = id.replace( /_/g, ' ' );
+
+				if ( !site || !site.info ) {
+					return title;
+				}
+
+				url = 'https://' + site.domain + id.replace( /^(.*)$/, site.info.general.articlepath );
+				link = `[[${url} ${title}]]`;
+
+				if ( !foundation || !foundation.info ) {
+					return link;
+				}
+
+				// @TODO FIGURE OUT WHY THIS IS A VALUE INSTEAD OF A KEY!
+				console.log( key );
+				if ( key === 0 ) {
+					inter = foundation.info.interwikimap.find( ( map ) => {
+						return url === id.replace( /^(.*)$/, map.url );
+					} );
+				}
+
+				if ( !inter ) {
+					return link;
+				}
+
+				return `[[${inter.prefix}:${title}]]`;
+			} ).join( ' ' );
+		}
+	);
+}

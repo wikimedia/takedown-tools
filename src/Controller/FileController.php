@@ -64,7 +64,7 @@ class FileController {
 	/**
 	 * Get File
 	 *
-	 * @Route("/api/file/{file}.{_format}")
+	 * @Route("/api/file/{file}.{_format}", defaults={"_format" = "json"})
 	 * @ParamConverter("file", class="App\Entity\File")
 	 * @Method({"GET"})
 	 * @Groups({"api"})
@@ -141,13 +141,13 @@ class FileController {
 	/**
 	 * Delete File
 	 *
-	 * @Route("/api/file/{file}")
+	 * @Route("/api/file/{file}.{_format}", defaults={"_format" = "json"})
 	 * @ParamConverter("file", class="App\Entity\File")
 	 * @Method({"DELETE"})
 	 *
 	 * @param File $file File
 	 *
-	 * @return BinaryFileResponse
+	 * @return string
 	 */
 	public function deleteAction( File $file ) : string {
 		$this->filesystem->remove( $this->dir . '/' . $file->getPath() );

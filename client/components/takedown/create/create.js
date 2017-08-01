@@ -51,6 +51,10 @@ export class TakedownCreate extends React.Component {
 			.set( fieldName, value )
 			.set( 'status', 'dirty' );
 
+		if ( fieldName === 'siteId' ) {
+			takedown.delete( 'pageIds' );
+		}
+
 		takedown = removeErrors( takedown, fieldName );
 
 		this.props.updateTakedown( takedown );

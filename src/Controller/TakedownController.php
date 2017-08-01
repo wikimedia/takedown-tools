@@ -385,7 +385,7 @@ class TakedownController {
 	 *
 	 * @param Takedown $takedown Takedown
 	 *
-	 * @return Response
+	 * @return string
 	 */
 	public function deleteAction( Takedown $takedown ) : string {
 		$em = $this->doctrine->getEntityManager();

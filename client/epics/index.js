@@ -13,6 +13,8 @@ export default combineEpics(
 	TokenEpic.refreshToken,
 	SiteEpic.fetchAll,
 	SiteEpic.fetchSiteInfo,
+	SiteEpic.fetchSiteInfroFromTakedown,
+	SiteEpic.fetchFoundationSiteInfro,
 	TakedownEpic.fetchTakedownList,
 	TakedownEpic.fetchTakedown,
 	TakedownEpic.deleteTakedown,

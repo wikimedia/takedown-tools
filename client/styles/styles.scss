@@ -60,3 +60,8 @@ $spinkit-spinner-color: #339966;
 .input-group .material-icons {
 	font-size: inherit;
 }
+
+// Remove the hover background.
+.SingleDatePickerInput__clear-date--hover {
+	background: transparent;
+}

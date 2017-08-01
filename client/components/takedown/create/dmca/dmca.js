@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import { ListField } from 'app/components/fields/list';
 import { FormGroup } from 'app/components/fields/form-group';
 import { FileUploadField } from 'app/components/fields/file-upload';
 import { Takedown } from 'app/entities/takedown/takedown';
+import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
 import { User } from 'app/entities/user';
 import { DatePicker } from 'app/components/fields/date-picker';
@@ -111,6 +112,7 @@ export class TakedownCreateDmca extends React.Component {
 		let country,
 			lumenTitleField,
 			wmfText,
+			attachment,
 			wmfAnnouncement;
 
 		if ( this.props.takedown.dmca.senderCountryCode ) {
@@ -137,13 +139,25 @@ export class TakedownCreateDmca extends React.Component {
 		}
 
 		if ( this.props.takedown.dmca.wmfTitle ) {
+			if ( this.props.files.size > 0 ) {
+				attachment = this.props.files.map( ( file ) => file.name ).join( ' ' );
+			}
+
 			wmfText = (
 				<div className="form-group">
 					<label className="form-control-label">Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
 					<textarea className="form-control" readOnly rows="5" value={
-						'<div class="mw-code" style="white-space: pre; word-wrap: break-word;"><nowiki>\n' +
-						( this.props.takedown.dmca.body || '' ) +
-						`\n</nowiki></div>\n[[Category:DMCA ${moment().format( 'Y' )}]]`
+						'{DMCA email\n' +
+						`|from=${this.props.takedown.dmca.from || ''}\n` +
+						`|date=${moment( this.props.takedown.dmca.sent ).tz( 'America/Los_Angeles' ).format( 'MMMM D[,] YYYY [at] HH:mm:ss z' )}\n` +
+						`|subject=${this.props.takedown.dmca.subject || ''}\n` +
+						`|to=${this.props.takedown.dmca.to || ''}\n` +
+						`|content=${this.props.contentLink || ''}\n` +
+						`|attachment=${attachment || ''}\n` +
+						'|message=<nowiki>\n' +
+						( this.props.takedown.dmca.body || '' ) + '\n' +
+						'</nowiki>\n' +
+						`| year = ${moment().tz( 'America/Los_Angeles' ).format( 'Y' )}}}`
 					} />
 				</div>
 			);
@@ -168,12 +182,6 @@ export class TakedownCreateDmca extends React.Component {
 
 		return (
 			<div>
-				<FormGroup path="dmca.sent" error={this.props.takedown.error} render={ () => (
-					<div>
-						<label className="form-control-label">Sent</label> <small className="text-muted">date the takedown was sent</small>
-						<DatePicker disabled={this.props.disabled} value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
-					</div>
-				) } />
 				<FormGroup path="dmca.actionTaken" error={this.props.takedown.error} render={ ( hasError, className ) => (
 					<div>
 						<label className="form-control-label" htmlFor="actionTakenId">Action Taken</label>
@@ -190,30 +198,51 @@ export class TakedownCreateDmca extends React.Component {
 						<ListField disabled={this.props.disabled} required={true} type="url" name="originalUrls" value={this.props.takedown.dmca.originalUrls} onChange={ ( originalUrls ) => this.updateField( 'originalUrls', originalUrls ) } />
 					</div>
 				) } />
-				<FormGroup path="dmca.method" error={this.props.takedown.error} render={ ( hasError, className ) => (
-					<div>
-						<label className="form-control-label" htmlFor="method">Method</label> <small className="text-muted">how was the C&D sent? (e.g. email, postal mail, fax ...)</small>
-						<input type="text" className={className} disabled={this.props.disabled} name="method" value={this.props.takedown.dmca.method || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-				) } />
-				<FormGroup path="dmca.subject" error={this.props.takedown.error} render={ ( hasError, className ) => (
-					<div>
-						<label className="form-control-label" htmlFor="subject">Subject</label> <small className="text-muted">of the email or fax received</small>
-						<input type="text" className={className} disabled={this.props.disabled} name="subject" value={this.props.takedown.dmca.subject || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-				) } />
-				<FormGroup path="dmca.body" error={this.props.takedown.error} render={ ( hasError, className ) => (
-					<div>
-						<label className="form-control-label" htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
-						<textarea className={className} rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
-					</div>
-				) } />
-				<FormGroup path="dmca.files" error={this.props.takedown.error} render={ () => (
-					<div>
-						<label className="form-control-label">Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
-						<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
-					</div>
-				) } />
+				<fieldset className="form-group">
+					<legend>Notice</legend>
+					<FormGroup path="dmca.method" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label" htmlFor="method">Method</label> <small className="text-muted">how was the C&D sent? (e.g. email, postal mail, fax ...)</small>
+							<input type="text" className={className} disabled={this.props.disabled} name="method" value={this.props.takedown.dmca.method || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.sent" error={this.props.takedown.error} render={ () => (
+						<div>
+							<label className="form-control-label">Sent</label> <small className="text-muted">date the takedown was sent</small>
+							<DatePicker time={true} disabled={this.props.disabled} value={this.props.takedown.dmca.sent} onChange={( value ) => this.updateField( 'sent', value )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.to" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label" htmlFor="to">To</label> <small className="text-muted">emails or numbers the notice was sent to</small>
+							<input type="text" className={className} disabled={this.props.disabled} name="to" value={this.props.takedown.dmca.to || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.from" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label" htmlFor="from">From</label> <small className="text-muted">emails or numbers the notice was sent from</small>
+							<input type="text" className={className} disabled={this.props.disabled} name="from" value={this.props.takedown.dmca.from || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.subject" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label" htmlFor="subject">Subject</label> <small className="text-muted">of the email or fax received</small>
+							<input type="text" className={className} disabled={this.props.disabled} name="subject" value={this.props.takedown.dmca.subject || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.body" error={this.props.takedown.error} render={ ( hasError, className ) => (
+						<div>
+							<label className="form-control-label" htmlFor="body">Body</label> <small className="text-muted">copy and paste email etc.</small>
+							<textarea className={className} rows="5" disabled={this.props.disabled} name="body" value={this.props.takedown.dmca.body || ''} onChange={this.handleChange.bind( this )} />
+						</div>
+					) } />
+					<FormGroup path="dmca.files" error={this.props.takedown.error} render={ () => (
+						<div>
+							<label className="form-control-label">Supporting Files</label> <small className="text-muted">scanned takedown etc.</small>
+							<FileUploadField value={this.props.files} onAddFiles={this.addFiles.bind( this )} onRemoveFile={this.removeFile.bind( this )} />
+						</div>
+					) } />
+				</fieldset>
 				<fieldset className="form-group">
 					<legend>Sender</legend>
 					<FormGroup path="dmca.senderName" error={this.props.takedown.error} render={ ( hasError, className ) => (
@@ -332,6 +361,7 @@ TakedownCreateDmca.propTypes = {
 	addFiles: PropTypes.func.isRequired,
 	deleteFile: PropTypes.func.isRequired,
 	takedown: PropTypes.instanceOf( Takedown ).isRequired,
+	contentLink: PropTypes.string,
 	involved: PropTypes.arrayOf( PropTypes.instanceOf( User ) ).isRequired,
 	files: PropTypes.instanceOf( Set ).isRequired,
 	disabled: PropTypes.bool

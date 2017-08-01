@@ -7,7 +7,8 @@ import * as TakedownSelectors from 'app/selectors/takedown';
 export const TakedownCreateDmcaContainer = connect(
 	() => {
 		const getFiles = TakedownSelectors.makeGetFiles(),
-			getInonvolved = TakedownSelectors.makeGetInvolved();
+			getInonvolved = TakedownSelectors.makeGetInvolved(),
+			getContentLink = TakedownSelectors.makeGetContentLink();
 		return ( state, props ) => {
 			props = {
 				...props,
@@ -16,6 +17,7 @@ export const TakedownCreateDmcaContainer = connect(
 
 			return {
 				takedown: state.takedown.create,
+				contentLink: getContentLink( state, props ),
 				involved: getInonvolved( state, props ),
 				files: getFiles( state, props )
 			};

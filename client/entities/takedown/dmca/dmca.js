@@ -17,6 +17,8 @@ export class Dmca extends Record( {
 	actionTakenId: undefined,
 	originalUrls: new List(),
 	method: undefined,
+	to: undefined,
+	from: undefined,
 	subject: undefined,
 	body: undefined,
 	fileIds: new List(),

@@ -109,10 +109,6 @@ export class TakedownShowDmca extends React.Component {
 		return (
 			<tbody className="border-top-0">
 				<tr>
-					<td>Sent</td>
-					<td>{sent}</td>
-				</tr>
-				<tr>
 					<td>Action Taken</td>
 					<td>{actionTaken}</td>
 				</tr>
@@ -121,8 +117,15 @@ export class TakedownShowDmca extends React.Component {
 					<td>{originalUrls}</td>
 				</tr>
 				<tr>
+					<th colSpan="2">Notice</th>
+				</tr>
+				<tr>
 					<td>Method</td>
 					<td>{this.props.takedown.dmca.method}</td>
+				</tr>
+				<tr>
+					<td>Sent</td>
+					<td>{sent}</td>
 				</tr>
 				<tr>
 					<td>Subject</td>

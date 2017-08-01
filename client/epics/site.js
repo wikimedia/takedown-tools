@@ -10,6 +10,7 @@ import 'rxjs/add/observable/dom/ajax';
 import 'rxjs/add/observable/from';
 import { Site } from '../entities/site';
 import * as SiteActions from '../actions/site';
+import QueryString from 'querystring';
 
 export function fetchAll( action$ ) {
 	return action$
@@ -64,11 +65,9 @@ export function fetchAll( action$ ) {
 		} );
 }
 
-export function fetchSiteInfo( action$, store ) {
-	// const siteAddMultipleAction = action$.ofType( 'SITE_ADD_MULTIPLE' ).publishReplay( 1 );
-
+export function fetchSiteInfroFromTakedown( action$, store ) {
 	return action$
-		// Skip until the site info is fetched.
+		// Skip until the sites have been added.
 		.skipUntil( action$.ofType( 'SITE_ADD_MULTIPLE' ) )
 		.filter( ( action ) => {
 			const types = [
@@ -105,17 +104,44 @@ export function fetchSiteInfo( action$, store ) {
 			} );
 		} )
 		.flatMap( ( site ) => {
-			return Observable.ajax( {
-				url: 'https://' + site.domain + '/w/api.php?action=query&format=json&meta=siteinfo&siprop=general%7Cnamespaces%7Cnamespacealiases%7Cspecialpagealiases&origin=*',
-				crossDomain: true,
-				responseType: 'json'
-			} )
-				.map( ( ajaxResponse ) => {
-					return SiteActions.update( site.set( 'info', ajaxResponse.response.query ) );
-				} )
-				.catch( ( ajaxError ) => {
-					return Observable.of( SiteActions.update( site.set( 'error', ajaxError.status ) ) );
-				} );
+			return Observable.of( SiteActions.fetchInfo( site ) );
 		} );
+}
 
+export function fetchFoundationSiteInfro( action$, store ) {
+	return action$
+		// Skip until the sites have been added.
+		.skipUntil( action$.ofType( 'SITE_ADD_MULTIPLE' ) )
+		.ofType( 'TAKEDOWN_CREATE_UPDATE' )
+		.filter( ( action ) => action.takedown.type === 'dmca' && action.takedown.pageIds.size > 0 && action.takedown.dmca.wmfSend )
+		.first()
+		.flatMap( () => {
+			const site = store.getState().site.list.find( ( item ) => {
+				return item.id === 'foundationwiki';
+			} );
+
+			return Observable.of( SiteActions.fetchInfo( site ) );
+		} );
+}
+
+export function fetchSiteInfo( action$ ) {
+	return action$.ofType( 'SITE_FETCH_INFO' ).flatMap( ( action ) => {
+		const query = {
+			action: 'query',
+			format: 'json',
+			meta: 'siteinfo',
+			siprop: 'general|namespaces|namespacealiases|specialpagealiases|interwikimap',
+			origin: '*'
+		};
+
+		return Observable.ajax( {
+			url: 'https://' + action.site.domain + '/w/api.php?' + QueryString.stringify( query ),
+			crossDomain: true,
+			responseType: 'json'
+		} ).map( ( ajaxResponse ) => {
+			return SiteActions.update( action.site.set( 'info', ajaxResponse.response.query ) );
+		} ).catch( ( ajaxError ) => {
+			return Observable.of( SiteActions.update( action.site.set( 'error', ajaxError.status ) ) );
+		} );
+	} );
 }

@@ -4,6 +4,13 @@ export function fetchAll() {
 	};
 }
 
+export function fetchInfo( site ) {
+	return {
+		type: 'SITE_FETCH_INFO',
+		site: site
+	};
+}
+
 export function addMultiple( sites ) {
 	return {
 		type: 'SITE_ADD_MULTIPLE',
