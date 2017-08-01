@@ -190,11 +190,11 @@ export function makeGetContentLink() {
 				}
 
 				if ( index === 0 ) {
-					inter = foundation.info.interwikimap.filter( ( map ) => {
-						return url === id.replace( /^(.*)$/, map.url );
-					} ).sort( ( a, b ) => {
-						return a.prefix.length - b.prefix.length;
-					} );
+					inter = foundation.info.interwikimap
+						// Get all of the interwiki's that match the generated url.
+						.filter( ( map ) => url === id.replace( /^(.*)$/, map.url ) )
+						// Sort prefix by shortest to longest.
+						.sort( ( a, b ) => a.prefix.length - b.prefix.length );
 
 					// Get the first item.
 					inter = inter.length > 0 ? inter[ 0 ] : undefined;
