@@ -7,7 +7,6 @@ import { ListField } from 'app/components/fields/list';
 import { FormGroup } from 'app/components/fields/form-group';
 import { FileUploadField } from 'app/components/fields/file-upload';
 import { Takedown } from 'app/entities/takedown/takedown';
-import { Site } from 'app/entities/site';
 import { CountrySet } from 'app/entities/country.set';
 import { User } from 'app/entities/user';
 import { DatePicker } from 'app/components/fields/date-picker';
