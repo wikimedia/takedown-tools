@@ -18,6 +18,8 @@ services:
       - database:/var/lib/mysql
   composer:
     image: 'composer'
+    env_file:
+      - .env
     command: 'composer install'
     volumes:
      - .:/app:cached

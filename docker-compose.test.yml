@@ -8,7 +8,10 @@ services:
     networks:
       - ingress_default
   composer:
-    command: 'composer install -o --no-dev'
+    environment:
+      APP_ENV: "dev"
+      APP_DEBUG: 1
+    command: 'composer install -o'
   node:
     environment:
       NODE_ENV: "production"
