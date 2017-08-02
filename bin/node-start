@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ "$NODE_ENV" = "production" ]
+then
+	npm install --unsafe-perm
+else
+  npm install --unsafe-perm && npm run-script watch
+fi

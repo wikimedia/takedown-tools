@@ -4,8 +4,6 @@ services:
     build: ./
     env_file:
       - .env
-    ports:
-     - "8888:80"
     links:
       - database
     volumes:
@@ -18,5 +16,13 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'true'
     volumes:
       - database:/var/lib/mysql
+  node:
+    image: 'node:8'
+    env_file:
+     - .env
+    command: ./bin/node-start
+    working_dir: /code
+    volumes:
+     - .:/code:cached
 volumes:
   database:

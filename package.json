@@ -39,7 +39,10 @@
     "sass-loader": "^6.0.6",
     "shortid": "^2.2.8",
     "spinkit": "^1.2.5",
-    "webpack": "^3.0.0"
+    "webpack": "^3.4.1"
+  },
+  "config": {
+    "unsafe-perm": true
   },
   "scripts": {
     "postinstall": "webpack -p",
