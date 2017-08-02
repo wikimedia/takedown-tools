@@ -4,6 +4,7 @@ services:
     environment:
       APP_ENV: "dev"
       APP_DEBUG: 1
+      VIRTUAL_HOST: 'lcatools2.corp.wikimedia.org'
   node:
     environment:
       NODE_ENV: "production"
