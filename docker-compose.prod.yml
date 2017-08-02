@@ -4,6 +4,13 @@ services:
     environment:
       APP_ENV: "prod"
       APP_DEBUG: 0
+    networks:
+      - ingress_default
+
   node:
     environment:
       NODE_ENV: "production"
+
+networks:
+  ingress_default:
+    external: true
