@@ -16,6 +16,11 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'true'
     volumes:
       - database:/var/lib/mysql
+  composer:
+    image: 'composer'
+    command: 'composer install'
+    volumes:
+     - .:/app:cached
   node:
     image: 'node:8'
     env_file:
