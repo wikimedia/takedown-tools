@@ -4,14 +4,10 @@ RewriteEngine On
 RewriteCond %{HTTP:Authorization} ^(.*)
 RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
 
-# Serve files directly
-RewriteCond %{REQUEST_FILENAME} !-f
-
 # Send /login or /api to PHP
-RewriteRule ^(api|login) index.php [END,QSA]
-
-# Serve files directly
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(api|login) index.php [L,QSA]
 
 # Send all other routes to JavaScript.
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^(.*)$ index.html [L,QSA]

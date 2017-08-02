@@ -1,0 +1,22 @@
+version: '3'
+services:
+  web:
+    build: ./
+    env_file:
+      - .env
+    ports:
+     - "8888:80"
+    links:
+      - database
+    volumes:
+     - .:/var/www:cached
+  database:
+    image: 'mariadb:10.2'
+    env_file:
+     - .env
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'true'
+    volumes:
+      - database:/var/lib/mysql
+volumes:
+  database:

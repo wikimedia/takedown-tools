@@ -3,5 +3,5 @@
 /var/
 /vendor/
 /node_modules/
-/public/bundles/
+/html/bundles/
 ###< symfony/framework-bundle ###
