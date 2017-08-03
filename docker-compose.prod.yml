@@ -5,7 +5,8 @@ services:
       APP_ENV: "prod"
       APP_DEBUG: 0
     networks:
-      - ingress_default
+      - default
+      - ingress
   composer:
     environment:
       APP_ENV: "prod"
@@ -16,5 +17,6 @@ services:
       NODE_ENV: "production"
 
 networks:
-  ingress_default:
+  ingress:
     external: true
+    name: ingress_default

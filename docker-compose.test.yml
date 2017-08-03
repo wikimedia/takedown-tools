@@ -6,7 +6,8 @@ services:
       APP_DEBUG: 1
       VIRTUAL_HOST: 'lcatools2.corp.wikimedia.org'
     networks:
-      - ingress_default
+      - default
+      - ingress
   composer:
     environment:
       APP_ENV: "dev"
@@ -17,5 +18,6 @@ services:
       NODE_ENV: "production"
 
 networks:
-  ingress_default:
+  ingress:
     external: true
+    name: ingress_default
