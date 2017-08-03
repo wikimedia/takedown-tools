@@ -21,7 +21,7 @@ if ( getenv( 'APP_DEBUG' ) ) {
 		Debug::enable();
 }
 
-// Request::setTrustedProxies(['0.0.0.0/0'], Request::HEADER_FORWARDED);
+Request::setTrustedProxies(['127.0.0.1', gethostbyname( 'nginx.' )], Request::HEADER_X_FORWARDED_ALL);
 
 $kernel = new Kernel( getenv( 'APP_ENV' ), getenv( 'APP_DEBUG' ) );
 $request = Request::createFromGlobals();
