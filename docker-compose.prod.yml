@@ -1,12 +1,15 @@
 version: '2'
 services:
   web:
+    restart: always
     environment:
       APP_ENV: "prod"
       APP_DEBUG: 0
     networks:
       - default
       - ingress
+  database:
+    restart: always
   composer:
     environment:
       APP_ENV: "prod"

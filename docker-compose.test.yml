@@ -1,6 +1,7 @@
 version: '2'
 services:
   web:
+    restart: always
     environment:
       APP_ENV: "dev"
       APP_DEBUG: 1
@@ -8,6 +9,8 @@ services:
     networks:
       - default
       - ingress
+  database:
+    restart: always
   composer:
     environment:
       APP_ENV: "dev"
