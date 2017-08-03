@@ -39,17 +39,14 @@ export class SelectPages extends React.Component {
 				return Observable.ajax( {
 					url: 'https://' + this.props.site.domain + '/w/api.php?action=query&format=json&list=search&utf8=1&srnamespace=*&origin=*&srsearch=' + encodeURIComponent( input ),
 					crossDomain: true
-				} )
-					.map( ( ajaxResponse ) => {
-						return ajaxResponse.response.query.search.map( ( data ) => {
-							return this.getOptionFromText( data.title );
-						} ).filter( ( option ) => !!option );
-					} )
-					.catch( () => {
-						return [];
-					} );
-			} )
-			.subscribe( ( options ) => {
+				} ).map( ( ajaxResponse ) => {
+					return ajaxResponse.response.query.search.map( ( data ) => {
+						return this.getOptionFromText( data.title );
+					} ).filter( ( option ) => !!option );
+				} ).catch( () => {
+					return Observable.of( [] );
+				} );
+			} ).subscribe( ( options ) => {
 				// Set the internal state.
 				this.setState( {
 					...this.state,
