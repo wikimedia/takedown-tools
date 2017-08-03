@@ -43,14 +43,15 @@
     "shortid": "^2.2.8",
     "spinkit": "^1.2.5",
     "style-loader": "^0.18.2",
+    "uglifyjs-webpack-plugin": "^0.4.6",
     "webpack": "^3.4.1"
   },
   "config": {
     "unsafe-perm": true
   },
   "scripts": {
-    "postinstall": "webpack -p",
-    "watch": "webpack --progress --watch",
+    "postinstall": "webpack",
+    "watch": "webpack --watch",
     "lint": "eslint --color .",
     "test": "eslint --color ."
   },

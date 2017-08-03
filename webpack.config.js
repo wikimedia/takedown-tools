@@ -3,12 +3,13 @@ require( 'dotenv' ).config();
 const path = require( 'path' ),
 	webpack = require( 'webpack' ),
 	ExtractTextPlugin = require( 'extract-text-webpack-plugin' ),
+	UglifyJSPlugin = require( 'uglifyjs-webpack-plugin' ),
 	extractSass = new ExtractTextPlugin( {
 		filename: 'style.css',
 		disable: process.env.NODE_ENV !== 'production'
 	} );
 
-module.exports = {
+let config = {
 	entry: './client/index.js',
 	output: {
 		filename: 'bundle.js',
@@ -47,7 +48,22 @@ module.exports = {
 	plugins: [
 		extractSass,
 		new webpack.DefinePlugin( {
-			APP_ENV: JSON.stringify( process.env.APP_ENV )
+			APP_ENV: JSON.stringify( process.env.APP_ENV ),
+			// @see https://facebook.github.io/react/docs/optimizing-performance.html#webpack
+			'process.env': {
+				NODE_ENV: JSON.stringify( process.env.NODE_ENV )
+			}
 		} )
 	]
 };
+
+if ( process.env.NODE_ENV === 'production' ) {
+	config.plugins.push( new UglifyJSPlugin( {
+		sourceMap: true,
+		// Mangle throws an error with mediawiki-title.
+		// @see https://github.com/wikimedia/mediawiki-title/issues/27
+		mangle: false
+	} ) );
+}
+
+module.exports = config;

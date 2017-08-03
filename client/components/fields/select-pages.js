@@ -6,6 +6,8 @@ import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
 import { Subject, Observable } from 'rxjs';
 import 'rxjs/add/observable/dom/ajax';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/skipWhile';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -40,10 +42,20 @@ export class SelectPages extends React.Component {
 					url: 'https://' + this.props.site.domain + '/w/api.php?action=query&format=json&list=search&utf8=1&srnamespace=*&origin=*&srsearch=' + encodeURIComponent( input ),
 					crossDomain: true
 				} ).map( ( ajaxResponse ) => {
+					if ( !ajaxResponse.response.query ) {
+						return [];
+					}
+
+					if ( !ajaxResponse.response.query.search ) {
+						return [];
+					}
+
 					return ajaxResponse.response.query.search.map( ( data ) => {
 						return this.getOptionFromText( data.title );
 					} ).filter( ( option ) => !!option );
-				} ).catch( () => {
+
+				} ).catch( ( e ) => {
+					console.error( e );
 					return Observable.of( [] );
 				} );
 			} ).subscribe( ( options ) => {
