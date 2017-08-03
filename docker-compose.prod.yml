@@ -18,5 +18,5 @@ services:
 
 networks:
   ingress:
-    external: true
-    name: ingress_default
+    external:
+      name: ingress_default
