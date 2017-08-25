@@ -171,7 +171,7 @@ export class TakedownShowDmca extends React.Component {
 					<td>{this.props.takedown.dmca.senderCity}</td>
 				</tr>
 				<tr>
-					<td>State / Providence</td>
+					<td>State / Province</td>
 					<td>{this.props.takedown.dmca.senderState}</td>
 				</tr>
 				<tr>

@@ -610,7 +610,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param string $senderState State/Providence.
+	 * @param string $senderState State/Province.
 	 *
 	 * @return self
 	 */
