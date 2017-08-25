@@ -277,7 +277,7 @@ export class TakedownCreateDmca extends React.Component {
 					) } />
 					<FormGroup path="dmca.senderState" error={this.props.takedown.error} render={ ( hasError, className ) => (
 						<div>
-							<label className="form-control-label">State / Providence</label>
+							<label className="form-control-label">State / Province</label>
 							<input disabled={this.props.disabled} type="text" className={className} name="senderState" value={this.props.takedown.dmca.senderState || ''} onChange={this.handleChange.bind( this )} />
 						</div>
 					) } />
