@@ -499,7 +499,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Person.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 * @Assert\Length(max=63)
 	 *
 	 * @return string
@@ -562,7 +561,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Address.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 *
 	 * @return string[]
 	 */
@@ -596,7 +594,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * City.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 * @Assert\Length(max=63)
 	 *
 	 * @return string
@@ -610,7 +607,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param string $senderState State/Providence.
+	 * @param string $senderState State/Province.
 	 *
 	 * @return self
 	 */
@@ -624,7 +621,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * State.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 * @Assert\Length(max=63)
 	 *
 	 * @return string
@@ -652,7 +648,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Zip.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 * @Assert\Length(max=15)
 	 *
 	 * @return string
@@ -704,7 +699,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Country.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotNull(groups={"Lumen"})
 	 *
 	 * @return Country
 	 */
