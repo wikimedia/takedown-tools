@@ -157,21 +157,21 @@ class Dmca implements GroupSequenceProviderInterface {
 	 /**
 		* @var string
 		*
-		* @ORM\Column(name="to", type="string", length=255, nullable=true)
+		* @ORM\Column(name="`to`", type="string", length=255, nullable=true)
 		*/
 	 private $to;
 
 	 /**
 		* @var string
 		*
-		* @ORM\Column(name="from", type="string", length=255, nullable=true)
+		* @ORM\Column(name="`from`", type="string", length=255, nullable=true)
 		*/
 	private $from;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="subject", type="string", length=255, nullable=true)
+	 * @ORM\Column(name="`subject`", type="string", length=255, nullable=true)
 	 */
 	 private $subject;
 
