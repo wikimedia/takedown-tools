@@ -149,6 +149,7 @@ class Takedown implements GroupSequenceProviderInterface {
 			Page::class,
 			new ArrayCollection()
 		);
+		$this->created = $params->getInstance( 'created', \DateTime::class );
 		$this->dmca = $params->getInstance( 'dmca', Dmca::class );
 		$this->cp = $params->getInstance( 'cp', ChildProtection::class );
 	}
@@ -446,7 +447,7 @@ class Takedown implements GroupSequenceProviderInterface {
 		$this->pages = new ArrayCollection( array_map( function ( $id ) {
 			return new Page( [
 				'key' => $id,
-				'dmca' => $this,
+				'takedown' => $this,
 			] );
 		}, $pageIds ) );
 

@@ -196,3 +196,11 @@ services:
       public: false
       tags:
         - { name: serializer.normalizer }
+
+  app.command.import_existing:
+      class: App\Command\ImportExisting
+      arguments:
+        - '@doctrine'
+        - '@doctrine.dbal.old_connection'
+      tags:
+        - { name: console.command }
