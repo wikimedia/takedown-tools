@@ -3,6 +3,8 @@
 namespace App\Command;
 
 use App\Entity\Takedown\Takedown;
+use App\Entity\Takedown\ChildProtection\ChildProtection;
+use App\Entity\Takedown\Dmca\Dmca;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
@@ -20,6 +22,60 @@ class ImportExisting extends Command {
 	 * @var Connection
 	 */
 	protected $old;
+
+	/**
+	 * @var string[]
+	 */
+	protected const SITE_IDS = [
+		'en.wikipedia.org' => 'enwiki',
+		'wikimediafoundation.org' => 'foundationwiki',
+		'cy.wikipedia.org' => 'cywiki',
+		'en.wiktionary.org' => 'enwiktionary',
+		'commons.wikimedia.org' => 'commonswiki',
+	];
+
+	/**
+	 * @var string[]
+	 */
+	protected const PROJECT_IDS = [
+		'Wikimedia Commons' => 'commonswiki',
+	];
+
+	/**
+	 * @var string[]
+	 */
+	protected const USER_NAMES = [
+		'kbrown' => 'Kbrown (WMF)',
+		'ktsouroupidou' => 'Kalliope (WMF)',
+	];
+
+	/**
+	 * @var string[]
+	 */
+	protected const APPROVER_NAMES = [
+		'Geoff Brigham' => 'GeoffBrigham (WMF)',
+		'Geoff' => 'GeoffBrigham (WMF)',
+		'Jacob Rogers' => 'Jrogers (WMF)',
+		'Jacob' => 'Jrogers (WMF)',
+		'Luis Villa' => 'LuisV (WMF)',
+		'Luis' => 'LuisV (WMF)',
+		'Stephen LaPorte' => 'Slaporte (WMF)',
+		'Stephen' => 'Slaporte (WMF)',
+	];
+
+	/**
+	 * @var string[]
+	 */
+	protected const METADATA_IDS = [
+		'Checkuser data was available and is being included below.' => 'checkuser',
+		'An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.' => 'email-request',
+		'The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. ' => 'taken-down-apparent',
+		'The content was taken down pursuant to a DMCA notice.' => 'taken-down-dmca',
+		'The content was taken down and we have actual knowledge that the content was infringing copyright ' => 'taken-down-infringing',
+		'The content was taken down and suppressed.' => 'taken-down-suppressed',
+		'The content was taken down and the user was clearly warned and discouraged from future violations.' => 'taken-down-user-warned',
+		'The user who uploaded the content has been locked.' => 'user-locked',
+	];
 
 	/**
 	 * {@inheritdoc}
@@ -50,9 +106,11 @@ class ImportExisting extends Command {
 	 *
 	 * @param InputInterface $input Input
 	 * @param OutputInterface $output Output
+	 *
+	 * @return void
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
-		$statement = $this->old->executeQuery("SELECT * FROM centrallog WHERE test = 'N'");
+		$statement = $this->old->executeQuery( "SELECT * FROM centrallog WHERE test = 'N'" );
 		$statement = $this->old->createQueryBuilder()
 			->select( 'cl.*, dmca.*, cp.*, u.*' )
 			->from( 'centrallog', 'cl' )
@@ -67,13 +125,7 @@ class ImportExisting extends Command {
 		foreach ( $result as $item ) {
 			// Get the username.
 			if ( !$item['wiki_user'] ) {
-				switch ( $item['user'][0] ) {
-					case 'kbrown':
-						$item['wiki_user'] = 'Kbrown (WMF)';
-						break;
-					case 'ktsouroupidou':
-						$item['wiki_user'] = 'Kalliope (WMF)';
-				}
+				$item['wiki_user'] = self::USER_NAMES[$item['user'][0]];
 			}
 			$username = $item['wiki_user'];
 
@@ -87,6 +139,7 @@ class ImportExisting extends Command {
 
 			// Get the Page Ids.
 			$pageIds = [];
+			$siteId = null;
 			if ( $item['files_affected'] ) {
 				$urls = unserialize( $item['files_affected'] );
 				if ( $urls ) {
@@ -94,8 +147,17 @@ class ImportExisting extends Command {
 						$pieces = explode( '/', parse_url( $url,  PHP_URL_PATH ) );
 						return str_replace( ' ', '_', end( $pieces ) );
 					}, $urls );
+
+					$domain = parse_url( $urls[0],  PHP_URL_HOST );
+					$siteId = self::SITE_IDS[$domain];
+					$takedown->setSiteId( $siteId );
 				}
 			}
+
+			if ( $item['project'] ) {
+				$takedown->setSiteId( self::PROJECT_IDS[$item['project']] );
+			}
+
 			$takedown->setPageIds( $pageIds );
 
 			// Get Involved Users.
@@ -116,15 +178,65 @@ class ImportExisting extends Command {
 
 			$takedown->setInvolvedNames( $involvedNames );
 
+			$metadataIds = [];
+			if ( $item['logging_metadata'] ) {
+				$metadataIds = array_reduce( $item['logging_metadata'], function ( $carry, $item ) {
+					if ( !$item ) {
+						return $carry;
+					}
+
+					$names = unserialize( $item );
+
+					if ( !$names ) {
+						return $carry;
+					}
+
+					$ids = array_map( function ( $item ) {
+						return self::METADATA_IDS[$item];
+					}, $names );
+
+					return array_merge( $carry, $ids );
+				}, [] );
+			}
+			$takedown->setMetadataIds( $metadataIds );
+
 			switch ( $item['type'] ) {
 				case 'Child Protection':
+					$cp = new ChildProtection( [
+						'approved' => $item['legalapproved'] === 'Y' ? true : false,
+						'deniedApprovalReason' => $item['whynotapproved'] ?: null,
+						'ncmecId' => (int)$item['report_id'],
+						'comments' => $item['logging_details'] ?: null,
+						'files' => [
+							[
+								'name' => $item['filename'],
+							],
+						],
+					] );
+
+					if ( $item['whoapproved'] ) {
+						$cp->setApproverName( self::APPROVER_NAMES[$item['whoapproved']] );
+					}
+
+					$takedown->setCp( $cp );
+					dump( $item );
+					dump( $takedown );
 					break;
 				case 'DMCA':
+					// Get the Lumen Id.
+					$lumenId = null;
+					if ( $item['ce_url'] ) {
+						$path = explode( '/', parse_url( $item['ce_url'], PHP_URL_PATH ) );
+						$lumenId = intval( end( $path ) );
+					}
+
+					$dmca = new Dmca( [
+						'takedown' => $takedown,
+						'lumenId' => $lumenId,
+					] );
+					$takedown->setDmca( $dmca );
 					break;
 			}
-
-			dump($item);
-			dump($takedown);
 		}
 	}
 

@@ -93,12 +93,13 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
+		$this->ncmecId = $params->getInt( 'ncmecId' );
 		$this->approved = $params->getBoolean( 'approved', false );
 		$this->approver = $params->getInstance( 'approver', User::class );
 		$this->deniedApprovalReason = $params->getString( 'deniedApprovalReason' );
 		$this->accessed = $params->getInstance( 'accessed', \DateTime::class );
 		$this->comments = $params->getString( 'comments' );
-		$this->files = $params->getCollection( 'files', File::class, new ArrayCollection() );
+		$this->setFiles( $params->getCollection( 'files', File::class, new ArrayCollection() ) );
 	}
 
 	/**

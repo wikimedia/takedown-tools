@@ -248,6 +248,7 @@ class Dmca implements GroupSequenceProviderInterface {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->lumenSend = $params->getBoolean( 'lumenSend', false );
+		$this->lumenId = $params->getInt( 'lumenId' );
 		$this->lumenTitle = $params->getString( 'lumenTitle' );
 		$this->originals = $params->getCollection(
 			'originals',

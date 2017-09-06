@@ -81,7 +81,7 @@ class File implements GroupSequenceProviderInterface {
 	public function __construct( array $data = [] ) {
 		$params = new ParameterBag( $data );
 		$this->id = $params->getInt( 'id' );
-		$this->dmca = $params->getInstance( 'cp', ChildProtection::class, new ChildProtection() );
+		$this->cp = $params->getInstance( 'cp', ChildProtection::class, new ChildProtection() );
 		$this->name = $params->getString( 'name' );
 		$this->ip = $params->getString( 'ip' );
 		$this->uploaded = $params->getInstance( 'uploaded', \DateTime::class );
