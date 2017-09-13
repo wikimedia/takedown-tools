@@ -384,7 +384,11 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->getUser( $username );
 		}, $usernames );
 
-		return \GuzzleHttp\Promise\all( $promises );
+		return \GuzzleHttp\Promise\all( $promises )->then( function ( $users ) {
+			return array_filter( $users, function ( $user ) {
+				return $user !== null;
+			} );
+		} );
 	}
 
 	/**
@@ -400,11 +404,12 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'query',
 				'format' => 'json',
 				'meta' => 'globaluserinfo',
-				'guiuser' => $username,
+				'guiuser' => ucfirst( $username ),
 				'guiprop' => 'groups'
 			],
 		] )->then( function( $response ) {
-			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
+			$user = $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
+			return $user->getId() ? $user : null;
 		}, function ( $e ) {
 			return null;
 		} );

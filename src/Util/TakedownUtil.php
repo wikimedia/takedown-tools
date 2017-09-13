@@ -7,6 +7,8 @@ use App\Client\LumenClientInterface;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\User;
 use App\Entity\Takedown\Takedown;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use GeoSocio\EntityAttacher\EntityAttacherInterface;
 use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -102,15 +104,6 @@ class TakedownUtil implements TakedownUtilInterface {
 		if ( $usernames ) {
 			$promises[] = $this->client->getUsers( $usernames )
 				->then( function( $users ) use ( $takedown ) {
-					array_map( function( $user ) use ( $takedown ) {
-						if ( !$user->getId() ) {
-							// @TODO Figure out why this happens!
-							dump($takedown->getInvolvedNames());
-							dump( $user );
-							exit;
-						}
-						return $user;
-					}, $users );
 					$takedown->setInvolved( $users );
 				} );
 		}
@@ -159,7 +152,15 @@ class TakedownUtil implements TakedownUtilInterface {
 			$cp = $takedown->getCp();
 			$takedown->setCp();
 
+			// If an id was explicitly set, then avoid autogeneration.
+			if ( $takedown->getId() ) {
+				$metadata = $em->getClassMetadata( Takedown::class );
+				$metadata->setIdGenerator( new AssignedGenerator() );
+				$metadata->setIdGeneratorType( ClassMetadata::GENERATOR_TYPE_NONE );
+			}
+
 			$em->persist( $takedown );
+
 			$em->flush();
 
 			// Add the related entities back and persist them.
@@ -173,6 +174,7 @@ class TakedownUtil implements TakedownUtilInterface {
 			if ( $takedown->getCP() ) {
 				$em->persist( $takedown->getCp() );
 			}
+
 			$em->flush();
 
 			return $takedown;

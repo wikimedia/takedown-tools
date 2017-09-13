@@ -132,6 +132,8 @@ class ImportExisting extends Command {
 
 		$promises = [];
 
+		$em = $this->doctrine->getEntityManager();
+
 		$result = $statement->fetchAll( \PDO::FETCH_NAMED );
 		foreach ( $result as $item ) {
 			// Get the username.
@@ -215,12 +217,12 @@ class ImportExisting extends Command {
 				case 'Child Protection':
 					$cp = new ChildProtection( [
 						'approved' => $item['legalapproved'] === 'Y' ? true : false,
-						'deniedApprovalReason' => $item['whynotapproved'] ?: null,
+						'deniedApprovalReason' => $item['whynotapproved'] ? utf8_encode( $item['whynotapproved'] ) : null,
 						'ncmecId' => (int)$item['report_id'],
-						'comments' => $item['logging_details'] ?: null,
+						'comments' => $item['logging_details'] ? utf8_encode( $item['logging_details'] ) :  null,
 						'files' => [
 							[
-								'name' => $item['filename'],
+								'name' => utf8_encode( $item['filename'] ),
 							],
 						],
 					] );
@@ -252,12 +254,12 @@ class ImportExisting extends Command {
 					$dmca = new Dmca( [
 						'takedown' => $takedown,
 						'lumenId' => $lumenId,
-						'lumenTitle' => $item['takedown_title'],
-						'method' => $item['takedown_method'],
-						'subject' => $item['takedown_subject'],
+						'lumenTitle' => utf8_encode( $item['takedown_title'] ),
+						'method' => utf8_encode( $item['takedown_method'] ),
+						'subject' => utf8_encode( $item['takedown_subject'] ),
 						'sent' => $sent,
-						'senderCity' => $item['sender_city'],
-						'senderState' => $item['sender_state'],
+						'senderCity' => utf8_encode( $item['sender_city'] ),
+						'senderState' => utf8_encode( $item['sender_state'] ),
 						'senderZip' => $item['sender_zip'],
 						'wmfTitle' => $wmfTitle,
 					] );
@@ -274,12 +276,24 @@ class ImportExisting extends Command {
 					break;
 			}
 
+			$em = $this->doctrine->getEntityManager();
+
+			// Delete any existing takedown with the same id.
+			$existing = $em->find( Takedown::class, $takedown->getId() );
+
+			if ( $existing ) {
+				$em->remove( $existing );
+			}
+
 			$promises[] = $this->takedownUtil->create( $takedown )
 				->then( function( $takedown ) use ( $output ) {
 					$output->writeln( 'Saved Takedown #' . $takedown->getId() );
 					return $takedown;
 				} );
 		}
+
+		// Delete all of the takedowns before creating them.
+		$em->flush();
 
 		return \GuzzleHttp\Promise\all( $promises )->wait();
 	}
