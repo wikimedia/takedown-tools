@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Takedown\Takedown;
 use App\Entity\Takedown\ChildProtection\ChildProtection;
 use App\Entity\Takedown\Dmca\Dmca;
+use App\Util\TakedownUtilInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Command\Command;
@@ -22,6 +23,11 @@ class ImportExisting extends Command {
 	 * @var Connection
 	 */
 	protected $old;
+
+	/**
+	 * @var TakedownUtilInterface
+	 */
+	protected $takedownUtil;
 
 	/**
 	 * @var string[]
@@ -82,13 +88,16 @@ class ImportExisting extends Command {
 	 *
 	 * @param Registry $doctrine Doctrine.
 	 * @param Connection $old Old Database Connection.
+	 * @param TakedownUtilInterface $takedownUtil Takedown Utility.
 	 */
 	public function __construct(
 		Registry $doctrine,
-		Connection $old
+		Connection $old,
+		TakedownUtilInterface $takedownUtil
 	) {
 		$this->doctrine = $doctrine;
 		$this->old = $old;
+		$this->takedownUtil = $takedownUtil;
 
 		parent::__construct();
 	}
@@ -120,6 +129,8 @@ class ImportExisting extends Command {
 			->where( "cl.test = 'N'" )
 			->andWhere( "cl.type IN ('Child Protection', 'DMCA')" )
 			->execute();
+
+		$promises = [];
 
 		$result = $statement->fetchAll( \PDO::FETCH_NAMED );
 		foreach ( $result as $item ) {
@@ -263,9 +274,14 @@ class ImportExisting extends Command {
 					break;
 			}
 
-			// @TODO Actually save takedown!
-			$output->writeln( 'Saved Takedown #' . $takedown->getId() );
+			$promises[] = $this->takedownUtil->create( $takedown )
+				->then( function( $takedown ) use ( $output ) {
+					$output->writeln( 'Saved Takedown #' . $takedown->getId() );
+					return $takedown;
+				} );
 		}
+
+		return \GuzzleHttp\Promise\all( $promises )->wait();
 	}
 
 }

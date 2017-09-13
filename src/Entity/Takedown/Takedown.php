@@ -51,7 +51,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	/**
 	 * @var User
 	 *
-	 * @ORM\ManyToOne(targetEntity="App\Entity\User")
+	 * @ORM\ManyToOne(targetEntity="App\Entity\User", cascade={"persist"})
 	 * @ORM\JoinColumn(name="reporter", referencedColumnName="user_id")
 	 * @Attach()
 	 */

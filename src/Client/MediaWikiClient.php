@@ -13,7 +13,6 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use GuzzleHttp\Promise;
 
 /**
  * Media Wiki Client
@@ -385,7 +384,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 			return $this->getUser( $username );
 		}, $usernames );
 
-		return Promise\all( $promises );
+		return \GuzzleHttp\Promise\all( $promises );
 	}
 
 	/**
