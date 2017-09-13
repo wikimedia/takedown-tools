@@ -255,14 +255,16 @@ class Dmca implements GroupSequenceProviderInterface {
 			Original::class,
 			new ArrayCollection()
 		);
-		$this->senderName = $params->getString( 'name' );
-		$this->senderPerson = $params->getString( 'person' );
-		$this->senderFirm = $params->getString( 'firm' );
-		$this->senderAddress1 = $params->getString( 'address1' );
-		$this->senderAddress2 = $params->getString( 'address2' );
-		$this->senderCity = $params->getString( 'city' );
+		$this->senderName = $params->getString( 'senderName' );
+		$this->senderPerson = $params->getString( 'senderPerson' );
+		$this->senderFirm = $params->getString( 'senderFirm' );
+		$this->senderAddress1 = $params->getString( 'senderAddress1' );
+		$this->senderAddress2 = $params->getString( 'senderAddress2' );
+		$this->senderCity = $params->getString( 'senderCity' );
+		$this->senderState = $params->getString( 'senderState' );
+		$this->senderZip = $params->getString( 'senderZip' );
 		$this->senderCountry = $params->getInstance( 'country', Country::class );
-		$this->date = $params->getInstance( 'sent', \DateTime::class );
+		$this->sent = $params->getInstance( 'sent', \DateTime::class );
 		$this->method = $params->getString( 'method' );
 		$this->to = $params->getString( 'to' );
 		$this->from = $params->getString( 'from' );

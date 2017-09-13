@@ -219,8 +219,6 @@ class ImportExisting extends Command {
 					}
 
 					$takedown->setCp( $cp );
-					dump( $item );
-					dump( $takedown );
 					break;
 				case 'DMCA':
 					// Get the Lumen Id.
@@ -230,13 +228,43 @@ class ImportExisting extends Command {
 						$lumenId = intval( end( $path ) );
 					}
 
+					$wmfTitle = null;
+					if ( $item['wmfwiki_title'] ) {
+						$wmfTitle = str_replace( ' ', '_', $item['wmfwiki_title'] );
+					}
+
+					$sent = null;
+					if ( $item['takedown_date'] ) {
+						$sent = new \DateTime( $item['takedown_date'] );
+					}
+
 					$dmca = new Dmca( [
 						'takedown' => $takedown,
 						'lumenId' => $lumenId,
+						'lumenTitle' => $item['takedown_title'],
+						'method' => $item['takedown_method'],
+						'subject' => $item['takedown_subject'],
+						'sent' => $sent,
+						'senderCity' => $item['sender_city'],
+						'senderState' => $item['sender_state'],
+						'senderZip' => $item['sender_zip'],
+						'wmfTitle' => $wmfTitle,
 					] );
+
+					if ( $item['sender_country'] ) {
+						$dmca->setSenderCountryCode( $item['sender_country'] );
+					}
+
+					if ( $item['action_taken'] ) {
+						$dmca->setActionTakenId( strtolower( $item['action_taken'] ) );
+					}
+
 					$takedown->setDmca( $dmca );
 					break;
 			}
+
+			// @TODO Actually save takedown!
+			$output->writeln( 'Saved Takedown #' . $takedown->getId() );
 		}
 	}
 
