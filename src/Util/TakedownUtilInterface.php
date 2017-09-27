@@ -13,7 +13,7 @@ interface TakedownUtilInterface {
 	/**
 	 * Creates a Takedown
 	 *
-	 * @param Takedown $takedown Takedown
+	 * @param Takedown $takedown Takedown.
 	 *
 	 * @return PromiseInterface
 	 */
@@ -22,7 +22,7 @@ interface TakedownUtilInterface {
 	/**
 	 * Deletes a Takedown
 	 *
-	 * @param Takedown $takedown Takedown
+	 * @param Takedown $takedown Takedown.
 	 *
 	 * @return PromiseInterface
 	 */

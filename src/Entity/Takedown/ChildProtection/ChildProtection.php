@@ -333,7 +333,7 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	 * @return Collection
 	 */
 	public function setFiles( Collection $files ) : self {
-		$this->files = $files->map( function( $file ) {
+		$this->files = $files->map( function ( $file ) {
 			return $file->setCp( $this );
 		} );
 
@@ -385,7 +385,7 @@ class ChildProtection implements GroupSequenceProviderInterface {
 	 * @return void
 	 */
 	public function __clone() {
-		$this->files = $this->files->map( function( $file ) {
+		$this->files = $this->files->map( function ( $file ) {
 			$file = clone $file;
 			$file->setCp( $this );
 			return $file;

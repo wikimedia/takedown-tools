@@ -5,18 +5,17 @@ namespace App\Entity\Takedown;
 use App\Entity\Site;
 use App\Entity\User;
 use App\Entity\Metadata;
-use App\Entity\Takedown\Page;
 use App\Entity\Takedown\Dmca\Dmca;
 use App\Entity\Takedown\ChildProtection\ChildProtection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use GeoSocio\EntityAttacher\Annotation\Attach;
 use GeoSocio\EntityUtils\CreatedTrait;
 use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
+use Doctrine\ORM\Mapping as ORM;
+use GeoSocio\EntityAttacher\Annotation\Attach;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
@@ -313,7 +312,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	/**
 	 * Set Involved Users
 	 *
-	 * @param User[] $users Involved Users
+	 * @param iterable $users Involved Users
 	 *
 	 * @return self
 	 */
@@ -528,7 +527,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param Dmca $dmca DMCA
+	 * @param Dmca|null $dmca DMCA
 	 *
 	 * @return self
 	 */
@@ -583,11 +582,11 @@ class Takedown implements GroupSequenceProviderInterface {
 	 *
 	 * @Groups({"api"})
 	 *
-	 * @param ChildProtection $cp Child Protection
+	 * @param ChildProtection|null $cp Child Protection
 	 *
 	 * @return self
 	 */
-	public function setCp( $cp = null ) : self {
+	public function setCp( ?ChildProtection $cp = null ) : self {
 		if ( $cp === null ) {
 			$this->cp = null;
 
@@ -637,7 +636,7 @@ class Takedown implements GroupSequenceProviderInterface {
 	 * @return Takedown
 	 */
 	public function __clone() {
-		$this->pages = $this->pages->map( function( $page ) {
+		$this->pages = $this->pages->map( function ( $page ) {
 			return new Page( [
 				'key' => $page->getKey(),
 				'takedown' => $this,

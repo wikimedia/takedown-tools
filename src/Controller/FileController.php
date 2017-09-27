@@ -116,7 +116,7 @@ class FileController {
 		// Create the file.
 		$fileName = md5( uniqid() );
 		$filePath = $fileDir . '/' . $fileName . '.' . $ext;
-		$path =  $this->dir .  '/' . $filePath;
+		$path = $this->dir . '/' . $filePath;
 		$this->filesystem->touch( $path );
 
 		// Copy to the file.

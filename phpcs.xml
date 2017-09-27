@@ -4,6 +4,17 @@
 	<file>.</file>
 	<arg name="extensions" value="php,php5,inc"/>
 	<arg name="encoding" value="utf8"/>
+	<!-- No reason not to use scalar type hints in PHP 7 -->
+	<rule ref="MediaWiki.Usage.ScalarTypeHintUsage.Found">
+		<severity>0</severity>
+	</rule>
+	<!-- Enforce Type Hints -->
+	<rule ref="Squiz.Commenting.FunctionComment.TypeHintMissing" />
+	<rule ref="Squiz.Commenting.FunctionComment.ScalarTypeHintMissing" />
+	<!-- @see https://phabricator.wikimedia.org/T176885 -->
+	<rule ref="MediaWiki.Classes.UnusedUseStatement.UnusedUse">
+		<severity>0</severity>
+	</rule>
 	<exclude-pattern>node_modules/</exclude-pattern>
 	<exclude-pattern>var/</exclude-pattern>
 	<exclude-pattern>vendor/</exclude-pattern>

@@ -92,7 +92,7 @@ class TakedownUtil implements TakedownUtilInterface {
 				$takedown->setReporter( $this->getUser() );
 			} elseif ( $takedown->getReporter()->getUsername() ) {
 				$promises[] = $this->client->getUser( $takedown->getReporter()->getUsername() )
-					->then( function( $user ) use ( $takedown ) {
+					->then( function ( $user ) use ( $takedown ) {
 						$takedown->setReporter( $user );
 					} );
 			}
@@ -103,7 +103,7 @@ class TakedownUtil implements TakedownUtilInterface {
 
 		if ( $usernames ) {
 			$promises[] = $this->client->getUsers( $usernames )
-				->then( function( $users ) use ( $takedown ) {
+				->then( function ( $users ) use ( $takedown ) {
 					$takedown->setInvolved( $users );
 				} );
 		}
@@ -112,7 +112,7 @@ class TakedownUtil implements TakedownUtilInterface {
 		if ( $takedown->getCp() && $takedown->getCp()->getApprover() ) {
 			$username = $takedown->getCp()->getApprover()->getUsername();
 			$promises[] = $this->client->getUser( $username )
-				->then( function( $user ) use ( $takedown ) {
+				->then( function ( $user ) use ( $takedown ) {
 					$takedown->getCp()->setApprover( $user );
 					return $takedown;
 				} );
@@ -121,14 +121,16 @@ class TakedownUtil implements TakedownUtilInterface {
 		// Send to Lumen.
 		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
 			$promises[] = $this->lumenClient->createNotice( $takedown )
-				->then( function( $noticeId ) use ( $takedown ) {
+				->then( function ( $noticeId ) use ( $takedown ) {
 					$takedown->getDmca()->setLumenId( $noticeId );
 					return $takedown;
 				} );
 		}
 
 		// Send to NCME
-		if ( $takedown->getCp() && !$takedown->getCp()->getNcmecId() && $takedown->getCp()->isApproved() ) {
+		if ( $takedown->getCp()
+			&& !$takedown->getCp()->getNcmecId() && $takedown->getCp()->isApproved()
+		) {
 			$promises[] = $this->ncmecClient->createReport( $takedown )
 				->then( function ( $reportId ) use ( $takedown ) {
 					$takedown->getCp()->setNcmecId( $reportId );

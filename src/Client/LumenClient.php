@@ -88,7 +88,7 @@ class LumenClient implements LumenClientInterface {
 
 			$files = [];
 
-			$takedown->getDmca()->getFiles()->forAll( function( $index, $file ) {
+			$takedown->getDmca()->getFiles()->forAll( function ( $index, $file ) {
 				$files[] = [
 					'name' => 'notice[file_uploads_attributes][' . $index . '][file]',
 					'filename' => $file->getName(),

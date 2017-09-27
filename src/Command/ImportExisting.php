@@ -74,11 +74,15 @@ class ImportExisting extends Command {
 	 */
 	protected const METADATA_IDS = [
 		'Checkuser data was available and is being included below.' => 'checkuser',
+		// @codingStandardsIgnoreLine
 		'An email was sent to legal@rt.wikimedia.org with the file name asking for it to be deleted.' => 'email-request',
+		// @codingStandardsIgnoreLine
 		'The content was taken down and we have awareness of facts or circumstances from which infringing activity is apparent. ' => 'taken-down-apparent',
 		'The content was taken down pursuant to a DMCA notice.' => 'taken-down-dmca',
+		// @codingStandardsIgnoreLine
 		'The content was taken down and we have actual knowledge that the content was infringing copyright ' => 'taken-down-infringing',
 		'The content was taken down and suppressed.' => 'taken-down-suppressed',
+		// @codingStandardsIgnoreLine
 		'The content was taken down and the user was clearly warned and discouraged from future violations.' => 'taken-down-user-warned',
 		'The user who uploaded the content has been locked.' => 'user-locked',
 	];
@@ -176,6 +180,7 @@ class ImportExisting extends Command {
 			// Get Involved Users.
 			$involvedNames = [];
 			if ( $item['involved_user'] ) {
+				// @codingStandardsIgnoreLine
 				$involvedNames = @unserialize( $item['involved_user'] );
 
 				if ( $involvedNames === false ) {
@@ -217,9 +222,12 @@ class ImportExisting extends Command {
 				case 'Child Protection':
 					$cp = new ChildProtection( [
 						'approved' => $item['legalapproved'] === 'Y' ? true : false,
-						'deniedApprovalReason' => $item['whynotapproved'] ? utf8_encode( $item['whynotapproved'] ) : null,
+						'deniedApprovalReason' =>
+							$item['whynotapproved'] ?
+							utf8_encode( $item['whynotapproved'] )
+							: null,
 						'ncmecId' => (int)$item['report_id'],
-						'comments' => $item['logging_details'] ? utf8_encode( $item['logging_details'] ) :  null,
+						'comments' => $item['logging_details'] ? utf8_encode( $item['logging_details'] ) : null,
 						'files' => [
 							[
 								'name' => utf8_encode( $item['filename'] ),
@@ -286,7 +294,7 @@ class ImportExisting extends Command {
 			}
 
 			$promises[] = $this->takedownUtil->create( $takedown )
-				->then( function( $takedown ) use ( $output ) {
+				->then( function ( $takedown ) use ( $output ) {
 					$output->writeln( 'Saved Takedown #' . $takedown->getId() );
 					return $takedown;
 				} );

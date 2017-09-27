@@ -9,12 +9,12 @@ use App\Entity\Takedown\Takedown;
 use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
-use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
@@ -1174,7 +1174,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @return void
 	 */
 	public function __clone() {
-		$this->originals = $this->originals->map( function( $original ) {
+		$this->originals = $this->originals->map( function ( $original ) {
 			return new Original( [
 				'url' => $original->getUrl(),
 				'dmca' => $this,

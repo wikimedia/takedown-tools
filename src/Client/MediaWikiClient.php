@@ -106,7 +106,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'meta' => 'siteinfo',
 				'siprop' => 'general|namespaces|namespacealiases|specialpagealiases',
 			],
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -130,7 +130,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'sitematrix',
 				'format' => 'json',
 			],
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -191,7 +191,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -257,7 +257,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -326,7 +326,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -353,7 +353,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return string
 	 */
-	protected function getToken( $uri = '' ) : PromiseInterface {
+	protected function getToken( string $uri = '' ) : PromiseInterface {
 		$request = new Request( 'GET', $uri );
 		return $this->client->sendAsync( $request, [
 			'query' => [
@@ -361,7 +361,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'format' => 'json',
 			],
 			'auth' => 'oauth',
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -380,7 +380,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return PromiseInterface
 	 */
 	public function getUsers( array $usernames ) : PromiseInterface {
-		$promises = array_map( function( $username ) {
+		$promises = array_map( function ( $username ) {
 			return $this->getUser( $username );
 		}, $usernames );
 
@@ -407,7 +407,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'guiuser' => ucfirst( $username ),
 				'guiprop' => 'groups'
 			],
-		] )->then( function( $response ) {
+		] )->then( function ( $response ) {
 			$user = $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
 			return $user->getId() ? $user : null;
 		}, function ( $e ) {
