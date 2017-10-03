@@ -2,10 +2,9 @@
 
 namespace App\Entity\Takedown\Dmca;
 
-use App\Entity\Takedown\Dmca\Dmca;
+use GeoSocio\EntityUtils\ParameterBag;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
-use GeoSocio\EntityUtils\ParameterBag;
 
 /**
  * @ORM\Entity

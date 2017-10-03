@@ -51,9 +51,9 @@ class HandlerStackFactory {
 	 */
 	public function createHandlerStack() {
 		$stack = HandlerStack::create();
-		$user = $this->tokenStorage->getToken()->getUser();
+		$user = $this->getUser();
 
-		if ( $user instanceof User ) {
+		if ( $user ) {
 				$oauth = new Oauth1( [
 					'consumer_key' => $this->consumerKey,
 					'consumer_secret' => $this->consumerSecret,
@@ -65,4 +65,25 @@ class HandlerStackFactory {
 
 		return $stack;
 	}
+
+	/**
+	 * Get a user from the Security Token Storage.
+	 *
+	 * @return User
+	 */
+	 protected function getUser() :? User {
+		 $token = $this->tokenStorage->getToken();
+
+		 if ( $token === null ) {
+			 return $token;
+		 }
+
+		 $user = $token->getUser();
+
+		 if ( ! $user instanceof User ) {
+				 return null;
+		 }
+
+		 return $user;
+	 }
 }

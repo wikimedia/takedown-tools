@@ -36,7 +36,7 @@ class NcmecReportNormalizer implements NormalizerInterface {
 	 * {@inheritdoc}
 	 *
 	 * @param object $object Object to normalize
-	 * @param string $format Format the normalization result will be encoded as
+	 * @param string|null $format Format the normalization result will be encoded as
 	 * @param array $context Context options for the normalizer
 	 *
 	 * @return array
@@ -89,7 +89,7 @@ class NcmecReportNormalizer implements NormalizerInterface {
 		} )->toArray();
 
 		// Add the page urls.
-		$urls = $object->getPages()->map( function( $page ) use ( $object ) {
+		$urls = $object->getPages()->map( function ( $page ) use ( $object ) {
 			return $page->getUrl( $object->getSite() );
 		} )->toArray();
 
@@ -144,7 +144,7 @@ class NcmecReportNormalizer implements NormalizerInterface {
 	 * {@inheritdoc}
 	 *
 	 * @param mixed $data Data to normalize
-	 * @param string $format The format being (de-)serialized from or into
+	 * @param string|null $format The format being (de-)serialized from or into
 	 *
 	 * @return bool
 	 */

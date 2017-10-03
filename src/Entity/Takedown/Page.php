@@ -3,9 +3,9 @@
 namespace App\Entity\Takedown;
 
 use App\Entity\Site;
+use GeoSocio\EntityUtils\ParameterBag;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
-use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

@@ -1,9 +1,16 @@
 doctrine:
     dbal:
-        host: 'database'
-        dbname: '%env(MYSQL_DATABASE)%'
-        user: '%env(MYSQL_USER)%'
-        password: '%env(MYSQL_PASSWORD)%'
+        connections:
+          default:
+            host: 'database'
+            dbname: '%env(MYSQL_DATABASE)%'
+            user: '%env(MYSQL_USER)%'
+            password: '%env(MYSQL_PASSWORD)%'
+          old:
+            host: 'old'
+            dbname: '%env(MYSQL_DATABASE)%'
+            user: '%env(MYSQL_USER)%'
+            password: '%env(MYSQL_PASSWORD)%'
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore

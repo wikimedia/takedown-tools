@@ -9,12 +9,12 @@ use App\Entity\Takedown\Takedown;
 use App\Entity\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use GeoSocio\EntityUtils\ParameterBag;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityAttacher\Annotation\Attach;
-use GeoSocio\EntityUtils\ParameterBag;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
 /**
  * @ORM\Entity
@@ -248,20 +248,23 @@ class Dmca implements GroupSequenceProviderInterface {
 		$params = new ParameterBag( $data );
 		$this->takedown = $params->getInstance( 'takedown', Takedown::class, new Takedown() );
 		$this->lumenSend = $params->getBoolean( 'lumenSend', false );
+		$this->lumenId = $params->getInt( 'lumenId' );
 		$this->lumenTitle = $params->getString( 'lumenTitle' );
 		$this->originals = $params->getCollection(
 			'originals',
 			Original::class,
 			new ArrayCollection()
 		);
-		$this->senderName = $params->getString( 'name' );
-		$this->senderPerson = $params->getString( 'person' );
-		$this->senderFirm = $params->getString( 'firm' );
-		$this->senderAddress1 = $params->getString( 'address1' );
-		$this->senderAddress2 = $params->getString( 'address2' );
-		$this->senderCity = $params->getString( 'city' );
+		$this->senderName = $params->getString( 'senderName' );
+		$this->senderPerson = $params->getString( 'senderPerson' );
+		$this->senderFirm = $params->getString( 'senderFirm' );
+		$this->senderAddress1 = $params->getString( 'senderAddress1' );
+		$this->senderAddress2 = $params->getString( 'senderAddress2' );
+		$this->senderCity = $params->getString( 'senderCity' );
+		$this->senderState = $params->getString( 'senderState' );
+		$this->senderZip = $params->getString( 'senderZip' );
 		$this->senderCountry = $params->getInstance( 'country', Country::class );
-		$this->date = $params->getInstance( 'sent', \DateTime::class );
+		$this->sent = $params->getInstance( 'sent', \DateTime::class );
 		$this->method = $params->getString( 'method' );
 		$this->to = $params->getString( 'to' );
 		$this->from = $params->getString( 'from' );
@@ -1171,7 +1174,7 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * @return void
 	 */
 	public function __clone() {
-		$this->originals = $this->originals->map( function( $original ) {
+		$this->originals = $this->originals->map( function ( $original ) {
 			return new Original( [
 				'url' => $original->getUrl(),
 				'dmca' => $this,

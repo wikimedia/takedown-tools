@@ -3,13 +3,12 @@
 namespace App\Controller;
 
 use App\Client\NcmecClientInterface;
-use App\Client\LumenClientInterface;
 use App\Entity\User;
 use App\Client\MediaWikiClientInterface;
 use App\Entity\Takedown\Takedown;
 use App\Entity\Takedown\Dmca\Post;
 use App\Entity\Takedown\ChildProtection\File;
-use GeoSocio\EntityAttacher\EntityAttacherInterface;
+use App\Util\TakedownUtilInterface;
 use GuzzleHttp\Exception\RequestException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -19,11 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use GuzzleHttp\Promise;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route(service="app.controller_takedown")
@@ -36,24 +31,9 @@ class TakedownController {
 	protected $doctrine;
 
 	/**
-	 * @var SerializerInterface
-	 */
-	protected $serializer;
-
-	/**
 	 * @var MediaWikiClientInterface
 	 */
 	protected $client;
-
-	/**
-	 * @var EntityAttacherInterface
-	 */
-	protected $attacher;
-
-	/**
-	 * @var LumenClientInterface
-	 */
-	protected $lumenClient;
 
 	/**
 	 * @var NcmecClientInterface
@@ -61,39 +41,28 @@ class TakedownController {
 	protected $ncmecClient;
 
 	/**
-	 * @var ValidatorInterface
+	 * @var TakedownUtilInterface
 	 */
-	protected $validator;
-
-	/**
-	 * @var TokenStorageInterface
-	 */
-	protected $tokenStorage;
+	protected $takedownUtil;
 
 	/**
 	 * Takedown Controller.
 	 *
 	 * @param RegistryInterface $doctrine Doctrine.
 	 * @param MediaWikiClientInterface $client MediaWiki Client.
-	 * @param EntityAttacherInterface $attacher Entity Attacher.
-	 * @param LumenClientInterface $lumenClient Lumen Client.
 	 * @param NcmecClientInterface $ncmecClient NCMEC Client.
-	 * @param TokenStorageInterface $tokenStorage Token Storage.
+	 * @param TakedownUtilInterface $takedownUtil Takedown Utility.
 	 */
 	public function __construct(
 		RegistryInterface $doctrine,
 		MediaWikiClientInterface $client,
-		EntityAttacherInterface $attacher,
-		LumenClientInterface $lumenClient,
 		NcmecClientInterface $ncmecClient,
-		TokenStorageInterface $tokenStorage
+		TakedownUtilInterface $takedownUtil
 	) {
 		$this->doctrine = $doctrine;
 		$this->client = $client;
-		$this->attacher = $attacher;
-		$this->lumenClient = $lumenClient;
 		$this->ncmecClient = $ncmecClient;
-		$this->tokenStorage = $tokenStorage;
+		$this->takedownUtil = $takedownUtil;
 	}
 
 	/**
@@ -146,87 +115,7 @@ class TakedownController {
 	 * @return Response
 	 */
 	public function createAction( Takedown $takedown ) {
-		$em = $this->doctrine->getEntityManager();
-		$promises = [];
-
-		// If the reporter is the same as the current user, set the current user
-		// object as the report since it has more data.
-		if ( $takedown->getReporter() && $this->getUser() ) {
-			if ( $takedown->getReporter()->getId() === $this->getUser()->getId() ) {
-				$takedown->setReporter( $this->getUser() );
-			}
-		}
-
-		// Get the user ids from the API.
-		$usernames = $takedown->getInvolvedNames();
-
-		if ( $usernames ) {
-			$promises[] = $this->client->getUsers( $usernames )
-				->then( function( $users ) use ( $takedown ) {
-					$takedown->setInvolved( $users );
-				} );
-		}
-
-		// Get the user ids from the API.
-		if ( $takedown->getCp() && $takedown->getCp()->getApprover() ) {
-			$username = $takedown->getCp()->getApprover()->getUsername();
-			$promises[] = $this->client->getUser( $username )
-				->then( function( $user ) use ( $takedown ) {
-					$takedown->getCp()->setApprover( $user );
-					return $takedown;
-				} );
-		}
-
-		// Send to Lumen.
-		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
-			$promises[] = $this->lumenClient->createNotice( $takedown )
-				->then( function( $noticeId ) use ( $takedown ) {
-					$takedown->getDmca()->setLumenId( $noticeId );
-					return $takedown;
-				} );
-		}
-
-		// Send to NCME
-		if ( $takedown->getCp() && $takedown->getCp()->isApproved() ) {
-			$promises[] = $this->ncmecClient->createReport( $takedown )
-				->then( function ( $reportId ) use ( $takedown ) {
-					$takedown->getCp()->setNcmecId( $reportId );
-					return $takedown;
-				} );
-		}
-
-		// Settle the promises.
-		// The requests are not executed unless we explicitly wait since we are not
-		// in an event loop.
-		Promise\all( $promises )->wait();
-
-		// Attach the takedown to existing entities.
-		$takedown = $this->attacher->attach( $takedown );
-
-		// Remove the related entities.
-		// @link https://github.com/doctrine/doctrine2/issues/6531
-		$dmca = $takedown->getDmca();
-		$takedown->setDmca();
-		$cp = $takedown->getCp();
-		$takedown->setCp();
-
-		$em->persist( $takedown );
-		$em->flush();
-
-		// Add the related entities back and persist them.
-		// @link https://github.com/doctrine/doctrine2/issues/6531
-		$takedown->setDmca( $dmca );
-		$takedown->setCp( $cp );
-
-		if ( $takedown->getDmca() ) {
-			$em->persist( $takedown->getDmca() );
-		}
-		if ( $takedown->getCP() ) {
-			$em->persist( $takedown->getCp() );
-		}
-		$em->flush();
-
-		return $this->showAction( $takedown );
+		return $this->takedownUtil->create( $takedown )->wait();
 	}
 
 	/**
@@ -388,19 +277,7 @@ class TakedownController {
 	 * @return string
 	 */
 	public function deleteAction( Takedown $takedown ) : string {
-		$em = $this->doctrine->getEntityManager();
-
-		// Retract the report before deleting the takedown.
-		if ( $takedown->getCp() && $takedown->getCp()->getNcmecId() ) {
-			$this->ncmecClient->retractReport( $takedown )->then( function ( $result ) use ( $takedown ) {
-				$takedown->getCp()->setNcmecId( null );
-				return $takedown;
-			} )->wait();
-		}
-
-		$em->remove( $takedown );
-		$em->flush();
-
+		$this->takedownUtil->delete( $takedown )->wait();
 		return '';
 	}
 
@@ -470,27 +347,6 @@ class TakedownController {
 
 		return $takedown;
 	}
-
-	/**
-	 * Get a user from the Security Token Storage.
-	 *
-	 * @return User
-	 */
-	 protected function getUser() :? User {
-		 $token = $this->tokenStorage->getToken();
-
-		 if ( $token === null ) {
-			 return $token;
-		 }
-
-		 $user = $token->getUser();
-
-		 if ( ! $user instanceof User ) {
-				 return null;
-		 }
-
-		 return $user;
-	 }
 
 	/**
 	 * Gets the offset from the Request.

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use GeoSocio\EntityUtils\ParameterBag;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -270,7 +270,7 @@ class User implements UserInterface, JWTUserInterface {
 	/**
 	 * {@inheritdoc}
 	 *
-	 * @param string $username Username
+	 * @param mixed $username Username
 	 * @param array $payload Payload
 	 *
 	 * @return JWTUserInterface
@@ -287,11 +287,11 @@ class User implements UserInterface, JWTUserInterface {
 	* @return array
 	*/
 	public static function getRolesFromGroups( array $groups ) : array {
-		$groups = array_filter( $groups, function( $group ) {
+		$groups = array_filter( $groups, function ( $group ) {
 			return $group !== "*";
 		} );
 
-		$roles = array_map( function( $group ) {
+		$roles = array_map( function ( $group ) {
 			return 'ROLE_' . strtoupper( $group );
 		}, $groups );
 

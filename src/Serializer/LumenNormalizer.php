@@ -28,7 +28,7 @@ class LumenNormalizer implements NormalizerInterface {
 	 * {@inheritdoc}
 	 *
 	 * @param object $object Object to normalize
-	 * @param string $format Format the normalization result will be encoded as
+	 * @param string|null $format Format the normalization result will be encoded as
 	 * @param array $context Context options for the normalizer
 	 *
 	 * @return array
@@ -67,7 +67,7 @@ class LumenNormalizer implements NormalizerInterface {
 			];
 		} )->toArray();
 
-		$files = $object->getDmca()->getFiles()->map( function( $file ) {
+		$files = $object->getDmca()->getFiles()->map( function ( $file ) {
 			return [
 				'kind' => 'original',
 			];
@@ -77,7 +77,7 @@ class LumenNormalizer implements NormalizerInterface {
 			'name' => $this->organization['name'] ?? '',
 			'kind' => 'organization',
 			'address_line_1' => $this->organization['address'][0] ?? '',
-			'address_line_2' =>  $this->organization['address'][1] ?? '',
+			'address_line_2' => $this->organization['address'][1] ?? '',
 			'city' => $this->organization['city'] ?? '',
 			'state' => $this->organization['state'] ?? '',
 			'zip' => $this->organization['zip'] ?? '',
@@ -133,7 +133,7 @@ class LumenNormalizer implements NormalizerInterface {
 	 * {@inheritdoc}
 	 *
 	 * @param mixed $data Data to normalize
-	 * @param string $format The format being (de-)serialized from or into
+	 * @param string|null $format The format being (de-)serialized from or into
 	 *
 	 * @return bool
 	 */

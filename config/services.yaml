@@ -100,6 +100,14 @@ services:
     arguments:
       - '@doctrine'
       - '@app.mediawiki_client'
+      - '@app.ncmec_client'
+      - '@app.util_takedown'
+
+  app.util_takedown:
+    class: App\Util\TakedownUtil
+    arguments:
+      - '@doctrine'
+      - '@app.mediawiki_client'
       - '@entity_attacher'
       - '@app.lumen_client'
       - '@app.ncmec_client'
@@ -196,3 +204,12 @@ services:
       public: false
       tags:
         - { name: serializer.normalizer }
+
+  app.command.import_existing:
+      class: App\Command\ImportExisting
+      arguments:
+        - '@doctrine'
+        - '@doctrine.dbal.old_connection'
+        - '@app.util_takedown'
+      tags:
+        - { name: console.command }

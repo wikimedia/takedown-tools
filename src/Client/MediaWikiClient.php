@@ -13,7 +13,6 @@ use GuzzleHttp\Promise\PromiseInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Encoder\DecoderInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use GuzzleHttp\Promise;
 
 /**
  * Media Wiki Client
@@ -107,7 +106,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'meta' => 'siteinfo',
 				'siprop' => 'general|namespaces|namespacealiases|specialpagealiases',
 			],
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -131,7 +130,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'sitematrix',
 				'format' => 'json',
 			],
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -192,7 +191,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -258,7 +257,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -327,7 +326,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'auth' => 'oauth',
 			] );
 		} )
-		->then( function( $response ) use ( $request, $domain ) {
+		->then( function ( $response ) use ( $request, $domain ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -354,7 +353,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 *
 	 * @return string
 	 */
-	protected function getToken( $uri = '' ) : PromiseInterface {
+	protected function getToken( string $uri = '' ) : PromiseInterface {
 		$request = new Request( 'GET', $uri );
 		return $this->client->sendAsync( $request, [
 			'query' => [
@@ -362,7 +361,7 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'format' => 'json',
 			],
 			'auth' => 'oauth',
-		] )->then( function( $response ) use ( $request ) {
+		] )->then( function ( $response ) use ( $request ) {
 			$data = $this->decoder->decode( (string)$response->getBody(), 'json' );
 
 			if ( array_key_exists( 'error', $data ) ) {
@@ -381,11 +380,15 @@ class MediaWikiClient implements MediaWikiClientInterface {
 	 * @return PromiseInterface
 	 */
 	public function getUsers( array $usernames ) : PromiseInterface {
-		$promises = array_map( function( $username ) {
+		$promises = array_map( function ( $username ) {
 			return $this->getUser( $username );
 		}, $usernames );
 
-		return Promise\all( $promises );
+		return \GuzzleHttp\Promise\all( $promises )->then( function ( $users ) {
+			return array_filter( $users, function ( $user ) {
+				return $user !== null;
+			} );
+		} );
 	}
 
 	/**
@@ -401,11 +404,12 @@ class MediaWikiClient implements MediaWikiClientInterface {
 				'action' => 'query',
 				'format' => 'json',
 				'meta' => 'globaluserinfo',
-				'guiuser' => $username,
+				'guiuser' => ucfirst( $username ),
 				'guiprop' => 'groups'
 			],
-		] )->then( function( $response ) {
-			return $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
+		] )->then( function ( $response ) {
+			$user = $this->serializer->deserialize( (string)$response->getBody(), User::class, 'json' );
+			return $user->getId() ? $user : null;
 		}, function ( $e ) {
 			return null;
 		} );

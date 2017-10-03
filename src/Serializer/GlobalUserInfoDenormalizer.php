@@ -5,14 +5,17 @@ namespace App\Serializer;
 use App\Entity\User;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
+/**
+ * Global User Info Denormalizer.
+ */
 class GlobalUserInfoDenormalizer implements DenormalizerInterface {
 
 	/**
 	 * {@inheritdoc}
 	 *
 	 * @param mixed $data data to restore
-	 * @param string $class the expected class to instantiate
-	 * @param string $format format the given data was extracted from
+	 * @param mixed $class the expected class to instantiate
+	 * @param string|null $format format the given data was extracted from
 	 * @param array $context options available to the denormalizer
 	 *
 	 * @return object
@@ -31,8 +34,8 @@ class GlobalUserInfoDenormalizer implements DenormalizerInterface {
 	 * {@inheritdoc}
 	 *
 	 * @param mixed $data Data to denormalize from
-	 * @param string $type The class to which the data should be denormalized
-	 * @param string $format The format being deserialized from
+	 * @param mixed $type The class to which the data should be denormalized
+	 * @param string|null $format The format being deserialized from
 	 *
 	 * @return bool
 	 */
