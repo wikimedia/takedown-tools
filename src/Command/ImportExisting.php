@@ -123,7 +123,6 @@ class ImportExisting extends Command {
 	 * @return void
 	 */
 	protected function execute( InputInterface $input, OutputInterface $output ) {
-		$statement = $this->old->executeQuery( "SELECT * FROM centrallog WHERE test = 'N'" );
 		$statement = $this->old->createQueryBuilder()
 			->select( 'cl.*, dmca.*, cp.*, u.*' )
 			->from( 'centrallog', 'cl' )
