@@ -5,6 +5,7 @@ services:
     environment:
       APP_ENV: "prod"
       APP_DEBUG: 0
+      VIRTUAL_HOST: 'lcatools.corp.wikimedia.org'
     networks:
       - default
       - ingress
