@@ -5,12 +5,15 @@ matrix:
       php: 7.1
       before_install:
           - cp .env.dist .env
+          - cd server
       install:
           - composer install
       script:
           - composer test
     -
       language: node_js
+      before_install:
+          - cd client
       node_js: 8
 branches:
     only:

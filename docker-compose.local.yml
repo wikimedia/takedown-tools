@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ingress:
+    ports:
+      - '8888:80'
+  web:
+    volumes:
+     - ./client:/usr/share/nginx:cached
+  api:
+    volumes:
+     - ./server:/var/www:cached

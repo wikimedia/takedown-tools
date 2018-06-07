@@ -1,25 +1,22 @@
-version: '2'
+version: '3'
 services:
-  web:
+  ingress:
     restart: always
     environment:
-      APP_ENV: "dev"
-      APP_DEBUG: 1
       VIRTUAL_HOST: 'lcatools2.corp.wikimedia.org'
     networks:
       - default
       - ingress
+  web:
+    restart: always
+  api:
+    restart: always
+    volumes:
+      - files:/var/www/var/files
   database:
     restart: always
-  composer:
-    environment:
-      APP_ENV: "dev"
-      APP_DEBUG: 1
-    command: 'composer install -o'
-  node:
-    environment:
-      NODE_ENV: "production"
-
+volumes:
+  files:
 networks:
   ingress:
     external:

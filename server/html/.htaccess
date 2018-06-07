@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Prevent strping of the Authorization header.
+RewriteCond %{HTTP:Authorization} ^(.*)
+RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]

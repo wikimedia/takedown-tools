@@ -7,12 +7,9 @@ use Symfony\Component\Debug\Debug;
 
 require __DIR__.'/../vendor/autoload.php';
 
-// The check is to ensure we don't use .env in production
-if ( ! getenv( 'APP_ENV' ) ) {
-	( new Dotenv() )->load( __DIR__ . '/../.env' );
-}
-
 if ( getenv( 'APP_DEBUG' ) ) {
+		// Disable OpCache
+		ini_set('opcache.enable', 0);
 		// WARNING: You should setup permissions the proper way!
 		// REMOVE the following PHP line and read
 		// https://symfony.com/doc/current/book/installation.html#checking-symfony-application-configuration-and-setup

@@ -1,4 +1,3 @@
-###> symfony/framework-bundle ###
 .env
 docker-compose.override.yml
 /var/

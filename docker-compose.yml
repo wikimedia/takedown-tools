@@ -1,7 +1,23 @@
-version: '2'
+version: '3'
 services:
-  web:
+  ingress:
     build: ./
+    image: wikimedia/takedown-tools-ingress
+    env_file:
+      - .env
+    links:
+      - web
+      - api
+  web:
+    build: ./client
+    image: wikimedia/takedown-tools-web
+    env_file:
+      - .env
+    links:
+      - api
+  api:
+    build: ./server
+    image: wikimedia/takedown-tools-api
     env_file:
       - .env
     links:
@@ -16,20 +32,5 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'true'
     volumes:
       - database:/var/lib/mysql
-  composer:
-    image: 'composer'
-    env_file:
-      - .env
-    command: 'composer install'
-    volumes:
-     - .:/app:cached
-  node:
-    image: 'node:8'
-    env_file:
-     - .env
-    command: ./bin/node-start
-    working_dir: /code
-    volumes:
-     - .:/code:cached
 volumes:
   database:

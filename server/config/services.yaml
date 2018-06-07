@@ -209,7 +209,8 @@ services:
       class: App\Command\ImportExisting
       arguments:
         - '@doctrine'
-        - '@doctrine.dbal.old_connection'
+        # - '@doctrine.dbal.old_connection'
+        - '@doctrine.dbal.default_connection'
         - '@app.util_takedown'
       tags:
         - { name: console.command }
