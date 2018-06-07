@@ -1,0 +1,25 @@
+version: '3'
+services:
+  ingress:
+    ports:
+      - '8888:80'
+  web:
+    volumes:
+     - ./server:/var/www:cached
+  api:
+    volumes:
+     - ./server:/var/www:cached
+  database:
+    ports:
+      - '127.0.0.1:3306:3306'
+  composer:
+    image: composer
+    volumes:
+     - ./server:/app:cached
+    command: 'composer install'
+  watch:
+    image: node:8
+    working_dir: /app
+    volumes:
+      - ./client:/app:cached
+    command: sh -c "npm install --unsafe-perm && npm run watch"

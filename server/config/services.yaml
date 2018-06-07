@@ -1,6 +1,15 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+  env(CONTACT_FIRST_NAME): 'John'
+  env(CONTACT_LAST_NAME): 'Doe'
+  env(CONTACT_EMAIL): 'legal@wikimedia.org'
+  env(CONTACT_PHONE): '+1-415-839-6885'
+  env(OAUTH_CONSUMER_KEY): ''
+  env(OAUTH_CONSUMER_SECRET): ''
+  env(LUMEN_AUTH_TOKEN): ''
+  env(NCMEC_USER): ''
+  env(NCMEC_PASS): ''
   locale: 'en'
   app.files_dir: '%kernel.project_dir%/var/files'
   app.organization:
@@ -209,7 +218,8 @@ services:
       class: App\Command\ImportExisting
       arguments:
         - '@doctrine'
-        - '@doctrine.dbal.old_connection'
+        # - '@doctrine.dbal.old_connection'
+        - '@doctrine.dbal.default_connection'
         - '@app.util_takedown'
       tags:
         - { name: console.command }

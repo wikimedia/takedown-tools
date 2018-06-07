@@ -1,16 +1,13 @@
-require( 'dotenv' ).config();
-
 const path = require( 'path' ),
 	webpack = require( 'webpack' ),
 	ExtractTextPlugin = require( 'extract-text-webpack-plugin' ),
 	UglifyJSPlugin = require( 'uglifyjs-webpack-plugin' ),
 	extractSass = new ExtractTextPlugin( {
-		filename: 'style.css',
-		disable: process.env.NODE_ENV !== 'production'
+		filename: 'style.css'
 	} );
 
 let config = {
-	entry: './client/index.js',
+	entry: './index.js',
 	output: {
 		filename: 'bundle.js',
 		path: path.resolve( __dirname, 'html/bundles' )
@@ -18,7 +15,7 @@ let config = {
 	devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'cheap-module-eval-source-map',
 	resolve: {
 		alias: {
-			app: path.resolve( './client' )
+			app: path.resolve( './src' )
 		}
 	},
 	module: {
