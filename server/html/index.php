@@ -9,7 +9,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 if ( getenv( 'APP_DEBUG' ) ) {
 		// Disable OpCache
-		ini_set('opcache.enable', 0);
+		ini_set( 'opcache.enable', 0 );
+
 		// WARNING: You should setup permissions the proper way!
 		// REMOVE the following PHP line and read
 		// https://symfony.com/doc/current/book/installation.html#checking-symfony-application-configuration-and-setup
