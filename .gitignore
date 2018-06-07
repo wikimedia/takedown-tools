@@ -4,4 +4,3 @@ docker-compose.override.yml
 /vendor/
 /node_modules/
 /html/bundles/
-###< symfony/framework-bundle ###
