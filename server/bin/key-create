@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+mkdir -p ../config/jwt;
+openssl genrsa -out ../var/jwt/private.pem -aes256 -passout "pass:${JWT_PASSPHRASE}" 4096;
+openssl rsa -pubout -passin "pass:${JWT_PASSPHRASE}" -in ../var/jwt/private.pem -out ../var/jwt/public.pem;

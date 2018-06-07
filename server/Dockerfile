@@ -41,10 +41,8 @@ ENV DATABASE_URL sqlite:////var/www/var/data/data.db
 # Copy the app and all the dependencies
 COPY --from=builder /app /var/www
 
-# Generate a Key for JWT
-RUN mkdir -p ../config/jwt \
-    && openssl genrsa -out ../config/jwt/private.pem -aes256 -passout "pass:${JWT_PASSPHRASE}" 4096 \
-    && openssl rsa -pubout -passin "pass:${JWT_PASSPHRASE}" -in ../config/jwt/private.pem -out ../config/jwt/public.pem
+# Add the bin directory to the path.
+ENV PATH="/var/www/bin:${PATH}"
 
 # Touch the SQLite Database and set the permissions
 RUN mkdir -p ../var/data \
@@ -52,6 +50,8 @@ RUN mkdir -p ../var/data \
     && touch ../var/data/data.db \
     && chown www-data:www-data ../var/data/data.db
 
+# Generate a Key for JWT
+RUN key-create
+
 # Create the database schema and load the fixtures
-RUN ../bin/console doctrine:schema:create \
-    && ../bin/console doctrine:fixtures:load --fixtures=../src/DataFixtures/ORM\
+RUN db-setup

@@ -13,10 +13,12 @@ services:
     restart: always
     volumes:
       - files:/var/www/var/files
+      - jwt:/var/www/var/jwt
   database:
     restart: always
 volumes:
   files:
+  jwt:
 networks:
   ingress:
     external:

@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+console doctrine:schema:create;
+console doctrine:fixtures:load --fixtures=../src/DataFixtures/ORM;
