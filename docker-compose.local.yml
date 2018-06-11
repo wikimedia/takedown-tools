@@ -5,7 +5,7 @@ services:
       - '8888:80'
   web:
     volumes:
-     - ./server:/var/www:cached
+     - ./client/html:/usr/share/nginx/html:cached
   api:
     volumes:
      - ./server:/var/www:cached
