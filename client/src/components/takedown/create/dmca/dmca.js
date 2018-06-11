@@ -146,7 +146,7 @@ export class TakedownCreateDmca extends React.Component {
 				<div className="form-group">
 					<label className="form-control-label">Announcement</label> <small className="text-muted">post the below text to <a target="_blank" rel="noopener noreferrer" href={'https://www.wikimediafoundation.org/wiki/DMCA_' + this.props.takedown.dmca.wmfTitle.replace( / /g, '_' ) + '?action=edit' }>{'DMCA ' + this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a></small>
 					<textarea className="form-control" readOnly rows="5" value={
-						'{DMCA email\n' +
+						'{{DMCA email\n' +
 						`|from=${this.props.takedown.dmca.from || ''}\n` +
 						`|date=${moment( this.props.takedown.dmca.sent ).tz( 'America/Los_Angeles' ).format( 'MMMM D[,] YYYY [at] HH:mm:ss z' )}\n` +
 						`|subject=${this.props.takedown.dmca.subject || ''}\n` +
