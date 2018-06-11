@@ -529,7 +529,6 @@ class Dmca implements GroupSequenceProviderInterface {
 	 * Firm.
 	 *
 	 * @Groups({"api"})
-	 * @Assert\NotBlank(groups={"Lumen"})
 	 * @Assert\Length(max=63)
 	 *
 	 * @return string
