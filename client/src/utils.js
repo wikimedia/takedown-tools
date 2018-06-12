@@ -74,7 +74,7 @@ function getAffectedFilesText( pageIds ) {
 
 	fileIds = pageIds.filter( ( id ) => {
 		return id.startsWith( 'File:' );
-	} );
+	} ).map( fileId => fileId.replace( 'File:', '' ) );
 
 	if ( fileIds.size > 0 ) {
 		text = text + '\nAffected file(s):\n';
