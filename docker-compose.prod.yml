@@ -23,4 +23,5 @@ volumes:
   jwt:
 networks:
   ingress:
-    external: ingress
+    external:
+      name: ingress
