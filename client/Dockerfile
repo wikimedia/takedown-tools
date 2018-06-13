@@ -2,6 +2,10 @@
 FROM node:8 as builder
 WORKDIR /app
 COPY ./ /app
+
+# Environment
+ENV APP_ENV prod
+
 RUN npm install --unsafe-perm --production
 
 # Service
