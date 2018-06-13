@@ -20,7 +20,7 @@ if ( getenv( 'APP_DEBUG' ) ) {
 }
 
 Request::setTrustedProxies(
-	[ '127.0.0.1', gethostbyname( 'nginx.' ) ],
+	[ '127.0.0.1', gethostbyname( 'ingress.' ) ],
 	Request::HEADER_X_FORWARDED_ALL
 );
 
