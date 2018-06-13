@@ -22,8 +22,6 @@ services:
       - .env
     links:
       - database
-    volumes:
-     - .:/var/www:cached
   database:
     image: 'mariadb:10.2'
     env_file:
