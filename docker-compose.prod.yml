@@ -21,6 +21,8 @@ services:
 volumes:
   files:
   jwt:
+  cache:
+  logs:
 networks:
   ingress:
     external:
