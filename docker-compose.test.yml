@@ -14,12 +14,16 @@ services:
     volumes:
       - files:/var/www/var/files
       - jwt:/var/www/var/jwt
+      - cache:/var/www/var/cache
+      - logs:/var/www/var/logs
   database:
     restart: always
 volumes:
   files:
   jwt:
+  cache:
+  logs:
 networks:
   ingress:
     external:
-      name: ingress_default
+      name: ingress
