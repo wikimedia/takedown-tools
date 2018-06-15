@@ -36,7 +36,7 @@ export class DatePicker extends React.Component {
 		value.set( {
 			year: date.utc().year(),
 			month: date.utc().month(),
-			day: date.utc().day()
+			date: date.utc().date()
 		} );
 
 		this.props.onChange( value.utc().toISOString() );
