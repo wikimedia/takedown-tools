@@ -1,10 +1,11 @@
-const path = require( 'path' ),
-	webpack = require( 'webpack' ),
-	ExtractTextPlugin = require( 'extract-text-webpack-plugin' ),
-	UglifyJSPlugin = require( 'uglifyjs-webpack-plugin' ),
-	extractSass = new ExtractTextPlugin( {
-		filename: 'style.css'
-	} );
+const path = require( 'path' );
+const webpack = require( 'webpack' );
+const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
+const UglifyJSPlugin = require( 'uglifyjs-webpack-plugin' );
+
+const extractSass = new ExtractTextPlugin( {
+	filename: 'style.css'
+} );
 
 let config = {
 	entry: './index.js',

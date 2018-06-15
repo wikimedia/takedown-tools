@@ -143,6 +143,7 @@ export class SelectUsers extends React.Component {
 				options={this.state.options}
 				onInputChange={this.onInputChange.bind( this )}
 				onChange={this.onChange.bind( this )}
+				filterOption={option => option}
 			/>
 		);
 	}

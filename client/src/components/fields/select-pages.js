@@ -83,7 +83,7 @@ export class SelectPages extends React.Component {
 		const title = Title.newFromText( text, this.props.site.info );
 
 		return {
-			label: title.getNamespace().isMain() ? title.getKey().replace( /_/g, ' ' ) : `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`,
+			label: title.getNamespace().isMain() ? title.getKey().replace( /_/g, ' ' ) : `${title.getNamespace().getNormalizedText()}:${title.getKey().replace( /_/g, ' ' )}`,
 			value: title.getPrefixedDBKey()
 		};
 	}
@@ -115,14 +115,6 @@ export class SelectPages extends React.Component {
 	onInputChange( input ) {
 		this.textChange.next( input );
 		return input;
-	}
-
-	filterOptions( options, filterString, values ) {
-		return options.filter( ( option ) => {
-			return !values.find( ( value ) => {
-				return option.value === value.value;
-			} );
-		} );
 	}
 
 	onChange( value ) {
@@ -158,7 +150,7 @@ export class SelectPages extends React.Component {
 				options={this.state.options}
 				onInputChange={this.onInputChange.bind( this )}
 				onChange={this.onChange.bind( this )}
-				filterOptions={this.filterOptions.bind( this )}
+				filterOption={option => option}
 			/>
 		);
 	}
