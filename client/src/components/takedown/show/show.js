@@ -102,7 +102,7 @@ export class TakedownShow extends React.Component {
 				if ( title.getNamespace().isMain() ) {
 					content = title.getKey().replace( /_/g, ' ' );
 				} else {
-					content = `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`;
+					content = `${title.getNamespace().getNormalizedText()}:${title.getKey().replace( /_/g, ' ' )}`;
 				}
 
 				return (
