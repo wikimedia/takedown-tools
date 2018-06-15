@@ -94,16 +94,10 @@ export class TakedownShow extends React.Component {
 
 		if ( this.props.takedown.siteId && this.props.takedown.pageIds && this.props.site.info ) {
 			pages = this.props.takedown.pageIds.map( ( id ) => {
-				const url = 'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath ),
-					title = Title.newFromText( id, this.props.site.info );
+				const url = 'https://' + this.props.site.domain + id.replace( /^(.*)$/, this.props.site.info.general.articlepath );
+				const title = Title.newFromText( id, this.props.site.info );
 
-				let content;
-
-				if ( title.getNamespace().isMain() ) {
-					content = title.getKey().replace( /_/g, ' ' );
-				} else {
-					content = `${title.getNamespace().getNormalizedText()}:${title.getKey().replace( /_/g, ' ' )}`;
-				}
+				const content = title.getPrefixedText();
 
 				return (
 					<div key={id}>

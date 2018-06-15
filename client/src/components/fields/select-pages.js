@@ -89,7 +89,7 @@ export class SelectPages extends React.Component {
 		const title = Title.newFromText( text, this.props.site.info );
 
 		return {
-			label: title.getNamespace().isMain() ? title.getKey().replace( /_/g, ' ' ) : `${title.getNamespace().getNormalizedText()}:${title.getKey().replace( /_/g, ' ' )}`,
+			label: title.getPrefixedText(),
 			value: title.getPrefixedDBKey()
 		};
 	}
@@ -140,8 +140,7 @@ export class SelectPages extends React.Component {
 		return {
 			...option,
 			missing: true,
-			label: option.label.replace( /_/g, ' ' ),
-			value: option.label.replace( / /g, '_' ),
+			...this.getOptionFromText( option.label ),
 		};
 	}
 
