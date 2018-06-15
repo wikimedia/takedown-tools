@@ -180,7 +180,7 @@ export class SelectPages extends React.Component {
 				options={this.state.options}
 				onInputChange={this.onInputChange}
 				onChange={this.onChange}
-				filterOption={option => option}
+				filterOption={() => true}
 				newOptionCreator={this.newOptionCreator}
 				promptTextCreator={label => label}
 				isOptionUnique={this.isOptionUnique}
