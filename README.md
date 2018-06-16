@@ -24,3 +24,30 @@ already done so in step 3):
 ```
 docker-compose up
 ```
+
+## Deploying
+1. Connect to [Wikimedia Foundation's Virtual Private Network](https://office.wikimedia.org/wiki/Office_IT/OpenVPN_Setup).
+2. SSH into the production server:
+   ```
+	 ssh lcatools.corp.wikimedia.org
+	 ```
+3. Switch to the `lcatools` user:
+   ```
+	 sudo su - lcatools
+	 ```
+4. Change into the `takedowntools` directory:
+   ```
+	 cd sites/takedowntools
+	 ```
+5. Pull the changes:
+   ```
+	 git pull origin master
+	 ```
+6. Build the container(s)
+   ```
+	 docker-compose build
+	 ```
+7. Start the new containers:
+   ```
+	 docker-compose up -d
+	 ```
