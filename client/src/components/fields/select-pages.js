@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Select from 'react-select';
+import { Creatable } from 'react-select';
 import 'react-select/dist/react-select.css';
 import { Set } from 'immutable';
 import { Title } from 'mediawiki-title';
@@ -17,6 +17,12 @@ export class SelectPages extends React.Component {
 
 	constructor( props ) {
 		super( props );
+
+		this.onChange = this.onChange.bind( this );
+		this.onInputChange = this.onInputChange.bind( this );
+		this.newOptionCreator = this.newOptionCreator.bind( this );
+		this.isOptionUnique = this.isOptionUnique.bind( this );
+		this.optionRenderer = this.optionRenderer.bind( this );
 		this.textChange = new Subject();
 
 		// This components state should be self contained.
@@ -83,7 +89,7 @@ export class SelectPages extends React.Component {
 		const title = Title.newFromText( text, this.props.site.info );
 
 		return {
-			label: title.getNamespace().isMain() ? title.getKey().replace( /_/g, ' ' ) : `${title.getKey().replace( /_/g, ' ' )} (${title.getNamespace().getNormalizedText()})`,
+			label: title.getPrefixedText(),
 			value: title.getPrefixedDBKey()
 		};
 	}
@@ -117,14 +123,6 @@ export class SelectPages extends React.Component {
 		return input;
 	}
 
-	filterOptions( options, filterString, values ) {
-		return options.filter( ( option ) => {
-			return !values.find( ( value ) => {
-				return option.value === value.value;
-			} );
-		} );
-	}
-
 	onChange( value ) {
 		// Set the internal state.
 		this.setState( {
@@ -138,6 +136,30 @@ export class SelectPages extends React.Component {
 		}
 	}
 
+	newOptionCreator( option ) {
+		return {
+			...option,
+			missing: true,
+			...this.getOptionFromText( option.label ),
+		};
+	}
+
+	isOptionUnique({ option, options }) {
+		if ( !options ) {
+			return true;
+		}
+
+		return !options.find(o => o.value === option.value);
+	}
+
+	optionRenderer( option ) {
+		return (
+			<span style={{color: option.missing ? 'red' : 'black'}}>
+				{option.label}
+			</span>
+		);
+	}
+
 	render() {
 		let disabled = this.props.disabled,
 			loading = this.state.loading;
@@ -149,16 +171,20 @@ export class SelectPages extends React.Component {
 		}
 
 		return (
-			<Select
+			<Creatable
 				name={this.props.name}
 				disabled={disabled}
 				value={this.state.value}
 				multi={true}
 				isLoading={loading}
 				options={this.state.options}
-				onInputChange={this.onInputChange.bind( this )}
-				onChange={this.onChange.bind( this )}
-				filterOptions={this.filterOptions.bind( this )}
+				onInputChange={this.onInputChange}
+				onChange={this.onChange}
+				filterOption={() => true}
+				newOptionCreator={this.newOptionCreator}
+				promptTextCreator={label => label}
+				isOptionUnique={this.isOptionUnique}
+				optionRenderer={this.optionRenderer}
 			/>
 		);
 	}
