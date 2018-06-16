@@ -9,7 +9,6 @@ Tools for the Wikimedia Support and Safety team related to content takedown
 	 following permissions:
 	 - [High-volume editing](https://meta.wikimedia.org/wiki/Special:ListGrants#highvolume)
 	 - [Edit existing pages](https://meta.wikimedia.org/wiki/Special:ListGrants#editpage)
-	 - [View deleted files any pages](https://meta.wikimedia.org/wiki/Special:ListGrants#viewdeleted)
 	 - [Access private information](https://meta.wikimedia.org/wiki/Special:ListGrants#privateinfo)
 3. Execute `docker-compose up`
 4. After the database has started and ready to accept connections, open another
