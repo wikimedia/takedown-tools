@@ -23,6 +23,7 @@ export class SelectPages extends React.Component {
 		this.newOptionCreator = this.newOptionCreator.bind( this );
 		this.isOptionUnique = this.isOptionUnique.bind( this );
 		this.optionRenderer = this.optionRenderer.bind( this );
+		this.isValidNewOption = this.isValidNewOption.bind( this );
 		this.textChange = new Subject();
 
 		// This components state should be self contained.
@@ -160,6 +161,14 @@ export class SelectPages extends React.Component {
 		);
 	}
 
+	isValidNewOption( option ) {
+		if ( !option.label ) {
+			return false;
+		}
+
+		return !option.label.endsWith( ':' );
+	}
+
 	render() {
 		let disabled = this.props.disabled,
 			loading = this.state.loading;
@@ -185,6 +194,7 @@ export class SelectPages extends React.Component {
 				promptTextCreator={label => label}
 				isOptionUnique={this.isOptionUnique}
 				optionRenderer={this.optionRenderer}
+				isValidNewOption={this.isValidNewOption}
 			/>
 		);
 	}
