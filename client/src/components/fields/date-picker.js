@@ -11,7 +11,7 @@ export class DatePicker extends React.Component {
 	constructor( props ) {
 		super( props );
 
-		this.eod = moment().endOf( 'day' );
+		this.eod = moment.utc().endOf( 'day' );
 
 		// UI state can be maintained within the component.
 		this.state = {
@@ -47,7 +47,7 @@ export class DatePicker extends React.Component {
 	}
 
 	initialVisibleMonth() {
-		return moment().subtract( 1, 'month' );
+		return moment.utc().subtract( 1, 'month' );
 	}
 
 	onTimeChange( time ) {
@@ -81,7 +81,6 @@ export class DatePicker extends React.Component {
 						value={value ? value.local() : undefined}
 						onChange={this.onTimeChange.bind( this )}
 						showSecond={false}
-						use12Hours
 						placeholder="Time"
 					/>
 				</div>

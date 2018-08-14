@@ -11,7 +11,7 @@ export class TakedownShowCp extends React.Component {
 			files;
 
 		if ( this.props.takedown.cp.accessed ) {
-			accessed = moment.utc( this.props.takedown.cp.accessed ).local().format( 'l LT' );
+			accessed = moment.utc( this.props.takedown.cp.accessed ).format( 'l LT' );
 		}
 
 		if ( this.props.takedown.cp.comments ) {
@@ -31,7 +31,7 @@ export class TakedownShowCp extends React.Component {
 				let uploaded;
 
 				if ( file.uploaded ) {
-					uploaded = moment.utc( file.uploaded ).local().format( 'l LT' );
+					uploaded = moment.utc( file.uploaded ).format( 'l LT' );
 				}
 
 				return (

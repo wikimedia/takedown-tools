@@ -72,7 +72,7 @@ export class TakedownShow extends React.Component {
 		}
 
 		if ( this.props.takedown.created ) {
-			created = moment.utc( this.props.takedown.created ).local().format( 'l LT' );
+			created = moment.utc( this.props.takedown.created ).format( 'l LT' );
 		}
 
 		if ( this.props.takedown.type ) {
