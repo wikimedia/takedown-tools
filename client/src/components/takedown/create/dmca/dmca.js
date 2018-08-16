@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import { Set } from 'immutable';
-import moment from 'moment-timezone';
+import moment from 'moment';
 import { ListField } from 'app/components/fields/list';
 import { FormGroup } from 'app/components/fields/form-group';
 import { FileUploadField } from 'app/components/fields/file-upload';
@@ -148,7 +148,7 @@ export class TakedownCreateDmca extends React.Component {
 					<textarea className="form-control" readOnly rows="5" value={
 						'{{DMCA email\n' +
 						`|from=${this.props.takedown.dmca.from || ''}\n` +
-						`|date=${moment( this.props.takedown.dmca.sent ).tz( 'America/Los_Angeles' ).format( 'MMMM D[,] YYYY [at] HH:mm:ss z' )}\n` +
+						`|date=${moment.utc( this.props.takedown.dmca.sent ).format( 'MMMM D[,] YYYY [at] HH:mm:ss z' )}\n` +
 						`|subject=${this.props.takedown.dmca.subject || ''}\n` +
 						`|to=${this.props.takedown.dmca.to || ''}\n` +
 						`|content=${this.props.contentLink || ''}\n` +
@@ -156,7 +156,7 @@ export class TakedownCreateDmca extends React.Component {
 						'|message=<nowiki>\n' +
 						( this.props.takedown.dmca.body || '' ) + '\n' +
 						'</nowiki>\n' +
-						`| year = ${moment().tz( 'America/Los_Angeles' ).format( 'Y' )}}}`
+						`| year = ${moment.utc().format( 'Y' )}}}`
 					} />
 				</div>
 			);
