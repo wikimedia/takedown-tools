@@ -94,7 +94,7 @@ export class TakedownCreateCpFile extends React.Component {
 						</div>
 						<FormGroup path={`cp.files[${index}].uploaded`} error={this.props.takedown.error} render={() => (
 							<div>
-								<label className="form-control-label">Uploaded</label> <small className="text-muted">in local time</small>
+								<label className="form-control-label">Uploaded</label>
 								<DatePicker time={true} disabled={this.props.disabled} value={this.props.file.uploaded} onChange={( value ) => this.updateFile( this.props.file, 'uploaded', value )} />
 							</div>
 						)} />

@@ -30,7 +30,7 @@ export class TakedownShowDmca extends React.Component {
 		}
 
 		if ( this.props.takedown.dmca.sent ) {
-			sent = moment.utc( this.props.takedown.dmca.sent ).local().format( 'l' );
+			sent = moment.utc( this.props.takedown.dmca.sent ).format( 'l' );
 		}
 
 		if ( this.props.takedown.dmca.actionTakenId ) {
