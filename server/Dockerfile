@@ -11,7 +11,7 @@ RUN a2enmod rewrite env
 
 # System Dependencies.
 RUN apt-get update && apt-get install -y \
-        libicu-dev \
+		libicu-dev \
 	--no-install-recommends && rm -r /var/lib/apt/lists/*
 
 RUN set -ex \
@@ -19,7 +19,7 @@ RUN set -ex \
 		libsqlite3-dev \
 	' \
 	&& apt-get update && apt-get install -y --no-install-recommends $buildDeps && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install intl opcache pdo_mysql pdo_sqlite \
+	&& docker-php-ext-install intl opcache pdo_mysql pdo_sqlite \
 	&& apt-get purge -y --auto-remove $buildDeps
 
 # set recommended PHP.ini settings
@@ -32,6 +32,12 @@ RUN { \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# set the max upload
+RUN { \
+		echo 'post_max_size=64M'; \
+		echo 'upload_max_filesize=64M'; \
+	} > /usr/local/etc/php/conf.d/max-upload.ini
 
 # Environment
 ENV APP_ENV prod
@@ -46,9 +52,9 @@ ENV PATH="/var/www/bin:${PATH}"
 
 # Touch the SQLite Database and set the permissions
 RUN mkdir -p ../var/data \
-    && chmod 777 ../var/data \
-    && touch ../var/data/data.db \
-    && chown www-data:www-data ../var/data/data.db
+	&& chmod 777 ../var/data \
+	&& touch ../var/data/data.db \
+	&& chown www-data:www-data ../var/data/data.db
 
 # Generate a Key for JWT
 RUN key-create
