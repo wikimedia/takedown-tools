@@ -34,7 +34,7 @@ class ImportExisting extends Command {
 	 */
 	protected const SITE_IDS = [
 		'en.wikipedia.org' => 'enwiki',
-		'wikimediafoundation.org' => 'foundationwiki',
+		'foundation.wikimedia.org' => 'foundationwiki',
 		'cy.wikipedia.org' => 'cywiki',
 		'en.wiktionary.org' => 'enwiktionary',
 		'commons.wikimedia.org' => 'commonswiki',

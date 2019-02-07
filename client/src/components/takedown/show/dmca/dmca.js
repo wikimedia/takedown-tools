@@ -75,7 +75,7 @@ export class TakedownShowDmca extends React.Component {
 
 		if ( this.props.takedown.dmca.wmfTitle ) {
 			wmfTitle = (
-				<a href={'https://wikimediafoundation.org/wiki/' + this.props.takedown.dmca.wmfTitle}>{this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a>
+				<a href={'https://foundation.wikimedia.org/wiki/' + this.props.takedown.dmca.wmfTitle}>{this.props.takedown.dmca.wmfTitle.replace( /_/g, ' ' )}</a>
 			);
 		}
 
