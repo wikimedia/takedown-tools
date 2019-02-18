@@ -107,7 +107,7 @@ export function defaultCommonsText( title, wmfTitle, pageIds ) {
 		'If you have valid grounds for a counter-claim under the DMCA, please contact me.\n';
 
 	if ( wmfTitle ) {
-		text = text + `The takedown can be read [[:wmf:${wmfTitle}|'''here''']].\n`;
+		text = text + `The takedown can be read [[:wmf:Legal:${wmfTitle}|'''here''']].\n`;
 	}
 
 	text = text + getAffectedFilesText( pageIds );
@@ -131,19 +131,19 @@ export function defaultCommonsVillagePumpText( title, wmfTitle, pageIds ) {
 		return '';
 	}
 
-	let text = `\n=== Notification of DMCA takedown demand - ${title} ===\n` +
+	let text = `\n== Notification of DMCA takedown demand - ${title} ==\n` +
 		'In compliance with the provisions of the US [[:en:Digital Millennium Copyright Act|Digital Millennium Copyright Act]] (DMCA), and at the instruction of the [[Wikimedia Foundation]]\'s legal counsel, ' +
 		'one or more files have been deleted from Commons.  ' +
 		'Please note that this is an [[Commons:Office actions|official action of the WMF office]] which should not be undone. ' +
 		'If you have valid grounds for a counter-claim under the DMCA, please contact me.\n';
 
 	if ( wmfTitle ) {
-		text = text + `The takedown can be read [[:wmf:${wmfTitle}|'''here''']].\n`;
+		text = text + `The takedown can be read [[:wmf:Legal:${wmfTitle}|'''here''']].\n`;
 	}
 
 	text = text + getAffectedFilesText( pageIds );
 
-	text = text + `\nTo discuss this DMCA takedown, please go to [[COM:DMCA#${title}]] Thank you! ~~~~`;
+	text = text + `\nTo discuss this DMCA takedown, please go to [[COM:DMCA#${title}]]. Thank you! ~~~~`;
 
 	return text;
 }
@@ -160,7 +160,7 @@ export function defaultUserNoticeText( username, pageIds ) {
 	const files = pageIds.filter( ( id ) => {
 		return id.startsWith( 'File:' );
 	} ).map( ( id ) => {
-		return `[[:File:${id}]]`;
+		return `[[:${id}]]`;
 	} );
 
 	return `\nDear ${username}\n\n` +
