@@ -7,16 +7,12 @@ services:
     volumes:
      - ./client/html:/usr/share/nginx/html:cached
   api:
+    command: sh -c "composer install -d /var/www && apache2-foreground"
     volumes:
      - ./server:/var/www:cached
   database:
     ports:
       - '127.0.0.1:3306:3306'
-  composer:
-    image: composer
-    volumes:
-     - ./server:/app:cached
-    command: 'composer install'
   watch:
     image: node:8
     working_dir: /app
