@@ -34,9 +34,9 @@ export class DatePicker extends React.Component {
 
 		const value = this.props.value ? moment.utc( this.props.value ) : moment.utc();
 		value.set( {
-			year: date.utc().year(),
-			month: date.utc().month(),
-			date: date.utc().date()
+			year: date.year(),
+			month: date.month(),
+			date: date.date()
 		} );
 
 		this.props.onChange( value.utc().toISOString() );
@@ -59,7 +59,8 @@ export class DatePicker extends React.Component {
 		const value = this.props.value ? moment.utc( this.props.value ) : moment.utc();
 		value.set( {
 			hours: time.utc().hours(),
-			minutes: time.utc().minutes()
+			minutes: time.utc().minutes(),
+			seconds: 0
 		} );
 
 		this.props.onChange( value.utc().toISOString() );
@@ -78,7 +79,7 @@ export class DatePicker extends React.Component {
 				<div>
 					<TimePicker
 						disabled={this.props.disabled}
-						value={value ? value.local() : undefined}
+						value={value ? value.utc() : undefined}
 						onChange={this.onTimeChange.bind( this )}
 						showSecond={false}
 						placeholder="Time"
