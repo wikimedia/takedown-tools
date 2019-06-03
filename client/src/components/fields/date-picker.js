@@ -58,8 +58,8 @@ export class DatePicker extends React.Component {
 
 		const value = this.props.value ? moment.utc( this.props.value ) : moment.utc();
 		value.set( {
-			hours: time.utc().hours(),
-			minutes: time.utc().minutes(),
+			hours: time.hours(),
+			minutes: time.minutes(),
 			seconds: 0
 		} );
 
