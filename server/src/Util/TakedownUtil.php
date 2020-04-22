@@ -85,6 +85,9 @@ class TakedownUtil implements TakedownUtilInterface {
 	public function create( Takedown $takedown ) : PromiseInterface {
 		$promises = [];
 
+		// Attach the takedown to existing entities.
+		$takedown = $this->attacher->attach( $takedown );
+
 		if ( $takedown->getReporter() ) {
 			// If the reporter is the same as the current user, set the current user
 			// object as the report since it has more data.
@@ -143,9 +146,6 @@ class TakedownUtil implements TakedownUtilInterface {
 		// in an event loop.
 		return \GuzzleHttp\Promise\all( $promises )->then( function () use ( $takedown ) {
 			$em = $this->doctrine->getEntityManager();
-
-			// Attach the takedown to existing entities.
-			$takedown = $this->attacher->attach( $takedown );
 
 			// Remove the related entities.
 			// @link https://github.com/doctrine/doctrine2/issues/6531
