@@ -5,6 +5,7 @@ namespace App\Util;
 use App\Client\NcmecClientInterface;
 use App\Client\LumenClientInterface;
 use App\Client\MediaWikiClientInterface;
+use App\Entity\File;
 use App\Entity\User;
 use App\Entity\Takedown\Takedown;
 use Doctrine\ORM\Id\AssignedGenerator;
@@ -85,9 +86,6 @@ class TakedownUtil implements TakedownUtilInterface {
 	public function create( Takedown $takedown ) : PromiseInterface {
 		$promises = [];
 
-		// Attach the takedown to existing entities.
-		$takedown = $this->attacher->attach( $takedown );
-
 		if ( $takedown->getReporter() ) {
 			// If the reporter is the same as the current user, set the current user
 			// object as the report since it has more data.
@@ -123,6 +121,13 @@ class TakedownUtil implements TakedownUtilInterface {
 
 		// Send to Lumen.
 		if ( $takedown->getDmca() && $takedown->getDmca()->getLumenSend() ) {
+			// Load the file info from the data before sending to Lumen.
+			$repo = $this->doctrine->getRepository( File::class );
+			$files = $takedown->getDmca()->getFiles()->map( function ( $file ) use ( $repo ) {
+				return $repo->find( $file->getId() );
+			} );
+			$takedown->getDmca()->setFiles( $files );
+
 			$promises[] = $this->lumenClient->createNotice( $takedown )
 				->then( function ( $noticeId ) use ( $takedown ) {
 					$takedown->getDmca()->setLumenId( $noticeId );
@@ -146,6 +151,9 @@ class TakedownUtil implements TakedownUtilInterface {
 		// in an event loop.
 		return \GuzzleHttp\Promise\all( $promises )->then( function () use ( $takedown ) {
 			$em = $this->doctrine->getEntityManager();
+
+			// Attach the takedown to existing entities.
+			$takedown = $this->attacher->attach( $takedown );
 
 			// Remove the related entities.
 			// @link https://github.com/doctrine/doctrine2/issues/6531
