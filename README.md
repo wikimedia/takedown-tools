@@ -1,11 +1,11 @@
-# takedown-tools [![Build Status](https://travis-ci.org/wikimedia/takedown-tools.svg?branch=master)](https://travis-ci.org/wikimedia/takedown-tools)
+# takedown-tools
 Tools for the Wikimedia Support and Safety team related to content takedown
 
 ## Setup
 1. Copy the `.env.dist` file to `.env` and customize however you would like.
 2. To login to the app, you will need to obtain OAuth Keys by registering an
 	 [OAuth Consumer](https://meta.wikimedia.org/wiki/Special:OAuthConsumerRegistration/propose)
-	 (not an owner-ownly as it will need a callback url). With at least the
+	 (not an owner-only as it will need a callback url). With at least the
 	 following permissions:
 	 - [High-volume editing](https://meta.wikimedia.org/wiki/Special:ListGrants#highvolume)
 	 - [Edit existing pages](https://meta.wikimedia.org/wiki/Special:ListGrants#editpage)
